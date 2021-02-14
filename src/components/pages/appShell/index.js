@@ -35,7 +35,9 @@ const AppShell = (props) => {
   return (
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="logo">Shopdesk</div>
+        <div className="logo">
+          <h2>Shopdesk</h2>
+        </div>
         <Menu
           theme="dark"
           mode="inline"
@@ -97,14 +99,25 @@ const AppShell = (props) => {
         </Menu>
       </Sider>
       <Layout className="site-layout">
-        <Header className="site-layout-background" style={{ padding: 0 }}>
-          {React.createElement(
-            collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-            {
-              className: "trigger",
-              onClick: toggle,
-            }
-          )}
+        <Header className="header site-layout-background">
+          <div className="header__menu-btn">
+            {React.createElement(
+              collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+              {
+                className: "trigger",
+                onClick: toggle,
+              }
+            )}
+          </div>
+
+          <div className="header__content">
+            <div className="outlet">
+              <h2>Outlet Name</h2>
+            </div>
+            <div className="user">
+              <h2>Username</h2>
+            </div>
+          </div>
         </Header>
         <Content
           className="site-layout-background"
