@@ -1,25 +1,26 @@
-import React, {Component} from 'react';
-import { Route, Switch} from "react-router-dom";
-// Pages
-import HomePage from "./components/pages/HomePage";
-import NoPageFound from "./components/pages/NoPageFound";
-import GettingStarted from "./components/pages/GettingStarted";
+import React from "react";
+import { Route, Switch } from "react-router-dom";
 
+// Components
+import AppShell from "./components/pages/appShell";
+import Dashboard from "./components/pages/dashboard";
+import Categories from "./components/pages/categories";
 
+const renderWithLayout = (Component, props) => (
+  <AppShell {...props}>
+    <Component />
+  </AppShell> 
+);
 
-class Routes extends Component {
-    render() {
-        return (
-            <div style={{ margin: '18px 12px 0',minHeight:"76.1vh" }}>
-                <Switch>
-                    <Route path={"/"} exact /*strict*/ component={HomePage}/>
-                    <Route path={"/getting-started"} exact /*strict*/ component={GettingStarted}/>
-
-                    <Route /*strict*/ component={NoPageFound}/>
-                </Switch>
+const Routes = () => {
+  return (
+    <div>
+      <Switch>
+        <Route exact path="/dashboard" render={() => renderWithLayout(Dashboard)}></Route>
+        <Route exact path="/categories" render={() => renderWithLayout(Categories)}></Route>
+      </Switch>
     </div>
-        );
-    }
+  )
 }
 
 export default Routes;
