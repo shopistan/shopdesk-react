@@ -26,6 +26,16 @@
       max-width: 40rem;
     }
   }
+
+  .table {
+    margin-top: 30px;
+
+    .action-btns {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+    }
+  }
 }
 
 // Form

@@ -3,6 +3,7 @@ import "./style.scss";
 
 import { Button, Select, Input } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
+import EditableTable from "../../organism/table";
 
 const Categories = () => {
   const { Option } = Select;
@@ -51,7 +52,9 @@ const Categories = () => {
         </div>
 
         {/* Table */}
-        <div className='table'></div>
+        <div className='table'>
+          <EditableTable />
+        </div>
         {/* Table */}
       </div>
     </div>
