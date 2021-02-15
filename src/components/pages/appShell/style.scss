@@ -11,6 +11,7 @@
 }
 
 .header {
+  display: flex;
   background-color: aqua !important;
 
   &__menu-btn {
@@ -28,4 +29,49 @@
       padding: 0;
     }
   }
+}
+
+.page {
+  margin: 24px 16px;
+  padding: 24px;
+
+  &__title {
+    font-size: 30px;
+  }
+
+  &__form {
+    max-width: 900px;
+    margin: 0 auto;
+
+    &--small {
+      max-width: 400px;
+    }
+  }
+}
+
+.form {
+  &__row {
+    display: flex;
+  }
+
+  &__col {
+    flex: 1;
+
+    &--button {
+      display: flex;
+      align-items: flex-end;
+
+      button {
+        width: 100%;
+      }
+    }
+
+    &:not(:last-child) {
+      margin-right: 20px;
+    }
+  }
+}
+
+.w-100 {
+  width: 100%;
 }

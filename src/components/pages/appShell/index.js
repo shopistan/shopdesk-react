@@ -41,25 +41,29 @@ const AppShell = (props) => {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["1"]}
+          defaultSelectedKeys={["dashboard"]}
           onClick={(e) => {
-            if (e.key === "1") {
+            if (e.key === "dashboard") {
               history.push("/dashboard");
-            } else if (e.key === "2") {
+            } else if (e.key === "categories") {
               history.push("/categories");
-            }
+            } else if (e.key === "signup") {
+              history.push("/signup");
+            } else if (e.key === "signin") {
+              history.push("/signin");
+            } 
           }}
         >
-          <Menu.Item key="1" icon={<DashboardOutlined />}>
+          <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
             Dashboard
           </Menu.Item>
-          <Menu.Item key="2" icon={<TagsOutlined />}>
+          <Menu.Item key="categories" icon={<TagsOutlined />}>
             Categories
           </Menu.Item>
-          <Menu.Item key="3" icon={<SendOutlined />}>
+          <Menu.Item key="signup" icon={<SendOutlined />}>
             Suppliers
           </Menu.Item>
-          <Menu.Item key="4" icon={<BankOutlined />}>
+          <Menu.Item key="signin" icon={<BankOutlined />}>
             Taxes
           </Menu.Item>
           <Menu.Item key="5" icon={<ShopOutlined />}>
@@ -121,11 +125,6 @@ const AppShell = (props) => {
         </Header>
         <Content
           className="site-layout-background"
-          style={{
-            margin: "24px 16px",
-            padding: 24,
-            minHeight: 280,
-          }}
         >
           {props.children}
         </Content>
