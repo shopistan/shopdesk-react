@@ -1,8 +1,7 @@
 import React from "react";
 import Routes from "./Routes";
 import { Layout } from "antd";
-import "./App.css";
-// import "./styles/index.scss";
+import "./styles/index.scss";
 
 function App() {
   return (
