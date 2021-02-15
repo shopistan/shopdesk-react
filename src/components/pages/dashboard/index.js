@@ -8,7 +8,7 @@ function onChange(date, dateString) {
 
 const Dashboard = () => {
   return (
-    <div>
+    <div className='page dashboard'>
       <h2>Dashboard</h2>
       <DatePicker onChange={onChange} />
     </div>
