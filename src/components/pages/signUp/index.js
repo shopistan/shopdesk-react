@@ -1,6 +1,8 @@
-import React from "react";
+import React from 'react';
+import { signUp } from '../../../utils/api/auth-api-utils';
+import { saveDataIntoLocalStorage } from '../../../utils/local-storage/local-store-utils';
 
-import { Form, Input, Button, Checkbox } from "antd";
+import { Form, Input, Button, Checkbox } from 'antd';
 
 // const layout = {
 //   labelCol: {
@@ -18,12 +20,39 @@ import { Form, Input, Button, Checkbox } from "antd";
 // };
 
 const SignUp = () => {
-  const onFinish = (values) => {
-    console.log("Success:", values);
+  const onFinish = async (values) => {
+    //The values that will be in form data:
+    // {
+    //   businessAddress: 'a',
+    //   businessName: 'a',
+    //   confirmPassword: 'a',
+    //   email: 'a',
+    //   fullName: 'a',
+    //   password: 'a',
+    //   phoneNumber: 'a'
+    // };
+    const signUpResponse = await signUp(
+      values.fullName,
+      values.email,
+      values.password,
+      values.confirmPassword,
+      values.phone,
+      values.businessName,
+      values.businessPassword
+    );
+
+    if (signUpResponse.hasError) {
+      const errorMessage = signUpResponse.errorMessage;
+    } else {
+      const signedUpUserDetails = signUpResponse.data;
+      saveDataIntoLocalStorage();
+    }
+
+    console.log('Success:', values);
   };
 
   const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+    console.log('Failed:', errorInfo);
   };
 
   return (
@@ -38,7 +67,7 @@ const SignUp = () => {
             name='basic'
             layout='vertical'
             initialValues={{
-              remember: true,
+              remember: true
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
@@ -46,13 +75,13 @@ const SignUp = () => {
             <div className='form__row'>
               <div className='form__col'>
                 <Form.Item
-                  label='Username'
-                  name='username'
+                  label='Full name'
+                  name='fullName'
                   rules={[
                     {
                       required: true,
-                      message: "Please input your username!",
-                    },
+                      message: 'Please input your username!'
+                    }
                   ]}
                 >
                   <Input />
@@ -62,12 +91,12 @@ const SignUp = () => {
               <div className='form__col'>
                 <Form.Item
                   label='Email'
-                  name='Email'
+                  name='email'
                   rules={[
                     {
                       required: true,
-                      message: "Invalid email!",
-                    },
+                      message: 'Invalid email!'
+                    }
                   ]}
                 >
                   <Input />
@@ -83,8 +112,8 @@ const SignUp = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Please input your password!",
-                    },
+                      message: 'Please input your password!'
+                    }
                   ]}
                 >
                   <Input.Password />
@@ -94,12 +123,12 @@ const SignUp = () => {
               <div className='form__col'>
                 <Form.Item
                   label='Re-type Password'
-                  name='password'
+                  name='confirmPassword'
                   rules={[
                     {
                       required: true,
-                      message: "does not match!",
-                    },
+                      message: 'does not match!'
+                    }
                   ]}
                 >
                   <Input.Password />
@@ -111,12 +140,12 @@ const SignUp = () => {
               <div className='form__col'>
                 <Form.Item
                   label='Phone Number'
-                  name='Phone Number'
+                  name='phoneNumber'
                   rules={[
                     {
                       required: true,
-                      message: "Please input your phone number!",
-                    },
+                      message: 'Please input your phone number!'
+                    }
                   ]}
                 >
                   <Input />
@@ -126,12 +155,12 @@ const SignUp = () => {
               <div className='form__col'>
                 <Form.Item
                   label='Business Name'
-                  name='Business Name'
+                  name='businessName'
                   rules={[
                     {
                       required: true,
-                      message: "please enter valid business name!",
-                    },
+                      message: 'please enter valid business name!'
+                    }
                   ]}
                 >
                   <Input />
@@ -143,12 +172,12 @@ const SignUp = () => {
               <div className='form__col'>
                 <Form.Item
                   label='Business Address'
-                  name='Business Address'
+                  name='businessAddress'
                   rules={[
                     {
                       required: true,
-                      message: "Please input your business address",
-                    },
+                      message: 'Please input your business address'
+                    }
                   ]}
                 >
                   <Input />

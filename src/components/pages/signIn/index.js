@@ -1,14 +1,27 @@
-import React from "react";
+import React from 'react';
 
-import { Form, Input, Button, Checkbox } from "antd";
+import { Form, Input, Button, Checkbox } from 'antd';
+import { login } from '../../../utils/api/auth-api-utils';
+import { saveDataIntoLocalStorage } from '../../../utils/local-storage/local-store-utils';
 
 const SignIn = () => {
-  const onFinish = (values) => {
-    console.log("Success:", values);
+  const onFinish = async (values) => {
+    //The values that will be in form data:
+    //{ username: 'a', password: 'a', remember: true };
+
+    //todo: show loader here
+    const loginResponse = await login(values.username, values.password);
+    if (loginResponse.hasError) {
+      const errorMessage = loginResponse.errorMessage;
+    } else {
+      const loggedInUserDetails = loginResponse.data;
+      saveDataIntoLocalStorage('user',loggedInUserDetails);
+    }
+    console.log('Success:', loginResponse);
   };
 
   const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+    console.log('Failed:', errorInfo);
   };
 
   return (
@@ -23,7 +36,7 @@ const SignIn = () => {
             name='basic'
             layout='vertical'
             initialValues={{
-              remember: true,
+              remember: true
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
@@ -34,8 +47,8 @@ const SignIn = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please input your username!",
-                },
+                  message: 'Please input your username!'
+                }
               ]}
             >
               <Input />
@@ -47,8 +60,8 @@ const SignIn = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please input your password!",
-                },
+                  message: 'Please input your password!'
+                }
               ]}
             >
               <Input.Password />
