@@ -183,6 +183,7 @@ const EditableTable = () => {
         dataSource={data}
         columns={mergedColumns}
         rowClassName='editable-row'
+        className='table-frame'
         pagination={{
           onChange: cancel,
         }}

@@ -25,8 +25,8 @@ const Categories = () => {
         </Button>
       </div>
       <div className='page__content'>
-        <div className='row'>
-          <div>
+        <div className='action-row'>
+          <div className='action-row__element'>
             Show
             <Select
               defaultValue='10'
@@ -40,7 +40,7 @@ const Categories = () => {
             entries
           </div>
 
-          <div>
+          <div className='action-row__element'>
             <Search
               placeholder='search category'
               allowClear
