@@ -7,6 +7,7 @@ import Dashboard from "./components/pages/dashboard";
 import Categories from "./components/pages/categories";
 import SignUp from "./components/pages/signUp";
 import SignIn from "./components/pages/signIn";
+import Outlet from "./components/pages/outlet";
 
 const renderWithLayout = (Component, props) => (
   <AppShell {...props}>
@@ -37,6 +38,11 @@ const Routes = () => {
           exact
           path='/signin'
           render={() => renderWithLayout(SignIn)}
+        ></Route>
+        <Route
+          exact
+          path='/outlet'
+          render={() => renderWithLayout(Outlet)}
         ></Route>
       </Switch>
     </div>

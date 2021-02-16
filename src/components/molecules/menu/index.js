@@ -36,6 +36,8 @@ const SideMenu = () => {
           history.push("/signup");
         } else if (e.key === "signin") {
           history.push("/signin");
+        } else if (e.key === "outlet") {
+          history.push("/outlet");
         }
       }}
     >
@@ -90,6 +92,9 @@ const SideMenu = () => {
       </Menu.Item>
       <Menu.Item key='signin' icon={<BankOutlined />}>
         Sign In
+      </Menu.Item>
+      <Menu.Item key='outlet' icon={<BankOutlined />}>
+        Outlet
       </Menu.Item>
     </Menu>
   );
