@@ -12,10 +12,13 @@
 
 .header {
   display: flex;
-  background-color: aqua !important;
 
   &__menu-btn {
     width: 5%;
+
+    svg {
+      fill: white;
+    }
   }
 
   &__content {
@@ -25,53 +28,8 @@
     width: 90%;
 
     h2 {
-      margin: 0;
-      padding: 0;
+      font-size: 2rem;
+      color: white;
     }
   }
-}
-
-.page {
-  margin: 24px 16px;
-  padding: 24px;
-
-  &__title {
-    font-size: 30px;
-  }
-
-  &__form {
-    max-width: 900px;
-    margin: 0 auto;
-
-    &--small {
-      max-width: 400px;
-    }
-  }
-}
-
-.form {
-  &__row {
-    display: flex;
-  }
-
-  &__col {
-    flex: 1;
-
-    &--button {
-      display: flex;
-      align-items: flex-end;
-
-      button {
-        width: 100%;
-      }
-    }
-
-    &:not(:last-child) {
-      margin-right: 20px;
-    }
-  }
-}
-
-.w-100 {
-  width: 100%;
 }

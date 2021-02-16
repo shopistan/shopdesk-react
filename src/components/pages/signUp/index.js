@@ -156,7 +156,7 @@ const SignUp = () => {
               </div>
 
               <div className='form__col form__col--button'>
-                <Form.Item className='w-100'>
+                <Form.Item className='u-width-100'>
                   <Button type='primary' htmlType='submit'>
                     Submit
                   </Button>

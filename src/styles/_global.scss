@@ -1,0 +1,63 @@
+// Page
+.page {
+  background-color: $color-white;
+  border-radius: 10px;
+  margin: 2.4rem 1.6rem;
+  padding: 2.4rem;
+
+  &__header {
+    padding: 0 0 3rem 0;
+    border-bottom: 1px solid $color-grey-light-1;
+  }
+
+  &__title {
+    font-size: 3rem;
+  }
+
+  &__content {
+    padding: 3rem 0;
+  }
+
+  &__form {
+    max-width: 90rem;
+    margin: 0 auto;
+
+    &--small {
+      max-width: 40rem;
+    }
+  }
+
+  .table {
+    margin-top: 30px;
+
+    .action-btns {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+    }
+  }
+}
+
+// Form
+.form {
+  &__row {
+    display: flex;
+  }
+
+  &__col {
+    flex: 1;
+
+    &--button {
+      display: flex;
+      align-items: flex-end;
+
+      button {
+        width: 100%;
+      }
+    }
+
+    &:not(:last-child) {
+      margin-right: 2rem;
+    }
+  }
+}
