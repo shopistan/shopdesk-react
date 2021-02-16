@@ -15,7 +15,7 @@ const SignIn = () => {
       const errorMessage = loginResponse.errorMessage;
     } else {
       const loggedInUserDetails = loginResponse.data;
-      saveDataIntoLocalStorage();
+      saveDataIntoLocalStorage('user',loggedInUserDetails);
     }
     console.log('Success:', loginResponse);
   };
