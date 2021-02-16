@@ -1,0 +1,23 @@
+import React from "react";
+
+import { DatePicker } from "antd";
+
+function onChange(date, dateString) {
+  console.log(date, dateString);
+}
+
+const Page = () => {
+  return (
+    <div className='page dashboard'>
+      <div className='page__header'>
+        <h2>Dashboard</h2>
+      </div>
+
+      <div className='page__content'>
+        <DatePicker onChange={onChange} />
+      </div>
+    </div>
+  );
+};
+
+export default Page;
