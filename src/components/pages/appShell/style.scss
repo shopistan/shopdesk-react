@@ -1,35 +1,90 @@
+@import "../../../styles/variables";
+@import "../../../styles/mixins";
+
+// Logo
 .logo {
   height: 64px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+
+  @extend %flex-center;
 
   h2 {
-    color: #fff;
+    color: $color-white;
     margin: 0;
   }
 }
 
+// Sider
+.sider {
+  @include respond(mobile) {
+    display: none;
+  }
+}
+
+.site-layout {
+  overflow: hidden;
+}
+
+.content-layout {
+  width: 100%;
+  transition: all 0.3s;
+}
+
+// Header
 .header {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.6rem !important;
+  height: auto !important;
+  line-height: initial !important;
+
+  @include respond(mobile) {
+    padding: 1.6rem !important;
+  }
 
   &__menu-btn {
     width: 5%;
 
+    @include respond(mobile) {
+      display: none;
+    }
+
     svg {
-      fill: white;
+      fill: $color-white;
+    }
+  }
+
+  &__mob-menu-btn {
+    display: none;
+    margin-right: 2rem;
+
+    @include respond(mobile) {
+      display: block;
     }
   }
 
   &__content {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     color: #fff;
     width: 90%;
 
     h2 {
       font-size: 2rem;
       color: white;
+    }
+  }
+
+  .user {
+    @extend %flex-center;
+
+    &__avatar {
+      margin-left: 10px;
+
+      @include respond(mobile) {
+        display: none;
+      }
     }
   }
 }

@@ -2,8 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./style.scss";
 
-import { DatePicker } from "antd";
-
 const Outlet = () => {
   return (
     <div className='page outlet'>

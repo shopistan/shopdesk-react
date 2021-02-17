@@ -5,6 +5,11 @@ import { Route, Switch } from "react-router-dom";
 import AppShell from "./components/pages/appShell";
 import Dashboard from "./components/pages/dashboard";
 import Categories from "./components/pages/categories";
+import CategoryAdd from "./components/pages/categories/categoryAdd";
+import Suppliers from "./components/pages/suppliers";
+import SupplierAdd from "./components/pages/suppliers/supplierAdd";
+import Taxes from "./components/pages/taxes";
+import TaxAdd from "./components/pages/taxes/taxAdd";
 import SignUp from "./components/pages/signUp";
 import SignIn from "./components/pages/signIn";
 import Outlet from "./components/pages/outlet";
@@ -31,6 +36,31 @@ const Routes = () => {
           exact
           path='/categories'
           render={() => renderWithLayout(Categories)}
+        ></Route>
+        <Route
+          exact
+          path='/categories/add'
+          render={() => renderWithLayout(CategoryAdd)}
+        ></Route>
+        <Route
+          exact
+          path='/suppliers'
+          render={() => renderWithLayout(Suppliers)}
+        ></Route>
+        <Route
+          exact
+          path='/suppliers/add'
+          render={() => renderWithLayout(SupplierAdd)}
+        ></Route>
+        <Route
+          exact
+          path='/taxes'
+          render={() => renderWithLayout(Taxes)}
+        ></Route>
+        <Route
+          exact
+          path='/taxes/add'
+          render={() => renderWithLayout(TaxAdd)}
         ></Route>
         <Route
           exact

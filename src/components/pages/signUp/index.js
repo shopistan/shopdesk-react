@@ -1,23 +1,8 @@
-import React from 'react';
-import { signUp } from '../../../utils/api/auth-api-utils';
-import { saveDataIntoLocalStorage } from '../../../utils/local-storage/local-store-utils';
+import React from "react";
+import { signUp } from "../../../utils/api/auth-api-utils";
+import { saveDataIntoLocalStorage } from "../../../utils/local-storage/local-store-utils";
 
-import { Form, Input, Button, Checkbox } from 'antd';
-
-// const layout = {
-//   labelCol: {
-//     span: 8,
-//   },
-//   wrapperCol: {
-//     span: 16,
-//   },
-// };
-// const tailLayout = {
-//   wrapperCol: {
-//     offset: 8,
-//     span: 16,
-//   },
-// };
+import { Form, Input, Button } from "antd";
 
 const SignUp = () => {
   const onFinish = async (values) => {
@@ -48,11 +33,11 @@ const SignUp = () => {
       saveDataIntoLocalStorage();
     }
 
-    console.log('Success:', values);
+    console.log("Success:", values);
   };
 
   const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+    console.log("Failed:", errorInfo);
   };
 
   return (
@@ -67,7 +52,7 @@ const SignUp = () => {
             name='basic'
             layout='vertical'
             initialValues={{
-              remember: true
+              remember: true,
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
@@ -80,8 +65,8 @@ const SignUp = () => {
                   rules={[
                     {
                       required: true,
-                      message: 'Please input your username!'
-                    }
+                      message: "Please input your username!",
+                    },
                   ]}
                 >
                   <Input />
@@ -95,8 +80,8 @@ const SignUp = () => {
                   rules={[
                     {
                       required: true,
-                      message: 'Invalid email!'
-                    }
+                      message: "Invalid email!",
+                    },
                   ]}
                 >
                   <Input />
@@ -112,8 +97,8 @@ const SignUp = () => {
                   rules={[
                     {
                       required: true,
-                      message: 'Please input your password!'
-                    }
+                      message: "Please input your password!",
+                    },
                   ]}
                 >
                   <Input.Password />
@@ -127,8 +112,8 @@ const SignUp = () => {
                   rules={[
                     {
                       required: true,
-                      message: 'does not match!'
-                    }
+                      message: "does not match!",
+                    },
                   ]}
                 >
                   <Input.Password />
@@ -144,8 +129,8 @@ const SignUp = () => {
                   rules={[
                     {
                       required: true,
-                      message: 'Please input your phone number!'
-                    }
+                      message: "Please input your phone number!",
+                    },
                   ]}
                 >
                   <Input />
@@ -159,8 +144,8 @@ const SignUp = () => {
                   rules={[
                     {
                       required: true,
-                      message: 'please enter valid business name!'
-                    }
+                      message: "please enter valid business name!",
+                    },
                   ]}
                 >
                   <Input />
@@ -176,8 +161,8 @@ const SignUp = () => {
                   rules={[
                     {
                       required: true,
-                      message: 'Please input your business address'
-                    }
+                      message: "Please input your business address",
+                    },
                   ]}
                 >
                   <Input />

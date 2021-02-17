@@ -105,6 +105,7 @@ const EditableTable = (props) => {
         dataSource={data}
         columns={mergedColumns}
         rowClassName='editable-row'
+        className='table-frame'
         pagination={{
           total: data.length,
           showTotal: (total, range) => showTotalItemsBar(total, range),

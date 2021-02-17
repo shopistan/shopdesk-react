@@ -1,13 +1,15 @@
 // Page
 .page {
   background-color: $color-white;
-  border-radius: 10px;
+  border-radius: 1rem;
   margin: 2.4rem 1.6rem;
   padding: 2.4rem;
 
   &__header {
     padding: 0 0 3rem 0;
     border-bottom: 1px solid $color-grey-light-1;
+    display: flex;
+    justify-content: space-between;
   }
 
   &__title {
@@ -27,21 +29,64 @@
     }
   }
 
+  .action-row {
+    display: flex;
+    justify-content: space-between;
+
+    @include respond(mobile) {
+      flex-direction: column-reverse;
+    }
+
+    &__element {
+      @include respond(mobile) {
+        margin-bottom: 2rem;
+      }
+    }
+  }
+
   .table {
-    margin-top: 30px;
+    margin-top: 3rem;
+    overflow: auto;
 
     .action-btns {
       width: 100%;
       display: flex;
       justify-content: space-around;
     }
+
+    .table-frame {
+      min-width: 80rem;
+    }
   }
+}
+
+// Mobile Menu
+.mobile__menu {
+  min-width: 25rem;
+  position: fixed;
+  left: -25rem;
+  z-index: 1;
+  transition: all 0.3s;
+}
+
+.mob_menu_on {
+  height: 100%;
+  left: 0;
+  overflow: scroll;
+}
+
+.mobile_menu_on_body {
+  transform: translateX(25rem);
 }
 
 // Form
 .form {
   &__row {
     display: flex;
+
+    @include respond(mobile) {
+      flex-direction: column;
+    }
   }
 
   &__col {
@@ -58,6 +103,10 @@
 
     &:not(:last-child) {
       margin-right: 2rem;
+
+      @include respond(mobile) {
+        margin: 0;
+      }
     }
   }
 }
