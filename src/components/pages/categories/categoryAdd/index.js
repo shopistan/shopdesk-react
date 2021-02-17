@@ -13,7 +13,7 @@ const CategoryAdd = () => {
   return (
     <div className='page dashboard'>
       <div className='page__header'>
-        <h2>New Category</h2>
+        <h1>New Category</h1>
       </div>
 
       <div className='page__content'>

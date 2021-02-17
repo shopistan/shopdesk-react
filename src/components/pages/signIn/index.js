@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import { Form, Input, Button, Checkbox } from 'antd';
-import { login } from '../../../utils/api/auth-api-utils';
-import { saveDataIntoLocalStorage } from '../../../utils/local-storage/local-store-utils';
+import { Form, Input, Button, Checkbox } from "antd";
+import { login } from "../../../utils/api/auth-api-utils";
+import { saveDataIntoLocalStorage } from "../../../utils/local-storage/local-store-utils";
 
 const SignIn = () => {
   const onFinish = async (values) => {
@@ -15,19 +15,19 @@ const SignIn = () => {
       const errorMessage = loginResponse.errorMessage;
     } else {
       const loggedInUserDetails = loginResponse.data;
-      saveDataIntoLocalStorage('user',loggedInUserDetails);
+      saveDataIntoLocalStorage("user", loggedInUserDetails);
     }
-    console.log('Success:', loginResponse);
+    console.log("Success:", loginResponse);
   };
 
   const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+    console.log("Failed:", errorInfo);
   };
 
   return (
     <div className='page signUp'>
       <div className='page__header'>
-        <h1 className='page__title'>Sign In</h1>
+        <h1>Sign In</h1>
       </div>
 
       <div className='page__content'>
@@ -36,7 +36,7 @@ const SignIn = () => {
             name='basic'
             layout='vertical'
             initialValues={{
-              remember: true
+              remember: true,
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
@@ -47,8 +47,8 @@ const SignIn = () => {
               rules={[
                 {
                   required: true,
-                  message: 'Please input your username!'
-                }
+                  message: "Please input your username!",
+                },
               ]}
             >
               <Input />
@@ -60,8 +60,8 @@ const SignIn = () => {
               rules={[
                 {
                   required: true,
-                  message: 'Please input your password!'
-                }
+                  message: "Please input your password!",
+                },
               ]}
             >
               <Input.Password />

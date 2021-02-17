@@ -6,7 +6,7 @@ const Outlet = () => {
   return (
     <div className='page outlet'>
       <div className='page__header'>
-        <h2>Select an Outlet</h2>
+        <h1>Select an Outlet</h1>
       </div>
 
       <div className='page__content'>

@@ -2,15 +2,14 @@ import React from "react";
 
 import { Button, Select, Input } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
+
 import EditableTable from "../../organism/table";
 import { useHistory } from "react-router-dom";
 
-const Suppliers = () => {
+const Products = () => {
   const { Option } = Select;
-
-  const history = useHistory();
-
   const { Search } = Input;
+  const history = useHistory();
 
   const onSearch = (value) => console.log(value);
 
@@ -21,16 +20,19 @@ const Suppliers = () => {
   return (
     <div className='page categories'>
       <div className='page__header'>
-        <h1>Suppliers</h1>
-        <Button
-          type='primary'
-          icon={<PlusCircleOutlined />}
-          onClick={() => {
-            history.push("/suppliers/add");
-          }}
-        >
-          Add New
-        </Button>
+        <h1>Products</h1>
+
+        <div className='page__header__buttons'>
+          <Button
+            type='primary'
+            icon={<PlusCircleOutlined />}
+            onClick={() => {
+              history.push("/products/add");
+            }}
+          >
+            Add New
+          </Button>
+        </div>
       </div>
       <div className='page__content'>
         <div className='action-row'>
@@ -50,7 +52,7 @@ const Suppliers = () => {
 
           <div className='action-row__element'>
             <Search
-              placeholder='search category'
+              placeholder='search product'
               allowClear
               enterButton='Search'
               size='large'
@@ -69,4 +71,4 @@ const Suppliers = () => {
   );
 };
 
-export default Suppliers;
+export default Products;

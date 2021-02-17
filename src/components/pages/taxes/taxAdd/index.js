@@ -13,7 +13,7 @@ const TaxAdd = () => {
   return (
     <div className='page dashboard'>
       <div className='page__header'>
-        <h2>New Tax</h2>
+        <h1>New Tax</h1>
       </div>
 
       <div className='page__content'>

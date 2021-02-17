@@ -10,6 +10,8 @@ import Suppliers from "./components/pages/suppliers";
 import SupplierAdd from "./components/pages/suppliers/supplierAdd";
 import Taxes from "./components/pages/taxes";
 import TaxAdd from "./components/pages/taxes/taxAdd";
+import Products from "./components/pages/products";
+import ProductAdd from "./components/pages/products/productAdd";
 import SignUp from "./components/pages/signUp";
 import SignIn from "./components/pages/signIn";
 import Outlet from "./components/pages/outlet";
@@ -25,7 +27,6 @@ const Routes = () => {
     <div>
       <Switch>
         <Route
-          exact
           path='/dashboard'
           render={() => renderWithLayout(Dashboard)}
         ></Route>
@@ -58,6 +59,16 @@ const Routes = () => {
           exact
           path='/taxes/add'
           render={() => renderWithLayout(TaxAdd)}
+        ></Route>
+        <Route
+          exact
+          path='/products'
+          render={() => renderWithLayout(Products)}
+        ></Route>
+        <Route
+          exact
+          path='/products/add'
+          render={() => renderWithLayout(ProductAdd)}
         ></Route>
         <Route
           exact

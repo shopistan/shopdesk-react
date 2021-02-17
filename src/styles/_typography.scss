@@ -5,3 +5,12 @@ body {
   font-size: $default-font-size;
   color: $color-black;
 }
+
+h1 {
+  font-size: $font-size-big;
+  font-weight: $semi-bold;
+}
+
+h2 {
+  font-size: $font-size-medium;
+}

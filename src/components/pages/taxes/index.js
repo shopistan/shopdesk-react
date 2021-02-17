@@ -3,10 +3,11 @@ import React from "react";
 import { Button, Select, Input } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import EditableTable from "../../organism/table";
+import { useHistory } from "react-router-dom";
 
 const Taxes = () => {
   const { Option } = Select;
-
+  const history = useHistory();
   const { Search } = Input;
 
   const onSearch = (value) => console.log(value);
@@ -18,8 +19,14 @@ const Taxes = () => {
   return (
     <div className='page categories'>
       <div className='page__header'>
-        <h2>Taxes</h2>
-        <Button type='primary' icon={<PlusCircleOutlined />}>
+        <h1>Taxes</h1>
+        <Button
+          type='primary'
+          icon={<PlusCircleOutlined />}
+          onClick={() => {
+            history.push("/taxes/add");
+          }}
+        >
           Add New
         </Button>
       </div>
