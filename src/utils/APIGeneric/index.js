@@ -31,7 +31,7 @@ const config = {
   baseURL: API_ENDPOINT,  
   headers: {
     'Content-Type':  contentType.json,
-    Authorization: `${readFromLocalStorage.auth_token}`,
+    Authorization: readFromLocalStorage &&`${readFromLocalStorage.auth_token}`,
      },
     }
     

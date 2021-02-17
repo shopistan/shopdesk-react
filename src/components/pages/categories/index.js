@@ -12,6 +12,7 @@ const Categories = () => {
   const { Search } = Input;
 
   const onSearch = (value) => console.log(value);
+  
   const history = useHistory();
 
   function handleChange(value) {

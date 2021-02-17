@@ -96,7 +96,7 @@ const EditableTable = (props) => {
   });
 
 
-  
+
   return (
     <Form form={form} component={false}>
 
@@ -107,7 +107,7 @@ const EditableTable = (props) => {
         rowClassName='editable-row'
         className='table-frame'
         pagination={{
-          total: data.length,
+          total: data && data.length,
           showTotal: (total, range) => showTotalItemsBar(total, range),
           defaultPageSize: 10,
           pageSize: parseInt(props.pageLimit),
