@@ -12,6 +12,9 @@ import Taxes from "./components/pages/taxes";
 import TaxAdd from "./components/pages/taxes/taxAdd";
 import Products from "./components/pages/products";
 import ProductAdd from "./components/pages/products/productAdd";
+import ProductDiscount from "./components/pages/products/productDiscount";
+import ProductLookup from "./components/pages/products/productLookup";
+import ProductUpload from "./components/pages/products/productUpload";
 import SignUp from "./components/pages/signUp";
 import SignIn from "./components/pages/signIn";
 import Outlet from "./components/pages/outlet";
@@ -67,8 +70,18 @@ const Routes = () => {
         ></Route>
         <Route
           exact
-          path='/products/add'
-          render={() => renderWithLayout(ProductAdd)}
+          path='/products/upload'
+          render={() => renderWithLayout(ProductUpload)}
+        ></Route>
+        <Route
+          exact
+          path='/products/lookup'
+          render={() => renderWithLayout(ProductLookup)}
+        ></Route>
+        <Route
+          exact
+          path='/products/discount'
+          render={() => renderWithLayout(ProductDiscount)}
         ></Route>
         <Route
           exact
