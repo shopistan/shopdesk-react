@@ -8,6 +8,8 @@
   &__header {
     padding: 0 0 3rem 0;
     border-bottom: 1px solid $color-grey-light-1;
+    display: flex;
+    justify-content: space-between;
   }
 
   &__title {
@@ -81,6 +83,10 @@
 .form {
   &__row {
     display: flex;
+
+    @include respond(mobile) {
+      flex-direction: column;
+    }
   }
 
   &__col {
@@ -97,6 +103,10 @@
 
     &:not(:last-child) {
       margin-right: 2rem;
+
+      @include respond(mobile) {
+        margin: 0;
+      }
     }
   }
 }
