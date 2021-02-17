@@ -32,6 +32,8 @@ const SideMenu = () => {
           history.push("/dashboard");
         } else if (e.key === "categories") {
           history.push("/categories");
+        } else if (e.key === "suppliers") {
+          history.push("/suppliers");
         } else if (e.key === "signup") {
           history.push("/signup");
         } else if (e.key === "signin") {
@@ -47,7 +49,7 @@ const SideMenu = () => {
       <Menu.Item key='categories' icon={<TagsOutlined />}>
         Categories
       </Menu.Item>
-      <Menu.Item key='3' icon={<SendOutlined />}>
+      <Menu.Item key='suppliers' icon={<SendOutlined />}>
         Suppliers
       </Menu.Item>
       <Menu.Item key='4' icon={<BankOutlined />}>

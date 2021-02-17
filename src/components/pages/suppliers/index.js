@@ -4,7 +4,7 @@ import { Button, Select, Input } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import EditableTable from "../../organism/table";
 
-const Categories = () => {
+const Suppliers = () => {
   const { Option } = Select;
 
   const { Search } = Input;
@@ -18,7 +18,7 @@ const Categories = () => {
   return (
     <div className='page categories'>
       <div className='page__header'>
-        <h2>Categories</h2>
+        <h2>Suppliers</h2>
         <Button type='primary' icon={<PlusCircleOutlined />}>
           Add New
         </Button>
@@ -60,4 +60,4 @@ const Categories = () => {
   );
 };
 
-export default Categories;
+export default Suppliers;
