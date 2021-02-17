@@ -1,26 +1,37 @@
-import React from "react";
+import React, {useState} from "react";
 import "./style.scss";
 
 import { Button, Select, Input } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import EditableTable from "../../organism/table";
+import { useHistory } from 'react-router-dom';
 
 const Categories = () => {
+  const [paginationLimit, setPaginationLimit] = useState(10);
   const { Option } = Select;
 
   const { Search } = Input;
 
   const onSearch = (value) => console.log(value);
+  const history = useHistory();
 
   function handleChange(value) {
     console.log(`selected ${value}`);
+    setPaginationLimit(value);
   }
+
+  const handleAddCategory = () => {
+    history.push({
+      pathname: '/categories/add',
+    });
+  };
 
   return (
     <div className='page categories'>
       <div className='page__header'>
         <h2>Categories</h2>
-        <Button type='primary' icon={<PlusCircleOutlined />}>
+        <Button type='primary' icon={<PlusCircleOutlined />}
+          onClick={() => handleAddCategory()}>
           Add New
         </Button>
       </div>
@@ -33,7 +44,8 @@ const Categories = () => {
               style={{ width: 120, margin: "0 5px" }}
               onChange={handleChange}
             >
-              <Option value='25'>25</Option>
+              <Option value='10'>10</Option>
+              <Option value='20'>20</Option>
               <Option value='50'>50</Option>
               <Option value='100'>100</Option>
             </Select>
@@ -53,7 +65,7 @@ const Categories = () => {
 
         {/* Table */}
         <div className='table'>
-          <EditableTable />
+          <EditableTable pageLimit={paginationLimit} />
         </div>
         {/* Table */}
       </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { getDataFromLocalStorage } from '../../../utils/local-storage/local-store-utils';
 
 import { Menu } from "antd";
 import {
@@ -19,6 +20,7 @@ import {
 
 const SideMenu = () => {
   const history = useHistory();
+  const readFromLocalStorage = JSON.parse(getDataFromLocalStorage('user').data);
 
   const { SubMenu } = Menu;
 
@@ -41,6 +43,8 @@ const SideMenu = () => {
         }
       }}
     >
+      {readFromLocalStorage !== null &&
+      <React.Fragment>
       <Menu.Item key='dashboard' icon={<DashboardOutlined />}>
         Dashboard
       </Menu.Item>
@@ -87,15 +91,21 @@ const SideMenu = () => {
         <Menu.Item key='21'>Users</Menu.Item>
         <Menu.Item key='22'>Receipt Templates</Menu.Item>
       </SubMenu>
-      <Menu.Item key='signup' icon={<SendOutlined />}>
+      <Menu.Item key='outlet' icon={<BankOutlined />}>
+        Outlet
+      </Menu.Item>
+      </React.Fragment>
+      }
+
+      {readFromLocalStorage == null &&
+        <React.Fragment>
+        <Menu.Item key='signup' icon={<SendOutlined />}>
         Sign Up
       </Menu.Item>
       <Menu.Item key='signin' icon={<BankOutlined />}>
         Sign In
       </Menu.Item>
-      <Menu.Item key='outlet' icon={<BankOutlined />}>
-        Outlet
-      </Menu.Item>
+      </React.Fragment>}
     </Menu>
   );
 };

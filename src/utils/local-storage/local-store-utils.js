@@ -1,6 +1,7 @@
 export const saveDataIntoLocalStorage = (key, value) => {
   try {
-    window.localStorage.saveItem(key, JSON.stringify(value));
+    //window.localStorage.saveItem(key, JSON.stringify(value)); not working
+    localStorage.setItem(key, JSON.stringify(value));
   } catch (err) {
     console.log(
       'error while saving data with key',
