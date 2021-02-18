@@ -10,10 +10,16 @@
     border-bottom: 1px solid $color-grey-light-1;
     display: flex;
     justify-content: space-between;
-  }
 
-  &__title {
-    font-size: 3rem;
+    @include respond(mobile) {
+      flex-direction: column;
+    }
+
+    h1 {
+      @include respond(mobile) {
+        margin-bottom: 2.4rem;
+      }
+    }
   }
 
   &__content {
@@ -81,10 +87,19 @@
 
 // Form
 .form {
+  &__section {
+    padding: 3rem 0;
+    border-bottom: 1px solid $color-grey-light-1;
+  }
+
   &__row {
     display: flex;
 
     @include respond(mobile) {
+      flex-direction: column;
+    }
+
+    &--full-col {
       flex-direction: column;
     }
   }
@@ -107,6 +122,10 @@
       @include respond(mobile) {
         margin: 0;
       }
+    }
+
+    label {
+      font-weight: bold;
     }
   }
 }

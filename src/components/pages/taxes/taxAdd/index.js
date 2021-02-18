@@ -1,9 +1,11 @@
 import React from "react";
 import { Form, Input, Button, InputNumber } from "antd";
+import * as TaxApiUtil from '../../../../utils/api/tax-api-utils'
 
 const TaxAdd = () => {
-  const onFinish = (values) => {
-    console.log("Success:", values);
+  const onFinish = async (values) => {
+    const taxAddResponse = await TaxApiUtil.addTax(values.taxName,values.taxValue);
+    console.log('taxAddResponse:',taxAddResponse)
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -13,7 +15,7 @@ const TaxAdd = () => {
   return (
     <div className='page dashboard'>
       <div className='page__header'>
-        <h2>New Tax</h2>
+        <h1>New Tax</h1>
       </div>
 
       <div className='page__content'>
@@ -31,7 +33,7 @@ const TaxAdd = () => {
               <div className='form__col'>
                 <Form.Item
                   label='Tax Name'
-                  name='tax_name'
+                  name='taxName'
                   rules={[
                     {
                       required: true,
@@ -46,7 +48,7 @@ const TaxAdd = () => {
               <div className='form__col'>
                 <Form.Item
                   label='Tax Percentage'
-                  name='tax_percentage'
+                  name='taxPercentage'
                   rules={[
                     {
                       required: true,
@@ -55,7 +57,7 @@ const TaxAdd = () => {
                   ]}
                 >
                   <InputNumber
-                    defaultValue={100}
+                    initialValues={100}
                     min={0}
                     max={100}
                     formatter={(value) => `${value}%`}

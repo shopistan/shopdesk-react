@@ -11,6 +11,8 @@ const Categories = () => {
   const [data, setData] = useState([]);
   const { Option } = Select;
 
+  const history = useHistory();
+
   const { Search } = Input;
 
   const onSearch = async (e) => {
