@@ -23,7 +23,7 @@ const SignIn = () => {
       saveDataIntoLocalStorage("user", loggedInUserDetails);
       message.success('Login Succesfull ', 3);
       setTimeout(() => {
-        window.open('/dashboard', "_self");
+        window.open('/outlets', "_self");
       }, 2000);
     }
 

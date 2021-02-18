@@ -75,7 +75,7 @@ const Routes = () => {
           path='/signin'
           render={() => authRenderWithLayout(SignIn)}
         ></Route>
-        <PrivateRoute exact path='/outlet' component={Outlet} />
+        <PrivateRoute exact path='/outlets' component={Outlet} />
         <PrivateRoute exact path='/categories/add' component={CategoryAdd} /> 
         <PrivateRoute exact path='/categories/:id/edit' component={EditCategory} />
         <PrivateRoute exact path='/categories/:id/delete' component={DeleteCategory} />
