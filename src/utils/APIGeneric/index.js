@@ -12,8 +12,6 @@ const contentType = {
   multipart: 'multipart/form-data',
 };
 
-const readFromLocalStorage = JSON.parse(getDataFromLocalStorage('user').data);
-
 const errorResponseHandler = (error) => {
   if (error && error.status === 401) {
     console.log('401', error);
@@ -31,15 +29,14 @@ const config = {
   baseURL: API_ENDPOINT,  
   headers: {
     'Content-Type':  contentType.json,
-    Authorization: readFromLocalStorage &&`${readFromLocalStorage.auth_token}`,
-     },
-    }
-    
-const instance = axios.create(config);
-instance.interceptors.response.use(response => response, errorResponseHandler);
-
+    Authorization:  `${ JSON.parse(window.localStorage.getItem('user')) &&  JSON.parse(window.localStorage.getItem('user')).auth_token }`,
+  },
+}
 
   export const get = (url) => {
+    const instance = axios.create(config);
+    instance.interceptors.response.use(response => response, errorResponseHandler);
+
     return new Promise(async (resolve, reject) => {
       try {
         const res = await instance.get(url);
@@ -51,6 +48,10 @@ instance.interceptors.response.use(response => response, errorResponseHandler);
   }
 
   export const post = (url, body) => {
+
+    const instance = axios.create(config);
+    instance.interceptors.response.use(response => response, errorResponseHandler);
+
     return new Promise(async (resolve, reject) => {
       try {
         const res = await instance.post(url, body);
@@ -63,6 +64,10 @@ instance.interceptors.response.use(response => response, errorResponseHandler);
 
 
   export const onDelete = (url, id) => {
+
+    const instance = axios.create(config);
+    instance.interceptors.response.use(response => response, errorResponseHandler);
+
     return new Promise(async (resolve, reject) => {
       try {
         const res = await instance.delete(`${url}/${id}`);
@@ -74,6 +79,10 @@ instance.interceptors.response.use(response => response, errorResponseHandler);
   }
 
   export const put = (url, body) => {
+
+    const instance = axios.create(config);
+    instance.interceptors.response.use(response => response, errorResponseHandler);
+
     return new Promise(async (resolve, reject) => {
       try {
         const res = await instance.put(url, body);
@@ -85,6 +94,10 @@ instance.interceptors.response.use(response => response, errorResponseHandler);
   }
 
   export const patch = (url, body) => {
+
+    const instance = axios.create(config);
+    instance.interceptors.response.use(response => response, errorResponseHandler); 
+
     return new Promise(async (resolve, reject) => {
       try {
         const res = await instance.patch(url, body);

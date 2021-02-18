@@ -4,7 +4,6 @@ import { ENDPOINTS } from './config';
 
 
 export async function getCategories() {
-  // energy || instantaneous || demand
   try {
     return await post(ENDPOINTS.CATEGORIES, {});
   } catch (error) {
@@ -13,7 +12,6 @@ export async function getCategories() {
 }
 
 export async function addCategory(data) {
-  // energy || instantaneous || demand
   try {
     return await post(ENDPOINTS.CATEGORIES_ADD, data);
   } catch (error) {
@@ -22,7 +20,6 @@ export async function addCategory(data) {
 }
 
 export async function editCategory(data) {
-  // energy || instantaneous || demand
   try {
     return await post(ENDPOINTS.CATEGORIES_EDIT, data);
   } catch (error) {
@@ -31,7 +28,6 @@ export async function editCategory(data) {
 }
 
 export async function deleteCategory(data) {
-  // energy || instantaneous || demand
   try {
     return await post(ENDPOINTS.CATEGORIES_DELETE, data);
   } catch (error) {

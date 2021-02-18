@@ -21,9 +21,7 @@ const SignIn = () => {
     } else {
       const loggedInUserDetails = loginResponse.data;
       saveDataIntoLocalStorage('user',loggedInUserDetails);
-      history.push({
-        pathname: '/dashboard',
-      });
+      window.open("/dashboard", "_self");
     }
     console.log('Success:', loginResponse);
     
