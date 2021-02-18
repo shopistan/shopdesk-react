@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button } from 'antd';
 import { useHistory } from 'react-router-dom';
-import { editCategory } from "../../../utils/APIGeneric/DataRequests";
-
+import * as CategoriesApiUtil from '../../../utils/api/categories-api-utils';
 
 const EditCategory = () => {
     const history = useHistory();
@@ -13,17 +12,17 @@ const EditCategory = () => {
     }, []);
 
     const onFinish = async (values) => {
-            const res = await editCategory({"cat_id": history.location.data.category_id, "cat_name": values.categoryName});
-            if (res.fail) {
-              console.log('Cant edit Category -> ', res);
-            }
-            else {
-              console.log('res -> ', res);
-              history.push({
+        const categoryEditResponse = await CategoriesApiUtil.editCategory(history.location.data.category_id,  values.categoryName);
+        console.log('categoryEditResponse:', categoryEditResponse);
+        if (categoryEditResponse.hasError) {
+            console.log('Cant delete a Category -> ', categoryEditResponse.errorMessage);
+        }
+        else {
+            console.log('res -> ', categoryEditResponse);
+            history.push({
                 pathname: '/categories',
-              });
-
-            }
+            });
+        }
     };
 
     const onFinishFailed = (errorInfo) => {

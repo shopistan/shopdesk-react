@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Typography } from 'antd';
 import { useHistory } from 'react-router-dom';
-import { deleteCategory } from "../../../utils/APIGeneric/DataRequests";
+import * as CategoriesApiUtil from '../../../utils/api/categories-api-utils';
 
 const { Text } = Typography;
 
@@ -13,16 +13,17 @@ const DeleteCategory = () => {
     }, []);
 
     const handleConfirm = async () => {
-        const res = await deleteCategory({ "cat_id": history.location.data.category_id });
-        if (res.fail) {
-            console.log('Cant delete Category -> ', res);
+        const categoryDeleteResponse = await CategoriesApiUtil.deleteCategory(history.location.data.category_id);
+        console.log('categoryDeleteResponse:', categoryDeleteResponse);
+
+        if (categoryDeleteResponse.hasError) {
+            console.log('Cant delete a Category -> ', categoryDeleteResponse.errorMessage);
         }
         else {
-            console.log('res -> ', res);
+            console.log('res -> ', categoryDeleteResponse);
             history.push({
                 pathname: '/categories',
             });
-
         }
     };
 

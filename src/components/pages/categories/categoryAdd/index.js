@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Input, Button } from "antd";
 import { useHistory } from 'react-router-dom';
-import { addCategory } from "../../../../utils/APIGeneric/DataRequests";
+import * as CategoriesApiUtil from '../../../../utils/api/categories-api-utils';
 
 
 const CategoryAdd = () => {
@@ -9,17 +9,17 @@ const CategoryAdd = () => {
 
   const onFinish = async (values) => {
     console.log("Success:", values);
-
-    const res = await addCategory({ "name": values.category_name });
-        if (res.fail) {
-            console.log('Cant add new Category -> ', res);
-        }
-        else {
-            console.log('res -> ', res);
-            history.push({
-                pathname: '/categories',
-            });
-        }
+    const categoryAddResponse = await CategoriesApiUtil.addCategory(values.category_name);
+    console.log('categoryAddResponse:', categoryAddResponse);
+    if (categoryAddResponse.hasError) {
+      console.log('Cant add new Category -> ', categoryAddResponse.errorMessage);
+    }
+    else {
+      console.log('res -> ', categoryAddResponse);
+      history.push({
+        pathname: '/categories',
+      });
+    }
   };
 
   const onFinishFailed = (errorInfo) => {

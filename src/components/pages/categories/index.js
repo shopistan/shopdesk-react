@@ -4,7 +4,8 @@ import { Button, Select, Input } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import EditableTable from "../../organism/table";
 import { useHistory } from 'react-router-dom';
-import { getCategories } from "../../../utils/APIGeneric/DataRequests";
+import * as CategoriesApiUtil from '../../../utils/api/categories-api-utils';
+
 
 const Categories = () => {
   const [paginationLimit, setPaginationLimit] = useState(10);
@@ -19,8 +20,8 @@ const Categories = () => {
     const currValue = e.target.value;
     if(currValue === "") {
       const result = await fetchCategoriesData();
-      if (result.fail) {
-        console.log('Cant fetch -> ', result);
+      if (result.hasError) {
+        console.log('Cant fetch categories -> ', result.errorMessage);
       }
       else {
         console.log('res -> ', result);
@@ -39,22 +40,23 @@ const Categories = () => {
   }
 
   const fetchCategoriesData =  async ()  => {
-    const res = await getCategories();
-    return res;
+    const categoriesViewResponse = await CategoriesApiUtil.viewCategories({});
+    console.log('categoriesViewResponse:', categoriesViewResponse)
+    return categoriesViewResponse;
   }
 
   useEffect( async () => {
     const result = await fetchCategoriesData();
-    if (result.fail) {
-      console.log('Cant fetch -> ', result);
+    if (result.hasError) {
+      console.log('Cant fetch categories -> ', result.errorMessage);
     }
     else {
       console.log('res -> ', result);
       setData(result.categories);
     }
+
   }, []);
-  
-  const history = useHistory();
+
 
   function handleChange(value) {
     console.log(`selected ${value}`);

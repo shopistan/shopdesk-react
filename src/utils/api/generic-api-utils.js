@@ -7,7 +7,7 @@ export const getUserAuthToken = () => {
     const localDataResponse = getDataFromLocalStorage(
       Constants.USER_DETAILS_KEY
     );
-    return JSON.parse(localDataResponse.data).auth_token
+    return localDataResponse.data.auth_token;
   } catch (err) {
     console.log('json parse',err)
     return '';//returning empty token in case not found
@@ -22,6 +22,7 @@ export const http = async (
 ) => {
   try {
     const authToken = getUserAuthToken();
+    console.log(authToken);
     headers['Authorization'] = authToken;
 
     const axiosCallObject = {
