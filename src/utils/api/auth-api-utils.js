@@ -1,5 +1,5 @@
 import axios from 'axios';
-import UrlConstants from '../url-configs';
+import UrlConstants from '../constants/url-configs';
 
 export const login = async (userNameOrEmail, passsword) => {
   const loginFormData = new FormData();
