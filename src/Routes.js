@@ -70,6 +70,11 @@ const Routes = () => {
         ></Route>
         <Route
           exact
+          path='/products/add'
+          render={() => renderWithLayout(ProductAdd)}
+        ></Route>
+        <Route
+          exact
           path='/products/upload'
           render={() => renderWithLayout(ProductUpload)}
         ></Route>
