@@ -10,7 +10,7 @@ const Dashboard = () => {
   return (
     <div className='page dashboard'>
       <div className='page__header'>
-        <h2>Dashboard</h2>
+        <h1>Dashboard</h1>
       </div>
 
       <div className='page__content'>

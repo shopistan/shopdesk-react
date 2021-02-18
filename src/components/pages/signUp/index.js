@@ -43,7 +43,7 @@ const SignUp = () => {
   return (
     <div className='page signUp'>
       <div className='page__header'>
-        <h1 className='page__title'>Sign Up</h1>
+        <h1>Sign Up</h1>
       </div>
 
       <div className='page__content'>
