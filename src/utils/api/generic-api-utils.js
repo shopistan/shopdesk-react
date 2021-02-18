@@ -1,36 +1,61 @@
 import axios from 'axios';
+import { getDataFromLocalStorage } from '../local-storage/local-store-utils';
+import Constants from '../constants/constants';
+
+export const getUserAuthToken = () => {
+  try {
+    const localDataResponse = getDataFromLocalStorage(
+      Constants.USER_DETAILS_KEY
+    );
+    return JSON.parse(localDataResponse.data).auth_token
+  } catch (err) {
+    console.log('json parse',err)
+    return '';//returning empty token in case not found
+  }
+};
 
 export const http = async (
   apiUrl,
-  callType,//POST or GET
+  callType, //POST or GET
   data,
-  fallbackErrorMessage = 'Unable to fulfill the request'
+  headers = {}
 ) => {
   try {
+    const authToken = getUserAuthToken();
+    headers['Authorization'] = authToken;
+
     const axiosCallObject = {
       method: callType,
       url: apiUrl,
-      data: data
+      data: data,
+      headers
     };
 
     const axiosCallResponse = await axios(axiosCallObject);
 
-    if (axiosCallResponse && axiosCallResponse.status) {
+    if (
+      axiosCallResponse &&
+      axiosCallResponse.data &&
+      axiosCallResponse.data.status
+    ) {
       return {
         hasError: false,
-        ...axiosCallResponse
+        ...axiosCallResponse.data
       };
     }
+    console.log('axios call response: ', axiosCallResponse.data);
 
     return {
       hasError: true,
-      errorMessage: axiosCallResponse.message || fallbackErrorMessage
+      errorMessage:
+        (axiosCallResponse.data && axiosCallResponse.data.message) ||
+        'Unable to complete the request'
     };
   } catch (err) {
     console.log('error while calling api', err);
     return {
       hasError: true,
-      fallbackErrorMessage
+      errorMessage: 'Unable to complete the request'
     };
   }
 };

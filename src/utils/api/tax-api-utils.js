@@ -1,9 +1,9 @@
-import axios from 'axios';
+
 import UrlConstants from '../constants/url-configs';
 import GenericConstants from '../constants/constants';
-import ApiCallUtil from './generic-api-utils';
+import * as ApiCallUtil from './generic-api-utils';
 
-const addTax = async (taxName, taxValue) => {
+export const addTax = async (taxName, taxValue) => {
   const formDataPair = {
     name: taxName,
     value: taxValue
@@ -19,7 +19,7 @@ const addTax = async (taxName, taxValue) => {
   );
 };
 
-const deleteTax = async (taxId) => {
+export const deleteTax = async (taxId) => {
   const formDataPair = {
     tax_id: taxId
   };
@@ -34,7 +34,7 @@ const deleteTax = async (taxId) => {
   );
 };
 
-const editTax = async (taxId, newTaxName, newTaxValue) => {
+export const editTax = async (taxId, newTaxName, newTaxValue) => {
   const formDataPair = {
     tax_id: taxId,
     name: newTaxName,
