@@ -20,6 +20,12 @@
         margin-bottom: 2.4rem;
       }
     }
+
+    &__buttons {
+      button {
+        margin: 0 0.5rem;
+      }
+    }
   }
 
   &__content {
@@ -101,6 +107,17 @@
 
     &--full-col {
       flex-direction: column;
+    }
+
+    &--footer {
+      display: flex;
+      justify-content: flex-end;
+
+      button {
+        &:not(:last-child) {
+          margin-right: 1rem;
+        }
+      }
     }
   }
 

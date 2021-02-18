@@ -15,6 +15,8 @@ import ProductAdd from "./components/pages/products/productAdd";
 import ProductDiscount from "./components/pages/products/productDiscount";
 import ProductLookup from "./components/pages/products/productLookup";
 import ProductUpload from "./components/pages/products/productUpload";
+import Customers from "./components/pages/customers";
+import CustomerAdd from "./components/pages/customers/customerAdd";
 import SignUp from "./components/pages/signUp";
 import SignIn from "./components/pages/signIn";
 import Outlet from "./components/pages/outlet";
@@ -87,6 +89,16 @@ const Routes = () => {
           exact
           path='/products/discount'
           render={() => renderWithLayout(ProductDiscount)}
+        ></Route>
+        <Route
+          exact
+          path='/customers'
+          render={() => renderWithLayout(Customers)}
+        ></Route>
+        <Route
+          exact
+          path='/customers/add'
+          render={() => renderWithLayout(CustomerAdd)}
         ></Route>
         <Route
           exact
