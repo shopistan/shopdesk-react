@@ -1,15 +1,10 @@
 import React from "react";
 
-import { Form, Input, Button } from "antd";
+import { Input } from "antd";
 
 const ProductLookup = () => {
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
-  };
-
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
-  };
+  const { Search } = Input;
+  const onSearch = (value) => console.log(value);
 
   return (
     <div className='page dashboard'>
@@ -19,35 +14,15 @@ const ProductLookup = () => {
 
       <div className='page__content'>
         <div className='page__form'>
-          <Form
-            name='basic'
-            layout='vertical'
-            initialValues={{ remember: true }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-          >
-            <div className='form__row'>
-              <div className='form__col'>
-                <Form.Item
-                  label='Username'
-                  name='username'
-                  rules={[
-                    { required: true, message: "Please input your username!" },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-              </div>
-
-              <div className='form__col'>
-                <Form.Item>
-                  <Button type='primary' htmlType='submit'>
-                    Submit
-                  </Button>
-                </Form.Item>
-              </div>
-            </div>
-          </Form>
+          <h2>Select a Product</h2>
+          <Search
+            placeholder='Select a Product'
+            allowClear
+            enterButton='Fetch'
+            size='large'
+            loading
+            onSearch={onSearch}
+          />
         </div>
       </div>
     </div>

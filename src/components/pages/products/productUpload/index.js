@@ -35,11 +35,16 @@ const ProductUpload = () => {
                     <Button icon={<UploadOutlined />}>Click to upload</Button>
                   </Upload>
                 </Form.Item>
+                <span>Download template file from here.</span>
               </div>
 
               <div className='form__col'>
                 <Form.Item>
-                  <Button type='primary' htmlType='submit'>
+                  <Button
+                    type='primary'
+                    htmlType='submit'
+                    className='u-width-100'
+                  >
                     Upload
                   </Button>
                 </Form.Item>
