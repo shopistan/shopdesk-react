@@ -14,9 +14,13 @@ export const saveDataIntoLocalStorage = (key, value) => {
 };
 
 export const getDataFromLocalStorage = (key) => {
-  const dataFromLocalStorage = window.localStorage.getItem(key);
+  const dataFromLocalStorage = JSON.parse(window.localStorage.getItem(key));
   return {
     hasError: dataFromLocalStorage ? true : false,
     data: dataFromLocalStorage
   };
+};
+
+export const clearDataFromLocalStorage = () => {
+  localStorage.clear();
 };

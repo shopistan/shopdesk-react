@@ -15,6 +15,7 @@ import SignIn from "./components/pages/signIn";
 import Outlet from "./components/pages/outlet";
 import EditCategory from "./components/pages/categories/editCategory";
 import DeleteCategory from "./components/pages/categories/deleteCategory";
+import { getDataFromLocalStorage  } from "./utils/local-storage/local-store-utils";
 
 
 const Routes = () => {
@@ -26,7 +27,8 @@ const Routes = () => {
   );
   
   const authRenderWithLayout = (Component, props) => {
-    const readFromLocalStorage =  JSON.parse(window.localStorage.getItem('user'));    
+    var readFromLocalStorage =  getDataFromLocalStorage('user');
+    readFromLocalStorage =  readFromLocalStorage.data ? readFromLocalStorage.data : null;
     return <AppShell {...props}>
               {readFromLocalStorage == null
                 ?  <Component />
@@ -35,7 +37,8 @@ const Routes = () => {
   }
   
   const PrivateRoute = ({ component: Component, ...rest }) => {
-    const readFromLocalStorage =  JSON.parse(window.localStorage.getItem('user'));
+    var readFromLocalStorage =  getDataFromLocalStorage('user');
+    readFromLocalStorage =  readFromLocalStorage.data ? readFromLocalStorage.data : null;
     return <Route {...rest} render={(props) => (
               readFromLocalStorage !== null
                 ?  renderWithLayout(Component,  {...props}) 

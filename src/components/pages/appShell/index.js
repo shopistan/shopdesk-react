@@ -14,6 +14,7 @@ import {
 
 // Custom Components
 import SideMenu from "../../molecules/menu";
+import { clearDataFromLocalStorage  } from "../../../utils/local-storage/local-store-utils";
 
 const AppShell = (props) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -27,7 +28,7 @@ const AppShell = (props) => {
   };
   
   const toggleLogout= () => {
-    localStorage.clear();
+    clearDataFromLocalStorage();
     history.push({
       pathname: '/signin',
     });

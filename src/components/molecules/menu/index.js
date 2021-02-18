@@ -20,7 +20,8 @@ import {
 
 const SideMenu = () => {
   const history = useHistory();
-  const readFromLocalStorage = JSON.parse(getDataFromLocalStorage('user').data);
+  var readFromLocalStorage =  getDataFromLocalStorage('user');
+  readFromLocalStorage =  readFromLocalStorage.data ? readFromLocalStorage.data : null;
 
   const { SubMenu } = Menu;
 
@@ -47,7 +48,7 @@ const SideMenu = () => {
         }
       }}
     >
-      {readFromLocalStorage !== null &&
+      {readFromLocalStorage &&
       <React.Fragment>
       <Menu.Item key='dashboard' icon={<DashboardOutlined />}>
         Dashboard
