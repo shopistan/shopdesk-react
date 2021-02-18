@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import { Table, Input, InputNumber, Pagination, Form, Typography } from "antd";
-import { getCategories } from "../../../utils/APIGeneric/DataRequests";
 import { useHistory } from 'react-router-dom';
 
 
@@ -26,24 +25,17 @@ const EditableTable = (props) => {
     });
   };
 
-
   const showTotalItemsBar = (total, range) => {
     console.log(range);
     return `${range[0]}-${range[1]} of ${total} items`
   };
 
-  useEffect( async () => {
-    const res = await getCategories();
-    if (res.fail) {
-      console.log('Cant fetch -> ', res);
-    }
-    else {
-      console.log('res -> ', res);
-      setData(res.categories);
-      setTableLoading(false);
-    }
 
-  }, [props.pageLimit]);
+  useEffect( async () => {
+      setData(props.tableData);
+      setTableLoading(false);
+      
+  }, [props.tableData]);  /* imp passing props to re-render */
 
   const columns = [
     {

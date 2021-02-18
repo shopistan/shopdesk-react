@@ -1,17 +1,56 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 
 import { Button, Select, Input } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import EditableTable from "../../organism/table";
 import { useHistory } from 'react-router-dom';
+import { getCategories } from "../../../utils/APIGeneric/DataRequests";
 
 const Categories = () => {
   const [paginationLimit, setPaginationLimit] = useState(10);
+  const [data, setData] = useState([]);
   const { Option } = Select;
 
   const { Search } = Input;
 
-  const onSearch = (value) => console.log(value);
+  const onSearch = async (e) => {
+    const currValue = e.target.value;
+    if(currValue === "") {
+      const result = await fetchCategoriesData();
+      if (result.fail) {
+        console.log('Cant fetch -> ', result);
+      }
+      else {
+        console.log('res -> ', result);
+        setData(result.categories);
+      }
+    } 
+    else {
+      const filteredData = data.filter((entry) => {
+      var item_name = entry.category_name;
+      item_name= item_name.toLowerCase();
+      console.log(item_name);
+      return item_name.includes(currValue.toLowerCase())
+      });
+      setData(filteredData);
+    }
+  }
+
+  const fetchCategoriesData =  async ()  => {
+    const res = await getCategories();
+    return res;
+  }
+
+  useEffect( async () => {
+    const result = await fetchCategoriesData();
+    if (result.fail) {
+      console.log('Cant fetch -> ', result);
+    }
+    else {
+      console.log('res -> ', result);
+      setData(result.categories);
+    }
+  }, []);
   
   const history = useHistory();
 
@@ -56,16 +95,17 @@ const Categories = () => {
             <Search
               placeholder='search category'
               allowClear
-              enterButton='Search'
+              //enterButton='Search'
               size='large'
-              onSearch={onSearch}
+              //onSearch={onSearch}
+              onChange= {onSearch}
             />
           </div>
         </div>
 
         {/* Table */}
         <div className='table'>
-          <EditableTable pageLimit={paginationLimit} />
+          <EditableTable pageLimit={paginationLimit} tableData={data} />
         </div>
         {/* Table */}
       </div>
