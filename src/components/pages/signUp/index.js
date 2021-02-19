@@ -1,10 +1,13 @@
 import React from "react";
 import { signUp } from "../../../utils/api/auth-api-utils";
 import { saveDataIntoLocalStorage } from "../../../utils/local-storage/local-store-utils";
+import { useHistory } from 'react-router-dom';
 
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, message } from "antd";
 
 const SignUp = () => {
+  const history = useHistory();
+
   const onFinish = async (values) => {
     //The values that will be in form data:
     // {
@@ -28,9 +31,19 @@ const SignUp = () => {
 
     if (signUpResponse.hasError) {
       const errorMessage = signUpResponse.errorMessage;
+      console.log('Cant SignUP -> ', errorMessage );
+      message.error('SignUP UnSuccesfull ', 3);
     } else {
       const signedUpUserDetails = signUpResponse.data;
       saveDataIntoLocalStorage();
+      message.success('SignUp Succesfull ', 3);
+      console.log('res -> ', signedUpUserDetails );
+        setTimeout(() => {
+          history.push({
+            pathname: '/signin',
+          });
+        }, 2000);
+
     }
 
     console.log("Success:", values);
@@ -81,6 +94,7 @@ const SignUp = () => {
                     {
                       required: true,
                       message: "Invalid email!",
+                      type: "email",
                     },
                   ]}
                 >

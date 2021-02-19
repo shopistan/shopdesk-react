@@ -1,26 +1,53 @@
 import React, { useState } from "react";
 import "./style.scss";
+import { useHistory } from 'react-router-dom';
 
 // Ant Design
-import { Layout, Avatar, Button } from "antd";
+import { Layout, Avatar, Button, Dropdown, Menu } from "antd";
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   UserOutlined,
   MenuOutlined,
+  DownOutlined,
 } from "@ant-design/icons";
 
 // Custom Components
 import SideMenu from "../../molecules/menu";
+import { clearDataFromLocalStorage  } from "../../../utils/local-storage/local-store-utils";
 
 const AppShell = (props) => {
   const [collapsed, setCollapsed] = useState(false);
 
   const { Header, Sider, Content } = Layout;
 
+  const history = useHistory();
+
   const toggle = () => {
     setCollapsed((s) => !s);
   };
+  
+  const toggleLogout= () => {
+    clearDataFromLocalStorage();
+    history.push({
+      pathname: '/signin',
+    });
+  };
+
+
+  const menu = (
+    <Menu>
+      <Menu.Item key="0">
+        <a>Report Bugs</a>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="1">
+        <a>switch Outlet</a>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="2" onClick={toggleLogout}>Logout</Menu.Item>
+    </Menu>
+  );
 
   return (
     <Layout className='site-layout'>
@@ -69,7 +96,11 @@ const AppShell = (props) => {
               <h2>Outlet Name</h2>
             </div>
             <div className='user'>
-              <h2>Username</h2>
+              <Dropdown overlay={menu} trigger={['click']}>
+                <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+                    <span > Hi, user </span> <DownOutlined />
+                </a>
+              </Dropdown>
               <Avatar
                 size={64}
                 icon={<UserOutlined />}

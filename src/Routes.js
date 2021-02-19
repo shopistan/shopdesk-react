@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 
 // Components
 import AppShell from "./components/pages/appShell";
@@ -22,76 +22,53 @@ import CourierAdd from "./components/pages/couriers/courierAdd";
 import SignUp from "./components/pages/signUp";
 import SignIn from "./components/pages/signIn";
 import Outlet from "./components/pages/outlet";
+import EditCategory from "./components/pages/categories/editCategory";
+import DeleteCategory from "./components/pages/categories/deleteCategory";
+import { getDataFromLocalStorage  } from "./utils/local-storage/local-store-utils";
 
-const renderWithLayout = (Component, props) => (
-  <AppShell {...props}>
-    <Component />
-  </AppShell>
-);
 
 const Routes = () => {
+
+  const renderWithLayout = (Component, props) => (
+    <AppShell {...props}>
+      <Component />
+    </AppShell>
+  );
+  
+  const authRenderWithLayout = (Component, props) => {
+    var readFromLocalStorage =  getDataFromLocalStorage('user');
+    readFromLocalStorage =  readFromLocalStorage.data ? readFromLocalStorage.data : null;
+    return <AppShell {...props}>
+              {readFromLocalStorage == null
+                ?  <Component />
+                : <Redirect to='/dashboard' />}
+            </AppShell>
+  }
+  
+  const PrivateRoute = ({ component: Component, ...rest }) => {
+    var readFromLocalStorage =  getDataFromLocalStorage('user');
+    readFromLocalStorage =  readFromLocalStorage.data ? readFromLocalStorage.data : null;
+    return <Route {...rest} render={(props) => (
+              readFromLocalStorage !== null
+                ?  renderWithLayout(Component,  {...props}) 
+                : <Redirect to='/signin' />
+            )} />
+  }
+  
   return (
     <div>
       <Switch>
-        <Route
-          path='/dashboard'
-          render={() => renderWithLayout(Dashboard)}
-        ></Route>
-        <Route
-          exact
-          path='/categories'
-          render={() => renderWithLayout(Categories)}
-        ></Route>
-        <Route
-          exact
-          path='/categories/add'
-          render={() => renderWithLayout(CategoryAdd)}
-        ></Route>
-        <Route
-          exact
-          path='/suppliers'
-          render={() => renderWithLayout(Suppliers)}
-        ></Route>
-        <Route
-          exact
-          path='/suppliers/add'
-          render={() => renderWithLayout(SupplierAdd)}
-        ></Route>
-        <Route
-          exact
-          path='/taxes'
-          render={() => renderWithLayout(Taxes)}
-        ></Route>
-        <Route
-          exact
-          path='/taxes/add'
-          render={() => renderWithLayout(TaxAdd)}
-        ></Route>
-        <Route
-          exact
-          path='/products'
-          render={() => renderWithLayout(Products)}
-        ></Route>
-        <Route
-          exact
-          path='/products/add'
-          render={() => renderWithLayout(ProductAdd)}
-        ></Route>
-        <Route
-          exact
-          path='/products/upload'
-          render={() => renderWithLayout(ProductUpload)}
-        ></Route>
-        <Route
-          exact
-          path='/products/lookup'
-          render={() => renderWithLayout(ProductLookup)}
-        ></Route>
-        <Route
-          exact
-          path='/products/discount'
-          render={() => renderWithLayout(ProductDiscount)}
-        ></Route>
+        <PrivateRoute exact path='/dashboard' component={Dashboard} />
+        <PrivateRoute exact path='/categories' component={Categories} />
+        <PrivateRoute exact path='/suppliers' component={Suppliers} />
+        <PrivateRoute exact path='/suppliers/add' component={SupplierAdd} />
+        <PrivateRoute exact path='/taxes' component={Taxes} />
+        <PrivateRoute exact path='/taxes/add' component={TaxAdd} />
+        <PrivateRoute exact path='/products' component={Products} />
+        <PrivateRoute exact path='/products/add' component={ProductAdd} />
+        <PrivateRoute exact path='/products/upload' component={ProductUpload} />
+        <PrivateRoute exact path='/products/lookup' component={ProductLookup} />
+        <PrivateRoute exact path='/products/discount' component={ProductDiscount} />
         <Route
           exact
           path='/customers'
@@ -115,18 +92,17 @@ const Routes = () => {
         <Route
           exact
           path='/signup'
-          render={() => renderWithLayout(SignUp)}
+          render={() => authRenderWithLayout(SignUp)}
         ></Route>
-        <Route
+         <Route
           exact
           path='/signin'
-          render={() => renderWithLayout(SignIn)}
+          render={() => authRenderWithLayout(SignIn)}
         ></Route>
-        <Route
-          exact
-          path='/outlet'
-          render={() => renderWithLayout(Outlet)}
-        ></Route>
+        <PrivateRoute exact path='/outlets' component={Outlet} />
+        <PrivateRoute exact path='/categories/add' component={CategoryAdd} /> 
+        <PrivateRoute exact path='/categories/:id/edit' component={EditCategory} />
+        <PrivateRoute exact path='/categories/:id/delete' component={DeleteCategory} />
       </Switch>
     </div>
   );

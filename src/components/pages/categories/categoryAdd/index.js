@@ -1,9 +1,25 @@
 import React from "react";
 import { Form, Input, Button } from "antd";
+import { useHistory } from 'react-router-dom';
+import * as CategoriesApiUtil from '../../../../utils/api/categories-api-utils';
+
 
 const CategoryAdd = () => {
-  const onFinish = (values) => {
+  const history = useHistory();
+
+  const onFinish = async (values) => {
     console.log("Success:", values);
+    const categoryAddResponse = await CategoriesApiUtil.addCategory(values.category_name);
+    console.log('categoryAddResponse:', categoryAddResponse);
+    if (categoryAddResponse.hasError) {
+      console.log('Cant add new Category -> ', categoryAddResponse.errorMessage);
+    }
+    else {
+      console.log('res -> ', categoryAddResponse);
+      history.push({
+        pathname: '/categories',
+      });
+    }
   };
 
   const onFinishFailed = (errorInfo) => {

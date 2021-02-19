@@ -1,10 +1,14 @@
 import React from "react";
 
-import { Form, Input, Button, Checkbox } from "antd";
+import { Form, Input, Button, Checkbox, message } from "antd";
 import { login } from "../../../utils/api/auth-api-utils";
 import { saveDataIntoLocalStorage } from "../../../utils/local-storage/local-store-utils";
+import { useHistory } from 'react-router-dom';
 
 const SignIn = () => {
+  const history = useHistory();
+
+
   const onFinish = async (values) => {
     //The values that will be in form data:
     //{ username: 'a', password: 'a', remember: true };
@@ -13,10 +17,16 @@ const SignIn = () => {
     const loginResponse = await login(values.username, values.password);
     if (loginResponse.hasError) {
       const errorMessage = loginResponse.errorMessage;
+      message.error('Login UnSuccesfull ', 3);
     } else {
       const loggedInUserDetails = loginResponse.data;
       saveDataIntoLocalStorage("user", loggedInUserDetails);
+      message.success('Login Succesfull ', 3);
+      setTimeout(() => {
+        window.open('/outlets', "_self");
+      }, 2000);
     }
+
     console.log("Success:", loginResponse);
   };
 

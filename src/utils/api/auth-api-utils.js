@@ -56,7 +56,7 @@ export const signUp = async (
   try {
     const signUpCall = await axios({
       method: 'post',
-      url: UrlConstants.AUTH.LOGIN,
+      url: UrlConstants.AUTH.SIGNUP,
       data: signUpFormData
     });
 

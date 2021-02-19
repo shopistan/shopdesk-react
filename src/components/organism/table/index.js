@@ -1,160 +1,76 @@
-import React, { useState } from "react";
-import { Table, Input, InputNumber, Popconfirm, Form, Typography } from "antd";
-const originData = [];
+import React, { useState, useEffect, useLayoutEffect } from "react";
+import { Table, Input, InputNumber, Pagination, Form, Typography } from "antd";
+import { useHistory } from 'react-router-dom';
 
-for (let i = 0; i < 100; i++) {
-  originData.push({
-    key: i.toString(),
-    name: `Edrward ${i}`,
-    age: 32,
-    address: `London Park no. ${i}`,
-  });
-}
 
-const EditableCell = ({
-  editing,
-  dataIndex,
-  title,
-  inputType,
-  record,
-  index,
-  children,
-  ...restProps
-}) => {
-  const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
-  return (
-    <td {...restProps}>
-      {editing ? (
-        <Form.Item
-          name={dataIndex}
-          style={{
-            margin: 0,
-          }}
-          rules={[
-            {
-              required: true,
-              message: `Please Input ${title}!`,
-            },
-          ]}
-        >
-          {inputNode}
-        </Form.Item>
-      ) : (
-        children
-      )}
-    </td>
-  );
-};
-
-const EditableTable = () => {
+const EditableTable = (props) => {
   const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
-  const [editingKey, setEditingKey] = useState("");
+  const [data, setData] = useState([]);
+  const [dataLoading, setTableLoading] = useState(true);
+  const history = useHistory();
 
-  const isEditing = (record) => record.key === editingKey;
-
-  const handleDelete = (key) => {
-    const tempData = [...data];
-
-    const filteratedData = tempData.filter((item) => item.key !== key);
-    setData(filteratedData);
+  const handleDelete = (record) => {
+    console.log(record);
+    history.push({
+      pathname: `/categories/${record.category_id}/delete`,
+      data: record // your data array of objects
+    });
   };
 
   const edit = (record) => {
-    form.setFieldsValue({
-      name: "",
-      age: "",
-      address: "",
-      ...record,
+    console.log(record);
+    history.push({
+      pathname:  `/categories/${record.category_id}/edit`,
+      data: record // your data array of objects
     });
-    setEditingKey(record.key);
   };
 
-  const cancel = () => {
-    setEditingKey("");
+  const showTotalItemsBar = (total, range) => {
+    console.log(range);
+    return `${range[0]}-${range[1]} of ${total} items`
   };
 
-  const save = async (key) => {
-    try {
-      const row = await form.validateFields();
-      const newData = [...data];
-      const index = newData.findIndex((item) => key === item.key);
 
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, { ...item, ...row });
-        setData(newData);
-        setEditingKey("");
-      } else {
-        newData.push(row);
-        setData(newData);
-        setEditingKey("");
-      }
-    } catch (errInfo) {
-      console.log("Validate Failed:", errInfo);
-    }
-  };
+  useEffect( async () => {
+      setData(props.tableData);
+      setTableLoading(false);
+      
+  }, [props.tableData]);  /* imp passing props to re-render */
 
   const columns = [
     {
-      title: "name",
-      dataIndex: "name",
-      width: "25%",
+      title: "CategoryName",
+      dataIndex: "category_name",
+      width: "50%",
       editable: true,
-    },
-    {
-      title: "age",
-      dataIndex: "age",
-      width: "15%",
-      editable: true,
-    },
-    {
-      title: "address",
-      dataIndex: "address",
-      width: "40%",
-      editable: true,
+      responsive: ['sm'],
     },
     {
       title: "operation",
       dataIndex: "operation",
+      responsive: ['sm'],
       render: (_, record) => {
-        const editable = isEditing(record);
-        return editable ? (
-          <span>
-            <a
-              href='javascript:;'
-              onClick={() => save(record.key)}
-              style={{
-                marginRight: 8,
-              }}
-            >
-              Save
-            </a>
-            <Popconfirm title='Sure to cancel?' onConfirm={cancel}>
-              <a>Cancel</a>
-            </Popconfirm>
-          </span>
-        ) : (
+        return (
           <div className='action-btns'>
             <Typography.Link
-              disabled={editingKey !== ""}
               onClick={() => edit(record)}
             >
               Edit
             </Typography.Link>
             {data.length >= 1 ? (
-              <Popconfirm
-                title='Sure to delete?'
-                onConfirm={() => handleDelete(record.key)}
+              <Typography.Link
+                onClick={() => handleDelete(record)}
               >
-                <a>Delete</a>
-              </Popconfirm>
+                delete
+              </Typography.Link>
+
             ) : null}
           </div>
         );
       },
     },
   ];
+
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
@@ -167,29 +83,34 @@ const EditableTable = () => {
         inputType: col.dataIndex === "age" ? "number" : "text",
         dataIndex: col.dataIndex,
         title: col.title,
-        editing: isEditing(record),
       }),
     };
   });
+
+
+
   return (
     <Form form={form} component={false}>
+
       <Table
-        components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
         bordered
         dataSource={data}
         columns={mergedColumns}
         rowClassName='editable-row'
         className='table-frame'
         pagination={{
-          onChange: cancel,
-        }}
+          total: data && data.length,
+          showTotal: (total, range) => showTotalItemsBar(total, range),
+          defaultPageSize: 10,
+          pageSize: parseInt(props.pageLimit),
+          showSizeChanger: false
+        }} 
+        loading={dataLoading}
       />
+
     </Form>
   );
 };
 
 export default EditableTable;
+
