@@ -22,8 +22,6 @@ export const addCategory = async (categoryName) => {
 };
 
 export const viewCategories = async (categoriesFormDataBody) => {
-    console.log("inside-cat");
-    console.log(getDataFromLocalStorage('user').data);
     const url = UrlConstants.CATEGORIES.VIEW;
     const callType = GenericConstants.API_CALL_TYPE.POST;
   

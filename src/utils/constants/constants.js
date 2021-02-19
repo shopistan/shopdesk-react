@@ -3,7 +3,8 @@ const constants = {
     POST: 'post',
     GET: 'get'
   },
-  USER_DETAILS_KEY: 'user'
+  USER_DETAILS_KEY: 'user',
+  USER_AUTH_KEY: 'auth'
 };
 
 export default constants;

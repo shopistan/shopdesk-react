@@ -25,7 +25,7 @@ const Categories = () => {
       }
       else {
         console.log('res -> ', result);
-        setData(result.categories);
+        setData(result.categories.data);
       }
     } 
     else {
@@ -52,7 +52,7 @@ const Categories = () => {
     }
     else {
       console.log('res -> ', result);
-      setData(result.categories);
+      setData(result.categories.data);
     }
 
   }, []);

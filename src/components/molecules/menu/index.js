@@ -1,6 +1,8 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { useHistory } from "react-router-dom";
-import { getDataFromLocalStorage } from '../../../utils/local-storage/local-store-utils';
+import { getDataFromLocalStorage, checkUserAuthFromLocalStorage } from '../../../utils/local-storage/local-store-utils';
+import Constants from '../../../utils/constants/constants';
+
 
 import { Menu } from "antd";
 import {
@@ -20,8 +22,19 @@ import {
 
 const SideMenu = () => {
   const history = useHistory();
-  var readFromLocalStorage =  getDataFromLocalStorage('user');
-  readFromLocalStorage =  readFromLocalStorage.data ? readFromLocalStorage.data : null;
+
+
+    var readFromLocalStorage =  getDataFromLocalStorage('user');
+    readFromLocalStorage =  readFromLocalStorage.data ? readFromLocalStorage.data : null;
+    var authenticateDashboard = false;
+    if(readFromLocalStorage){
+      console.log(checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication);
+      if(checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication){
+        authenticateDashboard = true;
+      }
+      else {authenticateDashboard = false;}
+    }
+
 
   const { SubMenu } = Menu;
 
@@ -32,7 +45,9 @@ const SideMenu = () => {
       defaultSelectedKeys={["dashboard"]}
       onClick={(e) => {
         if (e.key === "dashboard") {
-          history.push("/dashboard");
+          if(readFromLocalStorage && authenticateDashboard){
+            history.push("/dashboard");}
+          else{history.push("/outlets");} 
         } else if (e.key === "categories") {
           history.push("/categories");
         } else if (e.key === "suppliers") {
@@ -49,16 +64,18 @@ const SideMenu = () => {
           history.push("/signup");
         } else if (e.key === "signin") {
           history.push("/signin");
-        } else if (e.key === "outlet") {
-          history.push("/outlet");
         }
       }}
     >
       {readFromLocalStorage &&
       <React.Fragment>
       <Menu.Item key='dashboard' icon={<DashboardOutlined />}>
-        Dashboard
+         Dashboard
       </Menu.Item>
+      </React.Fragment>}
+      
+      {readFromLocalStorage && authenticateDashboard &&
+      <React.Fragment>
       <Menu.Item key='categories' icon={<TagsOutlined />}>
         Categories
       </Menu.Item>
@@ -102,9 +119,6 @@ const SideMenu = () => {
         <Menu.Item key='21'>Users</Menu.Item>
         <Menu.Item key='22'>Receipt Templates</Menu.Item>
       </SubMenu>
-      <Menu.Item key='outlet' icon={<BankOutlined />}>
-        Outlet
-      </Menu.Item>
       </React.Fragment>
       }
 

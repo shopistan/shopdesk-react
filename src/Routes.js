@@ -24,40 +24,60 @@ import SignIn from "./components/pages/signIn";
 import Outlet from "./components/pages/outlet";
 import EditCategory from "./components/pages/categories/editCategory";
 import DeleteCategory from "./components/pages/categories/deleteCategory";
-import { getDataFromLocalStorage  } from "./utils/local-storage/local-store-utils";
+import { getDataFromLocalStorage, checkUserAuthFromLocalStorage } from "./utils/local-storage/local-store-utils";
+import Constants from './utils/constants/constants';
 
 
 const Routes = () => {
 
-  const renderWithLayout = (Component, props) => (
+  const renderWithLayout = (Component, props, outletLayout) => (
     <AppShell {...props}>
-      <Component />
+        {outletLayout == 'outlets' ? <Outlet/> : <Component />}
     </AppShell>
   );
-  
+
+
   const authRenderWithLayout = (Component, props) => {
     var readFromLocalStorage =  getDataFromLocalStorage('user');
     readFromLocalStorage =  readFromLocalStorage.data ? readFromLocalStorage.data : null;
+    var authenticateDashboard = false;
+    if(readFromLocalStorage){
+      if(checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication){
+        authenticateDashboard = true;
+      }
+      else {authenticateDashboard = false;}
+    }
+    
     return <AppShell {...props}>
               {readFromLocalStorage == null
                 ?  <Component />
-                : <Redirect to='/dashboard' />}
+                : authenticateDashboard ? <Redirect to='/dashboard' /> : <Redirect to='/outlets' /> }
             </AppShell>
   }
   
   const PrivateRoute = ({ component: Component, ...rest }) => {
     var readFromLocalStorage =  getDataFromLocalStorage('user');
     readFromLocalStorage =  readFromLocalStorage.data ? readFromLocalStorage.data : null;
+    var authenticateDashboard = false;
+    if(readFromLocalStorage){
+      if(checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication){
+        authenticateDashboard = true;}
+      else { authenticateDashboard = false;}
+    }
+    
     return <Route {...rest} render={(props) => (
-              readFromLocalStorage !== null
-                ?  renderWithLayout(Component,  {...props}) 
+              readFromLocalStorage
+                ? authenticateDashboard ?  renderWithLayout(Component,  {...props}) : renderWithLayout(Component,  {...props}, 'outlets') 
                 : <Redirect to='/signin' />
             )} />
   }
+
+
   
   return (
     <div>
       <Switch>
+
         <PrivateRoute exact path='/dashboard' component={Dashboard} />
         <PrivateRoute exact path='/categories' component={Categories} />
         <PrivateRoute exact path='/suppliers' component={Suppliers} />

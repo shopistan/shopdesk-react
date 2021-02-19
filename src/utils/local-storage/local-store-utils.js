@@ -1,3 +1,6 @@
+import Constants from '../../utils/constants/constants';
+
+
 export const saveDataIntoLocalStorage = (key, value) => {
   try {
     //window.localStorage.saveItem(key, JSON.stringify(value)); not working
@@ -23,4 +26,12 @@ export const getDataFromLocalStorage = (key) => {
 
 export const clearDataFromLocalStorage = () => {
   localStorage.clear();
+};
+
+
+export const checkUserAuthFromLocalStorage = (key) => {
+  const dataFromLocalStorage = JSON.parse(window.localStorage.getItem(key));
+  return {
+    authentication: dataFromLocalStorage.hasOwnProperty(Constants.USER_AUTH_KEY),
+  };
 };
