@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { message } from 'antd';
+import { message, Spin } from 'antd';
 import "./style.scss";
 import { saveDataIntoLocalStorage, getDataFromLocalStorage, clearDataFromLocalStorage, checkUserAuthFromLocalStorage } from "../../../utils/local-storage/local-store-utils";
 import { useHistory } from 'react-router-dom';
@@ -11,6 +11,7 @@ const Outlet = () => {
   const history = useHistory();
   const [storeInfo, setStoreInfo] = useState([]);
   const [activeOutlet, setActiveOutlet] = useState(null);
+  const [loading, setLoading] = useState(false);
 
 
   useEffect(async () => {
@@ -34,7 +35,8 @@ const Outlet = () => {
     const selectedStoreId = e.target.dataset.storeid;
     var foundStoreObj = storeInfo.find(obj => {
       return obj.store_id === selectedStoreId
-    })
+    });
+    setLoading(true);
 
     if (foundStoreObj) {
       const userSelectOutletResponse = await OutletsApiUtil.selectOutlet(foundStoreObj.store_random);
@@ -42,20 +44,22 @@ const Outlet = () => {
       if (userSelectOutletResponse.hasError) {
         console.log('Cant Select Outlet -> ', userSelectOutletResponse.errorMessage);
         message.success('Store Change UnSuccesfull ', 3);
+        setLoading(false);
       }
       else {
         console.log('res -> ', userSelectOutletResponse);
         clearDataFromLocalStorage();
         saveDataIntoLocalStorage("user", userSelectOutletResponse);
+        setLoading(false);
         message.success('Store Change Succesfull ', 3);
         setTimeout(() => {
           history.push({
-            pathname: '/categories',
+            pathname: '/dashboard',
         });
         }, 2000);
       }
     }
-    else { console.log("store not found"); }
+    else { console.log("store not found"); setLoading(false); }
 
   }
 
@@ -63,6 +67,7 @@ const Outlet = () => {
 
   return (
     <div className='page outlet'>
+      {loading && <Spin size="large" />}
       <div className='page__header'>
         <h1>Select an Outlet</h1>
       </div>
@@ -73,7 +78,7 @@ const Outlet = () => {
             storeInfo.map(item => {
               return (
                 <li key={item.store_id}
-                  className={`outlet__link${activeOutlet == item.store_id ? ' outlet__active' : ''}`}
+                  className={ `outlet__link${activeOutlet == item.store_id ? ' outlet__active' : ''}` }
                   data-storeid={item.store_id} onClick={onSelectOutlet}>
                   {item.store_name}
                 </li>

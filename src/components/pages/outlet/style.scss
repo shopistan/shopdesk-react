@@ -13,13 +13,15 @@
     color: #333;
     display: inline-block;
     transition: all 0.3s;
-    border: 5px solid #eee;
+    border: 3px solid #eee;
 
     &:hover {
       transform: scale(0.9);
     }
   }
+
   &__active {
-    border: 5px solid #3da446;
+    border: 3px solid #3da446;
   }
+  
 }

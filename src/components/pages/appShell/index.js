@@ -7,7 +7,6 @@ import { Layout, Avatar, Button, Dropdown, Menu } from "antd";
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
-  UserOutlined,
   MenuOutlined,
   DownOutlined,
 } from "@ant-design/icons";
@@ -113,14 +112,15 @@ const AppShell = (props) => {
                 }}
               />
             </div>
+            <span style={{borderLeft: "2px solid #000"}}></span>
 
             <div className='header__content'>
               <div className='outlet'>
-                <h2>{storeObj ? storeObj.store_name : 'N/A'}</h2>
+                <h2>{storeObj ? storeObj.store_name + ' - ' : 'N/A - '}</h2>
                 <span>
                   <small>
                     <a onClick={toggleOutlet}>
-                      <span> - Switch outlet </span>
+                      <span className='outlet-name'> Switch outlet </span>
                     </a>
                   </small>
                 </span>
@@ -128,13 +128,13 @@ const AppShell = (props) => {
 
               <div className='user'>
                 <Dropdown overlay={menu} trigger={['click']}>
-                  <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-                    <span > Hi, user </span> <DownOutlined />
+                  <a className="user-dropdown-link" onClick={e => e.preventDefault()}>
+                    <span> Hi, user </span> <DownOutlined />
                   </a>
                 </Dropdown>
                 <Avatar
-                  size={64}
-                  icon={<UserOutlined />}
+                  size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
+                  src="images/ui.png"
                   className='user__avatar'
                 />
               </div>

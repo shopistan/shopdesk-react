@@ -37,13 +37,16 @@
   padding: 1.6rem !important;
   height: auto !important;
   line-height: initial !important;
+  background: #f8fdfb !important;
+  height: 110px !important;
 
   @include respond(mobile) {
     padding: 1.6rem !important;
   }
 
   &__menu-btn {
-    width: 5%;
+    background: #333;
+    
 
     @include respond(mobile) {
       display: none;
@@ -71,8 +74,10 @@
     width: 90%;
 
     h2 {
-      font-size: 2rem;
-      color: white;
+      font-size: 1.6rem;
+      color: #333;
+      font-weight: 700;
+      text-transform: uppercase;
     }
   }
 
@@ -87,8 +92,21 @@
       }
     }
   }
-}
 
-.ant-dropdown-link {
-  color: white;
+  .outlet-name:hover {
+    text-decoration: underline;
+  }
+  .outlet-name{
+    color: #000 !important;
+    font-size: 1.4rem;
+  }
+  .user-dropdown-link {
+    color: #9a9a9a;
+    display: inline-block;
+    text-transform: capitalize;
+  }
+  .user-dropdown-link:hover {
+    color: #333;
+  }
+
 }

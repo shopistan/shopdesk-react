@@ -9,6 +9,7 @@ import * as CategoriesApiUtil from '../../../utils/api/categories-api-utils';
 
 const Categories = () => {
   const [paginationLimit, setPaginationLimit] = useState(10);
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const { Option } = Select;
 
@@ -26,6 +27,7 @@ const Categories = () => {
       else {
         console.log('res -> ', result);
         setData(result.categories.data);
+        setLoading(false);
       }
     } 
     else {
@@ -53,6 +55,7 @@ const Categories = () => {
     else {
       console.log('res -> ', result);
       setData(result.categories.data);
+      setLoading(false);
     }
 
   }, []);
@@ -109,7 +112,7 @@ const Categories = () => {
 
         {/* Table */}
         <div className='table'>
-          <EditableTable pageLimit={paginationLimit} tableData={data} />
+          <EditableTable pageLimit={paginationLimit} tableData={data} tableDataLoading={loading} />
         </div>
         {/* Table */}
       </div>
