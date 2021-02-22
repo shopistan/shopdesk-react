@@ -43,7 +43,7 @@ const Outlet = () => {
       console.log('userSelectOutletResponse:', userSelectOutletResponse)
       if (userSelectOutletResponse.hasError) {
         console.log('Cant Select Outlet -> ', userSelectOutletResponse.errorMessage);
-        message.success('Store Change UnSuccesfull ', 3);
+        message.error('Store Change UnSuccesfull ', 3);
         setLoading(false);
       }
       else {
@@ -67,7 +67,9 @@ const Outlet = () => {
 
   return (
     <div className='page outlet'>
-      {loading && <Spin size="large" />}
+      <div className="loading-container">
+        {loading && <Spin size="large" />}
+      </div>
       <div className='page__header'>
         <h1>Select an Outlet</h1>
       </div>

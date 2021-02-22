@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Typography } from 'antd';
+import React, {  useEffect } from 'react';
+import { Button, Typography, message } from 'antd';
 import { useHistory } from 'react-router-dom';
 import * as CategoriesApiUtil from '../../../utils/api/categories-api-utils';
 
@@ -18,12 +18,16 @@ const DeleteCategory = () => {
 
         if (categoryDeleteResponse.hasError) {
             console.log('Cant delete a Category -> ', categoryDeleteResponse.errorMessage);
+            message.error('Category deletion UnSuccesfull ', 3);
         }
         else {
             console.log('res -> ', categoryDeleteResponse);
-            history.push({
-                pathname: '/categories',
-            });
+            message.success('Category deletion Succesfull ', 3);
+            setTimeout(() => {
+                history.push({
+                  pathname: '/categories',
+              });
+            }, 2000);
         }
     };
 
@@ -50,20 +54,16 @@ const DeleteCategory = () => {
 
                     </div>
                     <br />
-                    <div className='form__row'>
-                        <div className='form__col'>
-                            <Button type='primary' danger
-                                onClick={() => handleConfirm()}>
-                                Confirm
-                                </Button>
-                        </div>
-                        <div className='form__col'>
-                            <Button
-                                onClick={() => handleCancel()}>
-                                Cancel
-                                </Button>
+                    <div className='form__row--footer'>
+                        <Button type='primary' danger
+                            onClick={() => handleConfirm()}>
+                            Confirm
+                        </Button>
 
-                        </div>
+                        <Button
+                            onClick={() => handleCancel()}>
+                            Cancel
+                        </Button>
                     </div>
                 </div>
             </div>

@@ -21,14 +21,19 @@ export const addCategory = async (categoryName) => {
   );
 };
 
-export const viewCategories = async (categoriesFormDataBody) => {
+export const viewCategories = async (limit, PageNumber) => {
+  const formDataPair = {
+    limit: limit,
+    page: PageNumber,
+  };
+    const viewCategoriesFormDataBody = ApiCallUtil.constructFormData(formDataPair);
     const url = UrlConstants.CATEGORIES.VIEW;
     const callType = GenericConstants.API_CALL_TYPE.POST;
   
     return await ApiCallUtil.http(
       url, //api url
       callType, //calltype
-      categoriesFormDataBody,
+      viewCategoriesFormDataBody,
     );
 };
 

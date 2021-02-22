@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, message } from "antd";
 import { useHistory } from 'react-router-dom';
 import * as CategoriesApiUtil from '../../../../utils/api/categories-api-utils';
 
@@ -13,12 +13,16 @@ const CategoryAdd = () => {
     console.log('categoryAddResponse:', categoryAddResponse);
     if (categoryAddResponse.hasError) {
       console.log('Cant add new Category -> ', categoryAddResponse.errorMessage);
+      message.error('Category Cannot Added ', 3);
     }
     else {
       console.log('res -> ', categoryAddResponse);
-      history.push({
-        pathname: '/categories',
-      });
+      message.success('Category Succesfull Added ', 3);
+        setTimeout(() => {
+          history.push({
+            pathname: '/categories',
+          });
+        }, 2000);
     }
   };
 

@@ -9,8 +9,10 @@ import * as CategoriesApiUtil from '../../../utils/api/categories-api-utils';
 
 const Categories = () => {
   const [paginationLimit, setPaginationLimit] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [paginationData, setPaginationData] = useState({});
   const { Option } = Select;
 
   const history = useHistory();
@@ -20,50 +22,51 @@ const Categories = () => {
   const onSearch = async (e) => {
     const currValue = e.target.value;
     if(currValue === "") {
-      const result = await fetchCategoriesData();
-      if (result.hasError) {
-        console.log('Cant fetch categories -> ', result.errorMessage);
-      }
-      else {
-        console.log('res -> ', result);
-        setData(result.categories.data);
-        setLoading(false);
-      }
+      fetchCategoriesData(paginationLimit, currentPage);
     } 
     else {
       const filteredData = data.filter((entry) => {
       var item_name = entry.category_name;
       item_name= item_name.toLowerCase();
-      console.log(item_name);
       return item_name.includes(currValue.toLowerCase())
       });
       setData(filteredData);
     }
   }
 
-  const fetchCategoriesData =  async ()  => {
-    const categoriesViewResponse = await CategoriesApiUtil.viewCategories({});
-    console.log('categoriesViewResponse:', categoriesViewResponse)
-    return categoriesViewResponse;
-  }
+  const fetchCategoriesData =  async (pageLimit = 10, pageNumber = 1)  => {
+    const categoriesViewResponse = await CategoriesApiUtil.viewCategories(pageLimit, pageNumber);
+    console.log('categoriesViewResponse:', categoriesViewResponse);
 
-  useEffect( async () => {
-    const result = await fetchCategoriesData();
-    if (result.hasError) {
-      console.log('Cant fetch categories -> ', result.errorMessage);
+    if (categoriesViewResponse.hasError) {
+      console.log('Cant fetch categories -> ', categoriesViewResponse.errorMessage);
+      setLoading(false);
     }
     else {
-      console.log('res -> ', result);
-      setData(result.categories.data);
+      console.log('res -> ', categoriesViewResponse);
+      setData(categoriesViewResponse.categories.data);
+      setPaginationData(categoriesViewResponse.categories.page);
       setLoading(false);
     }
 
+  }
+
+  useEffect( async () => {
+    fetchCategoriesData();
   }, []);
 
 
   function handleChange(value) {
-    console.log(`selected ${value}`);
     setPaginationLimit(value);
+    setCurrentPage(1);
+    setLoading(true);
+    fetchCategoriesData(value);
+  }
+
+  function handlePageChange(currentPg) {
+    setCurrentPage(currentPg);
+    setLoading(true);
+    fetchCategoriesData(paginationLimit, currentPg);
   }
 
   const handleAddCategory = () => {
@@ -112,7 +115,8 @@ const Categories = () => {
 
         {/* Table */}
         <div className='table'>
-          <EditableTable pageLimit={paginationLimit} tableData={data} tableDataLoading={loading} />
+          <EditableTable pageLimit={paginationLimit} tableData={data} paginationData={paginationData} 
+             tableDataLoading={loading} onClickPageChanger={handlePageChange} currentPageIndex ={currentPage} />
         </div>
         {/* Table */}
       </div>
