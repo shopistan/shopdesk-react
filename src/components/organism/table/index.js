@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 const EditableTable = (props) => {
   const [form] = Form.useForm();
   const [data, setData] = useState([]);
+  const [currentPageNumber, setcurrentPageNumber] = useState(1);
   const history = useHistory();
 
 
@@ -20,7 +21,7 @@ const EditableTable = (props) => {
   const edit = (record) => {
     console.log(record);
     history.push({
-      pathname:  `/categories/${record.category_id}/edit`,
+      pathname: `/categories/${record.category_id}/edit`,
       data: record // your data array of objects
     });
   };
@@ -30,10 +31,17 @@ const EditableTable = (props) => {
     return `${range[0]}-${range[1]} of ${total} items`
   };
 
+  const handlePageChange = (page, pageSize) => {
+     setcurrentPageNumber(page)
+     props.onClickPageChanger(page); 
+  };
 
-  useEffect( async () => {
-      setData(props.tableData);
-  }, [props.tableData, props.tableDataLoading]);  /* imp passing props to re-render */
+
+  useEffect(async () => {
+    setData(props.tableData);
+    setcurrentPageNumber(props.currentPageIndex); 
+
+  }, [props.tableData, props.tableDataLoading, props.paginationData, props.currentPageIndex]);  /* imp passing props to re-render */
 
   const columns = [
     {
@@ -78,8 +86,8 @@ const EditableTable = (props) => {
       ...col,
       onCell: (record) => ({
         record,
-        inputType: col.dataIndex === "age" ? "number" : "text",
-        dataIndex: col.dataIndex,
+
+        dataindex: col.dataIndex,
         title: col.title,
       }),
     };
@@ -97,12 +105,14 @@ const EditableTable = (props) => {
         rowClassName='editable-row'
         className='table-frame'
         pagination={{
-          total: data && data.length,
+          total: props.paginationData && props.paginationData.totalElements,
           showTotal: (total, range) => showTotalItemsBar(total, range),
           defaultPageSize: 10,
           pageSize: parseInt(props.pageLimit),
-          showSizeChanger: false
-        }} 
+          showSizeChanger: false,
+          current: currentPageNumber,
+          onChange: (page, pageSize) => handlePageChange(page, pageSize),
+        }}
         loading={props.tableDataLoading}
       />
 

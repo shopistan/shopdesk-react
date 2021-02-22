@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Input, Button } from 'antd';
+import React, { useEffect } from 'react';
+import { Form, Input, Button, message } from 'antd';
 import { useHistory } from 'react-router-dom';
 import * as CategoriesApiUtil from '../../../utils/api/categories-api-utils';
 
@@ -15,13 +15,17 @@ const EditCategory = () => {
         const categoryEditResponse = await CategoriesApiUtil.editCategory(history.location.data.category_id,  values.categoryName);
         console.log('categoryEditResponse:', categoryEditResponse);
         if (categoryEditResponse.hasError) {
-            console.log('Cant delete a Category -> ', categoryEditResponse.errorMessage);
+            console.log('Cant Edit a Category -> ', categoryEditResponse.errorMessage);
+            message.error('Category Cant Edit ', 3);
         }
         else {
             console.log('res -> ', categoryEditResponse);
-            history.push({
-                pathname: '/categories',
-            });
+            message.success('Category Editing Succesfull ', 3);
+            setTimeout(() => {
+                history.push({
+                  pathname: '/categories',
+              });
+            }, 2000);
         }
     };
 
