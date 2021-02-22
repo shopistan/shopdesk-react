@@ -6,8 +6,8 @@ import { useHistory } from 'react-router-dom';
 const EditableTable = (props) => {
   const [form] = Form.useForm();
   const [data, setData] = useState([]);
-  const [dataLoading, setTableLoading] = useState(true);
   const history = useHistory();
+
 
   const handleDelete = (record) => {
     console.log(record);
@@ -33,9 +33,7 @@ const EditableTable = (props) => {
 
   useEffect( async () => {
       setData(props.tableData);
-      setTableLoading(false);
-      
-  }, [props.tableData]);  /* imp passing props to re-render */
+  }, [props.tableData, props.tableDataLoading]);  /* imp passing props to re-render */
 
   const columns = [
     {
@@ -105,7 +103,7 @@ const EditableTable = (props) => {
           pageSize: parseInt(props.pageLimit),
           showSizeChanger: false
         }} 
-        loading={dataLoading}
+        loading={props.tableDataLoading}
       />
 
     </Form>

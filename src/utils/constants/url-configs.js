@@ -16,6 +16,9 @@ const urls = {
     EDIT_CATEGORY: BASE_URL +  '/api/categories/edit',
     DELETE_CATEGORY: BASE_URL +  '/api/categories/delete',
   },
+  OULETS: {
+    SELECT_OUTLET: BASE_URL +  '/api/users/selectStore',
+  },
 };
 
 export default urls;

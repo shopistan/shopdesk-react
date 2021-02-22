@@ -4,17 +4,24 @@
   &__select {
     display: flex;
     justify-content: space-around;
+    cursor: pointer;
   }
 
   &__link {
     padding: 2rem 5rem;
-    background-color: $color-black;
-    color: #fff;
+    background-color: $color-white;
+    color: #333;
     display: inline-block;
     transition: all 0.3s;
+    border: 3px solid #eee;
 
     &:hover {
       transform: scale(0.9);
     }
   }
+
+  &__active {
+    border: 3px solid #3da446;
+  }
+  
 }
