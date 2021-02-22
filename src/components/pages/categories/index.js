@@ -14,6 +14,12 @@ const Categories = () => {
   const [data, setData] = useState([]);
   const [paginationData, setPaginationData] = useState({});
   const { Option } = Select;
+  
+  const dynamicTablecolumns= [{
+    title: 'CategoryName',
+    dataIndex: 'category_name',
+    width: '50%',
+  }];  /* add table columns and their names here and specify first column width too */
 
   const history = useHistory();
 
@@ -60,7 +66,12 @@ const Categories = () => {
     setPaginationLimit(value);
     setCurrentPage(1);
     setLoading(true);
-    fetchCategoriesData(value);
+    if(currentPage > Math.ceil(paginationData.totalElements/value)){
+      fetchCategoriesData(value, 1);
+    }
+    else {
+      fetchCategoriesData(value, currentPage);
+    }
   }
 
   function handlePageChange(currentPg) {
@@ -116,7 +127,8 @@ const Categories = () => {
         {/* Table */}
         <div className='table'>
           <EditableTable pageLimit={paginationLimit} tableData={data} paginationData={paginationData} 
-             tableDataLoading={loading} onClickPageChanger={handlePageChange} currentPageIndex ={currentPage} />
+             tableDataLoading={loading} tableColumns={dynamicTablecolumns}
+             tableName ={"categories"} onClickPageChanger={handlePageChange} />
         </div>
         {/* Table */}
       </div>

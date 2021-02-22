@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
-import { Table, Input, InputNumber, Pagination, Form, Typography } from "antd";
+import React, { useState, useEffect } from "react";
+import { Table, Form, Typography } from "antd";
 import { useHistory } from 'react-router-dom';
 
 
@@ -12,18 +12,22 @@ const EditableTable = (props) => {
 
   const handleDelete = (record) => {
     console.log(record);
-    history.push({
-      pathname: `/categories/${record.category_id}/delete`,
-      data: record // your data array of objects
-    });
+    if(props.tableName === 'categories'){ /* check for table type  */
+      history.push({
+        pathname: `/${props.tableName}/${record.category_id}/delete`,
+        data: record // your data array of objects
+      });
+    }
   };
 
   const edit = (record) => {
     console.log(record);
-    history.push({
-      pathname: `/categories/${record.category_id}/edit`,
-      data: record // your data array of objects
-    });
+    if(props.tableName === 'categories'){
+      history.push({
+        pathname: `/${props.tableName}/${record.category_id}/edit`,
+        data: record // your data array of objects
+      });
+    }
   };
 
   const showTotalItemsBar = (total, range) => {
@@ -39,18 +43,13 @@ const EditableTable = (props) => {
 
   useEffect(async () => {
     setData(props.tableData);
-    setcurrentPageNumber(props.currentPageIndex); 
+    if( currentPageNumber > Math.ceil(props.paginationData.totalPages)){
+      setcurrentPageNumber(1);}
 
-  }, [props.tableData, props.tableDataLoading, props.paginationData, props.currentPageIndex]);  /* imp passing props to re-render */
+  }, [props.tableData, props.tableDataLoading, props.paginationData]);  /* imp passing props to re-render */
 
-  const columns = [
-    {
-      title: "CategoryName",
-      dataIndex: "category_name",
-      width: "50%",
-      editable: true,
-      responsive: ['sm'],
-    },
+
+  const columns = [ ...props.tableColumns,
     {
       title: "operation",
       dataIndex: "operation",
@@ -94,7 +93,6 @@ const EditableTable = (props) => {
   });
 
 
-
   return (
     <Form form={form} component={false}>
 
@@ -115,7 +113,6 @@ const EditableTable = (props) => {
         }}
         loading={props.tableDataLoading}
       />
-
     </Form>
   );
 };
