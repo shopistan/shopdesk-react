@@ -34,20 +34,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.6rem !important;
-  height: auto !important;
-  line-height: initial !important;
-  background: #f8fdfb !important;
-  height: 110px !important;
+  // padding: 1.6rem !important;
+  // height: auto !important;
+  // line-height: initial !important;
+  // background: #f8fdfb !important;
+  // height: 110px !important;
 
   @include respond(mobile) {
-    padding: 1.6rem !important;
+    // padding: 1.6rem !important;
   }
 
   &__menu-btn {
-    background: #333;
-    
-
     @include respond(mobile) {
       display: none;
     }
@@ -67,17 +64,25 @@
   }
 
   &__content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #fff;
-    width: 90%;
+    @extend %flex-between;
+
+    color: $color-white;
+    width: 95%;
 
     h2 {
-      font-size: 1.6rem;
-      color: #333;
-      font-weight: 700;
+      color: $color-white;
       text-transform: uppercase;
+    }
+
+    .outlet {
+      display: flex;
+
+      &__btn {
+        margin-left: 1rem;
+        padding: 1rem 2rem;
+        color: $color-white;
+        border: 1px solid $color-white;
+      }
     }
   }
 
@@ -96,7 +101,7 @@
   .outlet-name:hover {
     text-decoration: underline;
   }
-  .outlet-name{
+  .outlet-name {
     color: #000 !important;
     font-size: 1.4rem;
   }
@@ -108,5 +113,4 @@
   .user-dropdown-link:hover {
     color: #333;
   }
-
 }

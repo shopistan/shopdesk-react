@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./style.scss";
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 
 // Ant Design
 import { Layout, Avatar, Button, Dropdown, Menu } from "antd";
@@ -13,9 +13,12 @@ import {
 
 // Custom Components
 import SideMenu from "../../molecules/menu";
-import { getDataFromLocalStorage, clearDataFromLocalStorage, checkUserAuthFromLocalStorage } from "../../../utils/local-storage/local-store-utils";
-import Constants from '../../../utils/constants/constants';
-
+import {
+  getDataFromLocalStorage,
+  clearDataFromLocalStorage,
+  checkUserAuthFromLocalStorage,
+} from "../../../utils/local-storage/local-store-utils";
+import Constants from "../../../utils/constants/constants";
 
 const AppShell = (props) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -31,42 +34,51 @@ const AppShell = (props) => {
   const toggleLogout = () => {
     clearDataFromLocalStorage();
     history.push({
-      pathname: '/signin',
+      pathname: "/signin",
     });
   };
 
   const toggleOutlet = () => {
     history.push({
-      pathname: '/outlets',
+      pathname: "/outlets",
     });
   };
 
-
   var storeObj = null;
-  var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
-  readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
+  var readFromLocalStorage = getDataFromLocalStorage(
+    Constants.USER_DETAILS_KEY
+  );
+  readFromLocalStorage = readFromLocalStorage.data
+    ? readFromLocalStorage.data
+    : null;
   if (readFromLocalStorage) {
-    if (checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication) {
-        var foundStoreObj = readFromLocalStorage.auth.storeInfo.find(obj => {
-        return obj.store_id === readFromLocalStorage.auth.current_store
-      })
-      if (foundStoreObj) { storeObj = foundStoreObj;  }
+    if (
+      checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
+    ) {
+      var foundStoreObj = readFromLocalStorage.auth.storeInfo.find((obj) => {
+        return obj.store_id === readFromLocalStorage.auth.current_store;
+      });
+      if (foundStoreObj) {
+        storeObj = foundStoreObj;
+      }
+    } else {
+      storeObj = null;
     }
-    else { storeObj = null; }
   }
-
-
-
 
   const menu = (
     <Menu>
-      <Menu.Item key="0">
+      <Menu.Item key='0'>
         <a>Report Bugs</a>
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key="1" onClick={toggleOutlet}>Switch Outlet</Menu.Item>
+      <Menu.Item key='1' onClick={toggleOutlet}>
+        Switch Outlet
+      </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key="2" onClick={toggleLogout}>Logout</Menu.Item>
+      <Menu.Item key='2' onClick={toggleLogout}>
+        Logout
+      </Menu.Item>
     </Menu>
   );
 
@@ -86,7 +98,7 @@ const AppShell = (props) => {
         <SideMenu />
       </div>
       <Layout className='content-layout'>
-        {readFromLocalStorage &&
+        {readFromLocalStorage && (
           <Header className='header site-layout-background'>
             <div className='header__menu-btn'>
               {React.createElement(
@@ -112,14 +124,14 @@ const AppShell = (props) => {
                 }}
               />
             </div>
-            <span style={{borderLeft: "2px solid #000"}}></span>
+            <span style={{ borderLeft: "2px solid #000" }}></span>
 
             <div className='header__content'>
               <div className='outlet'>
-                <h2>{storeObj ? storeObj.store_name + ' - ' : 'N/A - '}</h2>
+                <h2>{storeObj ? storeObj.store_name : "N/A - "}</h2>
                 <span>
                   <small>
-                    <a onClick={toggleOutlet}>
+                    <a onClick={toggleOutlet} className='outlet__btn'>
                       <span className='outlet-name'> Switch outlet </span>
                     </a>
                   </small>
@@ -127,19 +139,23 @@ const AppShell = (props) => {
               </div>
 
               <div className='user'>
-                <Dropdown overlay={menu} trigger={['click']}>
-                  <a className="user-dropdown-link" onClick={e => e.preventDefault()}>
+                <Dropdown overlay={menu} trigger={["click"]}>
+                  <a
+                    className='user-dropdown-link'
+                    onClick={(e) => e.preventDefault()}
+                  >
                     <span> Hi, user </span> <DownOutlined />
                   </a>
                 </Dropdown>
                 <Avatar
-                  size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
-                  src="images/ui.png"
+                  // size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
+                  src='images/ui.png'
                   className='user__avatar'
                 />
               </div>
             </div>
-          </Header>}
+          </Header>
+        )}
         <Content className='site-layout-background'>{props.children}</Content>
       </Layout>
     </Layout>
