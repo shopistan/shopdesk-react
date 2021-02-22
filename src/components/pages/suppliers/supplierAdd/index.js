@@ -1,9 +1,31 @@
 import React from "react";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, message } from "antd";
+import { useHistory } from 'react-router-dom';
+import * as SuppliersApiUtil from '../../../../utils/api/suppliers-api-utils';
+
 
 const SupplierAdd = () => {
-  const onFinish = (values) => {
+  const history = useHistory();
+
+  const onFinish = async (values) => {
     console.log("Success:", values);
+    const supplierAddResponse = await SuppliersApiUtil.addSupplier(values.supplier_name,
+      values.contact_person, values.phone, values.email, values.tax);
+
+    console.log('supplierAddResponse:', supplierAddResponse);
+    if (supplierAddResponse.hasError) {
+      console.log('Cant add new Category -> ', supplierAddResponse.errorMessage);
+      message.error('Supplier Cannot Added ', 3);
+    }
+    else {
+      console.log('res -> ', supplierAddResponse);
+      message.success('supplier Succesfull Added ', 3);
+      setTimeout(() => {
+        history.push({
+          pathname: '/suppliers',
+        });
+      }, 2000);
+    }
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -67,6 +89,7 @@ const SupplierAdd = () => {
                   rules={[
                     {
                       required: true,
+                      type: "email",
                       message: "Please input valid email!",
                     },
                   ]}

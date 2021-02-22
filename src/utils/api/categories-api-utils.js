@@ -2,7 +2,6 @@
 import UrlConstants from '../constants/url-configs';
 import GenericConstants from '../constants/constants';
 import * as ApiCallUtil from './generic-api-utils';
-import { getDataFromLocalStorage } from '../local-storage/local-store-utils';
 
 
 
