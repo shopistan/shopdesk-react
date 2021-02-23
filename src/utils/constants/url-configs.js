@@ -16,6 +16,12 @@ const urls = {
     EDIT_CATEGORY: BASE_URL +  '/api/categories/edit',
     DELETE_CATEGORY: BASE_URL +  '/api/categories/delete',
   },
+  SUPPLIERS: {
+    VIEW: BASE_URL +  '/api/suppliers/view',
+    ADD_SUPPLIER: BASE_URL +  '/api/suppliers/add',
+    EDIT_SUPPLIER: BASE_URL +  '/api/suppliers/edit',
+    DELETE_SUPPLIER: BASE_URL +  '/api/suppliers/delete',
+  },
   OULETS: {
     SELECT_OUTLET: BASE_URL +  '/api/users/selectStore',
   },

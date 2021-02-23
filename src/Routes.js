@@ -8,6 +8,8 @@ import Categories from "./components/pages/categories";
 import CategoryAdd from "./components/pages/categories/categoryAdd";
 import Suppliers from "./components/pages/suppliers";
 import SupplierAdd from "./components/pages/suppliers/supplierAdd";
+import SupplierEdit from "./components/pages/suppliers/editSupplier";
+import SupplierDelete from "./components/pages/suppliers/deleteSupplier";
 import Taxes from "./components/pages/taxes";
 import TaxAdd from "./components/pages/taxes/taxAdd";
 import Products from "./components/pages/products";
@@ -83,6 +85,8 @@ const Routes = () => {
         <PrivateRoute exact path='/dashboard' component={Dashboard} />
         <PrivateRoute exact path='/categories' component={Categories} />
         <PrivateRoute exact path='/suppliers' component={Suppliers} />
+        <PrivateRoute exact path='/suppliers/:id/edit' component={SupplierEdit} />
+        <PrivateRoute exact path='/suppliers/:id/delete' component={SupplierDelete} />
         <PrivateRoute exact path='/suppliers/add' component={SupplierAdd} />
         <PrivateRoute exact path='/taxes' component={Taxes} />
         <PrivateRoute exact path='/taxes/add' component={TaxAdd} />
