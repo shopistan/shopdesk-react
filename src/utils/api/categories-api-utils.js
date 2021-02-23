@@ -4,7 +4,6 @@ import GenericConstants from '../constants/constants';
 import * as ApiCallUtil from './generic-api-utils';
 
 
-
 export const addCategory = async (categoryName) => {
   const formDataPair = {
     name: categoryName,
