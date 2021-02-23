@@ -1,10 +1,31 @@
 import React from "react";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, message } from "antd";
+import { useHistory } from "react-router-dom";
+import * as CouriersApiUtil from '../../../../utils/api/couriers-api-utils';
+
 
 const CourierAdd = () => {
-  const onFinish = (values) => {
+  const history = useHistory();
+  
+  const onFinish = async (values) => {
     console.log("Success:", values);
+    const courierAddResponse = await CouriersApiUtil.addCourier(values.courier_name, values.courier_code);
+    console.log('courierAddResponse:', courierAddResponse);
+    if (courierAddResponse.hasError) {
+      console.log('Cant add a new Courier -> ', courierAddResponse.errorMessage);
+      message.error('New Courier Cannot Added ', 3);
+    }
+    else {
+      console.log('res -> ', courierAddResponse);
+      message.success('New Courier Succesfull Added ', 3);
+        setTimeout(() => {
+          history.push({
+            pathname: '/couriers',
+          });
+        }, 2000);
+    }
   };
+
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -13,7 +34,7 @@ const CourierAdd = () => {
   return (
     <div className='page dashboard'>
       <div className='page__header'>
-        <h1>New Customer</h1>
+        <h1>New Couriers</h1>
       </div>
 
       <div className='page__content'>
@@ -50,7 +71,7 @@ const CourierAdd = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Please input valid email!",
+                      message: "Please input courier code!",
                     },
                   ]}
                 >
@@ -60,12 +81,8 @@ const CourierAdd = () => {
             </div>
 
             <div className='form__row--footer'>
-              <Button type='secondary' htmlType='submit'>
-                Cancel
-              </Button>
-
               <Button type='primary' htmlType='submit'>
-                Confirm
+                Add
               </Button>
             </div>
           </Form>

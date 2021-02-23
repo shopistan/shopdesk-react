@@ -19,6 +19,8 @@ import Customers from "./components/pages/customers";
 import CustomerAdd from "./components/pages/customers/customerAdd";
 import Couriers from "./components/pages/couriers";
 import CourierAdd from "./components/pages/couriers/courierAdd";
+import CourierEdit from "./components/pages/couriers/editCourier";
+import CourierDelete from "./components/pages/couriers/deleteCourier";
 import SignUp from "./components/pages/signUp";
 import SignIn from "./components/pages/signIn";
 import Outlet from "./components/pages/outlet";
@@ -98,17 +100,7 @@ const Routes = () => {
           exact
           path='/customers/add'
           render={() => renderWithLayout(CustomerAdd)}
-        ></Route>
-        <Route
-          exact
-          path='/couriers'
-          render={() => renderWithLayout(Couriers)}
-        ></Route>
-        <Route
-          exact
-          path='/couriers/add'
-          render={() => renderWithLayout(CourierAdd)}
-        ></Route>
+        ></Route>    
         <Route
           exact
           path='/signup'
@@ -123,6 +115,10 @@ const Routes = () => {
         <PrivateRoute exact path='/categories/add' component={CategoryAdd} /> 
         <PrivateRoute exact path='/categories/:id/edit' component={EditCategory} />
         <PrivateRoute exact path='/categories/:id/delete' component={DeleteCategory} />
+        <PrivateRoute exact path='/couriers' component={Couriers} />
+        <PrivateRoute exact path='/couriers/add' component={CourierAdd} /> 
+        <PrivateRoute exact path='/couriers/:id/edit' component={CourierEdit} />
+        <PrivateRoute exact path='/couriers/:id/delete' component={CourierDelete} />
       </Switch>
     </div>
   );

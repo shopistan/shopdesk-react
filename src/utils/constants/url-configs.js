@@ -19,6 +19,12 @@ const urls = {
   OULETS: {
     SELECT_OUTLET: BASE_URL +  '/api/users/selectStore',
   },
+  COURIERS: {
+    VIEW: BASE_URL +  '/api/couriers/view',
+    ADD_COURIER: BASE_URL +  '/api/couriers/add',
+    EDIT_COURIER: BASE_URL +  '/api/couriers/edit',
+    DELETE_COURIER: BASE_URL +  '/api/couriers/delete',
+  },
 };
 
 export default urls;

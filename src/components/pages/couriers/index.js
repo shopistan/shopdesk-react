@@ -1,22 +1,82 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-import { Button, Select, Input } from "antd";
+import { Button, Select, Input, message } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
-import EditableTable from "../../organism/table";
+import EditableCouriers from "../../organism/table/couriersTable";
 import { useHistory } from "react-router-dom";
+import * as CouriersApiUtil from '../../../utils/api/couriers-api-utils';
+
 
 const Couriers = () => {
+  const [paginationLimit, setPaginationLimit] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+
+
   const { Option } = Select;
 
   const history = useHistory();
 
   const { Search } = Input;
 
-  const onSearch = (value) => console.log(value);
+  const onSearch = async (e) => {
+    var currValue = e.target.value;
+    currValue = currValue.toLowerCase();
+    if (currValue === "") {
+      fetchCouriersData(paginationLimit, currentPage);
+    }
+    else {
+      const filteredData = data.filter((entry) => {
+        var courierName = entry.courier_name;
+        courierName = courierName.toLowerCase();
+        var courierCode = entry.courier_code;
+        courierCode = courierCode.toLowerCase();
+        return courierName.includes(currValue) || courierCode.includes(currValue);
+      });
+      setData(filteredData);
+    }
+  }
+
+  const fetchCouriersData = async (pageLimit = 10, pageNumber = 1) => {
+    const couriersViewResponse = await CouriersApiUtil.viewCouriers(pageLimit, pageNumber);
+    console.log('couriersViewResponse:', couriersViewResponse);
+
+    if (couriersViewResponse.hasError) {
+      console.log('Cant fetch couriers -> ', couriersViewResponse.errorMessage);
+      setLoading(false);
+    }
+    else {
+      console.log('res -> ', couriersViewResponse);
+      message.success(couriersViewResponse.message, 3);
+      setData(couriersViewResponse.courier);
+      setLoading(false);
+    }
+  }
+
+  useEffect(async () => {
+    fetchCouriersData();
+  }, []);
+
 
   function handleChange(value) {
-    console.log(`selected ${value}`);
+    setPaginationLimit(value);
+    setCurrentPage(1);
+    setLoading(true);
+    fetchCouriersData(value);
   }
+
+  function handlePageChange(currentPg) {
+    setCurrentPage(currentPg);
+    setLoading(true);
+    fetchCouriersData(paginationLimit, currentPg);
+  }
+
+  const handleAddCourier = () => {
+    history.push({
+      pathname: '/couriers/add',
+    });
+  };
 
   return (
     <div className='page categories'>
@@ -25,9 +85,7 @@ const Couriers = () => {
         <Button
           type='primary'
           icon={<PlusCircleOutlined />}
-          onClick={() => {
-            history.push("/couriers/add");
-          }}
+          onClick={() => handleAddCourier()}
         >
           Add New
         </Button>
@@ -52,16 +110,17 @@ const Couriers = () => {
             <Search
               placeholder='search category'
               allowClear
-              enterButton='Search'
+              //enterButton='Search'
               size='large'
-              onSearch={onSearch}
+              onChange={onSearch}
             />
           </div>
         </div>
 
         {/* Table */}
         <div className='table'>
-          <EditableTable />
+          <EditableCouriers pageLimit={paginationLimit} tableData={data} tableDataLoading={loading}
+            onClickPageChanger={handlePageChange} currentPageIndex={currentPage} />
         </div>
         {/* Table */}
       </div>
