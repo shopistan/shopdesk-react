@@ -28,65 +28,99 @@ import SignIn from "./components/pages/signIn";
 import Outlet from "./components/pages/outlet";
 import EditCategory from "./components/pages/categories/editCategory";
 import DeleteCategory from "./components/pages/categories/deleteCategory";
-import { getDataFromLocalStorage, checkUserAuthFromLocalStorage } from "./utils/local-storage/local-store-utils";
-import Constants from './utils/constants/constants';
-
+import {
+  getDataFromLocalStorage,
+  checkUserAuthFromLocalStorage,
+} from "./utils/local-storage/local-store-utils";
+import Constants from "./utils/constants/constants";
+import CategoryWise from "./components/pages/reports/categoryWise";
 
 const Routes = () => {
-
   const renderWithLayout = (Component, props, outletLayout) => (
     <AppShell {...props}>
-        {outletLayout == 'outlets' ? <Outlet/> : <Component />}
+      {outletLayout == "outlets" ? <Outlet /> : <Component />}
     </AppShell>
   );
 
-
   const authRenderWithLayout = (Component, props) => {
-    var readFromLocalStorage =  getDataFromLocalStorage('user');
-    readFromLocalStorage =  readFromLocalStorage.data ? readFromLocalStorage.data : null;
+    var readFromLocalStorage = getDataFromLocalStorage("user");
+    readFromLocalStorage = readFromLocalStorage.data
+      ? readFromLocalStorage.data
+      : null;
     var authenticateDashboard = false;
-    if(readFromLocalStorage){
-      if(checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication){
+    if (readFromLocalStorage) {
+      if (
+        checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
+      ) {
         authenticateDashboard = true;
+      } else {
+        authenticateDashboard = false;
       }
-      else {authenticateDashboard = false;}
     }
-    
-    return <AppShell {...props}>
-              {readFromLocalStorage == null
-                ?  <Component />
-                : authenticateDashboard ? <Redirect to='/dashboard' /> : <Redirect to='/outlets' /> }
-            </AppShell>
-  }
-  
+
+    return (
+      <AppShell {...props}>
+        {readFromLocalStorage == null ? (
+          <Component />
+        ) : authenticateDashboard ? (
+          <Redirect to='/dashboard' />
+        ) : (
+          <Redirect to='/outlets' />
+        )}
+      </AppShell>
+    );
+  };
+
   const PrivateRoute = ({ component: Component, ...rest }) => {
-    var readFromLocalStorage =  getDataFromLocalStorage('user');
-    readFromLocalStorage =  readFromLocalStorage.data ? readFromLocalStorage.data : null;
+    var readFromLocalStorage = getDataFromLocalStorage("user");
+    readFromLocalStorage = readFromLocalStorage.data
+      ? readFromLocalStorage.data
+      : null;
     var authenticateDashboard = false;
-    if(readFromLocalStorage){
-      if(checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication){
-        authenticateDashboard = true;}
-      else { authenticateDashboard = false;}
+    if (readFromLocalStorage) {
+      if (
+        checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
+      ) {
+        authenticateDashboard = true;
+      } else {
+        authenticateDashboard = false;
+      }
     }
-    
-    return <Route {...rest} render={(props) => (
-              readFromLocalStorage
-                ? authenticateDashboard ?  renderWithLayout(Component,  {...props}) : renderWithLayout(Component,  {...props}, 'outlets') 
-                : <Redirect to='/signin' />
-            )} />
-  }
 
+    return (
+      <Route
+        {...rest}
+        render={(props) =>
+          readFromLocalStorage ? (
+            authenticateDashboard ? (
+              renderWithLayout(Component, { ...props })
+            ) : (
+              renderWithLayout(Component, { ...props }, "outlets")
+            )
+          ) : (
+            <Redirect to='/signin' />
+          )
+        }
+      />
+    );
+  };
 
-  
   return (
     <div>
       <Switch>
-
         <PrivateRoute exact path='/dashboard' component={Dashboard} />
         <PrivateRoute exact path='/categories' component={Categories} />
         <PrivateRoute exact path='/suppliers' component={Suppliers} />
-        <PrivateRoute exact path='/suppliers/:id/edit' component={SupplierEdit} />
-        <PrivateRoute exact path='/suppliers/:id/delete' component={SupplierDelete} />
+        <PrivateRoute
+          exact
+          path='/suppliers/:id/edit'
+          component={SupplierEdit}
+        />
+        <PrivateRoute
+          exact
+          path='/suppliers/:id/delete'
+          component={SupplierDelete}
+        />
         <PrivateRoute exact path='/suppliers/add' component={SupplierAdd} />
         <PrivateRoute exact path='/taxes' component={Taxes} />
         <PrivateRoute exact path='/taxes/add' component={TaxAdd} />
@@ -94,7 +128,11 @@ const Routes = () => {
         <PrivateRoute exact path='/products/add' component={ProductAdd} />
         <PrivateRoute exact path='/products/upload' component={ProductUpload} />
         <PrivateRoute exact path='/products/lookup' component={ProductLookup} />
-        <PrivateRoute exact path='/products/discount' component={ProductDiscount} />
+        <PrivateRoute
+          exact
+          path='/products/discount'
+          component={ProductDiscount}
+        />
         <Route
           exact
           path='/customers'
@@ -104,25 +142,38 @@ const Routes = () => {
           exact
           path='/customers/add'
           render={() => renderWithLayout(CustomerAdd)}
-        ></Route>    
+        ></Route>
         <Route
           exact
           path='/signup'
           render={() => authRenderWithLayout(SignUp)}
         ></Route>
-         <Route
+        <Route
           exact
           path='/signin'
           render={() => authRenderWithLayout(SignIn)}
         ></Route>
         <PrivateRoute exact path='/outlets' component={Outlet} />
-        <PrivateRoute exact path='/categories/add' component={CategoryAdd} /> 
-        <PrivateRoute exact path='/categories/:id/edit' component={EditCategory} />
-        <PrivateRoute exact path='/categories/:id/delete' component={DeleteCategory} />
+        <PrivateRoute exact path='/categories/add' component={CategoryAdd} />
+        <PrivateRoute
+          exact
+          path='/categories/:id/edit'
+          component={EditCategory}
+        />
+        <PrivateRoute
+          exact
+          path='/categories/:id/delete'
+          component={DeleteCategory}
+        />
         <PrivateRoute exact path='/couriers' component={Couriers} />
-        <PrivateRoute exact path='/couriers/add' component={CourierAdd} /> 
+        <PrivateRoute exact path='/couriers/add' component={CourierAdd} />
         <PrivateRoute exact path='/couriers/:id/edit' component={CourierEdit} />
-        <PrivateRoute exact path='/couriers/:id/delete' component={CourierDelete} />
+        <PrivateRoute
+          exact
+          path='/couriers/:id/delete'
+          component={CourierDelete}
+        />
+        <PrivateRoute exact path='/categoryWise' component={CategoryWise} />
       </Switch>
     </div>
   );
