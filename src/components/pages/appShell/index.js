@@ -100,39 +100,48 @@ const AppShell = (props) => {
       <Layout className='content-layout'>
         {readFromLocalStorage && (
           <Header className='header site-layout-background'>
-            <div className='header__menu-btn'>
-              {React.createElement(
-                collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-                {
-                  className: "trigger",
-                  onClick: toggle,
-                }
-              )}
+            <div className='header__left'>
+              <div className='header__menu-btn'>
+                {React.createElement(
+                  collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+                  {
+                    className: "trigger",
+                    onClick: toggle,
+                  }
+                )}
+              </div>
+
+              <div className='header__mob-menu-btn'>
+                <Button
+                  type='primary'
+                  shape='circle'
+                  icon={<MenuOutlined />}
+                  onClick={(e) => {
+                    let mobile_menu = document.querySelector(".mobile__menu");
+                    let content_body = document.querySelector(
+                      ".content-layout"
+                    );
+
+                    mobile_menu.classList.toggle("mob_menu_on");
+                    content_body.classList.toggle("mobile_menu_on_body");
+                  }}
+                />
+              </div>
+
+              <h2 className='heading'>
+                {storeObj ? storeObj.store_name : "N/A - "}
+              </h2>
             </div>
 
-            <div className='header__mob-menu-btn'>
-              <Button
-                type='primary'
-                shape='circle'
-                icon={<MenuOutlined />}
-                onClick={(e) => {
-                  let mobile_menu = document.querySelector(".mobile__menu");
-                  let content_body = document.querySelector(".content-layout");
-
-                  mobile_menu.classList.toggle("mob_menu_on");
-                  content_body.classList.toggle("mobile_menu_on_body");
-                }}
-              />
-            </div>
-            <span style={{ borderLeft: "2px solid #000" }}></span>
-
-            <div className='header__content'>
+            <div className='header__right'>
               <div className='outlet'>
-                <h2>{storeObj ? storeObj.store_name : "N/A - "}</h2>
                 <span>
                   <small>
-                    <a onClick={toggleOutlet} className='outlet__btn'>
-                      <span className='outlet-name'> Switch outlet </span>
+                    <a
+                      onClick={toggleOutlet}
+                      className='outlet__btn outlet-name'
+                    >
+                      Switch outlet
                     </a>
                   </small>
                 </span>
@@ -141,10 +150,10 @@ const AppShell = (props) => {
               <div className='user'>
                 <Dropdown overlay={menu} trigger={["click"]}>
                   <a
-                    className='user-dropdown-link'
+                    className='user__dropdown'
                     onClick={(e) => e.preventDefault()}
                   >
-                    <span> Hi, user </span> <DownOutlined />
+                    <span>Hi, user</span> <DownOutlined />
                   </a>
                 </Dropdown>
                 <Avatar

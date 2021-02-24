@@ -34,14 +34,53 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  // padding: 1.6rem !important;
-  // height: auto !important;
-  // line-height: initial !important;
-  // background: #f8fdfb !important;
-  // height: 110px !important;
 
   @include respond(mobile) {
-    // padding: 1.6rem !important;
+    height: auto !important;
+    padding: 0 1.5rem !important;
+    flex-direction: column;
+  }
+
+  &__left {
+    display: flex;
+
+    @include respond(mobile) {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .heading {
+      color: $color-white;
+      margin-left: 2rem;
+    }
+  }
+
+  &__right {
+    @extend %flex-between;
+
+    color: $color-white;
+    width: 95%;
+
+    @include respond(mobile) {
+      width: 100%;
+      flex-direction: row-reverse;
+    }
+
+    h2 {
+      color: $color-white;
+      text-transform: uppercase;
+    }
+
+    .outlet {
+      display: flex;
+
+      &__btn {
+        margin-left: 1rem;
+        padding: 0.5rem 1rem;
+        color: $color-white;
+        border: 1px solid $color-white;
+      }
+    }
   }
 
   &__menu-btn {
@@ -63,54 +102,19 @@
     }
   }
 
-  &__content {
-    @extend %flex-between;
-
-    color: $color-white;
-    width: 95%;
-
-    h2 {
-      color: $color-white;
-      text-transform: uppercase;
-    }
-
-    .outlet {
-      display: flex;
-
-      &__btn {
-        margin-left: 1rem;
-        padding: 1rem 2rem;
-        color: $color-white;
-        border: 1px solid $color-white;
-      }
-    }
-  }
-
   .user {
     @extend %flex-center;
 
     &__avatar {
-      margin-left: 10px;
+      margin-left: 1rem;
 
       @include respond(mobile) {
         display: none;
       }
     }
-  }
 
-  .outlet-name:hover {
-    text-decoration: underline;
-  }
-  .outlet-name {
-    color: #000 !important;
-    font-size: 1.4rem;
-  }
-  .user-dropdown-link {
-    color: #9a9a9a;
-    display: inline-block;
-    text-transform: capitalize;
-  }
-  .user-dropdown-link:hover {
-    color: #333;
+    &__dropdown {
+      color: $color-white;
+    }
   }
 }

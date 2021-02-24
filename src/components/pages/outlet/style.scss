@@ -1,16 +1,21 @@
 @import "../../../styles/variables";
+@import "../../../styles/mixins";
 
 .outlet {
   &__select {
     display: flex;
     justify-content: space-around;
     cursor: pointer;
+
+    @include respond(mobile) {
+      flex-direction: column;
+    }
   }
 
   &__link {
     padding: 2rem 5rem;
     background-color: $color-white;
-    color: #333;
+    color: $color-black;
     display: inline-block;
     transition: all 0.3s;
     border: 3px solid #eee;
@@ -18,14 +23,19 @@
     &:hover {
       transform: scale(0.9);
     }
+
+    @include respond(mobile) {
+      &:not(:last-child) {
+        margin-bottom: 2rem;
+      }
+    }
   }
 
   &__active {
-    border: 3px solid #3da446;
+    border: 3px solid $color-primary;
   }
-  
 }
 
-.loading-container{
+.loading-container {
   text-align: center;
 }
