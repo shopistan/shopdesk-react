@@ -34,6 +34,10 @@ import {
 } from "./utils/local-storage/local-store-utils";
 import Constants from "./utils/constants/constants";
 import CategoryWise from "./components/pages/reports/categoryWise";
+import InventoryDump from "./components/pages/reports/inventoryDump";
+import OmniSalesSummary from "./components/pages/reports/omniSalesSummary";
+import ProductHistory from "./components/pages/reports/productHistory";
+import SalesSummary from "./components/pages/reports/salesSummary";
 
 const Routes = () => {
   const renderWithLayout = (Component, props, outletLayout) => (
@@ -174,6 +178,14 @@ const Routes = () => {
           component={CourierDelete}
         />
         <PrivateRoute exact path='/categoryWise' component={CategoryWise} />
+        <PrivateRoute exact path='/inventoryDump' component={InventoryDump} />
+        <PrivateRoute
+          exact
+          path='/omniSalesSummary'
+          component={OmniSalesSummary}
+        />
+        <PrivateRoute exact path='/productHistory' component={ProductHistory} />
+        <PrivateRoute exact path='/salesSummary' component={SalesSummary} />
       </Switch>
     </div>
   );

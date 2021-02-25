@@ -1,6 +1,8 @@
 import React from "react";
+import "../style.scss";
+
 import { DatePicker, Button } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { BarsOutlined } from "@ant-design/icons";
 
 const CategoryWise = () => {
   const { RangePicker } = DatePicker;
@@ -8,16 +10,18 @@ const CategoryWise = () => {
   return (
     <div className='page reports'>
       <div className='page__header'>
-        <h1>Category Wise</h1>
+        <h1>Category Report</h1>
       </div>
 
       <div className='page__content'>
         <div className='action-row'>
-          <RangePicker />
-          <Button type='primary' icon={<SearchOutlined />}>
+          <RangePicker className='date-picker' />
+          <Button type='primary' icon={<BarsOutlined />}>
             Fetch
           </Button>
         </div>
+
+        <div className='page__table'>{/* Insert Table Here */}</div>
       </div>
     </div>
   );
