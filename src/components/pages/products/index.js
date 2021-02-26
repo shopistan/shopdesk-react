@@ -9,7 +9,7 @@ import * as ProductsApiUtil from '../../../utils/api/products-api-utils';
 const Products = () => {
   const [paginationLimit, setPaginationLimit] = useState(20);
   const [paginationData, setPaginationData] = useState({});
-  const [, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
@@ -63,7 +63,13 @@ const Products = () => {
     setPaginationLimit(value);
     //setCurrentPage(1);
     setLoading(true);
-    fetchProductsData(value);
+    if (currentPage > Math.ceil(paginationData.totalElements / value)) {
+      fetchProductsData(value, 1);
+    }
+    else {
+      fetchProductsData(value, currentPage);
+    }
+
   }
 
   function handlePageChange(currentPg) {

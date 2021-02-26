@@ -66,6 +66,7 @@ const DeleteProduct = () => {
     };
 
 
+
     return (
         <div className='page categoryDel'>
             <div className='page__header'>
@@ -83,12 +84,12 @@ const DeleteProduct = () => {
 
                     <div className='form__row'>
                         <div className='form__col'>
-                            
+
                             <Text>Do you really want to delete '
                                 {productData &&
-                                    productData.product_variant1_value &&  productData.product_variant2_value ? `${productData.product_name}/${productData.product_variant1_value}/${productData.product_variant2_value}`
-                                    : productData.product_variant1_value  ? `${productData.product_name}/${productData.product_variant1_value}`
-                                    : productData.product_variant2_value ? `${productData.product_name}/${productData.product_variant2_value}`
+                                    productData.product_variant1_value !== "undefined" &&  productData.product_variant2_value !== "undefined" ? `${productData.product_name}/ ${productData.product_variant1_value}/ ${productData.product_variant2_value}`
+                                    : productData.product_variant1_value !== "undefined" ? `${productData.product_name}/ ${productData.product_variant1_value}`
+                                    : productData.product_variant2_value !== "undefined" ? `${productData.product_name}/ ${productData.product_variant2_value}`
                                     : productData.product_name
                                 }
 

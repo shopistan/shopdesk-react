@@ -60,7 +60,7 @@ const EditProduct = (props) => {
 
 
     const fetchProductData = async (values) => {
-        
+
         const getProductsResponse = await ProductsApiUtil.getProduct(history.location.data.product_id);
         console.log('getProductsResponse:', getProductsResponse);
         if (getProductsResponse.hasError) {
@@ -556,7 +556,7 @@ const EditProduct = (props) => {
                                 </div>
 
                                 {/* Row */}
-                                {productData && productData.product_variant1_name &&
+                                {productData && productData.product_variant1_name !== "null" &&
                                     <div className='form__row'>
                                         <div className='form__col'>
                                             <Form.Item
@@ -579,7 +579,7 @@ const EditProduct = (props) => {
                                 {/* Row */}
 
                                 {/* Row */}
-                                {productData && productData.product_variant2_name &&
+                                {productData && productData.product_variant2_name !== "null" &&
                                     <div className='form__row'>
                                         <div className='form__col'>
                                             <Form.Item

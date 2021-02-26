@@ -59,9 +59,14 @@ const Categories = () => {
 
   function handleChange(value) {
     setPaginationLimit(value);
-    setCurrentPage(1);
+    //setCurrentPage(1);
     setLoading(true);
-    fetchCategoriesData(value);
+    if (currentPage > Math.ceil(paginationData.totalElements / value)) {
+      fetchCategoriesData(value, 1);
+    }
+    else {
+      fetchCategoriesData(value, currentPage);
+    }
   }
 
   function handlePageChange(currentPg) {
@@ -125,7 +130,6 @@ const Categories = () => {
             paginationData={paginationData}
             tableDataLoading={loading}
             onClickPageChanger={handlePageChange}
-            currentPageIndex={currentPage}
           />
         </div>
         {/* Table */}
