@@ -1,11 +1,10 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 
 import { Button, Select, Input } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import EditableTable from "../../organism/table";
-import { useHistory } from 'react-router-dom';
-import * as CategoriesApiUtil from '../../../utils/api/categories-api-utils';
-
+import { useHistory } from "react-router-dom";
+import * as CategoriesApiUtil from "../../../utils/api/categories-api-utils";
 
 const Categories = () => {
   const [paginationLimit, setPaginationLimit] = useState(10);
@@ -21,40 +20,42 @@ const Categories = () => {
 
   const onSearch = async (e) => {
     const currValue = e.target.value;
-    if(currValue === "") {
+    if (currValue === "") {
       fetchCategoriesData(paginationLimit, currentPage);
-    } 
-    else {
+    } else {
       const filteredData = data.filter((entry) => {
-      var item_name = entry.category_name;
-      item_name= item_name.toLowerCase();
-      return item_name.includes(currValue.toLowerCase())
+        var item_name = entry.category_name;
+        item_name = item_name.toLowerCase();
+        return item_name.includes(currValue.toLowerCase());
       });
       setData(filteredData);
     }
-  }
+  };
 
-  const fetchCategoriesData =  async (pageLimit = 10, pageNumber = 1)  => {
-    const categoriesViewResponse = await CategoriesApiUtil.viewCategories(pageLimit, pageNumber);
-    console.log('categoriesViewResponse:', categoriesViewResponse);
+  const fetchCategoriesData = async (pageLimit = 10, pageNumber = 1) => {
+    const categoriesViewResponse = await CategoriesApiUtil.viewCategories(
+      pageLimit,
+      pageNumber
+    );
+    console.log("categoriesViewResponse:", categoriesViewResponse);
 
     if (categoriesViewResponse.hasError) {
-      console.log('Cant fetch categories -> ', categoriesViewResponse.errorMessage);
+      console.log(
+        "Cant fetch categories -> ",
+        categoriesViewResponse.errorMessage
+      );
       setLoading(false);
-    }
-    else {
-      console.log('res -> ', categoriesViewResponse);
+    } else {
+      console.log("res -> ", categoriesViewResponse);
       setData(categoriesViewResponse.categories.data);
       setPaginationData(categoriesViewResponse.categories.page);
       setLoading(false);
     }
+  };
 
-  }
-
-  useEffect( async () => {
+  useEffect(async () => {
     fetchCategoriesData();
   }, []);
-
 
   function handleChange(value) {
     setPaginationLimit(value);
@@ -71,16 +72,19 @@ const Categories = () => {
 
   const handleAddCategory = () => {
     history.push({
-      pathname: '/categories/add',
+      pathname: "/categories/add",
     });
   };
 
   return (
     <div className='page categories'>
       <div className='page__header'>
-        <h2>Categories</h2>
-        <Button type='primary' icon={<PlusCircleOutlined />}
-          onClick={() => handleAddCategory()}>
+        <h1>Categories</h1>
+        <Button
+          type='primary'
+          icon={<PlusCircleOutlined />}
+          onClick={() => handleAddCategory()}
+        >
           Add New
         </Button>
       </div>
@@ -108,15 +112,21 @@ const Categories = () => {
               //enterButton='Search'
               size='large'
               //onSearch={onSearch}
-              onChange= {onSearch}
+              onChange={onSearch}
             />
           </div>
         </div>
 
         {/* Table */}
         <div className='table'>
-          <EditableTable pageLimit={paginationLimit} tableData={data} paginationData={paginationData} 
-             tableDataLoading={loading} onClickPageChanger={handlePageChange} currentPageIndex ={currentPage} />
+          <EditableTable
+            pageLimit={paginationLimit}
+            tableData={data}
+            paginationData={paginationData}
+            tableDataLoading={loading}
+            onClickPageChanger={handlePageChange}
+            currentPageIndex={currentPage}
+          />
         </div>
         {/* Table */}
       </div>
