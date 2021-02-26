@@ -21,6 +21,7 @@ import Customers from "./components/pages/customers";
 import CustomerAdd from "./components/pages/customers/customerAdd";
 import CustomerProfile from "./components/pages/customers/customerProfile";
 import CustomerPay from "./components/pages/customers/customerPay";
+import CustomerHistory from "./components/pages/customers/customerHistory";
 import Couriers from "./components/pages/couriers";
 import CourierAdd from "./components/pages/couriers/courierAdd";
 import CourierEdit from "./components/pages/couriers/editCourier";
@@ -158,6 +159,11 @@ const Routes = () => {
           exact
           path="/customers/pay"
           render={() => renderWithLayout(CustomerPay)}
+        ></Route>
+        <Route
+          exact
+          path="/customers/history"
+          render={() => renderWithLayout(CustomerHistory)}
         ></Route>
         <Route
           exact
