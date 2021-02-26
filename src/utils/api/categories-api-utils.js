@@ -65,3 +65,19 @@ export const editCategory = async (categoryId, categoryName) => {
     editCategoryFormDataBody //body
   );
 };
+
+
+export const getCategory = async (categoryId) => {
+  const formDataPair = {
+      cat_id: categoryId
+  };
+  const getCategoryFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+  const url = UrlConstants.CATEGORIES.GET_CATEGORY;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+      url, //api url
+      callType, //calltype
+      getCategoryFormDataBody //body
+  );
+};
