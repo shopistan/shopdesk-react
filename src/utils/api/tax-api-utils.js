@@ -50,3 +50,34 @@ export const editTax = async (taxId, newTaxName, newTaxValue) => {
     editTaxFormDataBody //body
   );
 };
+
+export const viewTaxes = async (limit, PageNumber) => {
+  const formDataPair = {
+    limit: limit,
+    page: PageNumber,
+};;
+  const viewTaxesFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+  const url = UrlConstants.TAX.VIEW;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+    viewTaxesFormDataBody //body
+  );
+};
+
+export const getTax = async (taxId) => {
+  const formDataPair = {
+      tax_id: taxId
+  };
+  const getProductFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+  const url = UrlConstants.TAX.GET_TAX;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+      url, //api url
+      callType, //calltype
+      getProductFormDataBody //body
+  );
+};
