@@ -49,12 +49,13 @@ const Couriers = () => {
     else {
       console.log('res -> ', couriersViewResponse);
       message.success(couriersViewResponse.message, 3);
+      console.log('checking here for couriers',couriersViewResponse.courier)
       setData(couriersViewResponse.courier);
       setLoading(false);
     }
   }
 
-  useEffect(async () => {
+  useEffect( () => {
     fetchCouriersData();
   }, []);
 
