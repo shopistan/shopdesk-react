@@ -1,29 +1,19 @@
 import React from "react";
-import "./style.scss";
 
-import { Button } from "antd";
-import {
-  EditOutlined,
-  CreditCardOutlined,
-  HistoryOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+import { Button, Form, Input, Select } from "antd";
+import {} from "@ant-design/icons";
 
 const CustomerPay = () => {
+  const { Option } = Select;
+
+  function handleChange(value) {
+    console.log(`selected ${value}`);
+  }
+
   return (
     <div className="page customer-profile">
       <div className="page__header">
-        <h1>Customer Profile</h1>
-
-        <div className="page__header__buttons">
-          <Button type="primary" icon={<EditOutlined />}>
-            Edit
-          </Button>
-
-          <Button type="primary" icon={<DeleteOutlined />}>
-            Delete
-          </Button>
-        </div>
+        <h1>Pay Account Balance</h1>
       </div>
 
       <div className="page__content">
@@ -56,21 +46,61 @@ const CustomerPay = () => {
           </ul>
         </div>
 
-        <div className="links">
-          <ul>
-            <li>
-              <a href="#" className="link">
-                <HistoryOutlined />
-                View Credit History
-              </a>
-            </li>
-            <li>
-              <a href="#" className="link">
-                <CreditCardOutlined />
-                Pay Account Balance
-              </a>
-            </li>
-          </ul>
+        <div className="page__form">
+          <Form
+            name="basic"
+            layout="vertical"
+            initialValues={{
+              remember: true,
+            }}
+          >
+            <div className="form__row">
+              <div className="form__col">
+                <Form.Item
+                  label="Payment Type"
+                  name="type"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please select payment type!",
+                    },
+                  ]}
+                >
+                  <Select defaultValue="Cash" onChange={handleChange}>
+                    <Option value="cash">Cash</Option>
+                    <Option value="credit card">Credit Card</Option>
+                  </Select>
+                </Form.Item>
+              </div>
+            </div>
+
+            <div className="form__row">
+              <div className="form__col">
+                <Form.Item
+                  label="Amount"
+                  name="amount"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input amount!",
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+              </div>
+            </div>
+
+            <div className="form__row--footer">
+              <Button type="secondary" htmlType="submit">
+                Cancel
+              </Button>
+
+              <Button type="primary" htmlType="submit">
+                Confirm
+              </Button>
+            </div>
+          </Form>
         </div>
       </div>
     </div>
