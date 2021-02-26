@@ -1,0 +1,24 @@
+.customer-profile {
+  .page__content {
+    display: flex;
+
+    > * {
+      flex: 1;
+    }
+
+    li {
+      display: flex;
+      padding: 1rem 0;
+
+      > * {
+        flex: 1;
+      }
+    }
+
+    .link {
+      span {
+        margin-right: 1.5rem;
+      }
+    }
+  }
+}

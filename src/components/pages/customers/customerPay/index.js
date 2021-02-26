@@ -9,7 +9,7 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 
-const CustomerProfile = () => {
+const CustomerPay = () => {
   return (
     <div className="page customer-profile">
       <div className="page__header">
@@ -77,4 +77,4 @@ const CustomerProfile = () => {
   );
 };
 
-export default CustomerProfile;
+export default CustomerPay;
