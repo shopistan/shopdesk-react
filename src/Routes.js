@@ -13,6 +13,8 @@ import SupplierDelete from "./components/pages/suppliers/deleteSupplier";
 import Taxes from "./components/pages/taxes";
 import TaxAdd from "./components/pages/taxes/taxAdd";
 import Products from "./components/pages/products";
+import ProductEdit from "./components/pages/products/editProduct";
+import ProductDelete from "./components/pages/products/deleteProduct";
 import ProductAdd from "./components/pages/products/productAdd";
 import ProductDiscount from "./components/pages/products/productDiscount";
 import ProductLookup from "./components/pages/products/productLookup";
@@ -187,16 +189,14 @@ const Routes = () => {
           path="/categories/:id/delete"
           component={DeleteCategory}
         />
-        <PrivateRoute exact path="/couriers" component={Couriers} />
-        <PrivateRoute exact path="/couriers/add" component={CourierAdd} />
-        <PrivateRoute exact path="/couriers/:id/edit" component={CourierEdit} />
-        <PrivateRoute
-          exact
-          path="/couriers/:id/delete"
-          component={CourierDelete}
-        />
-        <PrivateRoute exact path="/categoryWise" component={CategoryWise} />
-        <PrivateRoute exact path="/inventoryDump" component={InventoryDump} />
+        <PrivateRoute exact path='/couriers' component={Couriers} />
+        <PrivateRoute exact path='/couriers/add' component={CourierAdd} />
+        <PrivateRoute exact path='/couriers/:id/edit' component={CourierEdit} />
+        <PrivateRoute exact path='/couriers/:id/delete' component={CourierDelete} />
+        <PrivateRoute exact path='/products/:id/edit' component={ProductEdit} />
+        <PrivateRoute exact path='/products/:id/delete' component={ProductDelete} />
+        <PrivateRoute exact path='/categoryWise' component={CategoryWise} />
+        <PrivateRoute exact path='/inventoryDump' component={InventoryDump} />
         <PrivateRoute
           exact
           path="/omniSalesSummary"
