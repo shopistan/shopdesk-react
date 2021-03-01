@@ -39,9 +39,11 @@ const EditableTable = (props) => {
 
   useEffect(async () => {
     setData(props.tableData);
-    setcurrentPageNumber(props.currentPageIndex); 
+    if( currentPageNumber > Math.ceil(props.paginationData.totalPages)){
+      setcurrentPageNumber(1);
+    }
 
-  }, [props.tableData, props.tableDataLoading, props.paginationData, props.currentPageIndex]);  /* imp passing props to re-render */
+  }, [props.tableData, props.tableDataLoading, props.paginationData ]);  /* imp passing props to re-render */
 
   const columns = [
     {

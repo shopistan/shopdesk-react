@@ -1,10 +1,72 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import "../productsStyleMain.scss";
+import {
+  ProfileOutlined,
+} from "@ant-design/icons";
+import { Input, AutoComplete, Select, Button, message } from "antd";
+import { useHistory } from "react-router-dom";
+import ProductsNestedTable from "../../../organism/table/productsNestedTable/productsViewNestedTable";
+import ProductsLookUpTable from "../../../organism/table/productsNestedTable/productsLookUp/productsLookUpTable";
+import * as ProductsApiUtil from '../../../../utils/api/products-api-utils';
 
-import { Input } from "antd";
 
 const ProductLookup = () => {
+  const history = useHistory();
+  const [productsSearchResult, setProductsSearchResult] = useState([]);
+  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState("");
+  const [selectedProductLookUpId, setSelectedProductLookUpId] = useState("");
+  const [variantsTableCheck, setVariantsTableCheck] = useState(false);
+  const [lookUpTableCheck, setlookUpTableCheck] = useState(false);
+
+
   const { Search } = Input;
-  const onSearch = (value) => console.log(value);
+  const { Option } = Select;
+
+
+  useEffect(async () => {
+
+  }, []);
+
+
+  const handleSearch = async (value: string) => {
+    setSelectedValue(value);
+
+    const productsSearchResponse = await ProductsApiUtil.searchProductsByName(value);
+    console.log('productsSearchResponse:', productsSearchResponse);
+    if (productsSearchResponse.hasError) {
+      console.log('Cant Search Products -> ', productsSearchResponse.errorMessage);
+    }
+    else {
+      console.log('res -> ', productsSearchResponse);
+      //message.success(productsSearchResponse.message, 3);
+      setProductsSearchResult(productsSearchResponse);
+    }
+
+  };
+
+
+  const handleSelect = (value, option) => {
+    setSelectedValue(option.children);
+    setSelectedProduct(value);  //passes productuinqId
+
+  };
+
+
+  const handleFetchProductLookupData = (rowData) => {
+    setSelectedProductLookUpId(rowData.product_sku);
+    setlookUpTableCheck(true);
+
+  };
+
+  const handleFetchProduct = (data) => {
+    if (selectedValue === '') { message.warning('please select product', 3); }
+    else {
+      setVariantsTableCheck(true);
+    }
+  };
+
+
 
   return (
     <div className='page dashboard'>
@@ -15,14 +77,53 @@ const ProductLookup = () => {
       <div className='page__content'>
         <div className='page__form'>
           <h2>Select a Product</h2>
-          <Search
-            placeholder='Select a Product'
-            allowClear
-            enterButton='Fetch'
-            size='large'
-            loading
-            onSearch={onSearch}
-          />
+
+          <AutoComplete style={{ width: "100%" }}
+            dropdownMatchSelectWidth={500}
+            value={selectedValue}
+            onSearch={handleSearch}
+            onSelect={handleSelect}
+            placeholder="select a product">
+            {productsSearchResult.product && productsSearchResult.product.map((item) => (
+              <Option key={item.product_unique} value={item.product_unique}>
+                {item.product_name}
+              </Option>
+            ))}
+          </AutoComplete>
+
+          <div className='fetch-product-row'>
+            <Button type='default' className='fetch-product-btn'
+              icon={<ProfileOutlined />}
+              onClick={() => handleFetchProduct()}>
+              fetch
+            </Button>
+          </div>
+
+          {variantsTableCheck &&
+            <div className='page__content'>
+              <hr/>
+              <div className='product-variants-table'>{/* Insert Table Here */}
+                <div className='form__section__header'>
+                  <h3 className='variants-heading'>Product Variants</h3>
+                </div>
+                <ProductsNestedTable productUniqId={selectedProduct} originPage={"lookup"}
+                  onClickFetchProductLookupData = {handleFetchProductLookupData} />
+              </div>
+            </div>
+          }
+
+          {variantsTableCheck && lookUpTableCheck &&
+            <div className='page__content'>
+              <hr/>
+              <div className='product-lookup-table'>{/* Insert Table Here */}
+                <div className='form__section__header'>
+                  <h3 className='lookup-heading'>Product Lookup Data</h3>
+                </div>
+                <ProductsLookUpTable productSku={selectedProductLookUpId} />
+              </div>
+            </div>
+          }
+
         </div>
       </div>
     </div>

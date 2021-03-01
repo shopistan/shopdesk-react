@@ -67,7 +67,7 @@ const Suppliers = () => {
 
   function handleChange(value) {
     setPaginationLimit(value);
-    setCurrentPage(1);
+    //setCurrentPage(1);
     setLoading(true);
     if (currentPage > Math.ceil(paginationData.totalElements / value)) {
       fetchSupplierData(value, 1);
@@ -132,7 +132,7 @@ const Suppliers = () => {
         {/* Table */}
         <div className='table'>
           <EditableSupplier pageLimit={paginationLimit} tableData={data} paginationData={paginationData}
-            tableDataLoading={loading} onClickPageChanger={handlePageChange} currentPageIndex={currentPage} />
+            tableDataLoading={loading} onClickPageChanger={handlePageChange}  />
         </div>
         {/* Table */}
       </div>
