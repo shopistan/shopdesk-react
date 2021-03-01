@@ -13,17 +13,12 @@ import SupplierDelete from "./components/pages/suppliers/deleteSupplier";
 import Taxes from "./components/pages/taxes";
 import TaxAdd from "./components/pages/taxes/taxAdd";
 import Products from "./components/pages/products";
-import ProductEdit from "./components/pages/products/editProduct";
-import ProductDelete from "./components/pages/products/deleteProduct";
 import ProductAdd from "./components/pages/products/productAdd";
 import ProductDiscount from "./components/pages/products/productDiscount";
 import ProductLookup from "./components/pages/products/productLookup";
 import ProductUpload from "./components/pages/products/productUpload";
 import Customers from "./components/pages/customers";
 import CustomerAdd from "./components/pages/customers/customerAdd";
-import CustomerProfile from "./components/pages/customers/customerProfile";
-import CustomerPay from "./components/pages/customers/customerPay";
-import CustomerHistory from "./components/pages/customers/customerHistory";
 import Couriers from "./components/pages/couriers";
 import CourierAdd from "./components/pages/couriers/courierAdd";
 import CourierEdit from "./components/pages/couriers/editCourier";
@@ -43,6 +38,9 @@ import InventoryDump from "./components/pages/reports/inventoryDump";
 import OmniSalesSummary from "./components/pages/reports/omniSalesSummary";
 import ProductHistory from "./components/pages/reports/productHistory";
 import SalesSummary from "./components/pages/reports/salesSummary";
+import Setup from "./components/pages/setup";
+import OutletAdd from "./components/pages/setup/outlets/outletAdd";
+import UserAdd from "./components/pages/setup/users/userAdd";
 
 const Routes = () => {
   const renderWithLayout = (Component, props, outletLayout) => (
@@ -154,21 +152,6 @@ const Routes = () => {
         ></Route>
         <Route
           exact
-          path="/customers/profile"
-          render={() => renderWithLayout(CustomerProfile)}
-        ></Route>
-        <Route
-          exact
-          path="/customers/pay"
-          render={() => renderWithLayout(CustomerPay)}
-        ></Route>
-        <Route
-          exact
-          path="/customers/history"
-          render={() => renderWithLayout(CustomerHistory)}
-        ></Route>
-        <Route
-          exact
           path="/signup"
           render={() => authRenderWithLayout(SignUp)}
         ></Route>
@@ -189,14 +172,16 @@ const Routes = () => {
           path="/categories/:id/delete"
           component={DeleteCategory}
         />
-        <PrivateRoute exact path='/couriers' component={Couriers} />
-        <PrivateRoute exact path='/couriers/add' component={CourierAdd} />
-        <PrivateRoute exact path='/couriers/:id/edit' component={CourierEdit} />
-        <PrivateRoute exact path='/couriers/:id/delete' component={CourierDelete} />
-        <PrivateRoute exact path='/products/:id/edit' component={ProductEdit} />
-        <PrivateRoute exact path='/products/:id/delete' component={ProductDelete} />
-        <PrivateRoute exact path='/categoryWise' component={CategoryWise} />
-        <PrivateRoute exact path='/inventoryDump' component={InventoryDump} />
+        <PrivateRoute exact path="/couriers" component={Couriers} />
+        <PrivateRoute exact path="/couriers/add" component={CourierAdd} />
+        <PrivateRoute exact path="/couriers/:id/edit" component={CourierEdit} />
+        <PrivateRoute
+          exact
+          path="/couriers/:id/delete"
+          component={CourierDelete}
+        />
+        <PrivateRoute exact path="/categoryWise" component={CategoryWise} />
+        <PrivateRoute exact path="/inventoryDump" component={InventoryDump} />
         <PrivateRoute
           exact
           path="/omniSalesSummary"
@@ -204,6 +189,10 @@ const Routes = () => {
         />
         <PrivateRoute exact path="/productHistory" component={ProductHistory} />
         <PrivateRoute exact path="/salesSummary" component={SalesSummary} />
+
+        <PrivateRoute exact path="/setup" component={Setup} />
+        <PrivateRoute exact path="/setup/outlet/add" component={OutletAdd} />
+        <PrivateRoute exact path="/setup/user/add" component={UserAdd} />
       </Switch>
     </div>
   );
