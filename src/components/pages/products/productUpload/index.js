@@ -3,6 +3,8 @@ import React from "react";
 import { Form, Upload, Button } from "antd";
 
 import { UploadOutlined } from "@ant-design/icons";
+import UrlConstants from '../../../../utils/constants/url-configs';
+
 
 const ProductUpload = () => {
   const onFinish = (values: any) => {
@@ -12,6 +14,9 @@ const ProductUpload = () => {
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
+
+  var ProductBulkTemplateImageSrc = `${UrlConstants.BASE_URL}/template-files/bulk-products.csv`;  //imp to set image source
+
 
   return (
     <div className='page dashboard'>
@@ -35,7 +40,7 @@ const ProductUpload = () => {
                     <Button icon={<UploadOutlined />}>Click to upload</Button>
                   </Upload>
                 </Form.Item>
-                <span>Download template file from here.</span>
+                <span>Download template file from here.<a href={ProductBulkTemplateImageSrc} download> &nbsp;here</a></span>
               </div>
 
               <div className='form__col'>

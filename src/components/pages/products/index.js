@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
-import { Button, Select, Input, message } from "antd";
-import { PlusCircleOutlined } from "@ant-design/icons";
+import { Button, Select, Input, message, Menu, Dropdown } from "antd";
+import { DownOutlined, ProfileOutlined } from "@ant-design/icons";
 import EdiTableProducts from "../../organism/table/productsNestedTable/productsTable";
 import { useHistory } from "react-router-dom";
 import * as ProductsApiUtil from '../../../utils/api/products-api-utils';
@@ -78,12 +78,29 @@ const Products = () => {
     fetchProductsData(paginationLimit, currentPg);
   }
 
-  const handleAddproduct = () => {
-    history.push({
-      pathname: '/products/add',
-    });
-  };
-  
+ 
+
+  const PrductsMenu = (
+    <Menu>
+      <Menu.Item key='0' onClick={() => history.push({pathname: "products/add"}) }>
+        <a>New Product</a>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key='1' onClick={() => history.push({pathname: "products/upload"}) }>
+        Upload Bulk
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key='1' onClick={() => history.push({pathname: "products/lookup"}) }>
+        Lookup
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key='2' onClick={() => history.push({pathname: "products/discount"}) }>
+        Discount
+      </Menu.Item>
+    </Menu>
+  );
+
+
 
   return (
     <div className='page categories'>
@@ -91,13 +108,15 @@ const Products = () => {
         <h1>Products</h1>
 
         <div className='page__header__buttons'>
-          <Button
-            type='primary'
-            icon={<PlusCircleOutlined />}
-            onClick={() => handleAddproduct()}
-          >
-            Add New
-          </Button>
+          <Dropdown overlay={PrductsMenu} trigger={["click"]}>
+            <Button
+              type='Default'
+              icon={<ProfileOutlined />}
+              onClick={(e) => e.preventDefault()}
+            >
+              More
+            </Button>
+            </Dropdown>
         </div>
       </div>
       <div className='page__content'>
