@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Table, Form, Typography, message } from "antd";
+import { Table, Form, Typography, message, Button } from "antd";
+import {
+    CloudDownloadOutlined,
+  } from "@ant-design/icons";
 import { useHistory } from 'react-router-dom';
 import * as ProductsApiUtil from '../../../../utils/api/products-api-utils';
 import { getDataFromLocalStorage, checkUserAuthFromLocalStorage } from "../../../../utils/local-storage/local-store-utils";
@@ -14,7 +17,7 @@ const ProductsViewNestedTable = (props) => {
     const [form] = Form.useForm();
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
-    
+
     const history = useHistory();
 
 
@@ -65,101 +68,147 @@ const ProductsViewNestedTable = (props) => {
             "toolbar=yes,scrollbars=yes,resizable=yes,top=50,left=50,width=600,height=500"
         );
         //win.focus();
-        
-    }
 
+    }
 
     const fetchProductsVariantsData = async (productUniqueId) => {
 
         const productsVariantsResponse = await ProductsApiUtil.viewVariants(productUniqueId);
         console.log('productsVariantsResponse:', productsVariantsResponse);
         if (productsVariantsResponse.hasError) {
-          console.log('Cant fetch product Variants -> ', productsVariantsResponse.errorMessage);
-          setLoading(false);
+            console.log('Cant fetch product Variants -> ', productsVariantsResponse.errorMessage);
+            setLoading(false);
         }
         else {
-          console.log('res -> ', productsVariantsResponse);
-          message.success(productsVariantsResponse.message, 3);
-          setData(productsVariantsResponse.products);
-          setLoading(false);
+            console.log('res -> ', productsVariantsResponse);
+            message.success(productsVariantsResponse.message, 3);
+            setData(productsVariantsResponse.products);
+            setLoading(false);
         }
     }
 
 
+    const toggleFetchProductLookupData = (record) => {
+        props.onClickFetchProductLookupData(record);
+    };
 
     useEffect(async () => {
         fetchProductsVariantsData(props.productUniqId);
 
     }, [props.productUniqId]);  /* imp passing props to re-render */
 
+    var columns = null;
 
-    const columns = [
-        {
-            title: "product Name",
-            dataIndex: "product_name",
-            width: "20%",
-            render: (_, record) => {
-                return (
-                    <div>
-                        {record.product_name &&
-                           record.product_variant1_value ? record.product_variant2_value ? <small>{record.product_name+'/ '+record.product_variant1_value+'/ '+record.product_variant2_value}</small>
-                           : <small>{record.product_name+' / '+record.product_variant1_value}</small>
-                           : record.product_variant2_value ? <small>{record.product_name+' / '+record.product_variant2_value}</small>
-                           : record.product_name
-                        }
-                    </div>  
-                );
-            }
-        },
-        {
-            title: "Quantity",
-            dataIndex: "product_quantity",
-            width: "15%",
-        },
-        ,
-        {
-            title: "Sale Price",
-            dataIndex: "product_sale_price",
-            width: "15%",
-        },
-        {
-            title: "Barcode",
-            width: "5%",
-            render: (_, record) => {
-                return (
-                    <div className='action-btns'>
-                        <BarcodeOutlined
-                            onClick={() => barcodeGenerator(record)}
-                        >
-                        </BarcodeOutlined>
-                    </div>
-                );
-            }
-        },
-        {
-            title: "operation",
-            dataIndex: "operation",
-            render: (_, record) => {
-                return (
-                    <div className='action-btns'>
-                        <Typography.Link
-                            onClick={() => edit(record)}
-                        >
-                            Edit
-                        </Typography.Link>
-                        {data.length >= 1 ? (
-                            <Typography.Link
-                                onClick={() => handleDelete(record)}
-                            >
-                                delete
-                            </Typography.Link>
 
-                        ) : null}
-                    </div>
-                );
+    if (props.originPage && props.originPage === 'lookup' ) {
+        columns = [
+            {
+                title: "product Name",
+                dataIndex: "product_name",
+                width: "20%",
             },
-        },
-    ];
+            {
+                title: "SKU",
+                dataIndex: "product_sku",
+            },
+            {
+                title: "Varaint 1",
+                dataIndex: "product_variant1_value",
+            },
+            {
+                title: "Varaint 2",
+                dataIndex: "product_variant2_value",
+            },
+            {
+                title: "Fetch",
+                render: (_, record) => {
+                    return (
+                        <div className='action-btns'>
+                            <Button
+                                type='Default'
+                                icon={<CloudDownloadOutlined />}
+                                onClick={() => toggleFetchProductLookupData(record)}
+                                >
+                            </Button>
+                        </div>
+                    );
+                }
+            },
+        ];
+
+    }
+
+
+    else {
+        columns = [
+            {
+                title: "product Name",
+                dataIndex: "product_name",
+                width: "20%",
+                render: (_, record) => {
+                    return (
+                        <div>
+                            {record.product_name &&
+                                record.product_variant1_value ? record.product_variant2_value ? <small>{record.product_name + '/ ' + record.product_variant1_value + '/ ' + record.product_variant2_value}</small>
+                                    : <small>{record.product_name + ' / ' + record.product_variant1_value}</small>
+                                : record.product_variant2_value ? <small>{record.product_name + ' / ' + record.product_variant2_value}</small>
+                                    : record.product_name
+                            }
+                        </div>
+                    );
+                }
+            },
+            {
+                title: "Quantity",
+                dataIndex: "product_quantity",
+                width: "15%",
+            },
+            ,
+            {
+                title: "Sale Price",
+                dataIndex: "product_sale_price",
+                width: "15%",
+            },
+            {
+                title: "Barcode",
+                width: "5%",
+                render: (_, record) => {
+                    return (
+                        <div className='action-btns'>
+                            <BarcodeOutlined
+                                onClick={() => barcodeGenerator(record)}
+                            >
+                            </BarcodeOutlined>
+                        </div>
+                    );
+                }
+            },
+            {
+                title: "operation",
+                dataIndex: "operation",
+                render: (_, record) => {
+                    return (
+                        <div className='action-btns'>
+                            <Typography.Link
+                                onClick={() => edit(record)}
+                            >
+                                Edit
+                        </Typography.Link>
+                            {data.length >= 1 ? (
+                                <Typography.Link
+                                    onClick={() => handleDelete(record)}
+                                >
+                                    delete
+                                </Typography.Link>
+
+                            ) : null}
+                        </div>
+                    );
+                },
+            },
+        ];
+    }
+
 
     const mergedColumns = columns.map((col) => {
         if (!col.editable) {
@@ -180,15 +229,15 @@ const ProductsViewNestedTable = (props) => {
 
 
     return (
-             <Table
-                size="middle"
-                bordered={true}
-                columns={mergedColumns}
-                dataSource={data}
-                pagination={false}
-                loading={loading}
-            />
-        
+        <Table
+            size="middle"
+            bordered={true}
+            columns={mergedColumns}
+            dataSource={data}
+            pagination={false}
+            loading={loading}
+        />
+
     );
 };
 
