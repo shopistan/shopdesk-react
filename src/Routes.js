@@ -41,6 +41,7 @@ import SalesSummary from "./components/pages/reports/salesSummary";
 import Setup from "./components/pages/setup";
 import OutletAdd from "./components/pages/setup/outlets/outletAdd";
 import UserAdd from "./components/pages/setup/users/userAdd";
+import ReceiptAdd from "./components/pages/setup/receipt/receiptAdd";
 
 const Routes = () => {
   const renderWithLayout = (Component, props, outletLayout) => (
@@ -193,6 +194,7 @@ const Routes = () => {
         <PrivateRoute exact path="/setup" component={Setup} />
         <PrivateRoute exact path="/setup/outlet/add" component={OutletAdd} />
         <PrivateRoute exact path="/setup/user/add" component={UserAdd} />
+        <PrivateRoute exact path="/setup/receipt/add" component={ReceiptAdd} />
       </Switch>
     </div>
   );

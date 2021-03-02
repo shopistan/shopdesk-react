@@ -1,9 +1,28 @@
 import React from "react";
 
+import { Button } from "antd";
+import { PlusCircleOutlined } from "@ant-design/icons";
+
+import { useHistory } from "react-router-dom";
+
 function Outlets() {
+  const history = useHistory();
+
   return (
     <div className="outlets">
-      <h2>Outlets</h2>
+      <div className="button-row">
+        <Button
+          type="primary"
+          icon={<PlusCircleOutlined />}
+          onClick={() => {
+            history.push("/setup/outlet/add");
+          }}
+        >
+          Add New
+        </Button>
+      </div>
+
+      <div className="page__table"></div>
     </div>
   );
 }
