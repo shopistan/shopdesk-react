@@ -36,6 +36,22 @@
   .product-delete-sku-highlight{
     color: #a94442 !important;
   }
+
+  .fetch-product-row{
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .fetch-product-btn:hover{
+    background-color: #e6e6e6 !important;
+  }
+
+  .variants-heading ,
+  .lookup-heading{
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+  }
+
   
   
   

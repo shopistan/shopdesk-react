@@ -33,6 +33,19 @@ export const viewVariants = async (productUniqueId) => {
     );
 };
 
+
+export const productsLookUp = async (productSku) => {
+   
+    const url = UrlConstants.PRODUCTS.LOOKUP + `/${productSku}`;
+    const callType = GenericConstants.API_CALL_TYPE.GET;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+    );
+};
+
+
 export const viewProducts = async (limit, PageNumber) => {
     const formDataPair = {
         limit: limit,
@@ -56,13 +69,29 @@ export const searchProducts = async (limit, PageNumber, searchvalue) => {
         q: searchvalue,
     };
     const searchProductsFormDataBody = ApiCallUtil.constructFormData(formDataPair);
-    const url = UrlConstants.PRODUCTS.SEARCH;
+    const url = UrlConstants.PRODUCTS.VIEW;
     const callType = GenericConstants.API_CALL_TYPE.POST;
 
     return await ApiCallUtil.http(
         url, //api url
         callType, //calltype
         searchProductsFormDataBody,
+    );
+};
+
+
+export const searchProductsByName = async (searchvalue) => {
+    const formDataPair = {
+        name: searchvalue,
+    };
+    const searchProductsByNameFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+    const url = UrlConstants.PRODUCTS.SEARCH;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        searchProductsByNameFormDataBody,
     );
 };
 

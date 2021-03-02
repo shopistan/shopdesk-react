@@ -36,8 +36,9 @@ const urls = {
   },
   PRODUCTS: {
     VIEW: BASE_URL +  '/api/products/view',
-    SEARCH: BASE_URL +  '/api/products/view',
+    SEARCH: BASE_URL +  '/api/products/search',
     VIEW_VARIANTS: BASE_URL +  '/api/products/viewVar', 
+    LOOKUP: BASE_URL +  '/api/products/lookup', 
     ADD_PRODUCT: BASE_URL +  '/api/products/add',
     EDIT_PRODUCT: BASE_URL +  '/api/products/edit',
     DELETE_PRODUCT: BASE_URL +  '/api/products/delete',
