@@ -10,7 +10,7 @@ const urls = {
     ADD_TAX: BASE_URL + '/api/taxes/add',
     DELETE_TAX: BASE_URL + '/api/taxes/delete',
     EDIT_TAX: BASE_URL + '/api/taxes/edit',
-    GET_TAX: BASE_URL +  '/api/taxes/get',
+    GET_TAX: BASE_URL + '/api/taxes/get'
   },
   CATEGORIES: {
     VIEW: BASE_URL + '/api/categories/view',
@@ -35,18 +35,21 @@ const urls = {
     DELETE_COURIER: BASE_URL + '/api/couriers/delete'
   },
   CUSTOMERS: {
-    VIEW: BASE_URL + '/api/customers/view'
+    VIEW: BASE_URL + '/api/customers/view',
+    VIEW_SINGLE: BASE_URL + '/api/customers/get',
+    EDIT_CUSTOMER: BASE_URL + '/api/customers/edit',
+    RECHARGE: BASE_URL + '/api/customers/recharge'
   },
   PRODUCTS: {
-    VIEW: BASE_URL +  '/api/products/view',
-    SEARCH: BASE_URL +  '/api/products/search',
-    VIEW_VARIANTS: BASE_URL +  '/api/products/viewVar', 
-    LOOKUP: BASE_URL +  '/api/products/lookup', 
-    ADD_PRODUCT: BASE_URL +  '/api/products/add',
-    EDIT_PRODUCT: BASE_URL +  '/api/products/edit',
-    DELETE_PRODUCT: BASE_URL +  '/api/products/delete',
-    GET_PRODUCT: BASE_URL +  '/api/products/get',
-    IMG_UPLOAD: BASE_URL +  '/api/products/do_upload',
+    VIEW: BASE_URL + '/api/products/view',
+    SEARCH: BASE_URL + '/api/products/search',
+    VIEW_VARIANTS: BASE_URL + '/api/products/viewVar',
+    LOOKUP: BASE_URL + '/api/products/lookup',
+    ADD_PRODUCT: BASE_URL + '/api/products/add',
+    EDIT_PRODUCT: BASE_URL + '/api/products/edit',
+    DELETE_PRODUCT: BASE_URL + '/api/products/delete',
+    GET_PRODUCT: BASE_URL + '/api/products/get',
+    IMG_UPLOAD: BASE_URL + '/api/products/do_upload'
   }
 };
 

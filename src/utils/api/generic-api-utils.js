@@ -22,7 +22,6 @@ export const http = async (
 ) => {
   try {
     const authToken = getUserAuthToken();
-    console.log(authToken);
     headers['Authorization'] = authToken;
 
     const axiosCallObject = {

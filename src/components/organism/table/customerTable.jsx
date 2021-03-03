@@ -11,7 +11,7 @@ const CustomersTable = (props) => {
   const handleEdit = (record) => {
     console.log(record);
     history.push({
-      pathname: `/couriers/${record.customer_id}/edit`,
+      pathname: `/customers/${record.customer_id}/view`,
       data: record // your data array of objects
     });
   };
