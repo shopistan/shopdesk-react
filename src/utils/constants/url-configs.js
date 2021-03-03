@@ -44,6 +44,9 @@ const urls = {
     DELETE_PRODUCT: BASE_URL +  '/api/products/delete',
     GET_PRODUCT: BASE_URL +  '/api/products/get',
     IMG_UPLOAD: BASE_URL +  '/api/products/do_upload',
+    GET_REGISTERED_PRODUCTS: BASE_URL + '/api/products/getRegister',
+    SAVE_DISCOUNTED: BASE_URL + '/api/promotions/setSpecial',
+    BULK_UPLOAD: BASE_URL + '/api/integrations/add_products',
 
   },
 };
