@@ -187,13 +187,13 @@ const ProductsTable = (props) => {
                         <Typography.Link
                             onClick={() => edit(record)}
                         >
-                            Edit
+                        Edit
                         </Typography.Link>
                         {data.length >= 1 ? (
                             <Typography.Link
                                 onClick={() => handleDelete(record)}
                             >
-                                delete
+                            delete
                             </Typography.Link>
 
                         ) : null}
@@ -232,7 +232,7 @@ const ProductsTable = (props) => {
             pagination={{
                 total: props.paginationData && props.paginationData.totalElements,
                 showTotal: (total, range) => showTotalItemsBar(total, range),
-                defaultPageSize: 10,
+                defaultPageSize: 20,
                 pageSize: parseInt(props.pageLimit),
                 showSizeChanger: false,
                 current: currentPageNumber,

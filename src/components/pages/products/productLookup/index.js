@@ -4,14 +4,12 @@ import {
   ProfileOutlined,
 } from "@ant-design/icons";
 import { Input, AutoComplete, Select, Button, message } from "antd";
-import { useHistory } from "react-router-dom";
 import ProductsNestedTable from "../../../organism/table/productsNestedTable/productsViewNestedTable";
-import ProductsLookUpTable from "../../../organism/table/productsNestedTable/productsLookUp/productsLookUpTable";
+import ProductsLookUpTable from "../../../organism/table/productsNestedTable/productsLookUp";
 import * as ProductsApiUtil from '../../../../utils/api/products-api-utils';
 
 
 const ProductLookup = () => {
-  const history = useHistory();
   const [productsSearchResult, setProductsSearchResult] = useState([]);
   const [selectedValue, setSelectedValue] = useState("");
   const [selectedProduct, setSelectedProduct] = useState("");
@@ -39,7 +37,6 @@ const ProductLookup = () => {
     }
     else {
       console.log('res -> ', productsSearchResponse);
-      //message.success(productsSearchResponse.message, 3);
       setProductsSearchResult(productsSearchResponse);
     }
 
@@ -49,7 +46,6 @@ const ProductLookup = () => {
   const handleSelect = (value, option) => {
     setSelectedValue(option.children);
     setSelectedProduct(value);  //passes productuinqId
-
   };
 
 
@@ -100,29 +96,21 @@ const ProductLookup = () => {
           </div>
 
           {variantsTableCheck &&
-            <div className='page__content'>
-              <hr/>
-              <div className='product-variants-table'>{/* Insert Table Here */}
-                <div className='form__section__header'>
-                  <h3 className='variants-heading'>Product Variants</h3>
-                </div>
-                <ProductsNestedTable productUniqId={selectedProduct} originPage={"lookup"}
-                  onClickFetchProductLookupData = {handleFetchProductLookupData} />
+            <div className='table'>{/* Insert Table Here */}
+              <div className='form__section__header'>
+                <h3 className='variants-heading'>Product Variants</h3>
               </div>
-            </div>
-          }
+              <ProductsNestedTable productUniqId={selectedProduct} originPage={"lookup"}
+                onClickFetchProductLookupData={handleFetchProductLookupData} />
+            </div>}
 
           {variantsTableCheck && lookUpTableCheck &&
-            <div className='page__content'>
-              <hr/>
-              <div className='product-lookup-table'>{/* Insert Table Here */}
-                <div className='form__section__header'>
-                  <h3 className='lookup-heading'>Product Lookup Data</h3>
-                </div>
-                <ProductsLookUpTable productSku={selectedProductLookUpId} />
+            <div className='table'>{/* Insert Table Here */}
+              <div className='form__section__header'>
+                <h3 className='lookup-heading'>Product Lookup Data</h3>
               </div>
-            </div>
-          }
+              <ProductsLookUpTable productSku={selectedProductLookUpId} />
+            </div>}
 
         </div>
       </div>
