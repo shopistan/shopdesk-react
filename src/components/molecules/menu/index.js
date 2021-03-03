@@ -79,6 +79,10 @@ const SideMenu = () => {
           history.push("/omniSalesSummary");
         } else if (e.key === "categoryWise") {
           history.push("/categoryWise");
+        } else if (e.key === "salesHistory") {
+          history.push("/register/salesHistory");
+        } else if (e.key === "sell") {
+          history.push("/register/sell");
         } else if (e.key === "signup") {
           history.push("/signup");
         } else if (e.key === "signin") {
@@ -115,8 +119,8 @@ const SideMenu = () => {
             Couriers
           </Menu.Item>
           <SubMenu key='sub1' icon={<LaptopOutlined />} title='Register'>
-            <Menu.Item key='8'>Sell</Menu.Item>
-            <Menu.Item key='9'>Sales History</Menu.Item>
+            <Menu.Item key='sell'>Sell</Menu.Item>
+            <Menu.Item key='salesHistory'>Sales History</Menu.Item>
           </SubMenu>
           <SubMenu key='sub2' icon={<StockOutlined />} title='Stock Control'>
             <Menu.Item key='10'>Purchase Orders</Menu.Item>
