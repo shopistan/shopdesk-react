@@ -172,7 +172,7 @@ const Routes = () => {
         <Route
           exact
           path='/customers/add'
-          render={() => renderWithLayout(CustomerAdd)}
+          render={() => renderWithLayout(CustomerForm)}
         ></Route>
         <Route
           exact
