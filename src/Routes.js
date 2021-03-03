@@ -43,7 +43,6 @@ import InventoryDump from './components/pages/reports/inventoryDump';
 import OmniSalesSummary from './components/pages/reports/omniSalesSummary';
 import ProductHistory from './components/pages/reports/productHistory';
 import SalesSummary from './components/pages/reports/salesSummary';
-import CustomerAdd from "./components/pages/customers/customerAdd";
 import Setup from "./components/pages/setup";
 import OutletAdd from "./components/pages/setup/outlets/outletAdd";
 import UserAdd from "./components/pages/setup/users/userAdd";
