@@ -56,7 +56,7 @@ const Couriers = () => {
     }
   }
 
-  useEffect(async () => {
+  useEffect( () => {
     fetchCouriersData();
   }, []);
 
