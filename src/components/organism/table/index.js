@@ -40,8 +40,7 @@ const EditableTable = (props) => {
   useEffect(async () => {
     setData(props.tableData);
     if( currentPageNumber > Math.ceil(props.paginationData.totalPages)){
-      setcurrentPageNumber(1);
-    }
+      setcurrentPageNumber(1);}
 
   }, [props.tableData, props.tableDataLoading, props.paginationData ]);  /* imp passing props to re-render */
 

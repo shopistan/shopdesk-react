@@ -8,7 +8,7 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 
-const CustomerHistory = () => {
+const CustomerCredirHistory = () => {
   return (
     <div className="page customer-profile">
       <div className="page__header">
@@ -31,4 +31,4 @@ const CustomerHistory = () => {
   );
 };
 
-export default CustomerHistory;
+export default CustomerCredirHistory;

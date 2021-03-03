@@ -59,7 +59,6 @@ const Categories = () => {
 
   function handleChange(value) {
     setPaginationLimit(value);
-    //setCurrentPage(1);
     setLoading(true);
     if (currentPage > Math.ceil(paginationData.totalElements / value)) {
       fetchCategoriesData(value, 1);

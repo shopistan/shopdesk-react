@@ -13,12 +13,17 @@ import SupplierDelete from "./components/pages/suppliers/deleteSupplier";
 import Taxes from "./components/pages/taxes";
 import TaxAdd from "./components/pages/taxes/taxAdd";
 import Products from "./components/pages/products";
+import ProductEdit from "./components/pages/products/editProduct";
+import ProductDelete from "./components/pages/products/deleteProduct";
 import ProductAdd from "./components/pages/products/productAdd";
 import ProductDiscount from "./components/pages/products/productDiscount";
 import ProductLookup from "./components/pages/products/productLookup";
 import ProductUpload from "./components/pages/products/productUpload";
 import Customers from "./components/pages/customers";
-import CustomerAdd from "./components/pages/customers/customerAdd";
+import CustomerForm from "./components/pages/customers/customerForm";
+import CustomerProfile from "./components/pages/customers/customerProfile";
+import CustomerPay from "./components/pages/customers/customerPay";
+import CustomerCreditHistory from "./components/pages/customers/customerCreditHistory";
 import Couriers from "./components/pages/couriers";
 import CourierAdd from "./components/pages/couriers/courierAdd";
 import CourierEdit from "./components/pages/couriers/editCourier";
@@ -46,11 +51,17 @@ import SalesHistory from "./components/pages/register/salesHistory";
 import Sell from "./components/pages/register/sell";
 
 const Routes = () => {
-  const renderWithLayout = (Component, props, outletLayout) => (
-    <AppShell {...props}>
-      {outletLayout == "outlets" ? <Outlet /> : <Component />}
-    </AppShell>
-  );
+  const renderWithLayout = (Component, props, attrs = {}) => {
+    return (
+      <AppShell {...props}>
+        {attrs.isOutletLayout ? (
+          <Outlet />
+        ) : (
+          <Component {...props} {...attrs} />
+        )}
+      </AppShell>
+    );
+  };
 
   const authRenderWithLayout = (Component, props) => {
     var readFromLocalStorage = getDataFromLocalStorage("user");
@@ -105,7 +116,11 @@ const Routes = () => {
             authenticateDashboard ? (
               renderWithLayout(Component, { ...props })
             ) : (
-              renderWithLayout(Component, { ...props }, "outlets")
+              renderWithLayout(
+                Component,
+                { ...props },
+                { isOutletLayout: true }
+              )
             )
           ) : (
             <Redirect to='/signin' />
@@ -138,6 +153,12 @@ const Routes = () => {
         <PrivateRoute exact path='/products/add' component={ProductAdd} />
         <PrivateRoute exact path='/products/upload' component={ProductUpload} />
         <PrivateRoute exact path='/products/lookup' component={ProductLookup} />
+        <PrivateRoute exact path='/products/:id/edit' component={ProductEdit} />
+        <PrivateRoute
+          exact
+          path='/products/:id/delete'
+          component={ProductDelete}
+        />
         <PrivateRoute
           exact
           path='/products/discount'
@@ -152,6 +173,36 @@ const Routes = () => {
           exact
           path='/customers/add'
           render={() => renderWithLayout(CustomerAdd)}
+        ></Route>
+        <Route
+          exact
+          path='/customers/:customer_id/view'
+          render={(props) => renderWithLayout(CustomerProfile, props)}
+        ></Route>
+        <Route
+          exact
+          path='/customers/:customer_id/edit'
+          render={(props) => {
+            return renderWithLayout(CustomerForm, props, {
+              isCustomerEditMode: true,
+            });
+          }}
+        ></Route>
+
+        <Route
+          exact
+          path='/customers/profile'
+          render={() => renderWithLayout(CustomerProfile)}
+        ></Route>
+        <Route
+          exact
+          path='/customers/:customer_id/pay-account-balance'
+          render={(props) => renderWithLayout(CustomerPay, props)}
+        ></Route>
+        <Route
+          exact
+          path='/customers/:customer_id/credit-history'
+          render={(props) => renderWithLayout(CustomerCreditHistory, props)}
         ></Route>
         <Route
           exact
@@ -190,6 +241,7 @@ const Routes = () => {
           path='/omniSalesSummary'
           component={OmniSalesSummary}
         />
+
         <PrivateRoute exact path='/productHistory' component={ProductHistory} />
         <PrivateRoute exact path='/salesSummary' component={SalesSummary} />
 

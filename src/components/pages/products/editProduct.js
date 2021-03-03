@@ -267,9 +267,7 @@ const EditProduct = (props) => {
                             form={form}
                             name='basic'
                             layout='vertical'
-                            initialValues={{
-
-                            }}
+                            //initialValues={{ }}
                             onFinish={onFinish}
                             onFinishFailed={onFinishFailed}
                         >
@@ -277,7 +275,7 @@ const EditProduct = (props) => {
                             <div className='form__row--footer'>
                                 <Button type='primary' className='product-btn-edit' htmlType='submit' >
                                     Edit Product
-                            </Button>
+                                </Button>
                             </div>
 
                             {/* Form Section */}

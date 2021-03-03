@@ -12,6 +12,7 @@ const Couriers = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [paginationData, setPaginationData] = useState({});
 
 
   const { Option } = Select;
@@ -49,21 +50,27 @@ const Couriers = () => {
     else {
       console.log('res -> ', couriersViewResponse);
       message.success(couriersViewResponse.message, 3);
-      setData(couriersViewResponse.courier);
+      setData(couriersViewResponse.courier.data);
+      setPaginationData(couriersViewResponse.courier.page);
       setLoading(false);
     }
   }
 
-  useEffect(async () => {
+  useEffect( () => {
     fetchCouriersData();
   }, []);
 
 
   function handleChange(value) {
     setPaginationLimit(value);
-    setCurrentPage(1);
     setLoading(true);
-    fetchCouriersData(value);
+    if (currentPage > Math.ceil(paginationData.totalElements / value)) {
+      fetchCouriersData(value,1);
+    }
+    else {
+      fetchCouriersData(value, currentPage);
+    }
+
   }
 
   function handlePageChange(currentPg) {
@@ -121,7 +128,7 @@ const Couriers = () => {
         {/* Table */}
         <div className='table'>
           <EditableCouriers pageLimit={paginationLimit} tableData={data} tableDataLoading={loading}
-            onClickPageChanger={handlePageChange} currentPageIndex={currentPage} />
+            onClickPageChanger={handlePageChange} paginationData={paginationData} />
         </div>
         {/* Table */}
       </div>
