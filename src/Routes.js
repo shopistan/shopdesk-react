@@ -14,6 +14,8 @@ import Taxes from "./components/pages/taxes";
 import TaxAdd from "./components/pages/taxes/taxAdd";
 import Products from "./components/pages/products";
 import ProductAdd from "./components/pages/products/productAdd";
+import ProductEdit from "./components/pages/products/editProduct";
+import ProductDelete from "./components/pages/products/deleteProduct";
 import ProductDiscount from "./components/pages/products/productDiscount";
 import ProductLookup from "./components/pages/products/productLookup";
 import ProductUpload from "./components/pages/products/productUpload";
@@ -132,6 +134,8 @@ const Routes = () => {
         <PrivateRoute exact path="/suppliers/add" component={SupplierAdd} />
         <PrivateRoute exact path="/taxes" component={Taxes} />
         <PrivateRoute exact path="/taxes/add" component={TaxAdd} />
+        <PrivateRoute exact path="/products/:id/edit" component={ProductEdit} />
+        <PrivateRoute exact path="/products/:id/delete" component={ProductDelete} />
         <PrivateRoute exact path="/products" component={Products} />
         <PrivateRoute exact path="/products/add" component={ProductAdd} />
         <PrivateRoute exact path="/products/upload" component={ProductUpload} />
