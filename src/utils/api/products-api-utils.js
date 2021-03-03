@@ -18,6 +18,22 @@ export const addProduct = async (productName) => {
     );
 };
 
+
+export const productsBulkUpload = async (bulkProducts) => {
+    const bulkProductsDataBody = {
+        products: bulkProducts
+    };
+   
+    const url = UrlConstants.PRODUCTS.BULK_UPLOAD;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        bulkProductsDataBody //body
+    );
+};
+
 export const viewVariants = async (productUniqueId) => {
     const formDataPair = {
         id: productUniqueId
@@ -62,6 +78,45 @@ export const viewProducts = async (limit, PageNumber) => {
     );
 };
 
+
+export const getRegisteredProducts = async (limit, PageNumber) => {
+    const formDataPair = {
+        limit: limit,
+        page: PageNumber,
+    };
+    const viewRegisteredProductsFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+    const url = UrlConstants.PRODUCTS.GET_REGISTERED_PRODUCTS;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        viewRegisteredProductsFormDataBody,
+    );
+};
+
+
+export const saveProductsDiscountedData = async (discountedProducts) => {
+    var discountedProductsFormDataBody = new FormData;
+    for (var i = 0; i < discountedProducts.length; i++) {
+        Object.entries(discountedProducts[i]).forEach(
+            ([formDataKey, formDataValue]) => {
+                discountedProductsFormDataBody.append(`products[${i}][${formDataKey}]` , formDataValue);
+            }
+        );
+    }
+
+    const url = UrlConstants.PRODUCTS.SAVE_DISCOUNTED;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        discountedProductsFormDataBody,
+    );
+};
+
+
 export const searchProducts = async (limit, PageNumber, searchvalue) => {
     const formDataPair = {
         limit: limit,
@@ -94,7 +149,6 @@ export const searchProductsByName = async (searchvalue) => {
         searchProductsByNameFormDataBody,
     );
 };
-
 
 
 export const deleteProduct = async (productId) => {
