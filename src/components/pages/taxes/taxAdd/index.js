@@ -1,11 +1,32 @@
 import React from "react";
-import { Form, Input, Button, InputNumber } from "antd";
-import * as TaxApiUtil from '../../../../utils/api/tax-api-utils'
+import { Form, Input, Button, InputNumber, message } from "antd";
+import { useHistory } from 'react-router-dom';
+import * as TaxApiUtil from '../../../../utils/api/tax-api-utils';
+
 
 const TaxAdd = () => {
+  const history = useHistory();
+
+
+  
   const onFinish = async (values) => {
-    const taxAddResponse = await TaxApiUtil.addTax(values.taxName,values.taxValue);
-    console.log('taxAddResponse:',taxAddResponse)
+    console.log("Success:", values);
+    const TaxAddResponse = await TaxApiUtil.addTax(values.tax_name, values.tax_value);
+
+    console.log('TaxAddResponse:', TaxAddResponse);
+    if (TaxAddResponse.hasError) {
+      console.log('Cant add new Tax-> ', TaxAddResponse.errorMessage);
+      message.error('Tax Cannot Added ', 3);
+    }
+    else {
+      console.log('res -> ', TaxAddResponse);
+      message.success(TaxAddResponse.message, 3);
+      setTimeout(() => {
+        history.push({
+          pathname: '/taxes',
+        });
+      }, 2000);
+    }
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -33,7 +54,7 @@ const TaxAdd = () => {
               <div className='form__col'>
                 <Form.Item
                   label='Tax Name'
-                  name='taxName'
+                  name='tax_name'
                   rules={[
                     {
                       required: true,
@@ -48,7 +69,7 @@ const TaxAdd = () => {
               <div className='form__col'>
                 <Form.Item
                   label='Tax Percentage'
-                  name='taxPercentage'
+                  name='tax_value'
                   rules={[
                     {
                       required: true,

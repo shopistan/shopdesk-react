@@ -84,7 +84,7 @@ const ProductDiscount = () => {
   }
 
 
-  useEffect(async () => {
+  useEffect( () => {
     fetchProductsDiscountsData();
   }, []);
 

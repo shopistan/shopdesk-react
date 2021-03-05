@@ -22,7 +22,7 @@ const Suppliers = () => {
     var currValue = e.target.value;
     currValue = currValue.toLowerCase();
     if (currValue === "") {
-      fetchSupplierData(paginationLimit, currentPage);
+      fetchSuppliersData(paginationLimit, currentPage);
     }
     else {
       const filteredData = data.filter((entry) => {
@@ -43,7 +43,7 @@ const Suppliers = () => {
     }
   }
 
-  const fetchSupplierData = async (pageLimit = 10, pageNumber = 1) => {
+  const fetchSuppliersData = async (pageLimit = 10, pageNumber = 1) => {
     const SuppliersViewResponse = await SuppliersApiUtil.viewSuppliers(pageLimit, pageNumber);
     console.log('SuppliersViewResponse:', SuppliersViewResponse);
 
@@ -61,7 +61,7 @@ const Suppliers = () => {
   }
 
   useEffect(async () => {
-    fetchSupplierData();
+    fetchSuppliersData();
   }, []);
 
 
@@ -70,17 +70,17 @@ const Suppliers = () => {
     //setCurrentPage(1);
     setLoading(true);
     if (currentPage > Math.ceil(paginationData.totalElements / value)) {
-      fetchSupplierData(value, 1);
+      fetchSuppliersData(value, 1);
     }
     else {
-      fetchSupplierData(value, currentPage);
+      fetchSuppliersData(value, currentPage);
     }
   }
 
   function handlePageChange(currentPg) {
     setCurrentPage(currentPg);
     setLoading(true);
-    fetchSupplierData(paginationLimit, currentPg);
+    fetchSuppliersData(paginationLimit, currentPg);
   }
 
   const handleAddSupplier = () => {

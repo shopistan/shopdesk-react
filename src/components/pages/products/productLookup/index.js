@@ -22,7 +22,7 @@ const ProductLookup = () => {
   const { Option } = Select;
 
 
-  useEffect(async () => {
+  useEffect( () => {
 
   }, []);
 
