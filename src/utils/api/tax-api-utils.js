@@ -24,7 +24,7 @@ export const deleteTax = async (taxId) => {
     tax_id: taxId
   };
   const deleteTaxFormDataBody = ApiCallUtil.constructFormData(formDataPair);
-  const url = UrlConstants.TAX.ADD_TAX;
+  const url = UrlConstants.TAX.DELETE_TAX;
   const callType = GenericConstants.API_CALL_TYPE.POST;
 
   return await ApiCallUtil.http(
@@ -41,7 +41,7 @@ export const editTax = async (taxId, newTaxName, newTaxValue) => {
     value: newTaxValue
   };
   const editTaxFormDataBody = ApiCallUtil.constructFormData(formDataPair);
-  const url = UrlConstants.TAX.ADD_TAX;
+  const url = UrlConstants.TAX.EDIT_TAX;
   const callType = GenericConstants.API_CALL_TYPE.POST;
 
   return await ApiCallUtil.http(

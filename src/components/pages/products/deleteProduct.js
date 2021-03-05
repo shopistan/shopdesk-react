@@ -11,7 +11,7 @@ const DeleteProduct = () => {
     const [productData, setproductData] = useState({});
     const [loading, setLoading] = useState(true);
 
-    useEffect(async () => {
+    useEffect( () => {
         //console.log(history.location.data); //working
         if(history.location.data === undefined){
             history.push({

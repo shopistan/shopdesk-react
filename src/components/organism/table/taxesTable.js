@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
-import { Table, Input, InputNumber, Pagination, Form, Typography } from "antd";
+import React, { useState, useEffect } from "react";
+import { Table, Form, Typography } from "antd";
 import { useHistory } from 'react-router-dom';
 
 
-const CouriersTable = (props) => {
+const TaxesTable = (props) => {
   const [form] = Form.useForm();
   const [data, setData] = useState([]);
   const [currentPageNumber, setcurrentPageNumber] = useState(1);
@@ -13,7 +13,7 @@ const CouriersTable = (props) => {
   const handleDelete = (record) => {
     console.log(record);
     history.push({
-      pathname: `/couriers/${record.courier_id}/delete`,
+      pathname: `/taxes/${record.tax_id}/delete`,
       data: record // your data array of objects
     });
   };
@@ -21,7 +21,7 @@ const CouriersTable = (props) => {
   const edit = (record) => {
     console.log(record);
     history.push({
-      pathname: `/couriers/${record.courier_id}/edit`,
+      pathname: `/taxes/${record.tax_id}/edit`,
       data: record // your data array of objects
     });
   };
@@ -37,25 +37,28 @@ const CouriersTable = (props) => {
   };
 
 
-  useEffect(async () => {
+  useEffect( () => {
     setData(props.tableData);
     if( currentPageNumber > Math.ceil(props.paginationData.totalPages)){
-      setcurrentPageNumber(1);} 
+        setcurrentPageNumber(1);
+    }
 
-  }, [props.tableData, props.tableDataLoading, props.paginationData ]);  /* imp passing props to re-render */
+  }, [props.tableData, props.tableDataLoading, props.paginationData]);  /* imp passing props to re-render */
 
+  
   const columns = [
     {
-      title: "Name",
-      dataIndex: "courier_name",
-      width: "50%",
+      title: "Tax Name",
+      dataIndex: "tax_name",
     },
     {
-      title: "Code",
-      dataIndex: "courier_code",
-    },
+        title: "Tax Percentage",
+        dataIndex: "tax_value",
+       
+      },
     {
       title: "operation",
+      dataIndex: "operation",
       render: (_, record) => {
         return (
           <div className='action-btns'>
@@ -106,7 +109,7 @@ const CouriersTable = (props) => {
         rowClassName='editable-row'
         className='table-frame'
         pagination={{
-          total: data && data.length,
+          total: props.paginationData && props.paginationData.totalElements,
           showTotal: (total, range) => showTotalItemsBar(total, range),
           defaultPageSize: 10,
           pageSize: parseInt(props.pageLimit),
@@ -115,11 +118,12 @@ const CouriersTable = (props) => {
           onChange: (page, pageSize) => handlePageChange(page, pageSize),
         }}
         loading={props.tableDataLoading}
+        rowKey="tax_id"
       />
 
     </Form>
   );
 };
 
-export default CouriersTable;
+export default TaxesTable;
 

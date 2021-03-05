@@ -47,7 +47,7 @@ const EditProduct = (props) => {
     const { getFieldDecorator } = form;
 
 
-    useEffect(async () => {
+    useEffect( () => {
         //console.log(history.location.data); //working
         if (history.location.data === undefined) {
             history.push({
