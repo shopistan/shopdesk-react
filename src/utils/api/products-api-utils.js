@@ -3,18 +3,20 @@ import GenericConstants from '../constants/constants';
 import * as ApiCallUtil from './generic-api-utils';
 
 
-export const addProduct = async (productName) => {
-    const formDataPair = {
-        
-    };
-    const addproductFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+export const addProduct = async (productAddData) => {
+    console.log(productAddData);
+
+    const addProductFormDataBody = createComplexAddFormData(productAddData);
+
+    console.log(addProductFormDataBody);
+
     const url = UrlConstants.PRODUCTS.ADD_PRODUCT;
     const callType = GenericConstants.API_CALL_TYPE.POST;
 
     return await ApiCallUtil.http(
         url, //api url
         callType, //calltype
-        addproductFormDataBody //body
+        addProductFormDataBody //body
     );
 };
 
@@ -23,7 +25,7 @@ export const productsBulkUpload = async (bulkProducts) => {
     const bulkProductsDataBody = {
         products: bulkProducts
     };
-   
+
     const url = UrlConstants.PRODUCTS.BULK_UPLOAD;
     const callType = GenericConstants.API_CALL_TYPE.POST;
 
@@ -51,7 +53,7 @@ export const viewVariants = async (productUniqueId) => {
 
 
 export const productsLookUp = async (productSku) => {
-   
+
     const url = UrlConstants.PRODUCTS.LOOKUP + `/${productSku}`;
     const callType = GenericConstants.API_CALL_TYPE.GET;
 
@@ -101,7 +103,7 @@ export const saveProductsDiscountedData = async (discountedProducts) => {
     for (var i = 0; i < discountedProducts.length; i++) {
         Object.entries(discountedProducts[i]).forEach(
             ([formDataKey, formDataValue]) => {
-                discountedProductsFormDataBody.append(`products[${i}][${formDataKey}]` , formDataValue);
+                discountedProductsFormDataBody.append(`products[${i}][${formDataKey}]`, formDataValue);
             }
         );
     }
@@ -167,7 +169,7 @@ export const deleteProduct = async (productId) => {
 };
 
 export const editProduct = async (productEditData) => {
-    
+
     const editProductFormDataBody = ApiCallUtil.constructFormData(productEditData);
     const url = UrlConstants.PRODUCTS.EDIT_PRODUCT;
     const callType = GenericConstants.API_CALL_TYPE.POST;
@@ -207,5 +209,122 @@ export const imageUpload = async (productImg) => {
         callType, //calltype
         imageUploadFormDataBody //body
     );
+};
+
+
+
+
+export const createComplexAddFormData =  (addProductData) => {
+
+    const addProductFormDataBody = new FormData();
+
+    const addProductFormDataBody1 = new FormData();
+
+    addProductFormDataBody1.append('test', 123); //root level main
+
+    console.log(addProductFormDataBody1);
+
+
+
+    Object.entries(addProductData).forEach(
+        ([objKey, objValue]) => {
+
+            console.log(objKey);
+
+            /////////////chec entries///////////////
+            if (objKey === "varData") {
+
+                objValue.forEach(
+                    (varDataItem, varDataIndex) => {
+
+                        Object.entries(varDataItem).forEach(
+                            ([varDataItemEntriesKey, varDataItemEntriesObjValue]) => {
+
+                                if (varDataItemEntriesKey === "outletInfo") {
+
+                                    varDataItemEntriesObjValue.forEach(
+                                        (outletItem, outletIndex) => {
+
+                                            Object.entries(outletItem).forEach(
+                                                ([outletItemEntriesKey, outletItemEntriesValue]) => {
+
+                                                    addProductFormDataBody.append(`varData[${varDataIndex}]outletInfo[${outletIndex}][${outletItemEntriesKey}]`, outletItemEntriesValue);  //inner level basic
+
+                                                })
+
+                                        })
+
+                                }
+
+                                else if (varDataItemEntriesKey === "qty") {
+
+                                    varDataItemEntriesObjValue.forEach(
+                                        (qtyItem, qtyIndex) => {
+
+                                            Object.entries(qtyItem).forEach(
+                                                ([qtyItemEntriesKey, qtyItemEntriesValue]) => {
+
+                                                    addProductFormDataBody.append(`varData[${varDataIndex}]qty[${qtyIndex}][${qtyItemEntriesKey}]`, qtyItemEntriesValue);  //inner level basic
+
+                                                })
+
+                                        })
+
+                                }
+
+                                else {
+                                    addProductFormDataBody.append(`varData[${varDataIndex}][${varDataItemEntriesKey}]`, varDataItemEntriesObjValue);  //inner level basic
+
+                                }
+                            })
+
+
+                    }); /**end of foreach */
+
+            }
+
+            else if (objKey == "open_qty") {
+
+                console.log("in", objKey);
+
+                console.log("in", objValue );
+
+                objValue.forEach(
+                    (openQtyItem, openQtyItemIndex) => {
+
+                        console.log("each", openQtyItem );
+
+                        Object.entries(openQtyItem).forEach(
+                            ([openQtyItemItemEntriesKey, openQtyItemItemEntriesValue]) => {
+
+                                console.log("each", openQtyItemItemEntriesKey );
+                                console.log("each", openQtyItemItemEntriesValue );
+
+                                addProductFormDataBody.append(`open_qty[${openQtyItemIndex}][${openQtyItemItemEntriesKey}]`, openQtyItemItemEntriesValue);  //inner level basic
+
+                            })
+
+                    })
+            }
+
+            else {
+
+                addProductFormDataBody.append(objKey, objValue); //root level main
+
+            }
+
+            //////////////////check entries//////////
+        }
+    );
+
+
+    console.log(addProductFormDataBody);
+
+
+    return addProductFormDataBody;
+
+
+
+
 };
 
