@@ -90,7 +90,7 @@ const EditProduct = (props) => {
             setproductImagePreviewSource(productsData.product_image);  //imp to set image src here
 
             /*-----setting products data to fields value------*/
-            var pageLimit = 20;
+            var pageLimit = 50;
             var pageNumber = 1;
             const [categoriesRes, taxesRes] = await Promise.all([CategoriesApiUtil.viewCategories(pageLimit, pageNumber),
             TaxexApiUtil.viewTaxes(pageLimit, pageNumber)]);
@@ -447,7 +447,7 @@ const EditProduct = (props) => {
                                         <Form.Item className='u-width-100'>
                                             <Button type='default' onClick={handleUpload}>
                                                 Upload
-                                    </Button>
+                                             </Button>
                                         </Form.Item>
                                     </div>
 
