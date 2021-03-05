@@ -32,15 +32,15 @@ const SuppliersTable = (props) => {
   };
 
   const handlePageChange = (page, pageSize) => {
-     setcurrentPageNumber(page)
-     props.onClickPageChanger(page); 
+    setcurrentPageNumber(page)
+    props.onClickPageChanger(page);
   };
 
 
   useEffect(async () => {
     setData(props.tableData);
-    if( currentPageNumber > Math.ceil(props.paginationData.totalPages)){
-        setcurrentPageNumber(1);
+    if (currentPageNumber > Math.ceil(props.paginationData.totalPages)) {
+      setcurrentPageNumber(1);
     }
 
   }, [props.tableData, props.tableDataLoading, props.paginationData]);  /* imp passing props to re-render */
@@ -50,33 +50,27 @@ const SuppliersTable = (props) => {
       title: "SupplierName",
       dataIndex: "supplier_name",
       width: "10%",
-      responsive: ['sm'],
     },
     {
-        title: "ContactPerson",
-        dataIndex: "supplier_contact_name",
-        responsive: ['sm'],
-      },
-      {
-        title: "Email",
-        dataIndex: "supplier_contact_email",
-        responsive: ['sm'],
-      },
-      {
-        title: "Phone No.",
-        dataIndex: "supplier_contact_phone",
-        responsive: ['sm'],
-      },
-      {
-        title: "Tax ID",
-        dataIndex: "supplier_tax_number",
-        responsive: ['sm'],
-      },
+      title: "ContactPerson",
+      dataIndex: "supplier_contact_name",
+    },
+    {
+      title: "Email",
+      dataIndex: "supplier_contact_email",
+    },
+    {
+      title: "Phone No.",
+      dataIndex: "supplier_contact_phone",
+    },
+    {
+      title: "Tax ID",
+      dataIndex: "supplier_tax_number",
+    },
     {
       title: "operation",
       dataIndex: "operation",
       width: "20%",
-      responsive: ['sm'],
       render: (_, record) => {
         return (
           <div className='action-btns'>

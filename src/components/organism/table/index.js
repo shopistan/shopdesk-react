@@ -50,12 +50,10 @@ const EditableTable = (props) => {
       dataIndex: "category_name",
       width: "50%",
       editable: true,
-      responsive: ['sm'],
     },
     {
       title: "operation",
       dataIndex: "operation",
-      responsive: ['sm'],
       render: (_, record) => {
         return (
           <div className='action-btns'>

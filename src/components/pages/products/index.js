@@ -54,7 +54,7 @@ const Products = () => {
     }
   }
 
-  useEffect(async () => {
+  useEffect( () => {
     fetchProductsData();
   }, []);
 
