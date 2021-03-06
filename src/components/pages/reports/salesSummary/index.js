@@ -39,7 +39,7 @@ const SalesSummary = () => {
     console.log('salesSummaryResponse:', salesSummaryResponse);
 
     if (salesSummaryResponse.hasError) {
-      console.log('Cant fetch products -> ', salesSummaryResponse.errorMessage);
+      console.log('Cant fetch Omni Sales Data -> ', salesSummaryResponse.errorMessage);
       message.error(salesSummaryResponse.errorMessage, 3);
       setLoading(false);
     }
@@ -50,13 +50,14 @@ const SalesSummary = () => {
       setLoading(false);
       setShowSummaryTable(true);  //imp to show
       /*--setting sales Mops--*/
+      var omniSalesData = salesSummaryResponse.sales_summary;
       let salesDataMops = {
         cash: 0,
         credit: 0,
         customer: 0,
         discounts: 0
       };
-      salesSummaryResponse.sales_summary.forEach(element => {
+      omniSalesData.forEach(element => {
         if (element.MOP == "Credit Card") {
           salesDataMops.credit += parseFloat(element.gross_sale);
         } else if (element.MOP == "Cash") {
@@ -276,7 +277,7 @@ const SalesSummary = () => {
                 <h3 className='variants-heading'>Sales Summary</h3>
               </div>
               <SalesSummaryTable tableId='sales_summary_data_table' pageLimit={20} tableData={salesSummaryData}
-                tableDataLoading={loading} />
+                 tableDataLoading={loading}  summaryTableType='simple_sales' />
             </div>}
 
         </div>
