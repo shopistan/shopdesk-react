@@ -58,7 +58,8 @@ const urls = {
     BULK_UPLOAD: BASE_URL + '/api/integrations/add_products'
   },
   REPORTS:{
-    SALES_SUMMARY: BASE_URL + '/api/reports/saleSummary'
+    SALES_SUMMARY: BASE_URL + '/api/reports/saleSummary',
+    CATEGORY_SALES_SUMMARY: BASE_URL + '/api/reports/categoryWiseReport',
 
   }
 };
