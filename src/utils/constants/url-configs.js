@@ -1,6 +1,9 @@
 const BASE_URL = 'https://shopdesk-develop-iiqzqqotsq-uc.a.run.app';
+const IMAGE_UPLOADS_URL = 'https://storage.googleapis.com/shopdesk-artifacts';
+
 const urls = {
   BASE_URL,
+  IMAGE_UPLOADS_URL,
   AUTH: {
     LOGIN: BASE_URL + '/api/users/login',
     SIGNUP: BASE_URL + '/api/users/signupl'
@@ -53,6 +56,10 @@ const urls = {
     GET_REGISTERED_PRODUCTS: BASE_URL + '/api/products/getRegister',
     SAVE_DISCOUNTED: BASE_URL + '/api/promotions/setSpecial',
     BULK_UPLOAD: BASE_URL + '/api/integrations/add_products'
+  },
+  REPORTS:{
+    SALES_SUMMARY: BASE_URL + '/api/reports/saleSummary'
+
   }
 };
 

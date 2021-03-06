@@ -163,7 +163,7 @@ const ProductAdd = () => {
 
 
     addProductData.sku = formValues.sku;
-    addProductData.var = productVariantsDataDeepClone.length > 0 ? true : false;
+    //addProductData.var = productVariantsDataDeepClone.length > 0 ? true : false;   //imp see this later
     addProductData.track = inventoryTrackingCheck;
     addProductData.img = productImagePreviewSource || 'def.png';  //need discussion
     if (isImageUpload) { addProductData.product_image = productImagePreviewSource; }
@@ -175,13 +175,10 @@ const ProductAdd = () => {
     addProductData.purchase_price = formValues.purchase_price;
     addProductData.var1_name = formValues.product_variant1_name || "";
     addProductData.var2_name = formValues.product_variant2_name || "";
-    if (productVariantsDataDeepClone.length > 0) { addProductData.varData = productVariantsDataDeepClone };
+    //if (productVariantsDataDeepClone.length > 0) { addProductData.varData = productVariantsDataDeepClone };  imp see this later
     addProductData.open_qty = openQtyProductData;
     addProductData.inclusive = inclusiveTax;
     addProductData.attributes = JSON.stringify(formValues.product_attributes) || [];
-
-
-    console.log(addProductData);
 
 
 

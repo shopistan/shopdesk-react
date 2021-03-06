@@ -6,4 +6,31 @@
       margin-right: 2rem;
     }
   }
+  
+  .card-shade{
+    padding: 15px;
+    
+    h2{
+      color: #555;
+    }
+
+  }
+
+  .card-container{
+    -webkit-box-shadow: 0px 0px 5px 0px darkgray;
+    -moz-box-shadow: 0px 0px 5px 0px darkgray;
+    box-shadow: 0px 0px 5px 0px darkgray;
+    margin: 1rem;
+  }
+
+  .card-pull-right{
+    float: right !important;
+  }
+
+  .print-overview-btn{
+    display: flex;
+    justify-content: flex-end;
+
+  }
+
 }
