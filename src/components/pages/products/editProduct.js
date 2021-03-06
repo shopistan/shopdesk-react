@@ -246,7 +246,7 @@ const EditProduct = (props) => {
     };
 
 
-    var ProductImageSrc = `${UrlConstants.BASE_URL}/api/files/${productImagePreviewSource}`;  //imp to set image source
+    var ProductImageSrc = `${productImagePreviewSource}`;  //imp to set image source
 
 
     return (
