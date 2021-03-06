@@ -15,7 +15,7 @@ const SalesSummaryTable = (props) => {
   };
 
   useEffect(() => {
-    setData(props.tableData, props.tableDataLoading);
+    setData(props.tableData);
 
   }, [props.tableData, props.tableDataLoading]);  /* imp passing props to re-render */
 
