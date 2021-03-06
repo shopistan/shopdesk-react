@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import "./print.scss";
-import { useHistory } from "react-router-dom";
 import moment from 'moment';
 import UrlConstants from '../../../../utils/constants/url-configs';
 
 
 const PrintOverviewSales = (props) => {
-    const history = useHistory();
+
 
     useEffect(async () => {
 
@@ -72,7 +71,7 @@ const PrintOverviewSales = (props) => {
                 </tbody>
             </table>
             <hr />
-            <table class="print-sales-table sales-summary-invoice">
+            <table class="print-sales-table sales-summary-invoice" style={{ width: "100%" }}>
                 <tbody>
                     <tr>
                         <td>Total</td>
