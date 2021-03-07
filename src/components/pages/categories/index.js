@@ -62,8 +62,7 @@ const Categories = () => {
     setLoading(true);
     if (currentPage > Math.ceil(paginationData.totalElements / value)) {
       fetchCategoriesData(value, 1);
-    }
-    else {
+    } else {
       fetchCategoriesData(value, currentPage);
     }
   }
@@ -81,40 +80,41 @@ const Categories = () => {
   };
 
   return (
-    <div className='page categories'>
-      <div className='page__header'>
+    <div className="page categories">
+      <div className="page__header">
         <h1>Categories</h1>
         <Button
-          type='primary'
+          type="primary"
           icon={<PlusCircleOutlined />}
           onClick={() => handleAddCategory()}
+          className="custom-btn custom-btn--primary"
         >
           Add New
         </Button>
       </div>
-      <div className='page__content'>
-        <div className='action-row'>
-          <div className='action-row__element'>
+      <div className="page__content">
+        <div className="action-row">
+          <div className="action-row__element">
             Show
             <Select
-              defaultValue='10'
+              defaultValue="10"
               style={{ width: 120, margin: "0 5px" }}
               onChange={handleChange}
             >
-              <Option value='10'>10</Option>
-              <Option value='20'>20</Option>
-              <Option value='50'>50</Option>
-              <Option value='100'>100</Option>
+              <Option value="10">10</Option>
+              <Option value="20">20</Option>
+              <Option value="50">50</Option>
+              <Option value="100">100</Option>
             </Select>
             entries
           </div>
 
-          <div className='action-row__element'>
+          <div className="action-row__element">
             <Search
-              placeholder='search category'
+              placeholder="search category"
               allowClear
               //enterButton='Search'
-              size='large'
+              size="large"
               //onSearch={onSearch}
               onChange={onSearch}
             />
@@ -122,7 +122,7 @@ const Categories = () => {
         </div>
 
         {/* Table */}
-        <div className='table'>
+        <div className="table">
           <EditableTable
             pageLimit={paginationLimit}
             tableData={data}

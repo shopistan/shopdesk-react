@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-import { Button, Select, Input, message } from 'antd';
-import { PlusCircleOutlined } from '@ant-design/icons';
+import { Button, Select, Input, message } from "antd";
+import { PlusCircleOutlined } from "@ant-design/icons";
 
-import CustomerTable from '../../organism/table/customerTable';
-import { useHistory } from 'react-router-dom';
+import CustomerTable from "../../organism/table/customerTable";
+import { useHistory } from "react-router-dom";
 
-import * as CustomersApiUtil from '../../../utils/api/customer-api-utils';
+import * as CustomersApiUtil from "../../../utils/api/customer-api-utils";
 
 const Customers = () => {
   const [paginationLimit, setPaginationLimit] = useState(10);
@@ -20,19 +20,19 @@ const Customers = () => {
     const customersViewResponse = await CustomersApiUtil.viewCustomers(
       pageNumber
     );
-    console.log('customers view response:', customersViewResponse);
+    console.log("customers view response:", customersViewResponse);
 
     if (customersViewResponse.hasError) {
       console.log(
-        'Cant fetch customers -> ',
+        "Cant fetch customers -> ",
         customersViewResponse.errorMessage
       );
       setLoading(false);
     } else {
-      console.log('res -> ', customersViewResponse);
+      console.log("res -> ", customersViewResponse);
       message.success(customersViewResponse.message, 3);
       setData(customersViewResponse.Customer.data);
-      
+
       setLoading(false);
     }
   };
@@ -48,29 +48,34 @@ const Customers = () => {
   }, []);
 
   return (
-    <div className='page categories'>
-      <div className='page__header'>
+    <div className="page categories">
+      <div className="page__header">
         <h1>Customers</h1>
 
-        <div className='page__header__buttons'>
+        <div className="page__header__buttons">
           <Button
-            type='primary'
+            type="primary"
             icon={<PlusCircleOutlined />}
             onClick={() => {
-              history.push('/customers/add');
+              history.push("/customers/add");
             }}
+            className="custom-btn custom-btn--primary"
           >
             Add New
           </Button>
 
-          <Button type='primary'>Fetch All</Button>
+          <Button type="primary" className="custom-btn custom-btn--primary">
+            Fetch All
+          </Button>
 
-          <Button type='primary'>Export CSV</Button>
+          <Button type="primary" className="custom-btn custom-btn--primary">
+            Export CSV
+          </Button>
         </div>
       </div>
-      <div className='page__content'>
+      <div className="page__content">
         {/* Table */}
-        <div className='table'>
+        <div className="table">
           <CustomerTable
             pageLimit={paginationLimit}
             tableData={data}

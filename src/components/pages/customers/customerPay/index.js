@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-import { Button, Form, Input, Select, message } from 'antd';
-import { useHistory } from 'react-router-dom';
-import {} from '@ant-design/icons';
+import { Button, Form, Input, Select, message } from "antd";
+import { useHistory } from "react-router-dom";
+import {} from "@ant-design/icons";
 
 import {
   getSingleCustomer,
-  rechargeCustomerAccount
-} from '../../../../utils/api/customer-api-utils';
+  rechargeCustomerAccount,
+} from "../../../../utils/api/customer-api-utils";
 
 const CustomerPay = (props) => {
   const { Option } = Select;
@@ -33,7 +33,7 @@ const CustomerPay = (props) => {
       return popPage();
     }
     const singleCustomerDataResponse = await getSingleCustomer(customerId);
-    console.log('singleCustomerDataResponse:  ', singleCustomerDataResponse);
+    console.log("singleCustomerDataResponse:  ", singleCustomerDataResponse);
     if (singleCustomerDataResponse.hasError) {
       return popPage();
     }
@@ -46,7 +46,7 @@ const CustomerPay = (props) => {
       name: customerData.customer_name,
       phone: customerData.customer_phone,
       gender: customerData.customer_sex,
-      id: customerData.id
+      id: customerData.id,
     };
     setCustomerData(mappedCustomerResponse);
   };
@@ -56,10 +56,10 @@ const CustomerPay = (props) => {
   }
 
   const onNewBalanceSubmitted = async (values) => {
-    console.log('onNewBalanceSubmitted: ', values);
+    console.log("onNewBalanceSubmitted: ", values);
     const paymentInfo = {
       type: values.payment_type,
-      amount: values.payment_amount
+      amount: values.payment_amount,
     };
 
     const customerRechargeResponse = await rechargeCustomerAccount(
@@ -68,26 +68,26 @@ const CustomerPay = (props) => {
     );
 
     if (customerRechargeResponse.hasError) {
-      return message.error('Cannot recharge user account!', 3);
+      return message.error("Cannot recharge user account!", 3);
     }
 
     message.success(
       customerRechargeResponse.message
         ? customerRechargeResponse.message
-        : 'Balance successfully updated!',
+        : "Balance successfully updated!",
       3
     );
     history.push(`/customers/${customer_id}/view`);
   };
 
   return (
-    <div className='page customer-profile'>
-      <div className='page__header'>
+    <div className="page customer-profile">
+      <div className="page__header">
         <h1>Pay Account Balance</h1>
       </div>
 
-      <div className='page__content'>
-        <div className='info'>
+      <div className="page__content">
+        <div className="info">
           <ul>
             <li>
               <span>Name:</span>
@@ -116,45 +116,45 @@ const CustomerPay = (props) => {
           </ul>
         </div>
 
-        <div className='page__form'>
+        <div className="page__form">
           <Form
-            name='basic'
-            layout='vertical'
+            name="basic"
+            layout="vertical"
             onFinish={onNewBalanceSubmitted}
             initialValues={{
-              remember: true
+              remember: true,
             }}
           >
-            <div className='form__row'>
-              <div className='form__col'>
+            <div className="form__row">
+              <div className="form__col">
                 <Form.Item
-                  label='Payment Type'
-                  name='payment_type'
+                  label="Payment Type"
+                  name="payment_type"
                   rules={[
                     {
                       required: true,
-                      message: 'Please select payment type!'
-                    }
+                      message: "Please select payment type!",
+                    },
                   ]}
                 >
-                  <Select defaultValue='Cash' onChange={handleChange}>
-                    <Option value='cash'>Cash</Option>
-                    <Option value='credit card'>Credit Card</Option>
+                  <Select defaultValue="Cash" onChange={handleChange}>
+                    <Option value="cash">Cash</Option>
+                    <Option value="credit card">Credit Card</Option>
                   </Select>
                 </Form.Item>
               </div>
             </div>
 
-            <div className='form__row'>
-              <div className='form__col'>
+            <div className="form__row">
+              <div className="form__col">
                 <Form.Item
-                  label='Amount'
-                  name='payment_amount'
+                  label="Amount"
+                  name="payment_amount"
                   rules={[
                     {
                       required: true,
-                      message: 'Please input amount!'
-                    }
+                      message: "Please input amount!",
+                    },
                   ]}
                 >
                   <Input />
@@ -162,12 +162,16 @@ const CustomerPay = (props) => {
               </div>
             </div>
 
-            <div className='form__row--footer'>
-              <Button type='secondary' htmlType='submit'>
+            <div className="form__row--footer">
+              <Button type="secondary" htmlType="submit">
                 Cancel
               </Button>
 
-              <Button type='primary' htmlType='submit'>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="custom-btn custom-btn--primary"
+              >
                 Confirm
               </Button>
             </div>

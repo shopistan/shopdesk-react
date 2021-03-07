@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Select, Input } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import EditableSupplier from "../../organism/table/suppliersTable";
-import * as SuppliersApiUtil from '../../../utils/api/suppliers-api-utils';
+import * as SuppliersApiUtil from "../../../utils/api/suppliers-api-utils";
 import { useHistory } from "react-router-dom";
 
 const Suppliers = () => {
@@ -23,8 +23,7 @@ const Suppliers = () => {
     currValue = currValue.toLowerCase();
     if (currValue === "") {
       fetchSuppliersData(paginationLimit, currentPage);
-    }
-    else {
+    } else {
       const filteredData = data.filter((entry) => {
         var supplierName = entry.supplier_name;
         supplierName = supplierName.toLowerCase();
@@ -36,34 +35,42 @@ const Suppliers = () => {
         supplierPhone = supplierPhone.toLowerCase();
         var supplierTax = entry.supplier_tax_number;
         supplierTax = supplierTax.toLowerCase();
-        return supplierName.includes(currValue) || supplierEmail.includes(currValue) || supplierContact.includes(currValue) || supplierPhone.includes(currValue)
+        return (
+          supplierName.includes(currValue) ||
+          supplierEmail.includes(currValue) ||
+          supplierContact.includes(currValue) ||
+          supplierPhone.includes(currValue)
+        );
       });
 
       setData(filteredData);
     }
-  }
+  };
 
   const fetchSuppliersData = async (pageLimit = 10, pageNumber = 1) => {
-    const SuppliersViewResponse = await SuppliersApiUtil.viewSuppliers(pageLimit, pageNumber);
-    console.log('SuppliersViewResponse:', SuppliersViewResponse);
+    const SuppliersViewResponse = await SuppliersApiUtil.viewSuppliers(
+      pageLimit,
+      pageNumber
+    );
+    console.log("SuppliersViewResponse:", SuppliersViewResponse);
 
     if (SuppliersViewResponse.hasError) {
-      console.log('Cant fetch suppliers -> ', SuppliersViewResponse.errorMessage);
+      console.log(
+        "Cant fetch suppliers -> ",
+        SuppliersViewResponse.errorMessage
+      );
       setLoading(false);
-    }
-    else {
-      console.log('res -> ', SuppliersViewResponse);
+    } else {
+      console.log("res -> ", SuppliersViewResponse);
       setData(SuppliersViewResponse.suppliers.data);
       setPaginationData(SuppliersViewResponse.suppliers.page);
       setLoading(false);
     }
-
-  }
+  };
 
   useEffect(async () => {
     fetchSuppliersData();
   }, []);
-
 
   function handleChange(value) {
     setPaginationLimit(value);
@@ -71,8 +78,7 @@ const Suppliers = () => {
     setLoading(true);
     if (currentPage > Math.ceil(paginationData.totalElements / value)) {
       fetchSuppliersData(value, 1);
-    }
-    else {
+    } else {
       fetchSuppliersData(value, currentPage);
     }
   }
@@ -85,54 +91,60 @@ const Suppliers = () => {
 
   const handleAddSupplier = () => {
     history.push({
-      pathname: '/suppliers/add',
+      pathname: "/suppliers/add",
     });
   };
 
   return (
-    <div className='page categories'>
-      <div className='page__header'>
+    <div className="page categories">
+      <div className="page__header">
         <h1>Suppliers</h1>
         <Button
-          type='primary'
+          type="primary"
           icon={<PlusCircleOutlined />}
           onClick={handleAddSupplier}
+          className="custom-btn custom-btn--primary"
         >
           Add New
         </Button>
       </div>
-      <div className='page__content'>
-        <div className='action-row'>
-          <div className='action-row__element'>
+      <div className="page__content">
+        <div className="action-row">
+          <div className="action-row__element">
             Show
             <Select
-              defaultValue='10'
+              defaultValue="10"
               style={{ width: 120, margin: "0 5px" }}
               onChange={handleChange}
             >
-              <Option value='10'>10</Option>
-              <Option value='20'>20</Option>
-              <Option value='50'>50</Option>
-              <Option value='100'>100</Option>
+              <Option value="10">10</Option>
+              <Option value="20">20</Option>
+              <Option value="50">50</Option>
+              <Option value="100">100</Option>
             </Select>
             entries
           </div>
 
-          <div className='action-row__element'>
+          <div className="action-row__element">
             <Search
-              placeholder='search category'
+              placeholder="search category"
               allowClear
               //enterButton='Search'
-              size='large'
+              size="large"
               onChange={onSearch}
             />
           </div>
         </div>
 
         {/* Table */}
-        <div className='table'>
-          <EditableSupplier pageLimit={paginationLimit} tableData={data} paginationData={paginationData}
-            tableDataLoading={loading} onClickPageChanger={handlePageChange}  />
+        <div className="table">
+          <EditableSupplier
+            pageLimit={paginationLimit}
+            tableData={data}
+            paginationData={paginationData}
+            tableDataLoading={loading}
+            onClickPageChanger={handlePageChange}
+          />
         </div>
         {/* Table */}
       </div>

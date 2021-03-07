@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./style.scss";
 import { useHistory } from "react-router-dom";
 import {
   getDataFromLocalStorage,
@@ -47,8 +48,9 @@ const SideMenu = () => {
 
   return (
     <Menu
-      theme='dark'
-      mode='inline'
+      theme="dark"
+      mode="inline"
+      className="side-menu"
       defaultSelectedKeys={["dashboard"]}
       onClick={(e) => {
         if (e.key === "dashboard") {
@@ -92,7 +94,7 @@ const SideMenu = () => {
     >
       {readFromLocalStorage && (
         <React.Fragment>
-          <Menu.Item key='dashboard' icon={<DashboardOutlined />}>
+          <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
             Dashboard
           </Menu.Item>
         </React.Fragment>
@@ -100,58 +102,58 @@ const SideMenu = () => {
 
       {readFromLocalStorage && authenticateDashboard && (
         <React.Fragment>
-          <Menu.Item key='categories' icon={<TagsOutlined />}>
+          <Menu.Item key="categories" icon={<TagsOutlined />}>
             Categories
           </Menu.Item>
-          <Menu.Item key='suppliers' icon={<SendOutlined />}>
+          <Menu.Item key="suppliers" icon={<SendOutlined />}>
             Suppliers
           </Menu.Item>
-          <Menu.Item key='taxes' icon={<BankOutlined />}>
+          <Menu.Item key="taxes" icon={<BankOutlined />}>
             Taxes
           </Menu.Item>
-          <Menu.Item key='products' icon={<ShopOutlined />}>
+          <Menu.Item key="products" icon={<ShopOutlined />}>
             Products
           </Menu.Item>
-          <Menu.Item key='customers' icon={<UserOutlined />}>
+          <Menu.Item key="customers" icon={<UserOutlined />}>
             Customers
           </Menu.Item>
-          <Menu.Item key='couriers' icon={<BarcodeOutlined />}>
+          <Menu.Item key="couriers" icon={<BarcodeOutlined />}>
             Couriers
           </Menu.Item>
-          <SubMenu key='sub1' icon={<LaptopOutlined />} title='Register'>
-            <Menu.Item key='sell'>Sell</Menu.Item>
-            <Menu.Item key='salesHistory'>Sales History</Menu.Item>
+          <SubMenu key="sub1" icon={<LaptopOutlined />} title="Register">
+            <Menu.Item key="sell">Sell</Menu.Item>
+            <Menu.Item key="salesHistory">Sales History</Menu.Item>
           </SubMenu>
-          <SubMenu key='sub2' icon={<StockOutlined />} title='Stock Control'>
-            <Menu.Item key='10'>Purchase Orders</Menu.Item>
-            <Menu.Item key='11'>Inventory Transfers</Menu.Item>
-            <Menu.Item key='12'>Stock Adjustment</Menu.Item>
+          <SubMenu key="sub2" icon={<StockOutlined />} title="Stock Control">
+            <Menu.Item key="10">Purchase Orders</Menu.Item>
+            <Menu.Item key="11">Inventory Transfers</Menu.Item>
+            <Menu.Item key="12">Stock Adjustment</Menu.Item>
           </SubMenu>
-          <SubMenu key='sub3' icon={<ApartmentOutlined />} title='Ecommerce'>
-            <Menu.Item key='13'>Orders</Menu.Item>
-            <Menu.Item key='14'>Inventory Sync</Menu.Item>
+          <SubMenu key="sub3" icon={<ApartmentOutlined />} title="Ecommerce">
+            <Menu.Item key="13">Orders</Menu.Item>
+            <Menu.Item key="14">Inventory Sync</Menu.Item>
           </SubMenu>
-          <SubMenu key='reports' icon={<BarChartOutlined />} title='Reports'>
-            <Menu.Item key='salesSummary'>Sales Summary</Menu.Item>
-            <Menu.Item key='inventoryDump'>Inventory Dump</Menu.Item>
-            <Menu.Item key='productHistory'>Product History</Menu.Item>
-            <Menu.Item key='omniSalesSummary'>Omni Sales Summary</Menu.Item>
-            <Menu.Item key='categoryWise'>Category Wise</Menu.Item>
+          <SubMenu key="reports" icon={<BarChartOutlined />} title="Reports">
+            <Menu.Item key="salesSummary">Sales Summary</Menu.Item>
+            <Menu.Item key="inventoryDump">Inventory Dump</Menu.Item>
+            <Menu.Item key="productHistory">Product History</Menu.Item>
+            <Menu.Item key="omniSalesSummary">Omni Sales Summary</Menu.Item>
+            <Menu.Item key="categoryWise">Category Wise</Menu.Item>
           </SubMenu>
-          <SubMenu key='sub5' icon={<SettingOutlined />} title='Setup'>
-            <Menu.Item key='20'>Outlets</Menu.Item>
-            <Menu.Item key='21'>Users</Menu.Item>
-            <Menu.Item key='22'>Receipt Templates</Menu.Item>
+          <SubMenu key="sub5" icon={<SettingOutlined />} title="Setup">
+            <Menu.Item key="20">Outlets</Menu.Item>
+            <Menu.Item key="21">Users</Menu.Item>
+            <Menu.Item key="22">Receipt Templates</Menu.Item>
           </SubMenu>
         </React.Fragment>
       )}
 
       {readFromLocalStorage == null && (
         <React.Fragment>
-          <Menu.Item key='signup' icon={<SendOutlined />}>
+          <Menu.Item key="signup" icon={<SendOutlined />}>
             Sign Up
           </Menu.Item>
-          <Menu.Item key='signin' icon={<BankOutlined />}>
+          <Menu.Item key="signin" icon={<BankOutlined />}>
             Sign In
           </Menu.Item>
         </React.Fragment>

@@ -1,11 +1,10 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 
 import { Button, Select, Input, message } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import TaxesViewTable from "../../organism/table/taxesTable";
 import { useHistory } from "react-router-dom";
-import * as TaxApiUtil from '../../../utils/api/tax-api-utils';
-
+import * as TaxApiUtil from "../../../utils/api/tax-api-utils";
 
 const Taxes = () => {
   const history = useHistory();
@@ -18,63 +17,54 @@ const Taxes = () => {
   const [paginationData, setPaginationData] = useState({});
   const { Option } = Select;
 
-
   const onSearch = async (e) => {
-  
     var currValue = e.target.value;
     currValue = currValue.toLowerCase();
     if (currValue === "") {
       fetchTaxesData(paginationLimit, currentPage);
-    }
-    else {
+    } else {
       const filteredData = data.filter((entry) => {
         var taxName = entry.tax_name;
         taxName = taxName.toLowerCase();
         var taxValue = entry.tax_value;
         taxValue = taxValue.toLowerCase();
-  
+
         return taxName.includes(currValue) || taxValue.includes(currValue);
       });
 
-
       setData(filteredData);
-      paginationData.totalElements=filteredData.length;
+      paginationData.totalElements = filteredData.length;
       setPaginationData(paginationData);
       setPaginationLimit(paginationLimit);
-
     }
-  }
+  };
 
   const fetchTaxesData = async (pageLimit = 10, pageNumber = 1) => {
     const taxesViewResponse = await TaxApiUtil.viewTaxes(pageLimit, pageNumber);
-    console.log('taxesViewResponse:', taxesViewResponse);
+    console.log("taxesViewResponse:", taxesViewResponse);
 
     if (taxesViewResponse.hasError) {
-      console.log('Cant fetch taxes -> ', taxesViewResponse.errorMessage);
+      console.log("Cant fetch taxes -> ", taxesViewResponse.errorMessage);
       setLoading(false);
-    }
-    else {
-      console.log('res -> ', taxesViewResponse);
+    } else {
+      console.log("res -> ", taxesViewResponse);
       setData(taxesViewResponse.taxes.data || taxesViewResponse.taxes);
       message.success(taxesViewResponse.message, 3);
-      setPaginationData(taxesViewResponse.taxes.page || {} );
+      setPaginationData(taxesViewResponse.taxes.page || {});
       setLoading(false);
     }
-
-  }
+  };
 
   useEffect(async () => {
     fetchTaxesData();
   }, []);
-
 
   function handleChange(value) {
     setPaginationLimit(value);
     setLoading(true);
     if (currentPage > Math.ceil(paginationData.totalElements / value)) {
       fetchTaxesData(value, 1);
-    }
-    else {
+    } else {
       fetchTaxesData(value, currentPage);
     }
   }
@@ -87,54 +77,59 @@ const Taxes = () => {
 
   const handleAddTaxes = () => {
     history.push({
-      pathname: '/taxes/add',
+      pathname: "/taxes/add",
     });
   };
 
-
   return (
-    <div className='page categories'>
-      <div className='page__header'>
+    <div className="page categories">
+      <div className="page__header">
         <h1>Taxes</h1>
         <Button
-          type='primary'
+          type="primary"
           icon={<PlusCircleOutlined />}
           onClick={handleAddTaxes}
+          className="custom-btn custom-btn--primary"
         >
           Add New
         </Button>
       </div>
-      <div className='page__content'>
-        <div className='action-row'>
-          <div className='action-row__element'>
+      <div className="page__content">
+        <div className="action-row">
+          <div className="action-row__element">
             Show
             <Select
-              defaultValue='10'
+              defaultValue="10"
               style={{ width: 120, margin: "0 5px" }}
               onChange={handleChange}
             >
-              <Option value='10'>10</Option>
-              <Option value='20'>20</Option>
-              <Option value='50'>50</Option>
-              <Option value='100'>100</Option>
+              <Option value="10">10</Option>
+              <Option value="20">20</Option>
+              <Option value="50">50</Option>
+              <Option value="100">100</Option>
             </Select>
             entries
           </div>
 
-          <div className='action-row__element'>
+          <div className="action-row__element">
             <Search
-              placeholder='search category'
+              placeholder="search category"
               allowClear
-              size='large'
+              size="large"
               onChange={onSearch}
             />
           </div>
         </div>
 
         {/* Table */}
-        <div className='table'>
-          <TaxesViewTable  pageLimit={paginationLimit} tableData={data} paginationData={paginationData}
-            tableDataLoading={loading} onClickPageChanger={handlePageChange} />
+        <div className="table">
+          <TaxesViewTable
+            pageLimit={paginationLimit}
+            tableData={data}
+            paginationData={paginationData}
+            tableDataLoading={loading}
+            onClickPageChanger={handlePageChange}
+          />
         </div>
         {/* Table */}
       </div>

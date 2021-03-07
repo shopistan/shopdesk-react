@@ -1,28 +1,34 @@
 import React from "react";
 import { Form, Input, Button, message } from "antd";
-import { useHistory } from 'react-router-dom';
-import * as SuppliersApiUtil from '../../../../utils/api/suppliers-api-utils';
-
+import { useHistory } from "react-router-dom";
+import * as SuppliersApiUtil from "../../../../utils/api/suppliers-api-utils";
 
 const SupplierAdd = () => {
   const history = useHistory();
 
   const onFinish = async (values) => {
     console.log("Success:", values);
-    const supplierAddResponse = await SuppliersApiUtil.addSupplier(values.supplier_name,
-      values.contact_person, values.phone, values.email, values.tax);
+    const supplierAddResponse = await SuppliersApiUtil.addSupplier(
+      values.supplier_name,
+      values.contact_person,
+      values.phone,
+      values.email,
+      values.tax
+    );
 
-    console.log('supplierAddResponse:', supplierAddResponse);
+    console.log("supplierAddResponse:", supplierAddResponse);
     if (supplierAddResponse.hasError) {
-      console.log('Cant add new Category -> ', supplierAddResponse.errorMessage);
-      message.error('Supplier Cannot Added ', 3);
-    }
-    else {
-      console.log('res -> ', supplierAddResponse);
-      message.success('supplier Succesfull Added ', 3);
+      console.log(
+        "Cant add new Category -> ",
+        supplierAddResponse.errorMessage
+      );
+      message.error("Supplier Cannot Added ", 3);
+    } else {
+      console.log("res -> ", supplierAddResponse);
+      message.success("supplier Succesfull Added ", 3);
       setTimeout(() => {
         history.push({
-          pathname: '/suppliers',
+          pathname: "/suppliers",
         });
       }, 2000);
     }
@@ -33,27 +39,27 @@ const SupplierAdd = () => {
   };
 
   return (
-    <div className='page dashboard'>
-      <div className='page__header'>
+    <div className="page dashboard">
+      <div className="page__header">
         <h1>New Supplier</h1>
       </div>
 
-      <div className='page__content'>
-        <div className='page__form'>
+      <div className="page__content">
+        <div className="page__form">
           <Form
-            name='basic'
-            layout='vertical'
+            name="basic"
+            layout="vertical"
             initialValues={{
               remember: true,
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
           >
-            <div className='form__row'>
-              <div className='form__col'>
+            <div className="form__row">
+              <div className="form__col">
                 <Form.Item
-                  label='Supplier Name'
-                  name='supplier_name'
+                  label="Supplier Name"
+                  name="supplier_name"
                   rules={[
                     {
                       required: true,
@@ -65,10 +71,10 @@ const SupplierAdd = () => {
                 </Form.Item>
               </div>
 
-              <div className='form__col'>
+              <div className="form__col">
                 <Form.Item
-                  label='Contact Person Name'
-                  name='contact_person'
+                  label="Contact Person Name"
+                  name="contact_person"
                   rules={[
                     {
                       required: true,
@@ -81,11 +87,11 @@ const SupplierAdd = () => {
               </div>
             </div>
 
-            <div className='form__row'>
-              <div className='form__col'>
+            <div className="form__row">
+              <div className="form__col">
                 <Form.Item
-                  label='Email Address'
-                  name='email'
+                  label="Email Address"
+                  name="email"
                   rules={[
                     {
                       required: true,
@@ -98,10 +104,10 @@ const SupplierAdd = () => {
                 </Form.Item>
               </div>
 
-              <div className='form__col'>
+              <div className="form__col">
                 <Form.Item
-                  label='Phone Number'
-                  name='phone'
+                  label="Phone Number"
+                  name="phone"
                   rules={[
                     {
                       required: true,
@@ -114,11 +120,11 @@ const SupplierAdd = () => {
               </div>
             </div>
 
-            <div className='form__row'>
-              <div className='form__col'>
+            <div className="form__row">
+              <div className="form__col">
                 <Form.Item
-                  label='Tax ID'
-                  name='tax'
+                  label="Tax ID"
+                  name="tax"
                   rules={[
                     {
                       required: true,
@@ -130,9 +136,13 @@ const SupplierAdd = () => {
                 </Form.Item>
               </div>
 
-              <div className='form__col form__col--button'>
-                <Form.Item className='u-width-100'>
-                  <Button type='primary' htmlType='submit'>
+              <div className="form__col form__col--button">
+                <Form.Item className="u-width-100">
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    className="custom-btn custom-btn--primary"
+                  >
                     Add
                   </Button>
                 </Form.Item>

@@ -1,29 +1,28 @@
 import React from "react";
 import { Form, Input, Button, InputNumber, message } from "antd";
-import { useHistory } from 'react-router-dom';
-import * as TaxApiUtil from '../../../../utils/api/tax-api-utils';
-
+import { useHistory } from "react-router-dom";
+import * as TaxApiUtil from "../../../../utils/api/tax-api-utils";
 
 const TaxAdd = () => {
   const history = useHistory();
 
-
-  
   const onFinish = async (values) => {
     console.log("Success:", values);
-    const TaxAddResponse = await TaxApiUtil.addTax(values.tax_name, values.tax_value);
+    const TaxAddResponse = await TaxApiUtil.addTax(
+      values.tax_name,
+      values.tax_value
+    );
 
-    console.log('TaxAddResponse:', TaxAddResponse);
+    console.log("TaxAddResponse:", TaxAddResponse);
     if (TaxAddResponse.hasError) {
-      console.log('Cant add new Tax-> ', TaxAddResponse.errorMessage);
-      message.error('Tax Cannot Added ', 3);
-    }
-    else {
-      console.log('res -> ', TaxAddResponse);
+      console.log("Cant add new Tax-> ", TaxAddResponse.errorMessage);
+      message.error("Tax Cannot Added ", 3);
+    } else {
+      console.log("res -> ", TaxAddResponse);
       message.success(TaxAddResponse.message, 3);
       setTimeout(() => {
         history.push({
-          pathname: '/taxes',
+          pathname: "/taxes",
         });
       }, 2000);
     }
@@ -34,27 +33,27 @@ const TaxAdd = () => {
   };
 
   return (
-    <div className='page dashboard'>
-      <div className='page__header'>
+    <div className="page dashboard">
+      <div className="page__header">
         <h1>New Tax</h1>
       </div>
 
-      <div className='page__content'>
-        <div className='page__form'>
+      <div className="page__content">
+        <div className="page__form">
           <Form
-            name='basic'
-            layout='vertical'
+            name="basic"
+            layout="vertical"
             initialValues={{
               remember: true,
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
           >
-            <div className='form__row'>
-              <div className='form__col'>
+            <div className="form__row">
+              <div className="form__col">
                 <Form.Item
-                  label='Tax Name'
-                  name='tax_name'
+                  label="Tax Name"
+                  name="tax_name"
                   rules={[
                     {
                       required: true,
@@ -66,10 +65,10 @@ const TaxAdd = () => {
                 </Form.Item>
               </div>
 
-              <div className='form__col'>
+              <div className="form__col">
                 <Form.Item
-                  label='Tax Percentage'
-                  name='tax_value'
+                  label="Tax Percentage"
+                  name="tax_value"
                   rules={[
                     {
                       required: true,
@@ -83,16 +82,20 @@ const TaxAdd = () => {
                     max={100}
                     formatter={(value) => `${value}%`}
                     parser={(value) => value.replace("%", "")}
-                    className='u-width-100'
+                    className="u-width-100"
                   />
                 </Form.Item>
               </div>
             </div>
 
-            <div className='form__row'>
-              <div className='form__col form__col--button'>
-                <Form.Item className='u-width-100'>
-                  <Button type='primary' htmlType='submit'>
+            <div className="form__row">
+              <div className="form__col form__col--button">
+                <Form.Item className="u-width-100">
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    className="custom-btn custom-btn--primary"
+                  >
                     Add
                   </Button>
                 </Form.Item>

@@ -1,6 +1,13 @@
+@import "../../../../styles/variables";
+@import "../../../../styles/mixins";
+
 .customer-profile {
   .page__content {
     display: flex;
+
+    @include respond(mobile) {
+      flex-direction: column;
+    }
 
     > * {
       flex: 1;
@@ -11,7 +18,7 @@
       padding: 1rem 0;
 
       > * {
-        flex: 1;
+        width: 50%;
       }
     }
 
