@@ -33,6 +33,11 @@
     &--small {
       max-width: 40rem;
     }
+
+    @include respond(mobile) {
+      max-width: 100%;
+      margin: 0;
+    }
   }
 
   .action-row {
@@ -146,5 +151,10 @@
   &--primary {
     background: $color-primary !important;
     border-color: $color-primary !important;
+
+    &:hover {
+      background-color: $color-primary-light !important;
+      border-color: $color-primary-light !important;
+    }
   }
 }

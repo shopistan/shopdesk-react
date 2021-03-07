@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import './style.scss';
-import { useHistory } from 'react-router-dom';
-import { Button } from 'antd';
+import React, { useState } from "react";
+import "./style.scss";
+import { useHistory } from "react-router-dom";
+import { Button } from "antd";
 import {
   EditOutlined,
   CreditCardOutlined,
   HistoryOutlined,
-  DeleteOutlined
-} from '@ant-design/icons';
+  DeleteOutlined,
+} from "@ant-design/icons";
 
-import { getSingleCustomer } from '../../../../utils/api/customer-api-utils';
-import { useEffect } from 'react';
+import { getSingleCustomer } from "../../../../utils/api/customer-api-utils";
+import { useEffect } from "react";
 
 const CustomerProfile = (props) => {
   const { match = {} } = props;
@@ -36,7 +36,7 @@ const CustomerProfile = (props) => {
       name: customerData.customer_name,
       phone: customerData.customer_phone,
       gender: customerData.customer_sex,
-      id: customerData.id
+      id: customerData.id,
     };
     setCustomerData(mappedCustomerResponse);
   };
@@ -59,73 +59,79 @@ const CustomerProfile = (props) => {
 
   console.log(customerData);
   return (
-    <div className='page customer-profile'>
-      <div className='page__header'>
+    <div className="page customer-profile">
+      <div className="page__header">
         <h1>Customer Profile</h1>
 
-        <div className='page__header__buttons'>
+        <div className="page__header__buttons">
           <Button
-            type='primary'
+            type="primary"
             icon={<EditOutlined />}
             onClick={() => {
               history.push(`/customers/${customer_id}/edit`);
             }}
+            className="custom-btn custom-btn--primary"
           >
             Edit
           </Button>
 
           <Button
-            type='primary'
+            type="primary"
             icon={<DeleteOutlined />}
             onClick={() => {
               history.push(`/customers/${customer_id}/delete`);
             }}
+            className="custom-btn custom-btn--primary"
           >
             Delete
           </Button>
         </div>
       </div>
 
-      <div className='page__content'>
-        <div className='info'>
+      <div className="page__content">
+        <div className="info">
           <ul>
             <li>
               <span>Name:</span>
-              <span>{customerData.name ? customerData.name : ''}</span>
+              <span>{customerData.name ? customerData.name : ""}</span>
             </li>
             <li>
               <span>Phone:</span>
-              <span>{customerData.phone ? customerData.phone : ''}</span>
+              <span>{customerData.phone ? customerData.phone : ""}</span>
             </li>
             <li>
               <span>Email:</span>
-              <span>{customerData.email ? customerData.email : ''}</span>
+              <span>{customerData.email ? customerData.email : ""}</span>
             </li>
             <li>
               <span>Sex:</span>
-              <span>{customerData.gender ? customerData.gender : ''}</span>
+              <span>{customerData.gender ? customerData.gender : ""}</span>
             </li>
             <li>
               <span>Balance:</span>
-              <span>{customerData.balance ? customerData.balance : ''}</span>
+              <span>{customerData.balance ? customerData.balance : ""}</span>
             </li>
             <li>
               <span>Code:</span>
-              <span>{customerData.code ? customerData.code : ''}</span>
+              <span>{customerData.code ? customerData.code : ""}</span>
             </li>
           </ul>
         </div>
 
-        <div className='links'>
+        <div className="links">
           <ul>
             <li>
-              <a href='#' className='link' onClick={onCustomerCreditHistoryClick} >
+              <a
+                href="#"
+                className="link"
+                onClick={onCustomerCreditHistoryClick}
+              >
                 <HistoryOutlined />
                 View Credit History
               </a>
             </li>
             <li>
-              <a href='#' className='link' onClick={onPayAcccountBalanceClick}>
+              <a href="#" className="link" onClick={onPayAcccountBalanceClick}>
                 <CreditCardOutlined />
                 Pay Account Balance
               </a>
