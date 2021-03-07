@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { Table, Form, Input, message, Select, InputNumber } from "antd";
-import { useHistory } from 'react-router-dom';
+import { Table, Form, Input, Select, InputNumber } from "antd";
 const EditableContext = React.createContext(null);
-
 
 
 
@@ -38,8 +36,6 @@ const EditableCell = ({
     const form = useContext(EditableContext);
 
 
-
-
     useEffect(() => {
         if (editing) {
             //inputRef.current.focus();
@@ -53,7 +49,7 @@ const EditableCell = ({
     };
 
 
-    const save = async () => {
+    const save = async (e) => {
         try {
             const values = await form.validateFields();
 
@@ -64,10 +60,11 @@ const EditableCell = ({
         }
     };
 
+    var inputNode;
 
-    const inputNode = inputType === 'number' ?
-        <InputNumber  onPressEnter={save} onBlur={save} />
-        : inputType === 'select' ? <Select >
+    inputNode = inputType === 'number' ?
+        <InputNumber onPressEnter={save} onBlur={save} />
+        : inputType === 'select' ? <Select onPressEnter={save} >
             {
                 taxesData.map((obj, index) => {
                     return (
@@ -78,7 +75,8 @@ const EditableCell = ({
                 })
             }
         </Select>
-        : <Input  onPressEnter={save} onBlur={save} />;
+            : <Input onPressEnter={save} onBlur={save} />;
+
 
 
     let childNode = children;
@@ -88,14 +86,7 @@ const EditableCell = ({
             <Form.Item
                 style={{ margin: 0 }}
                 name={dataIndex}
-            /*rules={[
-                {
-                    required: true,
-                    message: `${title} is required.`,
-                },
-            ]} */
             >
-
                 {inputNode}
 
             </Form.Item>
@@ -113,18 +104,11 @@ const EditableCell = ({
 
 
 const ProductsVariantsNestedTable = (props) => {
-
-    const [data, setData] = useState([]);  
-
+    const [data, setData] = useState([]);
     const [currentExpandedRow, setCurrentExpandedRow] = useState("");
 
-    const history = useHistory();
 
-
-    const handleSave = async (row) => {
-        console.log("imp-save-cvvp", row);
-
-        console.log("imp-save-cvvp-newdata", data);
+    const handleSave = async (row, selectedRowId) => {
 
         const newData = [...data];
         const index = newData.findIndex(item => row.store_id === item.store_id);
@@ -136,24 +120,20 @@ const ProductsVariantsNestedTable = (props) => {
                 ...row,
             });
 
-            //setData(newData); //previous code imp one
-            //props.onSaveProductsSpecialPrice(newData);
-            //console.log("imp", currentExpandedRow);
-            //props.onChangeProductsVariantsNestedData(newData, row.outlet_row_unique_id);
+            setData(newData); //previous code imp one
+            props.onChangeProductsVariantsNestedData(newData, currentExpandedRow);
 
         };
     }
 
+
     useEffect(() => {
-        console.log("useeffectimpp");
-
-        console.log(props.tableData);
-
         setData(props.tableData);
+        setCurrentExpandedRow(props.currentExpandedRow);
 
+    }, [props.userStores, props.tableData, props.taxes, props.currentExpandedRow]);  /* imp passing props to re-render */
 
-    }, [props.userStores, props.tableData, props.taxes ]);  /* imp passing props to re-render */
-
+    
     var columns = null;
 
     columns = [
@@ -185,7 +165,7 @@ const ProductsVariantsNestedTable = (props) => {
             render: (_, record) => {
                 return (
                     <div >
-                        <Select className='select-w-100'>
+                        <Select className='select-w-100' value={record.tax_id}>
                             {
                                 props.taxes.map((obj, index) => {
                                     return (
@@ -206,8 +186,6 @@ const ProductsVariantsNestedTable = (props) => {
             editable: true,
         },
     ];
-
-
 
 
     const components = {
@@ -246,7 +224,7 @@ const ProductsVariantsNestedTable = (props) => {
             dataSource={data}
             pagination={false}
             components={components}
-            rowKey="outlet_row_unique_id" ///vvv impp if not unique then issue
+            rowKey="store_id" ///vvv impp if not unique then issue
         />
 
     );

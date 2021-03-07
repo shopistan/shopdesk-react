@@ -140,20 +140,22 @@ const ProductAdd = () => {
   };
 
   const onFinish = async (values) => {
-    console.log("changed", values);
+    //console.log("changed", values);
 
     var formValues = form.getFieldsValue();
-    console.log("changed", formValues);
+    //console.log("changed", formValues);
 
     var addProductData = {};  ///imp 
 
-    var productVariantsDataDeepClone = JSON.parse(JSON.stringify(productVariantsCombinations)); //imp to make adeep copy
-
+    //var productVariantsDataDeepClone = JSON.parse(JSON.stringify(productVariantsCombinations)); //imp to make adeep copy
+    var productVariantsDataDeepClone = [...productVariantsCombinations]; //imp to make adeep copy
+    //console.log("deepclone", productVariantsDataDeepClone);
+    
     if (productVariantsDataDeepClone.length>0) {
       productVariantsDataDeepClone.forEach((item, index) => {
         delete item['variant_row_id'];
       })
-    }
+    } 
 
     var openQtyProductData = [];
 
@@ -163,7 +165,7 @@ const ProductAdd = () => {
 
 
     addProductData.sku = formValues.sku;
-    //addProductData.var = productVariantsDataDeepClone.length > 0 ? true : false;   //imp see this later
+    addProductData.var = productVariantsDataDeepClone.length > 0 ? true : false;   //imp see this later
     addProductData.track = inventoryTrackingCheck;
     addProductData.img = productImagePreviewSource || 'def.png';  //need discussion
     if (isImageUpload) { addProductData.product_image = productImagePreviewSource; }
@@ -175,11 +177,12 @@ const ProductAdd = () => {
     addProductData.purchase_price = formValues.purchase_price;
     addProductData.var1_name = formValues.product_variant1_name || "";
     addProductData.var2_name = formValues.product_variant2_name || "";
-    //if (productVariantsDataDeepClone.length > 0) { addProductData.varData = productVariantsDataDeepClone };  imp see this later
+    if (productVariantsDataDeepClone.length > 0) { addProductData.varData = productVariantsDataDeepClone; } //imp see this later
     addProductData.open_qty = openQtyProductData;
     addProductData.inclusive = inclusiveTax;
     addProductData.attributes = JSON.stringify(formValues.product_attributes) || [];
 
+    console.log("final-post-data", addProductData);
 
 
     const AddProductResponse = await ProductsApiUtil.addProduct(addProductData);
@@ -202,11 +205,12 @@ const ProductAdd = () => {
 
   }
 
-  function removeHTML(str) {
+
+  /*function removeHTML(str) {
     var tmp = document.createElement("DIV");
     tmp.innerHTML = str;
     return tmp.textContent || tmp.innerText || "";
-  }
+  }*/
 
   const handleUpload = async () => {
     //console.log(fileList[0]);   //imp
@@ -241,20 +245,17 @@ const ProductAdd = () => {
   };
 
   const handleTrackingSwitch = (checked) => {
-    console.log(checked);
     setInventoryTrackingCheck(checked);
   };
 
   const handleVariantsSwitch = (checked) => {
-    console.log(checked);
     if (checked) { setInventoryTrackingCheck(false); }
     setVariantsCheck(checked);
-
   };
 
 
   const handleProductVariantsTagChangeSearch = (value) => {
-    console.log(`selected ${value}`);
+    //console.log(`selected ${value}`);
     setVariantTagvalue(value);
   };
 
@@ -286,19 +287,18 @@ const ProductAdd = () => {
 
 
   const handleSaveUpdatedVariantsData = (updatedVariantsProducts) => {
-    console.log('changed-actual-impp-main', updatedVariantsProducts);
+    //console.log('changed-actual-impp-main', updatedVariantsProducts);
     setproductVariantsCombinations(updatedVariantsProducts);
   };
 
 
   const handleSaleChange = (value) => {
-    console.log('saleChange', value);
 
     /*--getting variants combinations--*/
     setLoading(true);
     var variantsCombinations = ProductsVariantsCombination.calculateVaraintsCombinations
       (variant1Tags, variant2Tags, form.getFieldsValue(), userStores);
-    console.log(variantsCombinations);
+
     setproductVariantsCombinations(variantsCombinations);
     setLoading(false);
     /*--getting variants combinations--*/
@@ -307,13 +307,12 @@ const ProductAdd = () => {
 
 
   const handlePurchaseChange = (value) => {
-    console.log('purchaseChange', value);
 
     /*--getting variants combinations--*/
     setLoading(true);
     var variantsCombinations = ProductsVariantsCombination.calculateVaraintsCombinations
       (variant1Tags, variant2Tags, form.getFieldsValue(), userStores);
-    console.log(variantsCombinations);
+    
     setproductVariantsCombinations(variantsCombinations);
     setLoading(false);
     /*--getting variants combinations--*/
@@ -322,13 +321,12 @@ const ProductAdd = () => {
 
 
   const handleTaxChange = (value) => {
-    console.log('taxChange', value);
 
     /*--getting variants combinations--*/
     setLoading(true);
     var variantsCombinations = ProductsVariantsCombination.calculateVaraintsCombinations
       (variant1Tags, variant2Tags, form.getFieldsValue(), userStores);
-    console.log(variantsCombinations);
+    
     setproductVariantsCombinations(variantsCombinations);
     setLoading(false);
     /*--getting variants combinations--*/
@@ -336,16 +334,14 @@ const ProductAdd = () => {
   };
 
 
-
   const handleVariantsSelectTags = (value) => {
-    console.log(`oncselectedclick ${value}`);
     var formValues = form.getFieldsValue();
 
     /*--getting variants combinations--*/
     setLoading(true);
     var variantsCombinations = ProductsVariantsCombination.calculateVaraintsCombinations
       (variant1Tags, variant2Tags, formValues, userStores);
-    console.log(variantsCombinations);
+    
     setproductVariantsCombinations(variantsCombinations);
     setLoading(false);
     /*--getting variants combinations--*/
@@ -353,7 +349,6 @@ const ProductAdd = () => {
   }
 
   const handleVariants1DeSelectTags = (value) => {
-    console.log(`deselected ${value}`);
     var tags1 = [...variant1Tags];
     const index = tags1.findIndex(item => value === item);
     if (index > -1) {
@@ -363,8 +358,8 @@ const ProductAdd = () => {
       /*--getting variants combinations--*/
       setLoading(true);
       var variantsCombinations = ProductsVariantsCombination.calculateVaraintsCombinations
-        (tags1, variant2Tags, form.getFieldsValue(), userStores);
-      console.log(variantsCombinations);
+        (tags1, tags1.length>0 ? variant2Tags : [], form.getFieldsValue(), userStores);
+
       setproductVariantsCombinations(variantsCombinations);
       setLoading(false);
       /*--getting variants combinations--*/
@@ -374,7 +369,6 @@ const ProductAdd = () => {
   }
 
   const handleVariants2DeSelectTags = (value) => {
-    console.log(`deselected ${value}`);
     var tags2 = [...variant2Tags];
     const index = tags2.findIndex(item => value === item);
     if (index > -1) {
@@ -385,7 +379,7 @@ const ProductAdd = () => {
       setLoading(true);
       var variantsCombinations = ProductsVariantsCombination.calculateVaraintsCombinations
         (variant1Tags, tags2, form.getFieldsValue(), userStores);
-      console.log(variantsCombinations);
+      
       setproductVariantsCombinations(variantsCombinations);
       setLoading(false);
       /*--getting variants combinations--*/
@@ -399,7 +393,6 @@ const ProductAdd = () => {
   var ProductImageSrc = `${productImagePreviewSource}`;  //imp to set image source
 
 
-  console.log(variant1Tags);
 
   return (
     <div className='page dashboard'>
@@ -746,7 +739,7 @@ const ProductAdd = () => {
                     return (
                       <div className='form__col'>
                         <Form.Item
-                          label={`${store.store_name}`}
+                          label={store.store_name}
                           name={`${store.store_name}`}
                         >
                           <InputNumber
@@ -856,7 +849,7 @@ const ProductAdd = () => {
                         label='Attribute'
                         name='product_variant2_name'
                       >
-                        <Input placeholder='Attribute Name' />
+                        <Input placeholder='Attribute Name' disabled={variant1Tags.length>0 ? false: true } />
                       </Form.Item>
                     </div>
                     <div className='form__col'>
@@ -873,6 +866,7 @@ const ProductAdd = () => {
                           onKeyDown={handleVariants2TagsKeyDown}
                           onDeselect={handleVariants2DeSelectTags}
                           onSelect={handleVariantsSelectTags}
+                          disabled={variant1Tags.length>0 ? false: true }
 
                         >
                           {variant2Tags.length > 0 &&
@@ -890,22 +884,22 @@ const ProductAdd = () => {
                     </div>
                   </div>
 
+              
+
+                <div className='form__row'>
+                  {/* Table */}
+                  <div className='table'>
+                    <ProductsVariantsTable tableData={productVariantsCombinations} tableDataLoading={loading}
+                      onChangeProductsVariantsData={handleSaveUpdatedVariantsData} taxes={taxes}
+                      userStores={userStores}
+                    />
+
+                  </div>
+                  {/* Table */}
                 </div>
+              </div>
               }
 
-
-
-              <div className='form__row'>
-                {/* Table */}
-                <div className='table'>
-                  <ProductsVariantsTable tableData={productVariantsCombinations} tableDataLoading={loading}
-                    onChangeProductsVariantsData={handleSaveUpdatedVariantsData} taxes={taxes}
-                    userStores={userStores}
-                  />
-
-                </div>
-                {/* Table */}
-              </div>
             </div>
             {/* Form Section */}
           </Form>

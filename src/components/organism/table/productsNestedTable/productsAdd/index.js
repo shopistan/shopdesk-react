@@ -1,11 +1,10 @@
 
 import React, { useState, useEffect, useContext, useRef } from "react";
 import "../productStyle.scss";
-import { Table, message, Button, Input, Form, InputNumber, Typography, Popconfirm } from "antd";
+import { Table, message, Button, Input, Form, InputNumber, } from "antd";
 import ProductsVariantsNestedTable from "./productsVariantsNestedTable";
 
 const EditableContext = React.createContext(null);
-
 
 
 /*------edittableRow------*/
@@ -76,12 +75,12 @@ const EditableCell = ({
             <Form.Item
                 style={{ margin: 0 }}
                 name={dataIndex}
-            /*rules={[
-                {
-                    required: true,
-                    message: `${title} is required.`,
-                },
-            ]} */
+                /*rules={[
+                    {
+                        required: true,
+                        message: `${title} is required.`,
+                    },
+                ]} */
             >
                 {inputNode}
 
@@ -101,35 +100,28 @@ const EditableCell = ({
 
 const ProductsVariantsTable = (props) => {
     const [data, setData] = useState([]);
-    const [currentVariantExpandedRow, setCurrentVariantExpandedRow] = useState([]);
     const [tableExpandedRows, setTableExpandedRows] = useState([]);
 
 
     const tableExpandedRowRender = (record, index, indent, expanded) => {
-
-        var outletsData = data[currentVariantExpandedRow].outletInfo;
-
-        console.log(outletsData);
+        var outletsData;
+        if (data[parseInt(record.variant_row_id)]) {
+            outletsData = data[parseInt(record.variant_row_id)].outletInfo;
+        }
 
         return <ProductsVariantsNestedTable
             tableData={outletsData}
             userStores={props.userStores} taxes={props.taxes}
             onChangeProductsVariantsNestedData={handleSaveUpdatedNestedVariantsData}
-            currentExpandedRow={currentVariantExpandedRow} />;
+            currentExpandedRow={record.variant_row_id} />;
+
     };
 
 
 
     const handleSaveUpdatedNestedVariantsData = (updatedOutletsVariantsNestedData, currentExpandedRow) => {
-        console.log("see-1", updatedOutletsVariantsNestedData);
-        console.log("see-2", currentExpandedRow);
-
-        var expandedRow = Math.ceil((parseInt(currentExpandedRow) / (props.userStores.length)));
-
         var newData = [...data];
-
-        const index = newData.findIndex(item => expandedRow.toString() == item.variant_row_id);
-
+        const index = newData.findIndex(item => currentExpandedRow == item.variant_row_id);
         if (index > -1) {
             const item = newData[index];
             item.outletInfo = updatedOutletsVariantsNestedData;
@@ -137,25 +129,17 @@ const ProductsVariantsTable = (props) => {
                 ...item,
             });
 
-            console.log("last", newData);
-            //props.onChangeProductsVariantsData(updateOutletsData);  impp 
-
+            props.onChangeProductsVariantsData(newData);  //impp 
         }
 
     }
 
 
-
     const onRowExpand = (expanded, record) => {
-        //console.log("a-expand");
-        setCurrentVariantExpandedRow(parseInt(record.variant_row_id));
         toggleExpandByVariantId(record.variant_row_id);
     }
 
     const toggleExpandByVariantId = variantRowId => {
-        //console.log("b-expand");
-        console.log(variantRowId);
-
         var expandedRows = tableExpandedRows;
         const index = expandedRows.indexOf(variantRowId.toString());
         if (index > -1) {
@@ -171,10 +155,7 @@ const ProductsVariantsTable = (props) => {
     };
 
 
-
     const handleSave = async (row) => {
-        //console.log("imp-save-cvvp", row);
-        //const row = await form.validateFields();  //no need now as it includes in row data
         const newData = [...data];
         const index = newData.findIndex(item => row.variant_row_id === item.variant_row_id);
 
@@ -186,9 +167,7 @@ const ProductsVariantsTable = (props) => {
             });
 
             //setData(newData); //previous code imp one
-            //props.onSaveProductsSpecialPrice(newData);
             props.onChangeProductsVariantsData(newData);
-
         };
     }
 
@@ -200,9 +179,7 @@ const ProductsVariantsTable = (props) => {
     }, [props.tableData, props.tableDataLoading, props.userStores, props.taxes, tableExpandedRows]);  /* imp passing props to re-render */
 
 
-
     var columns = null;
-
 
     columns = [
         {
@@ -226,9 +203,23 @@ const ProductsVariantsTable = (props) => {
         },
         {
             title: "SKU",
-            dataIndex: "sku",
+            //dataIndex: "sku",
             width: "30%",
             editable: true,
+            render: (_, record) => {
+                return (
+                    <div>
+                        {
+                            <span >
+                                {record.var1_text && record.var2_text ? <small>{ record.sku+'-'+record.var1_text + '- ' + record.var2_text}</small>
+                                    : record.var1_text ? <small>{record.sku+'-'+record.var1_text+'-'+'Default'}</small>
+                                    : ""
+                                }
+                            </span>
+                        }
+                    </div>
+                );
+            }
         },
         {
             title: "Purchase Price",
@@ -277,7 +268,7 @@ const ProductsVariantsTable = (props) => {
     return (
 
         <Table
-
+        
             bordered={true}
             columns={mergedColumns}
             dataSource={data}
@@ -285,12 +276,11 @@ const ProductsVariantsTable = (props) => {
             components={components}
             loading={props.tableDataLoading}
             rowKey="variant_row_id"   //must be string and unique
-        /*expandedRowKeys={tableExpandedRows}
-        expandedRowRender={tableExpandedRowRender}
-        onExpand={onRowExpand}*/
+            expandedRowKeys={tableExpandedRows}
+            expandedRowRender={tableExpandedRowRender}
+            onExpand={onRowExpand}
 
         />
-
 
     );
 };

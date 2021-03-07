@@ -59,6 +59,7 @@ const ProductLookup = () => {
     if (selectedValue === '') { message.warning('please select product', 3); }
     else {
       setVariantsTableCheck(true);
+      setlookUpTableCheck(false);
     }
   };
 
