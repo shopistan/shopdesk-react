@@ -1,14 +1,12 @@
 import UrlConstants from '../constants/url-configs';
 import GenericConstants from '../constants/constants';
 import * as ApiCallUtil from './generic-api-utils';
+import $ from 'jquery';
 
 
 export const addProduct = async (productAddData) => {
-    console.log(productAddData);
-
-    const addProductFormDataBody = createComplexAddFormData(productAddData);
-
-    console.log(addProductFormDataBody);
+    //const addProductFormDataBody = createComplexAddFormData(productAddData);  //impp
+    const addProductFormDataBody =  $.param(productAddData);
 
     const url = UrlConstants.PRODUCTS.ADD_PRODUCT;
     const callType = GenericConstants.API_CALL_TYPE.POST;
@@ -218,13 +216,6 @@ export const createComplexAddFormData =  (addProductData) => {
 
     const addProductFormDataBody = new FormData();
 
-    const addProductFormDataBody1 = new FormData();
-
-    addProductFormDataBody1.append('test', 123); //root level main
-
-    console.log(addProductFormDataBody1);
-
-
 
     Object.entries(addProductData).forEach(
         ([objKey, objValue]) => {
@@ -285,20 +276,14 @@ export const createComplexAddFormData =  (addProductData) => {
 
             else if (objKey == "open_qty") {
 
-                console.log("in", objKey);
-
-                console.log("in", objValue );
 
                 objValue.forEach(
                     (openQtyItem, openQtyItemIndex) => {
 
-                        console.log("each", openQtyItem );
 
                         Object.entries(openQtyItem).forEach(
                             ([openQtyItemItemEntriesKey, openQtyItemItemEntriesValue]) => {
 
-                                console.log("each", openQtyItemItemEntriesKey );
-                                console.log("each", openQtyItemItemEntriesValue );
 
                                 addProductFormDataBody.append(`open_qty[${openQtyItemIndex}][${openQtyItemItemEntriesKey}]`, openQtyItemItemEntriesValue);  //inner level basic
 
@@ -318,11 +303,10 @@ export const createComplexAddFormData =  (addProductData) => {
     );
 
 
-    console.log(addProductFormDataBody);
+    //console.log(addProductFormDataBody);
 
 
     return addProductFormDataBody;
-
 
 
 
