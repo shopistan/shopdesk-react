@@ -48,3 +48,23 @@
 }
 
 
+.reports-inventory {
+  .action-row {
+    float: right;
+
+    .inventory-count-badge{
+      background-color: #337ab7;
+      color: #fff;
+      padding: 0.3rem;
+    }
+
+  }
+
+  .inventory-table{
+    margin-top: 5rem !important;
+
+  }
+  
+}
+
+

@@ -35,4 +35,16 @@ export const viewCategoryWiseSalesSummery = async (startDate, endDate) => {
       callType, //calltype
       categoryWiseSalesSummeryFormDataBody //body
     );
-  };
+};
+
+
+export const viewPrductsInventory = async () => {
+    
+    const url = UrlConstants.REPORTS.INVENTORY_DUMP;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+  
+    return await ApiCallUtil.http(
+      url, //api url
+      callType, //calltype
+    );
+};

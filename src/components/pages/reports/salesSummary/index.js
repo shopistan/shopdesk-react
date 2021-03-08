@@ -23,7 +23,7 @@ const SalesSummary = () => {
   const { RangePicker } = DatePicker;
   const [loading, setLoading] = useState(false);
   const [salesSummaryData, setSalesSummaryData] = useState([]);
-  const [showSummaryTable, setShowSummaryTable] = useState(false);
+  const [showSummaryTable, setShowSummaryTable] = useState(true);
   const [selectedDates, setselectedDates] = useState([]);
   const [user, setUser] = useState({});
   const [salesMops, setSalesMops] = useState(mops);

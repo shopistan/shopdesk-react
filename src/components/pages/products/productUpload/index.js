@@ -44,7 +44,7 @@ const ProductUpload = () => {
         
         let opt = {
           lineCode: "string",
-          itemCode: "string",
+          //itemCode: "string",
           foreignName: "string",
           price: "float",
           taxValue: "float",
@@ -70,12 +70,25 @@ const ProductUpload = () => {
         console.log(jsonOutput);
         bulkProcess.totalCount = jsonOutput.length;
 
-        /*json.forEach(e => {
+        jsonOutput.forEach((e) => {
           e.tax = {
             name: e.taxName,
-            value: e.taxValue
+            value: e.taxValue,
           };
-        }); */
+          e.itemCode = e.SKU;
+          if (e.variant === 'TRUE') {
+            e.variant = 'true';
+            e.variantData = {
+              variantName1: e.variantName1,
+              variantName2: e.variantName2,
+              variantValue1: e.variantValue1,
+              variantValue2: e.variantValue2,
+            };
+          } else {
+            e.variant = 'false';
+          }
+        });
+
         bulkProcess.queue = jsonOutput;
 
         uploadChunk(
@@ -129,6 +142,7 @@ const ProductUpload = () => {
       var currentline = lines[i].split(",");
       for (var j = 0; j < headers.length; j++) {
 
+        //testing attributes data
         if(headers[j]=='attributes'){ obj[headers[j]] = [{key: 'Build',value:'Wood'},{key: 'HS Code', value:'000'}]; }
         else{obj[headers[j]] = currentline[j].replace(/\n/ig, ''); }
 

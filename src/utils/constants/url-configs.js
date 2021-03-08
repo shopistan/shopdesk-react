@@ -60,6 +60,7 @@ const urls = {
   REPORTS:{
     SALES_SUMMARY: BASE_URL + '/api/reports/saleSummary',
     CATEGORY_SALES_SUMMARY: BASE_URL + '/api/reports/categoryWiseReport',
+    INVENTORY_DUMP: BASE_URL + '/api/reports/inventoryReport',
 
   }
 };
