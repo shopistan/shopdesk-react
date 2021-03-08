@@ -17,7 +17,6 @@ const ProductLookup = () => {
   const [variantsTableCheck, setVariantsTableCheck] = useState(false);
   const [lookUpTableCheck, setlookUpTableCheck] = useState(false);
 
-
   const { Search } = Input;
   const { Option } = Select;
 
@@ -27,7 +26,7 @@ const ProductLookup = () => {
   }, []);
 
 
-  const handleSearch = async (value: string) => {
+  const handleSearch = async (value) => {
     setSelectedValue(value);
 
     const productsSearchResponse = await ProductsApiUtil.searchProductsByName(value);
@@ -46,6 +45,7 @@ const ProductLookup = () => {
   const handleSelect = (value, option) => {
     setSelectedValue(option.children);
     setSelectedProduct(value);  //passes productuinqId
+    setVariantsTableCheck(false);  //imp to set here
   };
 
 

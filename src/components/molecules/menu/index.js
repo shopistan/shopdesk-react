@@ -89,6 +89,25 @@ const SideMenu = () => {
           history.push("/signup");
         } else if (e.key === "signin") {
           history.push("/signin");
+        } else if (e.key === "outlets" || e.key === "users" || e.key === "receipts") {
+          if (e.key === "outlets") {
+            history.push({
+              pathname: '/setup/outlets',
+              activeKey: 'outlets'
+            })
+          }
+          if (e.key === "users") {
+            history.push({
+              pathname: '/setup/users',
+              activeKey: 'users'
+            })
+          }
+          if (e.key === "receipts") {
+            history.push({
+              pathname: '/setup/receipts-templates',
+              activeKey: 'receipts'
+            })
+          }
         }
       }}
     >
@@ -141,9 +160,9 @@ const SideMenu = () => {
             <Menu.Item key="categoryWise">Category Wise</Menu.Item>
           </SubMenu>
           <SubMenu key="sub5" icon={<SettingOutlined />} title="Setup">
-            <Menu.Item key="20">Outlets</Menu.Item>
-            <Menu.Item key="21">Users</Menu.Item>
-            <Menu.Item key="22">Receipt Templates</Menu.Item>
+            <Menu.Item key="outlets">Outlets</Menu.Item>
+            <Menu.Item key="users">Users</Menu.Item>
+            <Menu.Item key="receipts">Receipt Templates</Menu.Item>
           </SubMenu>
         </React.Fragment>
       )}
