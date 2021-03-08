@@ -68,53 +68,54 @@ const AppShell = (props) => {
 
   const menu = (
     <Menu>
-      <Menu.Item key='0'>
+      <Menu.Item key="0">
         <a>Report Bugs</a>
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key='1' onClick={toggleOutlet}>
+      <Menu.Item key="1" onClick={toggleOutlet}>
         Switch Outlet
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key='2' onClick={toggleLogout}>
+      <Menu.Item key="2" onClick={toggleLogout}>
         Logout
       </Menu.Item>
     </Menu>
   );
 
   return (
-    <Layout className='site-layout'>
-      <Sider trigger={null} collapsible collapsed={collapsed} className='sider'>
-        <div className='logo'>
-          <h2>S</h2>
+    <Layout className="site-layout">
+      <Sider trigger={null} collapsible collapsed={collapsed} className="sider">
+        <div className="logo logo--desktop">
+          <img src="/images/shopdesk_logo.svg" />
         </div>
         <SideMenu />
       </Sider>
 
-      <div className='mobile__menu'>
-        <div className='logo'>
-          <h2>S</h2>
+      <div className="mobile__menu">
+        <div className="logo logo--desktop">
+          <img src="/images/shopdesk_logo.svg" />
         </div>
         <SideMenu />
       </div>
-      <Layout className='content-layout'>
+      <Layout className="content-layout">
         {readFromLocalStorage && (
-          <Header className='header site-layout-background'>
-            <div className='header__left'>
-              <div className='header__menu-btn'>
+          <Header className="header site-layout-background">
+            <div className="header__left">
+              <div className="header__menu-btn">
                 {React.createElement(
                   collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
                   {
-                    className: "trigger",
+                    className: "trigger menu-btn",
                     onClick: toggle,
                   }
                 )}
               </div>
 
-              <div className='header__mob-menu-btn'>
+              <div className="header__mob-menu-btn">
                 <Button
-                  type='primary'
-                  shape='circle'
+                  type="primary"
+                  shape="circle"
+                  className="custom-btn custom-btn--primary"
                   icon={<MenuOutlined />}
                   onClick={(e) => {
                     let mobile_menu = document.querySelector(".mobile__menu");
@@ -128,18 +129,18 @@ const AppShell = (props) => {
                 />
               </div>
 
-              <h2 className='heading'>
+              <h2 className="heading">
                 {storeObj ? storeObj.store_name : "N/A - "}
               </h2>
             </div>
 
-            <div className='header__right'>
-              <div className='outlet'>
+            <div className="header__right">
+              <div className="outlet">
                 <span>
                   <small>
                     <a
                       onClick={toggleOutlet}
-                      className='outlet__btn outlet-name'
+                      className="outlet__btn outlet-name"
                     >
                       Switch outlet
                     </a>
@@ -147,10 +148,10 @@ const AppShell = (props) => {
                 </span>
               </div>
 
-              <div className='user'>
+              <div className="user">
                 <Dropdown overlay={menu} trigger={["click"]}>
                   <a
-                    className='user__dropdown'
+                    className="user__dropdown"
                     onClick={(e) => e.preventDefault()}
                   >
                     <span>Hi, user</span> <DownOutlined />
@@ -158,14 +159,14 @@ const AppShell = (props) => {
                 </Dropdown>
                 <Avatar
                   // size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
-                  src='images/ui.png'
-                  className='user__avatar'
+                  src="images/ui.png"
+                  className="user__avatar"
                 />
               </div>
             </div>
           </Header>
         )}
-        <Content className='site-layout-background'>{props.children}</Content>
+        <Content className="site-layout-background">{props.children}</Content>
       </Layout>
     </Layout>
   );

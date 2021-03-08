@@ -1,0 +1,18 @@
+@import "../../../styles/variables";
+@import "../../../styles/mixins";
+
+.side-menu {
+  background-color: $color-asphalt !important;
+
+  li {
+    color: $color-white !important;
+  }
+
+  .ant-menu-item-selected {
+    background-color: $color-primary !important;
+  }
+}
+
+.mobile__menu {
+  background-color: $color-asphalt;
+}
