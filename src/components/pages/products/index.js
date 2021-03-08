@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import { Button, Select, Input, message, Menu, Dropdown } from "antd";
-import { DownOutlined, ProfileOutlined } from "@ant-design/icons";
+import { ProfileOutlined } from "@ant-design/icons";
 import EdiTableProducts from "../../organism/table/productsNestedTable/productsTable";
 import { useHistory } from "react-router-dom";
 import * as ProductsApiUtil from '../../../utils/api/products-api-utils';
@@ -90,11 +90,11 @@ const Products = () => {
         Upload Bulk
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key='1' onClick={() => history.push({pathname: "products/lookup"}) }>
+      <Menu.Item key='2' onClick={() => history.push({pathname: "products/lookup"}) }>
         Lookup
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key='2' onClick={() => history.push({pathname: "products/discount"}) }>
+      <Menu.Item key='3' onClick={() => history.push({pathname: "products/discount"}) }>
         Discount
       </Menu.Item>
     </Menu>

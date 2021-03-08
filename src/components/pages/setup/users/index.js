@@ -1,30 +1,60 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { message } from "antd";
+import ViewtableSetup from "../../../organism/table/setup/setupTable";
+import * as SetupApiUtil from '../../../../utils/api/setup-api-utils';
 
-import { Button } from "antd";
-import { PlusCircleOutlined } from "@ant-design/icons";
 
-import { useHistory } from "react-router-dom";
+const Users = () => {
+  const [paginationLimit, setPaginationLimit] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+  const [paginationData, setPaginationData] = useState({});
 
-function Users() {
-  const history = useHistory();
+
+
+  const fetchUsersData = async (pageLimit = 10, pageNumber = 1) => {
+    const usersViewResponse = await SetupApiUtil.viewUsers(pageLimit, pageNumber);
+    console.log('usersViewResponse:', usersViewResponse);
+
+    if (usersViewResponse.hasError) {
+      console.log('Cant fetch Users Data -> ', usersViewResponse.errorMessage);
+      setLoading(false);
+    }
+    else {
+      console.log('res -> ', usersViewResponse);
+      message.success(usersViewResponse.message, 3);
+      setData(usersViewResponse.Users.data);
+      setPaginationData(usersViewResponse.Users.page);
+      setLoading(false);
+    }
+  }
+
+  useEffect( () => {
+    fetchUsersData();
+  }, []);
+
+
+
+  function handlePageChange(currentPg) {
+    setCurrentPage(currentPg);
+    setLoading(true);
+    fetchUsersData(paginationLimit, currentPg);
+  }
+
 
   return (
-    <div className="outlets">
-      <div className="button-row">
-        <Button
-          type="primary"
-          icon={<PlusCircleOutlined />}
-          onClick={() => {
-            history.push("/setup/user/add");
-          }}
-        >
-          Add New
-        </Button>
-      </div>
+    <div className='setup-users'>
 
-      <div className="page__table"></div>
+        {/* Table */}
+        <div className='table'>
+          <ViewtableSetup  pageLimit={paginationLimit} tableData={data} tableDataLoading={loading}
+            onClickPageChanger={handlePageChange} paginationData={paginationData} tableType="users" />
+        </div>
+
+        {/* Table */} 
     </div>
   );
-}
+};
 
 export default Users;

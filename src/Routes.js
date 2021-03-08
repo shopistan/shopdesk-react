@@ -254,10 +254,12 @@ const Routes = () => {
         <PrivateRoute exact path="/stock" component={Stock} />
         <PrivateRoute exact path="/stock/order" component={PurchaseOrder} />
 
-        <PrivateRoute exact path="/setup" component={Setup} />
-        <PrivateRoute exact path="/setup/outlet/add" component={OutletAdd} />
-        <PrivateRoute exact path="/setup/user/add" component={UserAdd} />
-        <PrivateRoute exact path="/setup/receipt/add" component={ReceiptAdd} />
+        <PrivateRoute exact path="/setup/users" component={Setup} />
+        <PrivateRoute exact path="/setup/outlets" component={Setup} />
+        <PrivateRoute exact path="/setup/receipts-templates" component={Setup} />
+        <PrivateRoute exact path="/setup/outlets/add" component={OutletAdd} />
+        <PrivateRoute exact path="/setup/users/add" component={UserAdd} />
+        <PrivateRoute exact path="/setup/receipts-templates/add" component={ReceiptAdd} />
 
         <PrivateRoute exact path="/register/sell" component={Sell} />
         <PrivateRoute

@@ -62,7 +62,14 @@ const urls = {
     CATEGORY_SALES_SUMMARY: BASE_URL + '/api/reports/categoryWiseReport',
     INVENTORY_DUMP: BASE_URL + '/api/reports/inventoryReport',
 
+  },
+  OUTLETS:{
+    VIEW: BASE_URL + '/api/stores/view',
+    VIEW_USERS: BASE_URL + '/api/users/viewUsers',
+    VIEW_TEMPLATES: BASE_URL + '/api/templates/view', 
+
   }
+
 };
 
 export default urls;
