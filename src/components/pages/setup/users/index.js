@@ -29,6 +29,7 @@ const Users = () => {
       setLoading(false);
     }
   }
+  
 
   useEffect( () => {
     fetchUsersData();

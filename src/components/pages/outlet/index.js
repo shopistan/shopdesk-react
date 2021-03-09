@@ -74,8 +74,8 @@ const Outlet = () => {
         <h1>Select an Outlet</h1>
       </div>
 
-      <div className='page__content'>
-        <ul className='outlet__select'>
+      <div className='page__content' >
+        <ul className='outlet__select outlets-list-container'>
           {
             storeInfo.map(item => {
               return (
