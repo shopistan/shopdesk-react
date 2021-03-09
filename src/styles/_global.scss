@@ -95,6 +95,13 @@
   &__section {
     padding: 3rem 0;
     border-bottom: 1px solid $color-grey-light-1;
+
+    &__header {
+      &--btn {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
   }
 
   &__row {
@@ -142,6 +149,15 @@
 
     label {
       font-weight: bold;
+    }
+
+    &--btn {
+      display: flex;
+
+      .custom-btn {
+        height: auto;
+        margin-left: 2rem;
+      }
     }
   }
 }
