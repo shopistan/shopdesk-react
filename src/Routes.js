@@ -1,5 +1,7 @@
 import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
+import { message } from "antd";
+import moment from 'moment';
 
 // Components
 import AppShell from "./components/pages/appShell";
@@ -38,6 +40,7 @@ import DeleteCategory from "./components/pages/categories/deleteCategory";
 import {
   getDataFromLocalStorage,
   checkUserAuthFromLocalStorage,
+  checkAuthTokenExpiration,
 } from "./utils/local-storage/local-store-utils";
 import Constants from "./utils/constants/constants";
 import CategoryWise from "./components/pages/reports/categoryWise";
@@ -50,10 +53,13 @@ import OutletEdit from "./components/pages/setup/outlets/outletEdit";
 import OutletAdd from "./components/pages/setup/outlets/outletAdd";
 import UserAdd from "./components/pages/setup/users/userAdd";
 import ReceiptAdd from "./components/pages/setup/receipt/receiptAdd";
+import ReceiptEdit from "./components/pages/setup/receipt/receiptEdit";
 import SalesHistory from "./components/pages/register/salesHistory";
 import Sell from "./components/pages/register/sell";
 import Stock from "./components/pages/stock";
 import PurchaseOrder from "./components/pages/stock/order";
+
+
 
 const Routes = () => {
   const renderWithLayout = (Component, props, attrs = {}) => {
@@ -67,6 +73,47 @@ const Routes = () => {
       </AppShell>
     );
   };
+
+
+  const RenderWithLayoutOutlet = (Component, props) => {
+    var readFromLocalStorage = getDataFromLocalStorage("user");
+    var authExpirationTokenDate;
+
+    readFromLocalStorage = readFromLocalStorage.data
+      ? readFromLocalStorage.data
+      : null;
+    var authenticateDashboard = false;
+    if (readFromLocalStorage) {
+      if (
+        checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
+      ) {
+        authenticateDashboard = true;
+        authExpirationTokenDate = readFromLocalStorage.auth.expire_at;
+      } else {
+        authenticateDashboard = false;
+        authExpirationTokenDate = readFromLocalStorage.expire_at;
+      }
+    }
+
+    if(checkAuthTokenExpiration(authExpirationTokenDate)){
+      message.info("Logging Out Redirecting....", 5);
+      return <Redirect to='/signin' />
+    }
+
+
+    return (
+      <AppShell {...props}>
+        {readFromLocalStorage == null ? (
+          <Redirect to='/signin' />
+        ) : authenticateDashboard ? (
+          <Component />
+        ) : (
+          <Component />
+        )}
+      </AppShell>
+    );
+  };
+
 
   const authRenderWithLayout = (Component, props) => {
     var readFromLocalStorage = getDataFromLocalStorage("user");
@@ -99,6 +146,8 @@ const Routes = () => {
 
   const PrivateRoute = ({ component: Component, ...rest }) => {
     var readFromLocalStorage = getDataFromLocalStorage("user");
+    var authExpirationTokenDate;
+
     readFromLocalStorage = readFromLocalStorage.data
       ? readFromLocalStorage.data
       : null;
@@ -108,10 +157,19 @@ const Routes = () => {
         checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
       ) {
         authenticateDashboard = true;
+        authExpirationTokenDate = readFromLocalStorage.auth.expire_at;
       } else {
         authenticateDashboard = false;
+        authExpirationTokenDate = readFromLocalStorage.expire_at;
       }
     }
+
+
+    if(checkAuthTokenExpiration(authExpirationTokenDate)){
+      message.info("Logging Out Redirecting....", 5);
+      return <Redirect to='/signin' />
+    }
+
 
     return (
       <Route
@@ -121,12 +179,8 @@ const Routes = () => {
             authenticateDashboard ? (
               renderWithLayout(Component, { ...props })
             ) : (
-              renderWithLayout(
-                Component,
-                { ...props },
-                { isOutletLayout: true }
+               <Redirect to='/outlets' />
               )
-            )
           ) : (
             <Redirect to='/signin' />
           )
@@ -221,7 +275,11 @@ const Routes = () => {
           path='/signin'
           render={() => authRenderWithLayout(SignIn)}
         ></Route>
-        <PrivateRoute exact path='/outlets' component={Outlet} />
+        <Route
+          exact
+          path='/outlets'
+          render={() => RenderWithLayoutOutlet(Outlet)}
+        ></Route>
         <PrivateRoute exact path='/categories/add' component={CategoryAdd} />
         <PrivateRoute
           exact
@@ -270,7 +328,7 @@ const Routes = () => {
           path='/setup/receipts-templates/add'
           component={ReceiptAdd}
         />
-
+        <PrivateRoute exact path='/setup/receipts-templates/:id/edit' component={ReceiptEdit} />
         <PrivateRoute exact path='/register/sell' component={Sell} />
         <PrivateRoute
           exact

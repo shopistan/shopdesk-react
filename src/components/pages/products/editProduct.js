@@ -241,6 +241,11 @@ const EditProduct = (props) => {
     };
 
 
+    const onRemoveImage = (file) => {
+        setFileList([]);
+    };
+
+
     const onInclusiveTaxChecked = (e) => {
         setInclusiveTax(e.target.checked);
     };
@@ -437,7 +442,7 @@ const EditProduct = (props) => {
                                         <Form.Item
                                             label='Product Image'
                                         >
-                                            <Upload {...imageUploadProps}>
+                                            <Upload {...imageUploadProps} onRemove={onRemoveImage}>
                                                 <Button icon={<UploadOutlined />}>Click to Upload</Button>
                                             </Upload>
                                         </Form.Item>

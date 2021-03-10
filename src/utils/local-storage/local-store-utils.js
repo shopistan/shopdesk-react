@@ -1,4 +1,5 @@
 import Constants from '../../utils/constants/constants';
+import moment from 'moment';
 
 
 export const saveDataIntoLocalStorage = (key, value) => {
@@ -35,3 +36,17 @@ export const checkUserAuthFromLocalStorage = (key) => {
     authentication: dataFromLocalStorage.hasOwnProperty(Constants.USER_AUTH_KEY),
   };
 };
+
+
+export const checkAuthTokenExpiration = (expirationDate) => {
+  var currentDate = new Date();
+  var authExpirationTokenDate;
+  currentDate = moment(currentDate).format("yyyy-MM-DD HH:mm");
+  authExpirationTokenDate = moment(expirationDate).format("yyyy-MM-DD HH:mm");
+    if( currentDate >  authExpirationTokenDate){
+      clearDataFromLocalStorage();
+      return true;
+    }
+    else { return false; }
+
+}

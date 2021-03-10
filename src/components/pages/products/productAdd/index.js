@@ -27,7 +27,6 @@ import { getDataFromLocalStorage, checkUserAuthFromLocalStorage } from "../../..
 import * as ProductsApiUtil from '../../../../utils/api/products-api-utils';
 import * as TaxexApiUtil from '../../../../utils/api/tax-api-utils';
 import * as CategoriesApiUtil from '../../../../utils/api/categories-api-utils';
-import UrlConstants from '../../../../utils/constants/url-configs';
 import Constants from '../../../../utils/constants/constants';
 import * as ProductsVariantsCombination from './calculateProductsVariantsCombination';
 import ProductsVariantsTable from "../../../organism/table/productsNestedTable/productsAdd";
@@ -237,6 +236,11 @@ const ProductAdd = () => {
       return false;
     },
     fileList,
+  };
+
+
+  const onRemoveImage = (file) => {
+    setFileList([]);
   };
 
 
@@ -595,7 +599,7 @@ const ProductAdd = () => {
                       },
                     ]}
                   >
-                    <Upload {...imageUploadProps}>
+                    <Upload {...imageUploadProps} onRemove={onRemoveImage}>
                       <Button icon={<UploadOutlined />}>Click to Upload</Button>
                     </Upload>
                   </Form.Item>

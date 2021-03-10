@@ -102,8 +102,8 @@ function UserAdd() {
 
   const handleCancel = () => {
     history.push({
-        pathname: '/setup/users',
-        activeKey: 'users'
+      pathname: '/setup/users',
+      activeKey: 'users'
     });
   };
 
@@ -121,10 +121,10 @@ function UserAdd() {
       </div>
       <div className="page__header">
         <h1><Button type="primary" shape="circle" className="back-btn"
-         style={{marginRight: "2rem"}}
-         icon={<ArrowLeftOutlined />} 
-         onClick={handleCancel} 
-          /> New User
+          style={{ marginRight: "2rem" }}
+          icon={<ArrowLeftOutlined />}
+          onClick={handleCancel}
+        /> New User
         </h1>
       </div>
 
@@ -248,8 +248,9 @@ function UserAdd() {
                       storesData.map((obj, index) => {
                         return (
                           <div key={obj.store_id}>
-                            <label key={obj.store_id}  style={{ color: "#777", marginLeft: "15px" }}>
-                              <input type="checkbox" key={obj.store_id} style={{ marginRight: "1rem" }}
+                            <label key={obj.store_id} className="outlets-labels">
+                              <input type="checkbox" key={obj.store_id}
+                                style={{ marginRight: "1rem" }}
                                 data-outletid={obj.store_id}
                                 onChange={handleStoreChecked} />
                               {obj.store_name}

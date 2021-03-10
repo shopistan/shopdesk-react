@@ -50,7 +50,7 @@ const SetupTable = (props) => {
         if (props.tableType === 'receipts') {
             history.push({
                 pathname: `/setup/receipts-templates/${record.template_id}/edit`,
-                data: record // your data array of objects
+                data: record, // your data array of objects
             });
         }
 
