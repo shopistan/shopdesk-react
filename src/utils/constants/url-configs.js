@@ -63,13 +63,16 @@ const urls = {
     INVENTORY_DUMP: BASE_URL + '/api/reports/inventoryReport',
 
   },
-  OUTLETS:{
+  SETUP:{
     VIEW: BASE_URL + '/api/stores/view',
     VIEW_USERS: BASE_URL + '/api/users/viewUsers',
     VIEW_TEMPLATES: BASE_URL + '/api/templates/view', 
     ADD_OUTLET: BASE_URL + '/api/stores/add', 
     ADD_USER: BASE_URL + '/api/users/addUser', 
-    
+    ADD_TEMPLATE: BASE_URL + '/api/templates/add', 
+    GET_TEMPLATE: BASE_URL + '/api/templates/get', 
+    EDIT_TEMPLATE: BASE_URL + '/api/templates/edit', 
+
   }
 
 };

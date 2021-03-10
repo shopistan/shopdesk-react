@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect } from "react";
+import "../../style.scss";
 import { Form, Input, Button, Select, message, Spin } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
-import "../../style.scss";
 import * as SetupApiUtil from '../../../../../utils/api/setup-api-utils';
 import currencyData from "./currencyData.json";
 
@@ -97,8 +97,8 @@ function OutletAdd() {
 
   const handleCancel = () => {
     history.push({
-        pathname: '/setup/outlets',
-        activeKey: 'outlets'
+      pathname: '/setup/outlets',
+      activeKey: 'outlets'
     });
   };
 
@@ -111,8 +111,8 @@ function OutletAdd() {
       </div>
       <div className="page__header">
         <h1><Button type="primary" shape="circle" className="back-btn"
-         icon={<ArrowLeftOutlined />} 
-         onClick={handleCancel}  />
+          icon={<ArrowLeftOutlined />}
+          onClick={handleCancel} />
          New Outlet</h1>
       </div>
 
@@ -188,15 +188,15 @@ function OutletAdd() {
                   ]}
                 >
                   <Select>
-                  {
-                        templatesData.map((obj, index) => {
-                          return (
-                            <option key={obj.template_id} value={obj.template_id}>
-                              {obj.template_name}
-                            </option>
-                          )
-                        })
-                      }
+                    {
+                      templatesData.map((obj, index) => {
+                        return (
+                          <option key={obj.template_id} value={obj.template_id}>
+                            {obj.template_name}
+                          </option>
+                        )
+                      })
+                    }
                   </Select>
                 </Form.Item>
               </div>
