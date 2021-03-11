@@ -11,21 +11,30 @@ const { TabPane } = Tabs;
 
 const  Setup = ()  => { 
   const history = useHistory();
-  const [currentTab, setCurrentTab] = useState("outlets");
+  const [currentTab, setCurrentTab] = useState("");
 
 
   useEffect(async () => {
-    if(history.location){
+    if(history.location.activeKey){
       setCurrentTab(history.location.activeKey);
     }
+    else{
+      console.log(window.location.pathname);
+      var path = (window.location.pathname).split("/");
+      setCurrentTab(path[2]);
+    }
+
 
   }, [history.location.activeKey]);  //imp to render when history prop changes
 
   
 
   const handletabChange = (key) => {
-    console.log(key);
-    setCurrentTab(key);
+    //setCurrentTab(key);  // previous imp
+    history.push({
+      pathname: `/setup/${key}`,
+      activeKey: key
+    })
   };
 
 
@@ -76,7 +85,7 @@ const  Setup = ()  => {
           <TabPane tab="Users" key="users">
             <Users />
           </TabPane>
-          <TabPane tab="Receipt Templates" key="receipts">
+          <TabPane tab="Receipt Templates" key="receipts-templates">
             <Receipts />
           </TabPane>
         </Tabs>

@@ -321,7 +321,7 @@ const Routes = () => {
           component={Setup}
         />
         <PrivateRoute exact path='/setup/outlets/add' component={OutletAdd} />
-        <PrivateRoute exact path='/setup/outlets/edit' component={OutletEdit} />
+        <PrivateRoute exact path='/setup/outlets/:id/edit' component={OutletEdit} />
         <PrivateRoute exact path='/setup/users/add' component={UserAdd} />
         <PrivateRoute
           exact

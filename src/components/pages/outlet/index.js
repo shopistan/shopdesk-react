@@ -10,6 +10,7 @@ import Constants from '../../../utils/constants/constants';
 const Outlet = () => {
   const history = useHistory();
   const [storeInfo, setStoreInfo] = useState([]);
+  const [loginCacheData, setLoginCacheData] = useState({});
   const [activeOutlet, setActiveOutlet] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -18,6 +19,7 @@ const Outlet = () => {
     var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
     readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
     if (readFromLocalStorage) {
+      setLoginCacheData(readFromLocalStorage);
       if (checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication) {
         setStoreInfo(readFromLocalStorage.auth.storeInfo);
         setActiveOutlet(readFromLocalStorage.auth.current_store);
@@ -48,6 +50,7 @@ const Outlet = () => {
       }
       else {
         console.log('res -> ', userSelectOutletResponse);
+        userSelectOutletResponse.refresh_token = loginCacheData.refresh_token; 
         clearDataFromLocalStorage();
         saveDataIntoLocalStorage("user", userSelectOutletResponse);
         setLoading(false);

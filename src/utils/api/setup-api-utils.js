@@ -33,6 +33,39 @@ export const addOutlet = async (addOutletData) => {
 };
 
 
+export const editOutlet = async (editOutletData) => {
+
+  const editOutletFormDataBody =  $.param({store: editOutletData});
+  const url = UrlConstants.SETUP.EDIT_OUTLET;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+    editOutletFormDataBody, //body
+  );
+
+};
+
+
+export const getOutlet = async (storeId) => {
+  const formDataPair = {
+    store_id: storeId,
+  };
+
+  const getOutletFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+  const url = UrlConstants.SETUP.GET_OUTLET;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+    getOutletFormDataBody, //body
+  );
+
+};
+
+
 export const viewUsers = async () => {
 
   const url = UrlConstants.SETUP.VIEW_USERS;
@@ -73,7 +106,7 @@ export const getTemplate = async (templateId) => {
   const formDataPair = {
     template_id: templateId,
   };
-  
+
   const getTemplateFormDataBody = ApiCallUtil.constructFormData(formDataPair);
   const url = UrlConstants.SETUP.GET_TEMPLATE;
   const callType = GenericConstants.API_CALL_TYPE.POST;
@@ -113,5 +146,50 @@ export const addTemplate = async (addTemplateData) => {
   );
 };
 
+
+export const addWebHook= async (webHookName) => {
+  const formDataPair = {
+    url: webHookName,
+  };
+
+  const addWebHookFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+  const url = UrlConstants.SETUP.WEB_HOOKS.ADD;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+    addWebHookFormDataBody, //body
+  );
+};
+
+
+export const getWebHooks = async (limit, pageNumber) => {
+  const formDataPair = {
+    limit: limit,
+    page: pageNumber,
+};
+  const getWebHooksFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+  const url = UrlConstants.SETUP.WEB_HOOKS.GET;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+    getWebHooksFormDataBody,  //body
+  );
+};
+
+
+export const deleteWebHook = async (webHookId) => {
+
+  const url = UrlConstants.SETUP.WEB_HOOKS.DELETE + `/${webHookId}`;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+  );
+};
 
 

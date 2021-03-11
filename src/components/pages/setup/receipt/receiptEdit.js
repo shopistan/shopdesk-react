@@ -53,12 +53,12 @@ function ReceiptEdit() {
       message.success(receivedTemplateData.message, 3);
       setTemplateData(receivedTemplateData);
       setTemplateLastImg(receivedTemplateData.template_image);
-      
+
        /*-----setting template data to fields value------*/
        form.setFieldsValue({
         template_name: receivedTemplateData.template_name,
-        template_header: receivedTemplateData.template_header,
-        template_footer: receivedTemplateData.template_footer
+        template_header: removeHTML(receivedTemplateData.template_header),
+        template_footer: removeHTML(receivedTemplateData.template_footer),
        });
 
        /*-----setting template data to fields value------*/
@@ -98,7 +98,7 @@ function ReceiptEdit() {
       setTimeout(() => {
         history.push({
           pathname: '/setup/receipts-templates',
-          activeKey: 'receipts'
+          activeKey: 'receipts-templates'
         });
       }, 2000);
     }
@@ -140,6 +140,13 @@ function ReceiptEdit() {
   const onRemoveImage = (file) => {
     setFileList([]);
   };
+
+
+  function removeHTML(str) {
+    var tmp = document.createElement("DIV");
+    tmp.innerHTML = str;
+    return tmp.textContent || tmp.innerText || "";
+}
   
 
   const onFinishFailed = (errorInfo) => {
@@ -149,7 +156,7 @@ function ReceiptEdit() {
   const handleCancel = () => {
     history.push({
       pathname: '/setup/receipts-templates',
-      activeKey: 'receipts'
+      activeKey: 'receipts-templates'
     });
   };
 

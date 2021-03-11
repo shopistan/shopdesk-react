@@ -27,7 +27,7 @@ function ReceiptAdd() {
   const onFinish = async (values) => {
     var formValues = form.getFieldsValue();
     console.log("changed", formValues);
-    
+
     /*if (!productImagePreviewSource) {
       message.error("Please select template Logo", 4);
       return;
@@ -56,7 +56,7 @@ function ReceiptAdd() {
       setTimeout(() => {
         history.push({
           pathname: '/setup/receipts-templates',
-          activeKey: 'receipts'
+          activeKey: 'receipts-templates'
         });
       }, 2000);
     }
@@ -107,7 +107,7 @@ function ReceiptAdd() {
   const handleCancel = () => {
     history.push({
       pathname: '/setup/receipts-templates',
-      activeKey: 'receipts'
+      activeKey: 'receipts-templates'
     });
   };
 
