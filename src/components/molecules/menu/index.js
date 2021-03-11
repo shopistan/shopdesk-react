@@ -105,7 +105,7 @@ const SideMenu = () => {
           if (e.key === "receipts") {
             history.push({
               pathname: '/setup/receipts-templates',
-              activeKey: 'receipts'
+              activeKey: 'receipts-templates'
             })
           }
         }

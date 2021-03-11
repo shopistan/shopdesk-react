@@ -68,10 +68,17 @@ const urls = {
     VIEW_USERS: BASE_URL + '/api/users/viewUsers',
     VIEW_TEMPLATES: BASE_URL + '/api/templates/view', 
     ADD_OUTLET: BASE_URL + '/api/stores/add', 
+    GET_OUTLET: BASE_URL + '/api/stores/get', 
+    EDIT_OUTLET: BASE_URL + '/api/stores/edit', 
     ADD_USER: BASE_URL + '/api/users/addUser', 
     ADD_TEMPLATE: BASE_URL + '/api/templates/add', 
     GET_TEMPLATE: BASE_URL + '/api/templates/get', 
-    EDIT_TEMPLATE: BASE_URL + '/api/templates/edit', 
+    EDIT_TEMPLATE: BASE_URL + '/api/templates/edit',
+    WEB_HOOKS:{
+    ADD: BASE_URL + '/api/stores/addWebHook', 
+    GET: BASE_URL + '/api/stores/getWebHooks', 
+    DELETE: BASE_URL + '/api/stores/deleteWebHook',
+    }
 
   }
 

@@ -117,7 +117,7 @@ function UserAdd() {
   return (
     <div className="page dashboard">
       <div style={{ textAlign: "center" }}>
-        {loading && <Spin size="large" />}
+        {loading && <Spin size="large" tip="Loading..." />}
       </div>
       <div className="page__header">
         <h1><Button type="primary" shape="circle" className="back-btn"

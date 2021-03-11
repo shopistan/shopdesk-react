@@ -5,7 +5,7 @@ import { Form, Input, Button, Select, message, Spin } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
 import * as SetupApiUtil from '../../../../../utils/api/setup-api-utils';
-import currencyData from "./currencyData.json";
+import currencyData from "../currencyData.json";
 
 
 function OutletAdd() {
@@ -107,7 +107,7 @@ function OutletAdd() {
   return (
     <div className="page dashboard">
       <div style={{ textAlign: "center" }}>
-        {loading && <Spin size="large" />}
+        {loading && <Spin size="large" tip="Loading..." />}
       </div>
       <div className="page__header">
         <h1><Button type="primary" shape="circle" className="back-btn"
