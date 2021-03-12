@@ -10,7 +10,6 @@ const SetupTable = (props) => {
 
 
     const handleDelete = (record) => {
-        console.log(record);
         if (props.tableType === 'outlets') {
             history.push({
                 pathname: `/setup/outlets/${record.store_id}/delete`,
@@ -34,7 +33,6 @@ const SetupTable = (props) => {
     };
 
     const edit = (record) => {
-        console.log(record);
         if (props.tableType === 'outlets') {
             history.push({
                 pathname: `/setup/outlets/${record.store_id}/edit`,
@@ -50,14 +48,13 @@ const SetupTable = (props) => {
         if (props.tableType === 'receipts') {
             history.push({
                 pathname: `/setup/receipts-templates/${record.template_id}/edit`,
-                data: record // your data array of objects
+                data: record, // your data array of objects
             });
         }
 
     };
 
     const showTotalItemsBar = (total, range) => {
-        console.log(range);
         return `${range[0]}-${range[1]} of ${total} items`
     };
 
@@ -69,7 +66,7 @@ const SetupTable = (props) => {
 
     useEffect(() => {
         setData(props.tableData);
-        if (currentPageNumber > Math.ceil(props.paginationData.totalPages)) {
+        if ( props.paginationData && (currentPageNumber > Math.ceil(props.paginationData.totalPages))) {
             setcurrentPageNumber(1);
         }
 

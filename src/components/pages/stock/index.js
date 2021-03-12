@@ -1,23 +1,50 @@
-import React from "react";
+import React, { useState, useEffect} from "react";
 
 import { Button, Tabs, Select, Input, message, Menu, Dropdown } from "antd";
-import { ProfileOutlined } from "@ant-design/icons";
+import { ProfileOutlined, DownOutlined } from "@ant-design/icons";
+import PurchaseOrders from "./Po";
+import InventoryTransfers from "./Transfer";
+import StockAdjustment from "./Adjustment";
 import { useHistory } from "react-router-dom";
 
 const { TabPane } = Tabs;
 
-function callback(key) {
-  console.log(key);
-}
+
 
 function Stock() {
   const history = useHistory();
+  const [currentTab, setCurrentTab] = useState("");
+
+
+  useEffect( () => {
+    if(history.location.activeKey){
+      setCurrentTab(history.location.activeKey);
+    }
+    else{
+      console.log(window.location.pathname);
+      var path = (window.location.pathname).split("/");
+      console.log(path);
+      setCurrentTab(path[2]);
+    }
+
+
+  }, [history.location.activeKey]);  //imp to render when history prop changes
+
+  
+
+  const handletabChange = (key) => {
+    //setCurrentTab(key);  // previous imp
+    history.push({
+      pathname: `/stock-control/${key}`,
+      activeKey: key
+    })
+  };
 
   const OptionsDropdown = (
     <Menu>
       <Menu.Item
         key="0"
-        onClick={() => history.push({ pathname: "stock/order" })}
+        onClick={() => history.push({ pathname: "stock-control/purchase-orders/add" })}
       >
         <a>Order Stock</a>
       </Menu.Item>
@@ -30,14 +57,14 @@ function Stock() {
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item
-        key="1"
+        key="2"
         onClick={() => history.push({ pathname: "products/lookup" })}
       >
         Transfer Inventory
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item
-        key="2"
+        key="3"
         onClick={() => history.push({ pathname: "products/discount" })}
       >
         Stock Adjustment
@@ -54,25 +81,25 @@ function Stock() {
           <Dropdown overlay={OptionsDropdown} trigger={["click"]}>
             <Button
               type="Default"
-              icon={<ProfileOutlined />}
+              icon={<DownOutlined />}
               onClick={(e) => e.preventDefault()}
             >
-              More
+              More <ProfileOutlined />
             </Button>
           </Dropdown>
         </div>
       </div>
 
       <div className="page__content">
-        <Tabs defaultActiveKey="1" onChange={callback}>
-          <TabPane tab="Purchase Orders" key="1">
-            <h2>Purchase Orders</h2>
+        <Tabs  activeKey={currentTab} onChange={handletabChange}>
+          <TabPane tab="Purchase Orders" key="purchase-orders">
+            <PurchaseOrders />
           </TabPane>
-          <TabPane tab="Inventory Transfers" key="2">
-            <h2>Inventory Transfers</h2>
+          <TabPane tab="Inventory Transfers" key="inventory-transfers">
+            <InventoryTransfers />
           </TabPane>
-          <TabPane tab="Stock Adjustment" key="3">
-            <h2>Stock Adjustment</h2>
+          <TabPane tab="Stock Adjustment" key="stock-adjustments">
+            <StockAdjustment />
           </TabPane>
         </Tabs>
       </div>

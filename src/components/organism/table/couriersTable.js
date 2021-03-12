@@ -39,8 +39,10 @@ const CouriersTable = (props) => {
 
   useEffect(async () => {
     setData(props.tableData);
-    if( currentPageNumber > Math.ceil(props.paginationData.totalPages)){
-      setcurrentPageNumber(1);} 
+    if(props.paginationData && (currentPageNumber > Math.ceil(props.paginationData.totalPages))){
+      setcurrentPageNumber(1);
+    } 
+
 
   }, [props.tableData, props.tableDataLoading, props.paginationData ]);  /* imp passing props to re-render */
 
