@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import { Button, Select, Input, message, Menu, Dropdown } from "antd";
-import { ProfileOutlined } from "@ant-design/icons";
+import { ProfileOutlined, DownOutlined  } from "@ant-design/icons";
 import EdiTableProducts from "../../organism/table/productsNestedTable/productsTable";
 import { useHistory } from "react-router-dom";
 import * as ProductsApiUtil from '../../../utils/api/products-api-utils';
@@ -111,10 +111,10 @@ const Products = () => {
           <Dropdown overlay={PrductsMenu} trigger={["click"]}>
             <Button
               type='Default'
-              icon={<ProfileOutlined />}
+              icon={<DownOutlined />}
               onClick={(e) => e.preventDefault()}
             >
-              More
+              More <ProfileOutlined />
             </Button>
             </Dropdown>
         </div>

@@ -23,8 +23,8 @@ const Outlets = () => {
     else {
       console.log('res -> ', outletsViewResponse);
       message.success(outletsViewResponse.message, 3);
-      setData(outletsViewResponse.outlets.data);
-      setPaginationData(outletsViewResponse.outlets.page);
+      setData(outletsViewResponse.outlets.data || outletsViewResponse.outlets );
+      setPaginationData(outletsViewResponse.outlets.page || {} );
       setLoading(false);
     }
   }

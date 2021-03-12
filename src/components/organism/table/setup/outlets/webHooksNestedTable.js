@@ -12,7 +12,7 @@ const WebHooksNestedTable = (props) => {
 
   const handleDelete = (record) => {
     console.log(record);
-    props.onHandleWebHookDelete(record);
+    props.onClickDeleteWebHook(record);
   };
 
   const showTotalItemsBar = (total, range) => {
@@ -28,7 +28,6 @@ const WebHooksNestedTable = (props) => {
   useEffect(async () => {
     setData(props.tableData);
      
-
   }, [props.tableData, props.tableDataLoading, ]);  /* imp passing props to re-render */
 
   const columns = [

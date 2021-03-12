@@ -47,8 +47,8 @@ const Categories = () => {
       setLoading(false);
     } else {
       console.log("res -> ", categoriesViewResponse);
-      setData(categoriesViewResponse.categories.data);
-      setPaginationData(categoriesViewResponse.categories.page);
+      setData(categoriesViewResponse.categories.data || categoriesViewResponse.categories );
+      setPaginationData(categoriesViewResponse.categories.page || {});
       setLoading(false);
     }
   };

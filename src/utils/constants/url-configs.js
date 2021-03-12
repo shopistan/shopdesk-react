@@ -57,28 +57,37 @@ const urls = {
     SAVE_DISCOUNTED: BASE_URL + '/api/promotions/setSpecial',
     BULK_UPLOAD: BASE_URL + '/api/integrations/add_products'
   },
-  REPORTS:{
+  REPORTS: {
     SALES_SUMMARY: BASE_URL + '/api/reports/saleSummary',
     CATEGORY_SALES_SUMMARY: BASE_URL + '/api/reports/categoryWiseReport',
     INVENTORY_DUMP: BASE_URL + '/api/reports/inventoryReport',
 
   },
-  SETUP:{
+  SETUP: {
     VIEW: BASE_URL + '/api/stores/view',
     VIEW_USERS: BASE_URL + '/api/users/viewUsers',
-    VIEW_TEMPLATES: BASE_URL + '/api/templates/view', 
-    ADD_OUTLET: BASE_URL + '/api/stores/add', 
-    GET_OUTLET: BASE_URL + '/api/stores/get', 
-    EDIT_OUTLET: BASE_URL + '/api/stores/edit', 
-    ADD_USER: BASE_URL + '/api/users/addUser', 
-    ADD_TEMPLATE: BASE_URL + '/api/templates/add', 
-    GET_TEMPLATE: BASE_URL + '/api/templates/get', 
+    VIEW_TEMPLATES: BASE_URL + '/api/templates/view',
+    ADD_OUTLET: BASE_URL + '/api/stores/add',
+    GET_OUTLET: BASE_URL + '/api/stores/get',
+    EDIT_OUTLET: BASE_URL + '/api/stores/edit',
+    ADD_USER: BASE_URL + '/api/users/addUser',
+    GET_USER: BASE_URL + '/api/users/getUser',
+    GET_USERNAME: BASE_URL + '/api/users/getUsername',
+    EDIT_USER: BASE_URL + '/api/users/editUser',
+    ADD_TEMPLATE: BASE_URL + '/api/templates/add',
+    GET_TEMPLATE: BASE_URL + '/api/templates/get',
     EDIT_TEMPLATE: BASE_URL + '/api/templates/edit',
-    WEB_HOOKS:{
-    ADD: BASE_URL + '/api/stores/addWebHook', 
-    GET: BASE_URL + '/api/stores/getWebHooks', 
-    DELETE: BASE_URL + '/api/stores/deleteWebHook',
+    DELETE_TEMPLATE: BASE_URL + '/api/templates/delete',
+    WEB_HOOKS: {
+      ADD: BASE_URL + '/api/stores/addWebHook',
+      GET: BASE_URL + '/api/stores/getWebHooks',
+      DELETE: BASE_URL + '/api/stores/deleteWebHook',
     }
+  },
+  STOCK: {
+    VIEW_PO: BASE_URL + '/api/stock_control/viewPo',
+    VIEW_TRANSFER: BASE_URL + '/api/transfers/viewTransfer',
+    VIEW_ADJUSTMENTS: BASE_URL + '/api/stock_control/viewAdjustment',
 
   }
 

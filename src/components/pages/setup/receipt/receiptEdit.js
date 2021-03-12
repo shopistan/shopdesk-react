@@ -24,11 +24,10 @@ function ReceiptEdit() {
 
 
   useEffect(() => {
-    console.log(history.location.data);
-
     if (history.location.data === undefined) {
       history.push({
           pathname: '/setup/receipts-templates',
+          activeKey: 'receipts-templates',
       });
     }
     else { 
@@ -50,10 +49,9 @@ function ReceiptEdit() {
     else {
       console.log('res -> ', getTepmlateResponse);
       var receivedTemplateData = getTepmlateResponse.template;
-      message.success(receivedTemplateData.message, 3);
+      message.success(getTepmlateResponse.message, 3);
       setTemplateData(receivedTemplateData);
       setTemplateLastImg(receivedTemplateData.template_image);
-
        /*-----setting template data to fields value------*/
        form.setFieldsValue({
         template_name: receivedTemplateData.template_name,
@@ -156,7 +154,7 @@ function ReceiptEdit() {
   const handleCancel = () => {
     history.push({
       pathname: '/setup/receipts-templates',
-      activeKey: 'receipts-templates'
+      activeKey: 'receipts-templates',
     });
   };
 
@@ -174,7 +172,7 @@ function ReceiptEdit() {
       <div className="page__header">
         <h1><Button type="primary" shape="circle" className="back-btn"
          icon={<ArrowLeftOutlined />} 
-         onClick={handleCancel}  />New Receipt</h1>
+         onClick={handleCancel}  />Edit Template</h1>
       </div>
 
       <div className="page__content">

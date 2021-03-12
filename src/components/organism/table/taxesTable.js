@@ -39,7 +39,7 @@ const TaxesTable = (props) => {
 
     useEffect(() => {
         setData(props.tableData);
-        if (currentPageNumber > Math.ceil(props.paginationData.totalPages)) {
+        if( props.paginationData && (currentPageNumber > Math.ceil(props.paginationData.totalPages))) {
             setcurrentPageNumber(1);
         }
 

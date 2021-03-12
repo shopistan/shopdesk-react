@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { message, Spin } from 'antd';
 import "./style.scss";
-import { saveDataIntoLocalStorage, getDataFromLocalStorage, clearDataFromLocalStorage, checkUserAuthFromLocalStorage } from "../../../utils/local-storage/local-store-utils";
+import { 
+  saveDataIntoLocalStorage,
+  getDataFromLocalStorage,
+  clearDataFromLocalStorage,
+  checkUserAuthFromLocalStorage, 
+} from "../../../utils/local-storage/local-store-utils";
 import { useHistory } from 'react-router-dom';
 import * as OutletsApiUtil from '../../../utils/api/oulets-api-utils';
 import Constants from '../../../utils/constants/constants';

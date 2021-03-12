@@ -102,8 +102,9 @@ const ProductsDiscountsTable = (props) => {
 
     useEffect(async () => {
         setData(props.tableData);
-        if (currentPageNumber > Math.ceil(props.paginationData.totalPages)) {
-            setcurrentPageNumber(1);}
+        if( props.paginationData && (currentPageNumber > Math.ceil(props.paginationData.totalPages))) {
+            setcurrentPageNumber(1);
+        }
 
     }, [props.tableData, props.tableDataLoading, props.paginationData]);  /* imp passing props to re-render */
 
@@ -159,7 +160,7 @@ const ProductsDiscountsTable = (props) => {
             title: "Discount",
             render: (_, record) => {
                 let discounted_percentage = ( (parseFloat(record.discounted_price) / parseFloat(record.product_sale_price) )  * 100);
-                discounted_percentage =  100 - (parseFloat(discounted_percentage).toFixed(2));
+                discounted_percentage =  (100 - (parseFloat(discounted_percentage))).toFixed(2);
                 return (
                     <div>
                         {record.product_sale_price && 

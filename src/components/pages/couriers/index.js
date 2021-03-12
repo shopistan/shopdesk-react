@@ -50,8 +50,8 @@ const Couriers = () => {
     else {
       console.log('res -> ', couriersViewResponse);
       message.success(couriersViewResponse.message, 3);
-      setData(couriersViewResponse.courier.data);
-      setPaginationData(couriersViewResponse.courier.page);
+      setData(couriersViewResponse.courier.data || couriersViewResponse.courier );
+      setPaginationData(couriersViewResponse.courier.page || {});
       setLoading(false);
     }
   }

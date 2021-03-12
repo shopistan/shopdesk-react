@@ -140,7 +140,7 @@ const ProductsVariantsNestedTable = (props) => {
         {
             title: "Outlet Name",
             //dataIndex: "store_id",
-            width: "20%",
+            //width: "20%",
             render: (_, record) => {
                 return (
                     <div>
@@ -161,7 +161,7 @@ const ProductsVariantsNestedTable = (props) => {
             title: "Tax",
             dataIndex: "tax_id",
             editable: true,
-            width: "50%",
+            width: "40%",
             render: (_, record) => {
                 return (
                     <div >

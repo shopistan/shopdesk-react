@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "../../style.scss";
-import { Form, Input, Button, Select, Badge, message, Spin } from "antd";
+import { Form, Input, Button, Select, Badge, message, Spin, Modal, Divider } from "antd";
 import { AppstoreAddOutlined, PlusCircleOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
 import WebHooksTable from "../../../../organism/table/setup/outlets/webHooksNestedTable";
 import * as SetupApiUtil from '../../../../../utils/api/setup-api-utils';
 import currencyData from "../currencyData.json";
+import { values } from "lodash";
 
 
 
@@ -15,7 +16,6 @@ function OutletEdit() {
   const { Option } = Select;
   const { Search } = Input;
   const [show, setShow] = React.useState(true);
-
 
   const history = useHistory();
   const [form] = Form.useForm();
@@ -27,13 +27,15 @@ function OutletEdit() {
   const [selectedStoreObj, setSelectedStoreObj] = useState({});  //imp one
   const [currenciesData, setCurrenciesData] = useState([]);
   const [selectedCurrencyObj, setSelectedCurrencyObj] = useState("");
-
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [webHookDeleteId, setWebHookDeleteId] = useState("");
+  
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [webHookUrlName, setWebHookUrlName] = useState("");
 
 
 
   useEffect(() => {
-    console.log(history.location.data);
-
     if (history.location.data === undefined) {
       history.push({
         pathname: '/setup/outlets',
@@ -43,12 +45,9 @@ function OutletEdit() {
       var currenciesDataArr = [...currencyData];
       console.log(currenciesDataArr);
       setCurrenciesData(currenciesDataArr);
-
       fetchOutletWebHooks();
       getUserStoreData(history.location.data.store_id);
       fetchUsersTemplatesData();
-
-
     }
 
   }, []);
@@ -81,19 +80,21 @@ function OutletEdit() {
       var selectedStore = getOutletViewResponse.outlet;
       message.success(getOutletViewResponse.message, 3);
       setSelectedStoreObj(getOutletViewResponse.outlet);
-      setSelectedCurrencyObj({code: selectedStore.currency_code,
-         name: selectedStore.currency_name, symbol: selectedStore.currency_symbol});
-        /*-----setting template data to fields value------*/
-        form.setFieldsValue({
-          outlet: selectedStore.store_name,
-          currency: selectedStore.currency_code,
-          address: selectedStore.store_location,
-          template: selectedStore.template_id,
-          location: selectedStore.store_location_id,
-          brand: selectedStore.store_brand_id,
-         });
-         /*-----setting template data to fields value------*/
-      
+      setSelectedCurrencyObj({
+        code: selectedStore.currency_code,
+        name: selectedStore.currency_name, symbol: selectedStore.currency_symbol
+      });
+      /*-----setting template data to fields value------*/
+      form.setFieldsValue({
+        outlet: selectedStore.store_name,
+        currency: selectedStore.currency_code,
+        address: selectedStore.store_location,
+        template: selectedStore.template_id,
+        location: selectedStore.store_location_id,
+        brand: selectedStore.store_brand_id,
+      });
+      /*-----setting template data to fields value------*/
+
     }
   }
 
@@ -109,7 +110,50 @@ function OutletEdit() {
     else {
       console.log('res -> ', userTemplatesViewResponse);
       message.success(userTemplatesViewResponse.message, 3);
-      setTemplatesData(userTemplatesViewResponse.templates.data);
+      setTemplatesData(userTemplatesViewResponse.templates.data || userTemplatesViewResponse.templates);
+      setLoading(false);
+    }
+  }
+
+
+  const postAddWebHookData = async (webHookUrlName) => {
+
+    const hide = message.loading('Saving Changes in progress..', 0);
+    const addWebHookResponse = await SetupApiUtil.addWebHook(webHookUrlName);
+    console.log('addWebHookResponse:', addWebHookResponse);
+    setLoading(true);
+
+    if (addWebHookResponse.hasError) {
+      console.log('Cant add webhook -> ', addWebHookResponse.errorMessage);
+      setTimeout(hide, 1500);
+      setLoading(false);
+    }
+    else {
+      console.log('res -> ', addWebHookResponse);
+      message.success(addWebHookResponse.message, 3);
+      setTimeout(hide, 1500);
+      fetchOutletWebHooks();
+      setLoading(false);
+    }
+  }
+
+  const postDeleteWebHookData = async (webHookId) => {
+
+    const hide = message.loading('Saving Changes in progress..', 0);
+    const deleteWebHookResponse = await SetupApiUtil.deleteWebHook(webHookId);
+    console.log('deleteWebHookResponse:', deleteWebHookResponse);
+    setLoading(true);
+
+    if (deleteWebHookResponse.hasError) {
+      console.log('Cant add webhook -> ', deleteWebHookResponse.errorMessage);
+      setLoading(false);
+      setTimeout(hide, 1500);
+    }
+    else {
+      console.log('res -> ', deleteWebHookResponse);
+      message.success(deleteWebHookResponse.message, 3);
+      setTimeout(hide, 1500);
+      fetchOutletWebHooks();
       setLoading(false);
     }
   }
@@ -129,7 +173,6 @@ function OutletEdit() {
 
   const onFinish = async (values) => {
     postEditOutletData();
-
   };
 
   const handleOmniForm = () => {
@@ -137,7 +180,7 @@ function OutletEdit() {
   };
 
 
-  const  postEditOutletData = async (onmiFormCheck = false) => {
+  const postEditOutletData = async (onmiFormCheck = false) => {
     var formValues = form.getFieldsValue();
     console.log("changed", formValues);
 
@@ -151,7 +194,7 @@ function OutletEdit() {
     editOutletPostData.store_random = selectedStoreObj.store_random;
     editOutletPostData.store_location = formValues.address;
     editOutletPostData.store_id = selectedStoreObj.store_id;
-    
+
     const hide = message.loading('Saving Changes in progress..', 0);
     const editOutletResponse = await SetupApiUtil.editOutlet(editOutletPostData);
     console.log('editOutletResponse:', editOutletResponse);
@@ -170,16 +213,47 @@ function OutletEdit() {
           activeKey: 'outlets'
         });
       }, 2000);
-    } 
+    }
 
   };
-
-
 
 
   const onHandleWebHookDelete = (tableRecord) => {
     console.log(tableRecord);
+    setWebHookDeleteId(tableRecord.id);    //webhook row id
+    setIsDeleteModalVisible(true);
   };
+
+
+  const confirmDeleteWebHook = (e) => {
+    postDeleteWebHookData(webHookDeleteId);  //webhook row id
+    setIsDeleteModalVisible(false);
+  };
+
+
+  const addWebHook = (e) => {
+    setIsModalVisible(true);
+  };
+
+
+  const  confirmAddWebHook = (e) => {
+    let check = urlCheck(webHookUrlName);
+    console.log(webHookUrlName);
+    if(check){
+      postAddWebHookData(webHookUrlName);
+      setIsModalVisible(false);
+    }
+    else{
+      setIsModalVisible(false);
+      message.error("WebHook URL is invalid", 3)
+    }
+  };
+
+
+  const handleChangeWebHookUrl = (e) => {
+    console.log(e.target.value);
+    setWebHookUrlName("http://" + e.target.value);
+  }
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -190,6 +264,29 @@ function OutletEdit() {
       pathname: '/setup/outlets',
       activeKey: 'outlets'
     });
+  };
+  
+
+
+  function urlCheck(t) {
+    var regex = new RegExp(
+      "^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.){1}([0-9A-Za-z-\\.@:%_+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?"
+    );
+
+    if (t.match(regex)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  const handleCancelModal = () => {
+    setIsModalVisible(false);
+  };
+
+
+  const handleCancelDeleteModal = () => {
+    setIsDeleteModalVisible(false);
   };
 
 
@@ -260,7 +357,6 @@ function OutletEdit() {
                         })
                       }
                     </Select>
-
                   </Form.Item>
                 </div>
               </div>
@@ -309,7 +405,7 @@ function OutletEdit() {
               </div>
 
               <div className='form__row--footer'>
-                <Button type='secondary'>
+                <Button type='secondary' onClick={handleCancel}>
                   Cancel
                 </Button>
 
@@ -329,7 +425,7 @@ function OutletEdit() {
               <div className='form__section__header'>
                 <h2>Outlet API KEY</h2>
                 <p>
-                  Token Type: <Badge count={show ? 25 : 0} />
+                  Token Type: <Badge count={"Bearer"} />
                 </p>
               </div>
 
@@ -363,16 +459,16 @@ function OutletEdit() {
                 <Button
                   type='primary'
                   icon={<PlusCircleOutlined />}
+                  onClick={addWebHook}
                   className='custom-btn custom-btn--primary'
                 >
                   Add New
                 </Button>
-
               </div>
             </div>
+            {/* Form Section */}
 
-
-             {/* Form Section */}
+            {/* table Section */}
             <div className='form__row'>
               {/* Table */}
               <div className='table'>
@@ -382,6 +478,8 @@ function OutletEdit() {
               </div>
               {/* Table */}
             </div>
+            {/* table Section */}
+            <Divider />
 
             {/* Form Section */}
             <div className='form__section'>
@@ -419,13 +517,13 @@ function OutletEdit() {
                     },
                   ]}
                 >
-                    <Input />
+                  <Input />
                 </Form.Item>
               </div>
             </div>
 
             <div className='form__row--footer'>
-              <Button type='secondary'>
+              <Button type='secondary' onClick={handleCancel}>
                 Cancel
               </Button>
 
@@ -440,7 +538,27 @@ function OutletEdit() {
             {/* Form Section */}
           </Form>
         </div>
+        {/*end page content*/}
+
+        <Modal title="Basic Modal" visible={isModalVisible}  onOk={confirmAddWebHook}
+          onCancel={handleCancelModal}>
+          <label> Enter a url for webhook</label>
+          <div className='form__row'>
+            <div className='form__col'>
+            <Input addonBefore="http://"  onChange={handleChangeWebHookUrl} />
+            </div>
+          </div>
+        </Modal>
+
+
+        <Modal title="Basic Modal" visible={isDeleteModalVisible}  onOk={confirmDeleteWebHook}
+          onCancel={handleCancelDeleteModal}>
+          <label> Do you really want to delete this webhook?</label>
+        </Modal>
+
       </div>
+
+
     </div>
   );
 }
