@@ -24,8 +24,8 @@ const Receipts = () => {
     else {
       console.log('res -> ', userTemplatesViewResponse);
       message.success(userTemplatesViewResponse.message, 3);
-      setData(userTemplatesViewResponse.templates.data);
-      setPaginationData(userTemplatesViewResponse.templates.page);
+      setData(userTemplatesViewResponse.templates.data || userTemplatesViewResponse.templates);
+      setPaginationData(userTemplatesViewResponse.templates.page || {});
       setLoading(false);
     }
   }

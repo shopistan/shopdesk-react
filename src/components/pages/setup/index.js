@@ -1,24 +1,24 @@
-import React, {useEffect, useState} from "react";
-import { Tabs, Menu, Dropdown, Button  } from "antd";
-import { ProfileOutlined } from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
+import { Tabs, Menu, Dropdown, Button } from "antd";
+import { ProfileOutlined, DownOutlined } from "@ant-design/icons";
 import Outlets from "./outlets";
 import Receipts from "./receipt";
 import Users from "./users";
-import { useHistory } from 'react-router-dom'; 
+import { useHistory } from 'react-router-dom';
 
 const { TabPane } = Tabs;
 
 
-const  Setup = ()  => { 
+const Setup = () => {
   const history = useHistory();
   const [currentTab, setCurrentTab] = useState("");
 
 
-  useEffect(async () => {
-    if(history.location.activeKey){
+  useEffect(() => {
+    if (history.location.activeKey) {
       setCurrentTab(history.location.activeKey);
     }
-    else{
+    else {
       console.log(window.location.pathname);
       var path = (window.location.pathname).split("/");
       setCurrentTab(path[2]);
@@ -27,7 +27,7 @@ const  Setup = ()  => {
 
   }, [history.location.activeKey]);  //imp to render when history prop changes
 
-  
+
 
   const handletabChange = (key) => {
     //setCurrentTab(key);  // previous imp
@@ -40,19 +40,18 @@ const  Setup = ()  => {
 
   const SetupMenu = (
     <Menu>
-      <Menu.Item key='0' onClick={() => history.push({pathname: "/setup/outlets/add"}) }>
+      <Menu.Item key='0' onClick={() => history.push({ pathname: "/setup/outlets/add" })}>
         New Outlet
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key='1' onClick={() => history.push({pathname: "/setup/users/add"}) }>
+      <Menu.Item key='1' onClick={() => history.push({ pathname: "/setup/users/add" })}>
         New User
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key='2' onClick={() => history.push({pathname: "/setup/receipts-templates/add"}) }>
+      <Menu.Item key='2' onClick={() => history.push({ pathname: "/setup/receipts-templates/add" })}>
         New Template
       </Menu.Item>
       <Menu.Divider />
-    
     </Menu>
   );
 
@@ -67,18 +66,18 @@ const  Setup = ()  => {
           <Dropdown overlay={SetupMenu} trigger={["click"]}>
             <Button
               type='Default'
-              icon={<ProfileOutlined />}
+              icon={<DownOutlined />}
               onClick={(e) => e.preventDefault()}
             >
-              More
+              More <ProfileOutlined />
             </Button>
-            </Dropdown>
+          </Dropdown>
         </div>
       </div>
 
 
       <div className="page__content">
-        <Tabs  activeKey={currentTab } onChange={handletabChange}>
+        <Tabs activeKey={currentTab} onChange={handletabChange}>
           <TabPane tab="Outlets" key="outlets">
             <Outlets />
           </TabPane>

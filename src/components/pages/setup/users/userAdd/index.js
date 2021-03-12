@@ -12,10 +12,12 @@ function UserAdd() {
   const { Option } = Select;
   const [storesData, setStoresData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [userBrandName, setUserBrandName] = useState("");
   const [selectedOutlets, setSelectedOutlets] = useState([]);
 
 
   const fetchOutletsData = async (pageLimit = 10, pageNumber = 1) => {
+    setLoading(true);
     const outletsViewResponse = await SetupApiUtil.viewOutlets(pageLimit, pageNumber);
     console.log('outletsViewResponse:', outletsViewResponse);
 
@@ -26,7 +28,24 @@ function UserAdd() {
     else {
       console.log('res -> ', outletsViewResponse);
       message.success(outletsViewResponse.message, 3);
-      setStoresData(outletsViewResponse.outlets.data);
+      setStoresData(outletsViewResponse.outlets.data || outletsViewResponse.outlets);
+      setLoading(false);
+    }
+  }
+
+
+  const getUserNameData = async () => {
+    setLoading(true);
+    const getUsernameResponse = await SetupApiUtil.getUsername();
+    console.log('getUsernameResponse:', getUsernameResponse);
+
+    if (getUsernameResponse.hasError) {
+      console.log('Cant fetch username -> ', getUsernameResponse.errorMessage);
+      setLoading(false);
+    }
+    else {
+      console.log('res -> ', getUsernameResponse);
+      setUserBrandName(getUsernameResponse.username);
       setLoading(false);
     }
   }
@@ -34,6 +53,7 @@ function UserAdd() {
 
   useEffect(() => {
     fetchOutletsData();
+    getUserNameData();
 
   }, []);
 
@@ -53,7 +73,7 @@ function UserAdd() {
 
     var addUserPostData = {};
     addUserPostData.name = formValues.name;
-    addUserPostData.username = formValues.username;
+    addUserPostData.username = formValues.username + userBrandName;
     addUserPostData.password = formValues.password;
     addUserPostData.repass = formValues.re_password;
     addUserPostData.phone = formValues.phone;
@@ -86,14 +106,14 @@ function UserAdd() {
   const handleStoreChecked = (e) => {
     let outletId = e.target.dataset.outletid;
     var outletsData = [...selectedOutlets];
-
     const index = outletsData.indexOf(outletId);
+    console.log(index);
     if (index > -1) {
       outletsData.splice(index, 1);
+      setSelectedOutlets(outletsData);
     }
     else {
       outletsData.push(outletId);  /*imp convert to string[]*/
-      console.log(outletsData);
       setSelectedOutlets(outletsData);
     }
 
@@ -164,7 +184,7 @@ function UserAdd() {
                     },
                   ]}
                 >
-                  <Input addonAfter="@shopdeskco" />
+                  <Input addonAfter={userBrandName} />
                 </Form.Item>
               </div>
             </div>

@@ -52,11 +52,14 @@ import Setup from "./components/pages/setup";
 import OutletEdit from "./components/pages/setup/outlets/outletEdit";
 import OutletAdd from "./components/pages/setup/outlets/outletAdd";
 import UserAdd from "./components/pages/setup/users/userAdd";
+import UserEdit from "./components/pages/setup/users/editUser";
 import ReceiptAdd from "./components/pages/setup/receipt/receiptAdd";
 import ReceiptEdit from "./components/pages/setup/receipt/receiptEdit";
+import ReceiptDelete from "./components/pages/setup/receipt/receiptDelete";
 import SalesHistory from "./components/pages/register/salesHistory";
 import Sell from "./components/pages/register/sell";
 import Stock from "./components/pages/stock";
+import StockTransfer from "./components/pages/stock/Transfer";
 import PurchaseOrder from "./components/pages/stock/order";
 
 
@@ -310,8 +313,10 @@ const Routes = () => {
         <PrivateRoute exact path='/productHistory' component={ProductHistory} />
         <PrivateRoute exact path='/salesSummary' component={SalesSummary} />
 
-        <PrivateRoute exact path='/stock' component={Stock} />
-        <PrivateRoute exact path='/stock/order' component={PurchaseOrder} />
+        <PrivateRoute exact path='/stock-control/purchase-orders' component={Stock} />
+        <PrivateRoute exact path='/stock-control/inventory-transfers' component={Stock} />
+        <PrivateRoute exact path='/stock-control/stock-adjustments' component={Stock} /> 
+        <PrivateRoute exact path='/stock-control/purchase-orders/add' component={PurchaseOrder} />
 
         <PrivateRoute exact path='/setup/users' component={Setup} />
         <PrivateRoute exact path='/setup/outlets' component={Setup} />
@@ -323,12 +328,14 @@ const Routes = () => {
         <PrivateRoute exact path='/setup/outlets/add' component={OutletAdd} />
         <PrivateRoute exact path='/setup/outlets/:id/edit' component={OutletEdit} />
         <PrivateRoute exact path='/setup/users/add' component={UserAdd} />
+        <PrivateRoute exact path='/setup/users/:id/edit' component={UserEdit} />
         <PrivateRoute
           exact
           path='/setup/receipts-templates/add'
           component={ReceiptAdd}
         />
         <PrivateRoute exact path='/setup/receipts-templates/:id/edit' component={ReceiptEdit} />
+        <PrivateRoute exact path='/setup/receipts-templates/:id/delete' component={ReceiptDelete} />
         <PrivateRoute exact path='/register/sell' component={Sell} />
         <PrivateRoute
           exact

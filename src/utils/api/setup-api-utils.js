@@ -91,6 +91,51 @@ export const addUser = async (addUserData) => {
   );
 };
 
+
+export const editUser = async (editUserData) => {
+ 
+  const editUserFormDataBody =  $.param({user: editUserData});
+  const url = UrlConstants.SETUP.EDIT_USER;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+    editUserFormDataBody,  //body
+  );
+};
+
+
+
+export const getUser = async (userId) => {
+  const formDataPair = {
+    user_id: userId,
+  };
+
+  const getUserFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+  const url = UrlConstants.SETUP.GET_USER;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+    getUserFormDataBody,  //body
+  );
+};
+
+
+export const getUsername = async () => {
+
+  const url = UrlConstants.SETUP.GET_USERNAME;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+  );
+};
+
+
 export const viewTemplates = async () => {
 
   const url = UrlConstants.SETUP.VIEW_TEMPLATES;
@@ -131,6 +176,24 @@ export const editTemplate = async (editTemplateData) => {
     editTemplateFormDataBody,  //body
   );
 };
+
+
+export const deleteTemplate = async (TemplateId) => {
+  const formDataPair = {
+    template_id: TemplateId,
+  };
+
+  const deleteTemplateFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+  const url = UrlConstants.SETUP.DELETE_TEMPLATE;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+    deleteTemplateFormDataBody,  //body
+  );
+};
+
 
 
 export const addTemplate = async (addTemplateData) => {
