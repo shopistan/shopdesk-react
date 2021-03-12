@@ -2,10 +2,12 @@
 @import "../../../styles/mixins";
 
 .side-menu {
-  background-color: $color-asphalt !important;
+  // background-color: $color-asphalt !important;
+  background-color: $color-white !important;
 
   li {
-    color: $color-white !important;
+    // color: $color-white !important;
+    color: $color-black !important;
   }
 
   .ant-menu-item-selected {
@@ -14,5 +16,6 @@
 }
 
 .mobile__menu {
-  background-color: $color-asphalt;
+  // background-color: $color-asphalt;
+  background-color: $color-white;
 }

@@ -69,6 +69,7 @@
   &__right {
     @extend %flex-between;
 
+    justify-content: flex-end;
     color: $color-white;
     width: 95%;
 
