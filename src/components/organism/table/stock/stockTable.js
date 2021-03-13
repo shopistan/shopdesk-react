@@ -32,7 +32,7 @@ const StockTable = (props) => {
         return (
             <Menu>
                 <Menu.Item key='0' onClick={() => history.push({ 
-                    pathname: "/stock-control/purchase-orders/add",
+                    pathname: `/stock-control/purchase-orders/${record.purchase_order_id}/receive`,
                     data: record })}
                     >
                     Receive

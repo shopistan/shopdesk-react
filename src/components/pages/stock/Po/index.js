@@ -2,10 +2,6 @@ import React, { useState, useEffect } from "react";
 import { message } from "antd";
 import ViewtableStock from "../../../organism/table/stock/stockTable";
 import * as StockApiUtil from '../../../../utils/api/stock-api-utils';
-import Constants from '../../../../utils/constants/constants';
-import { 
-    getDataFromLocalStorage,
-  } from "../../../../utils/local-storage/local-store-utils";
 
 
 
