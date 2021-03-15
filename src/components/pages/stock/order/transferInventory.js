@@ -2,10 +2,15 @@ import React, { useState, useEffect } from "react";
 import "../style.scss";
 import { useHistory } from "react-router-dom";
 import * as ProductsApiUtil from '../../../../utils/api/products-api-utils';
-import * as SuppliersApiUtil from "../../../../utils/api/suppliers-api-utils";
 import * as StockApiUtil from '../../../../utils/api/stock-api-utils';
+import * as SetupApiUtil from '../../../../utils/api/setup-api-utils';
 import * as Helpers from "../../../../utils/helpers/scripts";
 import StockNestedProductsTable from "../../../organism/table/stock/stockNestedProductsTable";
+import Constants from '../../../../utils/constants/constants';
+import { 
+    getDataFromLocalStorage,
+    checkUserAuthFromLocalStorage, 
+  } from "../../../../utils/local-storage/local-store-utils";
 import moment from 'moment';
 
 
@@ -14,58 +19,61 @@ import {
   Input,
   Button,
   Select,
-  DatePicker,
-  InputNumber,
   Spin,
   AutoComplete,
-  Upload,
   message,
   Row,
   Col,
-  Space,
   Switch,
   Divider,
 } from "antd";
-
-import {
-  CloseOutlined,
-  CheckOutlined,
-  UploadOutlined,
-  DownloadOutlined,
-} from "@ant-design/icons";
 
 const { Option } = Select;
 
 
 
-
-const PurchaseOrder = () => {
+const TransferInventory = () => {
   const [form] = Form.useForm();
   const history = useHistory();
   const [loading, setLoading] = useState(true);
-  const [showBulkUpload, setShowBulkUpload] = useState(false);
-  const [fileList, setFileList] = useState([]);
   const [productsSearchResult, setProductsSearchResult] = useState([]);
   const [productsTableData, setProductsTableData] = useState([]);
   const [registereProductsData, setRegistereProductsData] = useState([]);
-  const [suppliers, setSuppliersData] = useState([]);
+  const [outlets, setOutletsData] = useState([]);
   const [selectedSearchValue, setSelectedSearchValue] = useState("");
   const [selectedProductId, setSelectedProductId] = useState("");
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
-  const [orderDueDate, setOrderDueDate] = useState("");
+  const [currentStoreId, setCurrentStoreId] = useState("");
 
   var registeredProductsLimit = Helpers.registeredProductsPageLimit;
+  var outletsPageLimit = Helpers.suppliersPageLimit;
 
 
 
   useEffect(() => {
     fetchRegisteredProductsData();
-    fetchSuppliersData();
+    fetchOutletsData();
     /*-----setting template data to fields value------*/
     form.setFieldsValue({
-      order_reference_name: `Order - ${moment(new Date()).format("MM/DD/yyyy HH:mm:ss")}`,
+      order_reference_name: `Transfer - ${moment(new Date()).format("MM/DD/yyyy HH:mm:ss")}`,
     });
     /*-----setting template data to fields value------*/
+
+    /*-----------set user store id-------------*/
+    var readFromLocalStorage = getDataFromLocalStorage(
+        Constants.USER_DETAILS_KEY
+      );
+      readFromLocalStorage = readFromLocalStorage.data
+        ? readFromLocalStorage.data
+        : null;
+      if (readFromLocalStorage) {
+        if (
+          checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
+        ) {
+          setCurrentStoreId(readFromLocalStorage.auth.current_store);
+        }
+      }
+      /*-----------set user store id-------------*/
 
   }, []);
 
@@ -138,96 +146,23 @@ const PurchaseOrder = () => {
     }
   }
 
-
-
-  const fetchSuppliersData = async (pageLimit = 10, pageNumber = 1) => {
-
-    const SuppliersViewResponse = await SuppliersApiUtil.viewSuppliers(
-      pageLimit,
-      pageNumber
+  const fetchOutletsData = async (pageLimit = 10, pageNumber = 1) => {
+    const outletsViewResponse = await SetupApiUtil.viewOutlets(
+        outletsPageLimit,
+        pageNumber
     );
-    console.log("SuppliersViewResponse:", SuppliersViewResponse);
+    console.log('outletsViewResponse:', outletsViewResponse);
 
-    if (SuppliersViewResponse.hasError) {
-      console.log(
-        "Cant fetch suppliers -> ",
-        SuppliersViewResponse.errorMessage
-      );
-    } else {
-      console.log("res -> ", SuppliersViewResponse);
-      setSuppliersData(SuppliersViewResponse.suppliers.data || SuppliersViewResponse.suppliers);
-    }
-  };
-
-
-  const handleUpload = () => {
-    console.log(fileList[0]);   //imp
-    var file = fileList[0];
-
-    //const hide = message.loading('Products Bulk Import in progress..', 0);
-
-    if (file && fileExtention(file.name) === 'csv') {
-      var reader = new FileReader();
-      reader.readAsText(file);
-      reader.onload = function (evt) {
-        // code to convert file data and render in json format
-        var json = JSON.parse(Helpers.CSV2JSON(evt.target.result));
-        console.log(json);
-        //jsonOutput = JSON.parse((jsonOutput));
-        /*-------------------------------*/
-        var bulkProducts = [];
-        json.forEach((v, k) => {
-          registereProductsData.forEach((v2, k2) => {
-            if (v.SKU == v2.product_sku) {
-              let selectedItemCopy = JSON.parse(JSON.stringify(v2));
-              selectedItemCopy.qty = parseFloat(v.Quantity);
-              bulkProducts.push(selectedItemCopy);
-              return 0;
-            }
-          });
-        });  // end of for loop
-
-        //setProductsTableData(bulkProducts);   //imp 
-        handleCombineProductsTableData(bulkProducts, [...productsTableData]);
-        //setTimeout(hide, 1500);
-        message.success("Products Imported", 3);
-        /*-------------------------------*/
-
-      }
-      reader.onerror = function (evt) {
-        message.error('error reading file');
-      }
+    if (outletsViewResponse.hasError) {
+      console.log('Cant fetch Outlets Data -> ', outletsViewResponse.errorMessage);
     }
     else {
-      message.error('Not a csv file');
+      console.log('res -> ', outletsViewResponse);
+      message.success(outletsViewResponse.message, 3);
+      setOutletsData(outletsViewResponse.outlets.data || outletsViewResponse.outlets );
     }
-
-  };
-
-
-
-  const imageUploadProps = {
-    beforeUpload: file => {
-      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-      if (isJpgOrPng) {
-        message.error('You cant  upload JPG/PNG file!');
-      }
-      else { setFileList([file]); }
-
-      return false;
-    },
-    fileList,
-  };
-
-  function fileExtention(filename) {
-    var parts = filename.split('.');
-    return parts[parts.length - 1];
   }
 
-
-  const onRemoveImage = (file) => {
-    setFileList([]);
-  };
 
   const handleChangeProductsData = (productsData, productsTotalQuantity = 0) => {
     setProductsTableData(productsData);
@@ -238,6 +173,7 @@ const PurchaseOrder = () => {
 
   const handleAddProduct = () => {
     var formValues = form.getFieldsValue();
+    console.log("changed", formValues);
 
     var productExistsCheck = false;
     var newData = [...productsTableData];
@@ -283,52 +219,15 @@ const PurchaseOrder = () => {
 
 
 
-  const handleCombineProductsTableData = (bulkProducts, tableProducts) => {
-    if (bulkProducts.length > tableProducts.length) {
-      bulkProducts.forEach((v, k) => {
-        tableProducts.forEach((v2, k2) => {
-          //console.log(v);
-          if (v.product_sku == v2.product_sku) {
-            v.qty = v.qty + parseFloat(v2.qty);
-            return 0;
-          }
-        });
-      });  // end of for loop
-
-      calculateProductsTotalQuantity(bulkProducts);
-      setProductsTableData(bulkProducts);
-    }   // first if
-
-    if (tableProducts.length >= bulkProducts.length) {
-      tableProducts.forEach((v, k) => {
-        bulkProducts.forEach((v2, k2) => {
-          // console.log(v);
-          if (v.product_sku == v2.product_sku) {
-            v.qty = v.qty + parseFloat(v2.qty);
-            //bulkProducts.push(selectedItemCopy);
-            return 0;
-          }
-        });
-      });  // end of for loop
-
-      calculateProductsTotalQuantity(tableProducts);
-      setProductsTableData(tableProducts);
-    }   // end of second if
-
-  };
-
-
-  const handleSaveChanges = async (e) => {
+  const handleSaveChanges = async () => {
     var formValues = form.getFieldsValue();
-    console.log("changed", formValues);
 
     if (productsTableData.length === 0) {
       message.error("No Products Added", 4);
       return;
     }
 
-    var addPurchaseOrderPostData = {};
-    //var clonedProducts = JSON.parse(JSON.stringify(productsTableData));
+    var transferInventoryPostData = {};
     var clonedProductsPostData = [];
     console.log("vvimp", productsTableData);
     productsTableData.forEach((item, index) => {
@@ -339,20 +238,24 @@ const PurchaseOrder = () => {
     });
 
 
-    addPurchaseOrderPostData.products = clonedProductsPostData;
-    addPurchaseOrderPostData.date_due = orderDueDate;
-    addPurchaseOrderPostData.po_name = formValues.order_reference_name;
-    addPurchaseOrderPostData.ordered_date = moment(new Date()).format("MM/DD/yyyy HH:mm:ss");
-    addPurchaseOrderPostData.supplier_id = formValues.supplier;
+    transferInventoryPostData.products = clonedProductsPostData;
+    transferInventoryPostData.date_due = "";
+    transferInventoryPostData.supplier_id = "";
+    transferInventoryPostData.po_name = formValues.order_reference_name;
+    transferInventoryPostData.transfer_name = transferInventoryPostData.po_name;
+    transferInventoryPostData.ordered_date = moment(new Date()).format("MM/DD/yyyy HH:mm:ss");
+    transferInventoryPostData.transfer_date = transferInventoryPostData.ordered_date;
+    transferInventoryPostData.destination_store_id = formValues.destination_outlet;
+    transferInventoryPostData.source_store_id = currentStoreId;
 
-    console.log("vvimp-final", clonedProductsPostData);
+    console.log("vvimp-final", transferInventoryPostData);
 
     const hide = message.loading('Saving Changes in progress..', 0);
-    const res = await StockApiUtil.addPurchaseOrder(addPurchaseOrderPostData);
-    console.log('AddPoResponse:', res);
+    const res = await StockApiUtil.transferInventory(transferInventoryPostData);
+    console.log('TransferOutResponse:', res);
 
     if (res.hasError) {
-      console.log('Cant Add Purchase Order -> ', res.errorMessage);
+      console.log('Cant Transfer Inventory Stock  -> ', res.errorMessage);
       message.error(res.errorMessage, 3);
       setTimeout(hide, 1500);
     }
@@ -362,8 +265,8 @@ const PurchaseOrder = () => {
       setTimeout(hide, 1000);
       setTimeout(() => {
         history.push({
-          pathname: '/stock-control/purchase-orders',
-          activeKey: 'purchase-orders'
+          pathname: '/stock-control/inventory-transfers',
+          activeKey: 'inventory-transfers'
         });
       }, 2000);
     }
@@ -371,60 +274,15 @@ const PurchaseOrder = () => {
   }
 
 
-
-  const handleDownloadPoForm = async () => {
-
-    const hide = message.loading('Downloading in progress..', 0);
-    const downloadPoResponse = await StockApiUtil.downloadPoForm();
-    console.log("downloadPoResponse:", downloadPoResponse);
-
-    if (downloadPoResponse.hasError) {
-      console.log(
-        "Cant Download PO Form -> ",
-        downloadPoResponse.errorMessage
-      );
-
-      setTimeout(hide, 1500);
-
-    } else {
-      console.log("res -> ", downloadPoResponse);
-      var csv = "SKU,Quantity\n";
-      var arr = downloadPoResponse.product;
-      arr.forEach(function (row) {
-        csv += row.product_sku + ",0\n";
-      });
-
-      //var parent = document.getElementById("download_csv");
-      var hiddenElement = document.createElement("a");
-      //parent.appendChild(hiddenElement);
-      hiddenElement.href = "data:text/csv;charset=utf-8," + encodeURI(csv);
-      hiddenElement.target = "_blank";
-      hiddenElement.download = new Date().toUTCString() + "-Product-SKU.csv";
-      hiddenElement.click();
-      //parent.removeChild(hiddenElement); 
-      setTimeout(hide, 1500);
-    }
-
-
-  };
-
-
-  function onDatePickerChange(date, dateString) {
-    setOrderDueDate(dateString);
-  }
-
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 
-  const handleBulkSwitch = (checked) => {
-    setShowBulkUpload(checked);
-  };
 
   const handleCancel = () => {
     history.push({
-      pathname: '/stock-control/purchase-orders',
-      activeKey: 'purchase-orders'
+      pathname: '/stock-control/inventory-transfers',
+      activeKey: 'inventory-transfers'
     });
   };
 
@@ -433,7 +291,7 @@ const PurchaseOrder = () => {
   return (
     <div className="page stock-add">
       <div className="page__header">
-        <h1>New Purchase Order</h1>
+        <h1>Transfer Out</h1>
       </div>
       <div style={{ textAlign: "center" }}>
         {loading && <Spin size="large" tip="Loading..." />}
@@ -462,7 +320,7 @@ const PurchaseOrder = () => {
 
                 {/* Row */}
                 <div className="form__row">
-                  <div className="form__col">
+                <div className="form__col">
                     <Form.Item
                       label="Name / reference"
                       name="order_reference_name"
@@ -479,21 +337,21 @@ const PurchaseOrder = () => {
 
                   <div className="form__col">
                     <Form.Item
-                      label="Supplier"
-                      name="supplier"
+                      label="Destination outlet"
+                      name="destination_outlet"
                       rules={[
                         {
                           required: true,
-                          message: "Please select supplier",
+                          message: "Please select outlet",
                         },
                       ]}
                     >
                       <Select>
                         {
-                          suppliers.map((obj, index) => {
+                          outlets.map((obj, index) => {
                             return (
-                              <option key={obj.supplier_id} value={obj.supplier_id}>
-                                {obj.supplier_name}
+                              <option key={obj.store_id} value={obj.store_id}>
+                                {obj.store_name}
                               </option>
                             )
                           })
@@ -501,76 +359,23 @@ const PurchaseOrder = () => {
                       </Select>
                     </Form.Item>
                   </div>
+
                 </div>
                 {/* Row */}
 
-                {/* Row */}
-                <div className="form__row">
-                  <div className="form__col">
-                    <Form.Item
-                      label="Delivery due"
-                      name="delivery_due_date"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please select Due date",
-                        },
-                      ]}
-                    >
-                      <DatePicker onChange={onDatePickerChange} />
-                    </Form.Item>
-                  </div>
-
-                  <div className="form__col"></div>
-                </div>
-                {/* Row */}
               </div>
               {/* Form Section */}
 
               {/* Form Section */}
               <div className="form__section">
-                <div className="form__section__header">
+                {/*<div className="form__section__header">
                   <div className="switch__row">
                     <Switch className="bulk-order-switch"
                       onChange={handleBulkSwitch} />
                     <h2>Bulk Order</h2>
                   </div>
-                </div>
+                </div>  */}
 
-
-                {showBulkUpload &&
-                  <div className="form__row">
-                    <div className="form__col">
-                      <Form.Item>
-                        <Upload {...imageUploadProps} onRemove={onRemoveImage}>
-                          <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                        </Upload>
-                      </Form.Item>
-                    </div>
-
-                    <div className="form__col">
-                      <Form.Item>
-                        <Button type="primary" icon={<DownloadOutlined />}
-                          style={{ width: "100%" }}
-                          id="download_csv"
-                          onClick={handleDownloadPoForm}>
-                          Download SKU CSV
-                    </Button>
-                      </Form.Item>
-                    </div>
-                  </div>}
-
-                {showBulkUpload &&
-                  <div className="form__row">
-                    <div className="form__col">
-                      <Form.Item>
-                        <Button type="default" onClick={handleUpload}
-                          style={{ width: "100%" }}>
-                          Done
-                    </Button>
-                      </Form.Item>
-                    </div>
-                  </div>}
 
               </div>
               {/* Form Section */}
@@ -583,7 +388,7 @@ const PurchaseOrder = () => {
                 </div>
               </div> */}
                 <h4 className="stock-receive-products-heading stock-receive-row-heading">
-                  Order products
+                  Products
                 <label className="label-stock-count">
                     {productsTotalQuantity}
                   </label>
@@ -633,7 +438,7 @@ const PurchaseOrder = () => {
                     tableData={productsTableData}
                     tableDataLoading={loading}
                     onChangeProductsData={handleChangeProductsData}
-                    tableType="order_stock" />
+                    tableType="order_transfer" />
                 </div>
                 {/* Table */}
                 <Divider />
@@ -641,15 +446,12 @@ const PurchaseOrder = () => {
 
                 <div className='form__row--footer'>
                   <Button type='secondary' onClick={handleCancel}>
-                    Cancel
-                    </Button>
+                    Cancel</Button>
                   <Button
                     type='primary'
                     className='custom-btn custom-btn--primary'
-                    htmlType="submit"
-                  >
-                    Save
-                </Button>
+                    htmlType="submit">
+                    Save</Button>
                 </div>
 
               </div>
@@ -663,4 +465,4 @@ const PurchaseOrder = () => {
   );
 };
 
-export default PurchaseOrder;
+export default TransferInventory;

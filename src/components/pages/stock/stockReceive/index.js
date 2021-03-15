@@ -8,7 +8,7 @@ import moment from 'moment';
 
 import {
     Form,
-    Input,
+    Spin,
     Button,
     Select,
     message,
@@ -56,7 +56,11 @@ const StockReceive = (props) => {
             console.log('res -> ', receivePurchaseOrdersResponse);
             message.success(receivePurchaseOrdersResponse.message, 3);
             setPoData(receivePurchaseOrdersResponse.purchase_order_info);
-            setProductsData(receivePurchaseOrdersResponse.products);
+            var receiveProducts = [...receivePurchaseOrdersResponse.products];
+            receiveProducts.forEach((item,) => {
+                item.qty = 0;
+            })
+            setProductsData(receiveProducts);
             setLoading(false);
         }
     }
@@ -70,9 +74,14 @@ const StockReceive = (props) => {
 
     const handleSaveChanges = async (e) => {
         var productsTotal = 0;
-        var newData = [...productsData];
-        newData.forEach(item => {
+        var completeCheck = true;
+        
+        productsData.forEach(item => {
             productsTotal = productsTotal + (parseFloat(item.qty || 0) * parseFloat(item.purchase_order_junction_price));
+            if(
+                item.qty < 
+                parseInt(item.purchase_order_junction_quantity)
+            ) { completeCheck = false; }
         });
 
         var receivePurchaseOrderPostData = {};
@@ -81,7 +90,7 @@ const StockReceive = (props) => {
             receivePurchaseOrderPostData.purchase_order_name + ' [Open]'
         receivePurchaseOrderPostData.products = productsData;
         receivePurchaseOrderPostData.total = (productsTotal).toFixed(2);
-        receivePurchaseOrderPostData.complete = true;
+        receivePurchaseOrderPostData.complete = completeCheck;
         receivePurchaseOrderPostData.date = moment(new Date()).format("MM/DD/yyyy HH:mm:ss");
         delete receivePurchaseOrderPostData['purchase_order_status'];
 
@@ -122,75 +131,76 @@ const StockReceive = (props) => {
 
     return (
         <div className="page stock-add">
+            <div style={{ textAlign: "center" }}>
+                {loading && <Spin size="large" tip="Loading..." />}
+            </div>
             <div className="page__header">
                 <h1>Receive  Purchase Order</h1>
             </div>
 
-            <div className="page__content">
-                <h4 className="stock-receive-details-heading">Details</h4>
+            {!loading &&
+                <div className="page__content">
+                    <h4 className="stock-receive-details-heading">Details</h4>
 
-                <Row gutter={16, 16} className="stock-receive-row-heading">
-                    <Col xs={24} sm={24} md={12} className="stock-item-content">
-                        <span> Name / reference: &nbsp; {poData.purchase_order_name} &nbsp; [Open] </span>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} className="stock-item-content">
-                        <span> Order No:  &nbsp;{poData.purchase_order_show_id} </span>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} className="stock-item-content">
-                        <span>  Ordered date: &nbsp;
+                    <Row gutter={16, 16} className="stock-receive-row-heading">
+                        <Col xs={24} sm={24} md={12} className="stock-item-content">
+                            <span> Name / reference: &nbsp; {poData.purchase_order_name} &nbsp; [Open] </span>
+                        </Col>
+                        <Col xs={24} sm={24} md={12} className="stock-item-content">
+                            <span> Order No:  &nbsp;{poData.purchase_order_show_id} </span>
+                        </Col>
+                        <Col xs={24} sm={24} md={12} className="stock-item-content">
+                            <span>  Ordered date: &nbsp;
                             {moment(poData.purchase_order_order_datetime).format("MM DD, yyyy")}
-                        </span>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} className="stock-item-content">
-                        <span> Due date:  &nbsp;
+                            </span>
+                        </Col>
+                        <Col xs={24} sm={24} md={12} className="stock-item-content">
+                            <span> Due date:  &nbsp;
                             {moment(poData.purchase_order_delivery_datetime).format("MM DD, yyyy")}
-                        </span>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} className="stock-item-content">
-                        <span> Supplier:  &nbsp; {poData.supplier_name} </span>
-                    </Col>
-                </Row>
+                            </span>
+                        </Col>
+                        <Col xs={24} sm={24} md={12} className="stock-item-content">
+                            <span> Supplier:  &nbsp; {poData.supplier_name} </span>
+                        </Col>
+                    </Row>
 
-                <h4 style={{ background: "#f3f3f3", padding: "10px", borderRadius: "4px" }}>
-                    Receive products
+                    <h4  className="stock-receive-products-heading">
+                        Receive products
                     <label className="label-stock-count">
-                        {productsTotalQuantity}</label>
-                </h4>
+                            {productsTotalQuantity}</label>
+                    </h4>
 
-                <Row gutter={16, 16}>
-                    <Col xs={24} sm={24} md={24} className="stock-item-content">
+                    <Row gutter={16, 16}>
+                        <Col xs={24} sm={24} md={24} className="stock-item-content">
+                            {/* Table */}
+                            <div className='table'>
+                                <StockReceiveProductsTable pageLimit={paginationLimit}
+                                    tableData={productsData}
+                                    tableDataLoading={loading}
+                                    onChangeProductsData={handleChangeProductsData}
+                                    tableType="receive_purchase_orders" />
+                            </div>
+                            {/* Table */}
+                        </Col>
+                    </Row>
+                    <Divider />
 
-                        {/* Table */}
-                        <div className='table'>
-                            <StockReceiveProductsTable pageLimit={paginationLimit}
-                                tableData={productsData}
-                                tableDataLoading={loading}
-                                onChangeProductsData={handleChangeProductsData}
-                                tableType="receive_purchase_orders" />
-                        </div>
-                        {/* Table */}
-
-
-                    </Col>
-                </Row>
-
-                <Divider />
-
-                <div className='form__row--footer'>
-                    <Button type='secondary' onClick={handleCancel}>
-                        Cancel
+                    <div className='form__row--footer'>
+                        <Button type='secondary' onClick={handleCancel}>
+                            Cancel
                     </Button>
 
-                    <Button
-                        type='primary'
-                        onClick={handleSaveChanges}
-                        className='custom-btn custom-btn--primary'
-                    >
-                        Confirm
+                        <Button
+                            type='primary'
+                            onClick={handleSaveChanges}
+                            className='custom-btn custom-btn--primary'
+                        >
+                            Confirm
                     </Button>
+                    </div>
+
                 </div>
-
-            </div>
+            }
         </div>
     );
 };

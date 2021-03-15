@@ -23,10 +23,9 @@ export const viewPurchaseOrders = async (limit, pageNumber) => {
 };
 
 
+export const addReceivePurchaseOrder = async (receivePoData) => {
 
-export const addReceivePurchaseOrder = async (poData) => {
-
-    const addReceivedPoFormDataBody =  $.param({grn: poData});
+    const addReceivedPoFormDataBody =  $.param({grn: receivePoData});
     const url = UrlConstants.STOCK.ADD_RECEIVE_PO;
     const callType = GenericConstants.API_CALL_TYPE.POST;
 
@@ -36,6 +35,50 @@ export const addReceivePurchaseOrder = async (poData) => {
         addReceivedPoFormDataBody,  //body
     );
 };
+
+
+export const addPurchaseOrder = async (addPurchaseOrderData) => {
+
+    const addPurchaseOrderFormDataBody =  $.param({purchase: addPurchaseOrderData});
+    const url = UrlConstants.STOCK.ADD_PURCHASE_ORDER;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        addPurchaseOrderFormDataBody,  //body
+    );
+};
+
+
+export const closePurchaseOrder = async (closePurchaseOrderId) => {
+    const formDataPair = {
+        purchase_order_id: closePurchaseOrderId,
+    };
+
+    const closePurchaseOrderFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+    const url = UrlConstants.STOCK.CLOSE_PURCHASE_ORDER;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        closePurchaseOrderFormDataBody,  //body
+    );
+};
+
+
+export const downloadPoForm = async () => {
+
+    const url = UrlConstants.STOCK.DOWNLOAD_PO_FORM;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+    );
+};
+
 
 
 export const receivePurchaseOrder = async (purchaseOrderId) => {
@@ -51,6 +94,68 @@ export const receivePurchaseOrder = async (purchaseOrderId) => {
         url, //api url
         callType, //calltype
         getPurchaseOrderFormDataBody,  //body
+    );
+};
+
+
+export const receiveTransfer = async (receiveTransferId) => {
+    const formDataPair = {
+        transfer_id: receiveTransferId,
+    };
+
+    const receiveTransferFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+    const url = UrlConstants.STOCK.RECEIVE_TRANSFER_IN;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        receiveTransferFormDataBody,  //body
+    );
+};
+
+
+export const addReceiveTransfersStatus = async (addReceiveTransferStatusData) => {
+
+    const addReceiveTransferStatusFormDataBody = ApiCallUtil.constructFormData(
+        addReceiveTransferStatusData
+    );
+    const url = UrlConstants.STOCK.RECEIVE_TRANSFER_STATUS;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        addReceiveTransferStatusFormDataBody,  //body
+    );
+};
+
+export const closeTransferInventoryOrder = async (closeTransferInventoryId) => {
+    const formDataPair = {
+        transfer_id: closeTransferInventoryId,
+    };
+
+    const closeTransferInventoryFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+    const url = UrlConstants.STOCK.CLOSE_TRANSFER_INVENTORY;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        closeTransferInventoryFormDataBody,  //body
+    );
+};
+
+export const returnStock = async (returnStockData) => {
+
+    const returnStockFormDataBody =  $.param({return: returnStockData});
+    const url = UrlConstants.STOCK.RETURN_STOCK;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        returnStockFormDataBody,  //body
     );
 };
 
@@ -73,6 +178,20 @@ export const viewStockAdjustments = async (limit, pageNumber) => {
 };
 
 
+export const addStockAdjustment = async (addStockAdjustmentData) => {
+
+    const addStockAdjustmentFormDataBody =  $.param(addStockAdjustmentData);
+    const url = UrlConstants.STOCK.ADD_ADJUSTMENT;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        addStockAdjustmentFormDataBody,  //body
+    );
+};
+
+
 export const viewInventoryTransfers = async (limit, pageNumber) => {
     const formDataPair = {
         limit: limit,
@@ -90,5 +209,35 @@ export const viewInventoryTransfers = async (limit, pageNumber) => {
     );
 
 };
+
+
+export const transferInventory = async (transferInventoryData) => {
+
+    const transferInventoryFormDataBody =  $.param({transfer: transferInventoryData});
+    const url = UrlConstants.STOCK.TRANSFER_OUT;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        transferInventoryFormDataBody, //body
+    );
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

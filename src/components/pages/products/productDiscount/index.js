@@ -3,7 +3,6 @@ import { Form, Input, Button, message, Select } from "antd";
 import { PlusCircleOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import ProductsDiscountsTable from "../../../organism/table/productsNestedTable/productsDiscounts";
 import * as ProductsApiUtil from '../../../../utils/api/products-api-utils';
-//import { values } from "lodash";
 
 
 const ProductDiscount = () => {
