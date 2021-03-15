@@ -12,6 +12,18 @@
   .ant-menu-item-selected {
     background-color: $color-primary !important;
   }
+
+  .ant-menu-submenu-title {
+    color: $color-black !important;
+  }
+
+  .ant-menu-sub {
+    background-color: $color-primary-light !important;
+
+    .ant-menu-item {
+      color: $color-white !important;
+    }
+  }
 }
 
 .side-menu {
