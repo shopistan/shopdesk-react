@@ -4,6 +4,16 @@
   border-radius: 1rem;
   margin: 2.4rem 1.6rem;
   padding: 2.4rem;
+  overflow: auto !important;
+  height: calc(100vh - 6.4rem);
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   &__header {
     padding: 0 0 3rem 0;
