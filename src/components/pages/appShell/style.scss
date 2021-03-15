@@ -23,8 +23,6 @@
 
 // Sider
 .sider {
-  background-color: $color-asphalt !important;
-
   @include respond(mobile) {
     display: none;
   }
