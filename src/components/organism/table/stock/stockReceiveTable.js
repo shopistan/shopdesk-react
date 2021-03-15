@@ -96,7 +96,7 @@ const StockReceiveTable = (props) => {
     const [form] = Form.useForm();
     const [data, setData] = useState([]);
     const [productsTotalAmount, setProductsTotalAmount] = useState(0);
-    
+
 
 
     const handleSave = (row) => {
@@ -134,58 +134,84 @@ const StockReceiveTable = (props) => {
     var columns = null;
 
 
-    columns = [
-        {
-            title: "Product Name",
-            //width: "20%",
-            dataIndex: "product_name",
-            render: (_, record) => {
-                return (
-                    <div>
-                        {record.product_name &&
-                            <small>{record.product_name + '/' + record.product_variant1_value + '/ ' + record.product_variant2_value}</small>
-                        }
-                    </div>
-                );
-            }
-        },
-        {
-            title: "SKU",
-            dataIndex: "product_sku",
-        },
-        {
-            title: "Quantity ordered",
-            dataIndex: "purchase_order_junction_quantity",
-        },
-        {
-            title: "Ordered received",
-            dataIndex: "qty",
-            editable: true,
-            render: (_, record) => {
-                return (
-                    <div>
-                        <InputNumber value={record.qty || 0} />
-                    </div>
-                );
-            }
-        },
-        {
-            title: "Price",
-            dataIndex: "purchase_order_junction_price",
-        },
-        {
-            title: "Total",
-            render: (_, record) => {
-                return (
-                    <span>
-                        {record.qty ? (parseFloat(record.qty) * parseFloat(record.purchase_order_junction_price)).toFixed(2)
-                            : parseFloat(0)
-                        }
-                    </span>
-                );
-            }
-        },
-    ];
+    if (props.tableType === "receive_transfers") {
+
+        columns = [
+            {
+                title: "Product Name",
+                dataIndex: "product_name",
+            },
+            {
+                title: "SKU",
+                dataIndex: "product_sku",
+            },
+            {
+                title: "Quantity",
+                dataIndex: "transfer_junction_quantity",
+            },
+
+
+        ];
+
+    }
+
+    if (props.tableType === "receive_purchase_orders") {
+
+        columns = [
+            {
+                title: "Product Name",
+                //width: "20%",
+                dataIndex: "product_name",
+                render: (_, record) => {
+                    return (
+                        <div>
+                            {record.product_name &&
+                                <small>{record.product_name + '/' + record.product_variant1_value + '/ ' + record.product_variant2_value}</small>
+                            }
+                        </div>
+                    );
+                }
+            },
+            {
+                title: "SKU",
+                dataIndex: "product_sku",
+            },
+            {
+                title: "Quantity ordered",
+                dataIndex: "purchase_order_junction_quantity",
+            },
+            {
+                title: "Ordered received",
+                dataIndex: "qty",
+                editable: true,
+                render: (_, record) => {
+                    return (
+                        <div>
+                            <InputNumber value={record.qty || 0} />
+                        </div>
+                    );
+                }
+            },
+            {
+                title: "Price",
+                dataIndex: "purchase_order_junction_price",
+            },
+            {
+                title: "Total",
+                render: (_, record) => {
+                    return (
+                        <span>
+                            {record.qty ? (parseFloat(record.qty) * parseFloat(record.purchase_order_junction_price)).toFixed(2)
+                                : parseFloat(0)
+                            }
+                        </span>
+                    );
+                }
+            },
+        ];
+
+    }
+
 
 
 
@@ -196,7 +222,7 @@ const StockReceiveTable = (props) => {
         const newData = [...data];
         newData.forEach(item => {
             item.qty = item.purchase_order_junction_quantity;
-            productsTotalQuantity = productsTotalQuantity + 
+            productsTotalQuantity = productsTotalQuantity +
                 parseFloat(item.purchase_order_junction_quantity);
             productsTotal = productsTotal
                 + (parseFloat(item.purchase_order_junction_quantity)
@@ -213,8 +239,9 @@ const StockReceiveTable = (props) => {
 
     const tableFooter = () => {
         return (
-            <Row>
-                <Col xs={24} sm={24} md={6} offset={6}>
+            <Row style={{ textAlign: "center" }}>
+                <Col xs={24} sm={24} md={6} //offset={6}
+                >
                     <span>
                         <button className="btn-mark-all-products"
                             onClick={markAllProducts}
@@ -264,6 +291,8 @@ const StockReceiveTable = (props) => {
 
     return (
         <Form form={form} component={false}>
+
+            {props.tableType === "receive_purchase_orders" &&
             <Table
 
                 bordered={true}
@@ -274,7 +303,19 @@ const StockReceiveTable = (props) => {
                 loading={props.tableDataLoading}
                 rowKey="product_id"
                 footer={tableFooter}
-            />
+            />}
+
+            {props.tableType === "receive_transfers" &&
+            <Table
+
+                bordered={true}
+                columns={mergedColumns}
+                dataSource={data}
+                rowClassName='editable-row'
+                loading={props.tableDataLoading}
+                rowKey="product_id"
+            />}
+
         </Form>
 
     );

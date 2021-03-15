@@ -2,11 +2,9 @@ import React, { useState, useEffect } from "react";
 import "../style.scss";
 import { useHistory } from "react-router-dom";
 import * as ProductsApiUtil from '../../../../utils/api/products-api-utils';
-import * as SuppliersApiUtil from "../../../../utils/api/suppliers-api-utils";
 import * as StockApiUtil from '../../../../utils/api/stock-api-utils';
 import * as Helpers from "../../../../utils/helpers/scripts";
 import StockNestedProductsTable from "../../../organism/table/stock/stockNestedProductsTable";
-import moment from 'moment';
 
 
 import {
@@ -14,15 +12,12 @@ import {
   Input,
   Button,
   Select,
-  DatePicker,
-  InputNumber,
   Spin,
   AutoComplete,
   Upload,
   message,
   Row,
   Col,
-  Space,
   Switch,
   Divider,
 } from "antd";
@@ -38,8 +33,7 @@ const { Option } = Select;
 
 
 
-
-const PurchaseOrder = () => {
+const AdjustmentStock = () => {
   const [form] = Form.useForm();
   const history = useHistory();
   const [loading, setLoading] = useState(true);
@@ -48,11 +42,9 @@ const PurchaseOrder = () => {
   const [productsSearchResult, setProductsSearchResult] = useState([]);
   const [productsTableData, setProductsTableData] = useState([]);
   const [registereProductsData, setRegistereProductsData] = useState([]);
-  const [suppliers, setSuppliersData] = useState([]);
   const [selectedSearchValue, setSelectedSearchValue] = useState("");
   const [selectedProductId, setSelectedProductId] = useState("");
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
-  const [orderDueDate, setOrderDueDate] = useState("");
 
   var registeredProductsLimit = Helpers.registeredProductsPageLimit;
 
@@ -60,13 +52,6 @@ const PurchaseOrder = () => {
 
   useEffect(() => {
     fetchRegisteredProductsData();
-    fetchSuppliersData();
-    /*-----setting template data to fields value------*/
-    form.setFieldsValue({
-      order_reference_name: `Order - ${moment(new Date()).format("MM/DD/yyyy HH:mm:ss")}`,
-    });
-    /*-----setting template data to fields value------*/
-
   }, []);
 
 
@@ -139,27 +124,6 @@ const PurchaseOrder = () => {
   }
 
 
-
-  const fetchSuppliersData = async (pageLimit = 10, pageNumber = 1) => {
-
-    const SuppliersViewResponse = await SuppliersApiUtil.viewSuppliers(
-      pageLimit,
-      pageNumber
-    );
-    console.log("SuppliersViewResponse:", SuppliersViewResponse);
-
-    if (SuppliersViewResponse.hasError) {
-      console.log(
-        "Cant fetch suppliers -> ",
-        SuppliersViewResponse.errorMessage
-      );
-    } else {
-      console.log("res -> ", SuppliersViewResponse);
-      setSuppliersData(SuppliersViewResponse.suppliers.data || SuppliersViewResponse.suppliers);
-    }
-  };
-
-
   const handleUpload = () => {
     console.log(fileList[0]);   //imp
     var file = fileList[0];
@@ -188,8 +152,7 @@ const PurchaseOrder = () => {
         });  // end of for loop
 
         //setProductsTableData(bulkProducts);   //imp 
-        handleCombineProductsTableData(bulkProducts, [...productsTableData]);
-        //setTimeout(hide, 1500);
+        handleCombineProductsTableData(bulkProducts, productsTableData);
         message.success("Products Imported", 3);
         /*-------------------------------*/
 
@@ -223,7 +186,6 @@ const PurchaseOrder = () => {
     var parts = filename.split('.');
     return parts[parts.length - 1];
   }
-
 
   const onRemoveImage = (file) => {
     setFileList([]);
@@ -318,7 +280,7 @@ const PurchaseOrder = () => {
   };
 
 
-  const handleSaveChanges = async (e) => {
+  const handleSaveChanges = async () => {
     var formValues = form.getFieldsValue();
     console.log("changed", formValues);
 
@@ -327,32 +289,30 @@ const PurchaseOrder = () => {
       return;
     }
 
-    var addPurchaseOrderPostData = {};
-    //var clonedProducts = JSON.parse(JSON.stringify(productsTableData));
-    var clonedProductsPostData = [];
-    console.log("vvimp", productsTableData);
-    productsTableData.forEach((item, index) => {
-      clonedProductsPostData.push({ qty: item.qty, selected: item });
-    });
-    clonedProductsPostData.forEach((item, index) => {
-      delete item.selected['qty'];
+    let adjustmentProducts = [];
+    productsTableData.forEach(item => {
+        adjustmentProducts.push({
+            quantity: item.qty,
+            SKU: item.product_sku
+        });
     });
 
+    var addStockAdjustmentPostData = {
+        call_source: "shopdesk-admin",
+        reason: {
+            message: formValues.adjustment_message,
+        },
+        products: adjustmentProducts,
+    };
 
-    addPurchaseOrderPostData.products = clonedProductsPostData;
-    addPurchaseOrderPostData.date_due = orderDueDate;
-    addPurchaseOrderPostData.po_name = formValues.order_reference_name;
-    addPurchaseOrderPostData.ordered_date = moment(new Date()).format("MM/DD/yyyy HH:mm:ss");
-    addPurchaseOrderPostData.supplier_id = formValues.supplier;
-
-    console.log("vvimp-final", clonedProductsPostData);
+    console.log("vvimp-final", addStockAdjustmentPostData);
 
     const hide = message.loading('Saving Changes in progress..', 0);
-    const res = await StockApiUtil.addPurchaseOrder(addPurchaseOrderPostData);
-    console.log('AddPoResponse:', res);
+    const res = await StockApiUtil.addStockAdjustment(addStockAdjustmentPostData);
+    console.log('AddAdjustmentResponse:', res);
 
     if (res.hasError) {
-      console.log('Cant Add Purchase Order -> ', res.errorMessage);
+      console.log('Cant Add Stock Adjustment -> ', res.errorMessage);
       message.error(res.errorMessage, 3);
       setTimeout(hide, 1500);
     }
@@ -362,8 +322,8 @@ const PurchaseOrder = () => {
       setTimeout(hide, 1000);
       setTimeout(() => {
         history.push({
-          pathname: '/stock-control/purchase-orders',
-          activeKey: 'purchase-orders'
+          pathname: '/stock-control/stock-adjustments',
+          activeKey: 'stock-adjustments'
         });
       }, 2000);
     }
@@ -405,13 +365,8 @@ const PurchaseOrder = () => {
       setTimeout(hide, 1500);
     }
 
-
   };
 
-
-  function onDatePickerChange(date, dateString) {
-    setOrderDueDate(dateString);
-  }
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -423,8 +378,8 @@ const PurchaseOrder = () => {
 
   const handleCancel = () => {
     history.push({
-      pathname: '/stock-control/purchase-orders',
-      activeKey: 'purchase-orders'
+      pathname: '/stock-control/stock-adjustments',
+      activeKey: 'stock-adjustments'
     });
   };
 
@@ -433,7 +388,7 @@ const PurchaseOrder = () => {
   return (
     <div className="page stock-add">
       <div className="page__header">
-        <h1>New Purchase Order</h1>
+        <h1>New Stock Adjustment</h1>
       </div>
       <div style={{ textAlign: "center" }}>
         {loading && <Spin size="large" tip="Loading..." />}
@@ -464,66 +419,21 @@ const PurchaseOrder = () => {
                 <div className="form__row">
                   <div className="form__col">
                     <Form.Item
-                      label="Name / reference"
-                      name="order_reference_name"
+                      label="Message "
+                      name="adjustment_message"
                       rules={[
                         {
                           required: true,
-                          message: "Please input Name / reference",
+                          message: "Please input adjustment message ",
                         },
                       ]}
                     >
-                      <Input />
-                    </Form.Item>
-                  </div>
-
-                  <div className="form__col">
-                    <Form.Item
-                      label="Supplier"
-                      name="supplier"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please select supplier",
-                        },
-                      ]}
-                    >
-                      <Select>
-                        {
-                          suppliers.map((obj, index) => {
-                            return (
-                              <option key={obj.supplier_id} value={obj.supplier_id}>
-                                {obj.supplier_name}
-                              </option>
-                            )
-                          })
-                        }
-                      </Select>
+                      <Input placeholder="reason for adjustment" />
                     </Form.Item>
                   </div>
                 </div>
                 {/* Row */}
 
-                {/* Row */}
-                <div className="form__row">
-                  <div className="form__col">
-                    <Form.Item
-                      label="Delivery due"
-                      name="delivery_due_date"
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please select Due date",
-                        },
-                      ]}
-                    >
-                      <DatePicker onChange={onDatePickerChange} />
-                    </Form.Item>
-                  </div>
-
-                  <div className="form__col"></div>
-                </div>
-                {/* Row */}
               </div>
               {/* Form Section */}
 
@@ -583,7 +493,7 @@ const PurchaseOrder = () => {
                 </div>
               </div> */}
                 <h4 className="stock-receive-products-heading stock-receive-row-heading">
-                  Order products
+                  Products
                 <label className="label-stock-count">
                     {productsTotalQuantity}
                   </label>
@@ -633,7 +543,7 @@ const PurchaseOrder = () => {
                     tableData={productsTableData}
                     tableDataLoading={loading}
                     onChangeProductsData={handleChangeProductsData}
-                    tableType="order_stock" />
+                    tableType="order_adjustment" />
                 </div>
                 {/* Table */}
                 <Divider />
@@ -663,4 +573,4 @@ const PurchaseOrder = () => {
   );
 };
 
-export default PurchaseOrder;
+export default AdjustmentStock;
