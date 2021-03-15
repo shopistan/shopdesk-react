@@ -1,4 +1,4 @@
-const BASE_URL = 'https://shopdesk-develop-iiqzqqotsq-uc.a.run.app';
+const BASE_URL = 'https://cloud.shopdesk.co';
 const IMAGE_UPLOADS_URL = 'https://storage.googleapis.com/shopdesk-artifacts';
 
 const urls = {
@@ -58,16 +58,48 @@ const urls = {
     SAVE_DISCOUNTED: BASE_URL + '/api/promotions/setSpecial',
     BULK_UPLOAD: BASE_URL + '/api/integrations/add_products'
   },
-  REPORTS:{
+  REPORTS: {
     SALES_SUMMARY: BASE_URL + '/api/reports/saleSummary',
     CATEGORY_SALES_SUMMARY: BASE_URL + '/api/reports/categoryWiseReport',
     INVENTORY_DUMP: BASE_URL + '/api/reports/inventoryReport',
 
   },
-  OUTLETS:{
+  SETUP: {
     VIEW: BASE_URL + '/api/stores/view',
     VIEW_USERS: BASE_URL + '/api/users/viewUsers',
-    VIEW_TEMPLATES: BASE_URL + '/api/templates/view', 
+    VIEW_TEMPLATES: BASE_URL + '/api/templates/view',
+    ADD_OUTLET: BASE_URL + '/api/stores/add',
+    GET_OUTLET: BASE_URL + '/api/stores/get',
+    EDIT_OUTLET: BASE_URL + '/api/stores/edit',
+    ADD_USER: BASE_URL + '/api/users/addUser',
+    GET_USER: BASE_URL + '/api/users/getUser',
+    GET_USERNAME: BASE_URL + '/api/users/getUsername',
+    EDIT_USER: BASE_URL + '/api/users/editUser',
+    ADD_TEMPLATE: BASE_URL + '/api/templates/add',
+    GET_TEMPLATE: BASE_URL + '/api/templates/get',
+    EDIT_TEMPLATE: BASE_URL + '/api/templates/edit',
+    DELETE_TEMPLATE: BASE_URL + '/api/templates/delete',
+    WEB_HOOKS: {
+      ADD: BASE_URL + '/api/stores/addWebHook',
+      GET: BASE_URL + '/api/stores/getWebHooks',
+      DELETE: BASE_URL + '/api/stores/deleteWebHook',
+    }
+  },
+  STOCK: {
+    VIEW_PO: BASE_URL + '/api/stock_control/viewPo',
+    VIEW_TRANSFER: BASE_URL + '/api/transfers/viewTransfer',
+    VIEW_ADJUSTMENTS: BASE_URL + '/api/stock_control/viewAdjustment',
+    RECEIVE_PO: BASE_URL + '/api/stock_control/receivePo',
+    ADD_RECEIVE_PO: BASE_URL + '/api/stock_control/insertGrn',
+    ADD_PURCHASE_ORDER: BASE_URL + '/api/stock_control/addPo',
+    DOWNLOAD_PO_FORM: BASE_URL + '/api/omni_engine/productsku',
+    ADD_ADJUSTMENT: BASE_URL + '/api/integrations/stock_adjustment',
+    RETURN_STOCK: BASE_URL + '/api/stock_control/addReturn',
+    TRANSFER_OUT: BASE_URL + '/api/transfers/add',
+    CLOSE_PURCHASE_ORDER:  BASE_URL + '/api/stock_control/closePo',
+    CLOSE_TRANSFER_INVENTORY: BASE_URL + '/api/transfers/status',
+    RECEIVE_TRANSFER_IN:  BASE_URL + '/api/transfers/getTransfer',
+    RECEIVE_TRANSFER_STATUS: BASE_URL + '/api/transfers/status',
 
   }
 

@@ -184,7 +184,7 @@ const ProductsVariantsTable = (props) => {
     columns = [
         {
             title: "Varaint Name",
-            width: "20%",
+            //width: "20%",
             render: (_, record) => {
                 return (
                     <div>
@@ -204,7 +204,7 @@ const ProductsVariantsTable = (props) => {
         {
             title: "SKU",
             //dataIndex: "sku",
-            width: "30%",
+            //width: "30%",
             editable: true,
             render: (_, record) => {
                 return (
@@ -224,13 +224,13 @@ const ProductsVariantsTable = (props) => {
         {
             title: "Purchase Price",
             dataIndex: "purchase",
-            width: "20%",
+            //width: "20%",
             editable: true,
         },
         {
             title: "Sale Price",
             dataIndex: "sale",
-            width: "20%",
+            //width: "20%",
             editable: true,
         },
 

@@ -3,7 +3,6 @@ import { Form, Input, Button, message, Select } from "antd";
 import { PlusCircleOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import ProductsDiscountsTable from "../../../organism/table/productsNestedTable/productsDiscounts";
 import * as ProductsApiUtil from '../../../../utils/api/products-api-utils';
-//import { values } from "lodash";
 
 
 const ProductDiscount = () => {
@@ -60,8 +59,8 @@ const ProductDiscount = () => {
     else {
       console.log('res -> ', productsDiscountsViewResponse);
       message.success(productsDiscountsViewResponse.message, 3);
-      setData(productsDiscountsViewResponse.products.data);
-      setPaginationData(productsDiscountsViewResponse.products.page);
+      setData(productsDiscountsViewResponse.products.data || productsDiscountsViewResponse.products );
+      setPaginationData(productsDiscountsViewResponse.products.page || {});
       setLoading(false);
     }
   }

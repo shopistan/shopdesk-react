@@ -62,8 +62,8 @@ const Suppliers = () => {
       setLoading(false);
     } else {
       console.log("res -> ", SuppliersViewResponse);
-      setData(SuppliersViewResponse.suppliers.data);
-      setPaginationData(SuppliersViewResponse.suppliers.page);
+      setData(SuppliersViewResponse.suppliers.data || SuppliersViewResponse.suppliers);
+      setPaginationData(SuppliersViewResponse.suppliers.page || {});
       setLoading(false);
     }
   };

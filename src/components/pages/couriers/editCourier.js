@@ -9,6 +9,12 @@ const EditCourier = () => {
 
     useEffect(async () => {
         //console.log(history.location.data); working
+        if (history.location.data === undefined) {
+            history.push({
+                pathname: '/couriers',
+            });
+        }
+
     }, []);
 
 
@@ -48,8 +54,8 @@ const EditCourier = () => {
                         name='basic'
                         layout='vertical'
                         initialValues={{
-                            courier_name: history.location.data.courier_name,
-                            courier_code: history.location.data.courier_code,
+                            courier_name: history.location.data && history.location.data.courier_name,
+                            courier_code: history.location.data && history.location.data.courier_code,
                         }}
                         onFinish={onFinish}
                         onFinishFailed={onFinishFailed}

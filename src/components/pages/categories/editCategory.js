@@ -9,6 +9,12 @@ const EditCategory = () => {
 
     useEffect(async () => {
         //console.log(history.location.data); working
+        if (history.location.data === undefined) {
+            history.push({
+                pathname: '/categories',
+            });
+        }
+
     }, []);
 
     const onFinish = async (values) => {
@@ -45,7 +51,7 @@ const EditCategory = () => {
                         name='basic'
                         layout='vertical'
                         initialValues={{
-                            categoryName: history.location.data.category_name,
+                            categoryName: history.location.data && history.location.data.category_name,
                         }}
                         onFinish={onFinish}
                         onFinishFailed={onFinishFailed}

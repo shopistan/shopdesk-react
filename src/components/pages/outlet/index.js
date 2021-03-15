@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { message, Spin } from 'antd';
 import "./style.scss";
-import { saveDataIntoLocalStorage, getDataFromLocalStorage, clearDataFromLocalStorage, checkUserAuthFromLocalStorage } from "../../../utils/local-storage/local-store-utils";
+import { 
+  saveDataIntoLocalStorage,
+  getDataFromLocalStorage,
+  clearDataFromLocalStorage,
+  checkUserAuthFromLocalStorage, 
+} from "../../../utils/local-storage/local-store-utils";
 import { useHistory } from 'react-router-dom';
 import * as OutletsApiUtil from '../../../utils/api/oulets-api-utils';
 import Constants from '../../../utils/constants/constants';
@@ -10,6 +15,7 @@ import Constants from '../../../utils/constants/constants';
 const Outlet = () => {
   const history = useHistory();
   const [storeInfo, setStoreInfo] = useState([]);
+  const [loginCacheData, setLoginCacheData] = useState({});
   const [activeOutlet, setActiveOutlet] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -18,6 +24,7 @@ const Outlet = () => {
     var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
     readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
     if (readFromLocalStorage) {
+      setLoginCacheData(readFromLocalStorage);
       if (checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication) {
         setStoreInfo(readFromLocalStorage.auth.storeInfo);
         setActiveOutlet(readFromLocalStorage.auth.current_store);
@@ -48,6 +55,7 @@ const Outlet = () => {
       }
       else {
         console.log('res -> ', userSelectOutletResponse);
+        userSelectOutletResponse.refresh_token = loginCacheData.refresh_token; 
         clearDataFromLocalStorage();
         saveDataIntoLocalStorage("user", userSelectOutletResponse);
         setLoading(false);
@@ -74,8 +82,8 @@ const Outlet = () => {
         <h1>Select an Outlet</h1>
       </div>
 
-      <div className='page__content'>
-        <ul className='outlet__select'>
+      <div className='page__content' >
+        <ul className='outlet__select outlets-list-container'>
           {
             storeInfo.map(item => {
               return (

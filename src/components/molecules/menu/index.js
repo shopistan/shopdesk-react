@@ -105,7 +105,26 @@ const SideMenu = () => {
           if (e.key === "receipts") {
             history.push({
               pathname: '/setup/receipts-templates',
-              activeKey: 'receipts'
+              activeKey: 'receipts-templates'
+            })
+          }
+        } else if (e.key === "purchaseOrders" || e.key === "inventoryTransfers" || e.key === "stockAdjustments") {
+          if (e.key === "purchaseOrders") {
+            history.push({
+              pathname: '/stock-control/purchase-orders',
+              activeKey: 'purchase-orders'
+            })
+          }
+          if (e.key === "inventoryTransfers") {
+            history.push({
+              pathname: '/stock-control/inventory-transfers',
+              activeKey: 'inventory-transfers'
+            })
+          }
+          if (e.key === "stockAdjustments") {
+            history.push({
+              pathname: '/stock-control/stock-adjustments',
+              activeKey: 'stock-adjustments'
             })
           }
         }
@@ -144,9 +163,9 @@ const SideMenu = () => {
             <Menu.Item key="salesHistory">Sales History</Menu.Item>
           </SubMenu>
           <SubMenu key="sub2" icon={<StockOutlined />} title="Stock Control">
-            <Menu.Item key="10">Purchase Orders</Menu.Item>
-            <Menu.Item key="11">Inventory Transfers</Menu.Item>
-            <Menu.Item key="12">Stock Adjustment</Menu.Item>
+            <Menu.Item key="purchaseOrders">Purchase Orders</Menu.Item>
+            <Menu.Item key="inventoryTransfers">Inventory Transfers</Menu.Item>
+            <Menu.Item key="stockAdjustments">Stock Adjustment</Menu.Item>
           </SubMenu>
           <SubMenu key="sub3" icon={<ApartmentOutlined />} title="Ecommerce">
             <Menu.Item key="13">Orders</Menu.Item>

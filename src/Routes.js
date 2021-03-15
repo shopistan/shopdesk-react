@@ -1,5 +1,7 @@
 import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
+import { message } from "antd";
+import moment from 'moment';
 
 // Components
 import AppShell from "./components/pages/appShell";
@@ -38,6 +40,7 @@ import DeleteCategory from "./components/pages/categories/deleteCategory";
 import {
   getDataFromLocalStorage,
   checkUserAuthFromLocalStorage,
+  checkAuthTokenExpiration,
 } from "./utils/local-storage/local-store-utils";
 import Constants from "./utils/constants/constants";
 import CategoryWise from "./components/pages/reports/categoryWise";
@@ -46,13 +49,24 @@ import OmniSalesSummary from "./components/pages/reports/omniSalesSummary";
 import ProductHistory from "./components/pages/reports/productHistory";
 import SalesSummary from "./components/pages/reports/salesSummary";
 import Setup from "./components/pages/setup";
+import OutletEdit from "./components/pages/setup/outlets/outletEdit";
 import OutletAdd from "./components/pages/setup/outlets/outletAdd";
 import UserAdd from "./components/pages/setup/users/userAdd";
+import UserEdit from "./components/pages/setup/users/editUser";
 import ReceiptAdd from "./components/pages/setup/receipt/receiptAdd";
+import ReceiptEdit from "./components/pages/setup/receipt/receiptEdit";
+import ReceiptDelete from "./components/pages/setup/receipt/receiptDelete";
 import SalesHistory from "./components/pages/register/salesHistory";
 import Sell from "./components/pages/register/sell";
 import Stock from "./components/pages/stock";
 import PurchaseOrder from "./components/pages/stock/order";
+import ReceiveStock from "./components/pages/stock/stockReceive";
+import ReceiveStockTransfer from "./components/pages/stock/stockReceive/transfer";
+import StockAdjustment from "./components/pages/stock/order/adjustmentStock";
+import ReturnStock from "./components/pages/stock/order/returnStock";
+import TransferOut from "./components/pages/stock/order/transferInventory";
+
+
 
 const Routes = () => {
   const renderWithLayout = (Component, props, attrs = {}) => {
@@ -66,6 +80,47 @@ const Routes = () => {
       </AppShell>
     );
   };
+
+
+  const RenderWithLayoutOutlet = (Component, props) => {
+    var readFromLocalStorage = getDataFromLocalStorage("user");
+    var authExpirationTokenDate;
+
+    readFromLocalStorage = readFromLocalStorage.data
+      ? readFromLocalStorage.data
+      : null;
+    var authenticateDashboard = false;
+    if (readFromLocalStorage) {
+      if (
+        checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
+      ) {
+        authenticateDashboard = true;
+        authExpirationTokenDate = readFromLocalStorage.auth.expire_at;
+      } else {
+        authenticateDashboard = false;
+        authExpirationTokenDate = readFromLocalStorage.expire_at;
+      }
+    }
+
+    if(checkAuthTokenExpiration(authExpirationTokenDate)){
+      message.info("Logging Out Redirecting....", 5);
+      return <Redirect to='/signin' />
+    }
+
+
+    return (
+      <AppShell {...props}>
+        {readFromLocalStorage == null ? (
+          <Redirect to='/signin' />
+        ) : authenticateDashboard ? (
+          <Component />
+        ) : (
+          <Component />
+        )}
+      </AppShell>
+    );
+  };
+
 
   const authRenderWithLayout = (Component, props) => {
     var readFromLocalStorage = getDataFromLocalStorage("user");
@@ -88,9 +143,9 @@ const Routes = () => {
         {readFromLocalStorage == null ? (
           <Component />
         ) : authenticateDashboard ? (
-          <Redirect to="/dashboard" />
+          <Redirect to='/dashboard' />
         ) : (
-          <Redirect to="/outlets" />
+          <Redirect to='/outlets' />
         )}
       </AppShell>
     );
@@ -98,6 +153,8 @@ const Routes = () => {
 
   const PrivateRoute = ({ component: Component, ...rest }) => {
     var readFromLocalStorage = getDataFromLocalStorage("user");
+    var authExpirationTokenDate;
+
     readFromLocalStorage = readFromLocalStorage.data
       ? readFromLocalStorage.data
       : null;
@@ -107,10 +164,19 @@ const Routes = () => {
         checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
       ) {
         authenticateDashboard = true;
+        authExpirationTokenDate = readFromLocalStorage.auth.expire_at;
       } else {
         authenticateDashboard = false;
+        authExpirationTokenDate = readFromLocalStorage.expire_at;
       }
     }
+
+
+    if(checkAuthTokenExpiration(authExpirationTokenDate)){
+      message.info("Logging Out Redirecting....", 5);
+      return <Redirect to='/signin' />
+    }
+
 
     return (
       <Route
@@ -120,14 +186,10 @@ const Routes = () => {
             authenticateDashboard ? (
               renderWithLayout(Component, { ...props })
             ) : (
-              renderWithLayout(
-                Component,
-                { ...props },
-                { isOutletLayout: true }
+               <Redirect to='/outlets' />
               )
-            )
           ) : (
-            <Redirect to="/signin" />
+            <Redirect to='/signin' />
           )
         }
       />
@@ -137,57 +199,57 @@ const Routes = () => {
   return (
     <div>
       <Switch>
-        <PrivateRoute exact path="/dashboard" component={Dashboard} />
-        <PrivateRoute exact path="/categories" component={Categories} />
-        <PrivateRoute exact path="/suppliers" component={Suppliers} />
+        <PrivateRoute exact path='/dashboard' component={Dashboard} />
+        <PrivateRoute exact path='/categories' component={Categories} />
+        <PrivateRoute exact path='/suppliers' component={Suppliers} />
         <PrivateRoute
           exact
-          path="/suppliers/:id/edit"
+          path='/suppliers/:id/edit'
           component={SupplierEdit}
         />
         <PrivateRoute
           exact
-          path="/suppliers/:id/delete"
+          path='/suppliers/:id/delete'
           component={SupplierDelete}
         />
-        <PrivateRoute exact path="/suppliers/add" component={SupplierAdd} />
-        <PrivateRoute exact path="/taxes" component={Taxes} />
-        <PrivateRoute exact path="/taxes/add" component={TaxAdd} />
-        <PrivateRoute exact path="/taxes/:id/edit" component={TaxEdit} />
-        <PrivateRoute exact path="/taxes/:id/delete" component={TaxDelete} />
-        <PrivateRoute exact path="/products" component={Products} />
-        <PrivateRoute exact path="/products/add" component={ProductAdd} />
-        <PrivateRoute exact path="/products/upload" component={ProductUpload} />
-        <PrivateRoute exact path="/products/lookup" component={ProductLookup} />
-        <PrivateRoute exact path="/products/:id/edit" component={ProductEdit} />
+        <PrivateRoute exact path='/suppliers/add' component={SupplierAdd} />
+        <PrivateRoute exact path='/taxes' component={Taxes} />
+        <PrivateRoute exact path='/taxes/add' component={TaxAdd} />
+        <PrivateRoute exact path='/taxes/:id/edit' component={TaxEdit} />
+        <PrivateRoute exact path='/taxes/:id/delete' component={TaxDelete} />
+        <PrivateRoute exact path='/products' component={Products} />
+        <PrivateRoute exact path='/products/add' component={ProductAdd} />
+        <PrivateRoute exact path='/products/upload' component={ProductUpload} />
+        <PrivateRoute exact path='/products/lookup' component={ProductLookup} />
+        <PrivateRoute exact path='/products/:id/edit' component={ProductEdit} />
         <PrivateRoute
           exact
-          path="/products/:id/delete"
+          path='/products/:id/delete'
           component={ProductDelete}
         />
         <PrivateRoute
           exact
-          path="/products/discount"
+          path='/products/discount'
           component={ProductDiscount}
         />
         <Route
           exact
-          path="/customers"
+          path='/customers'
           render={() => renderWithLayout(Customers)}
         ></Route>
         <Route
           exact
-          path="/customers/add"
+          path='/customers/add'
           render={() => renderWithLayout(CustomerForm)}
         ></Route>
         <Route
           exact
-          path="/customers/:customer_id/view"
+          path='/customers/:customer_id/view'
           render={(props) => renderWithLayout(CustomerProfile, props)}
         ></Route>
         <Route
           exact
-          path="/customers/:customer_id/edit"
+          path='/customers/:customer_id/edit'
           render={(props) => {
             return renderWithLayout(CustomerForm, props, {
               isCustomerEditMode: true,
@@ -197,74 +259,112 @@ const Routes = () => {
 
         <Route
           exact
-          path="/customers/profile"
+          path='/customers/profile'
           render={() => renderWithLayout(CustomerProfile)}
         ></Route>
         <Route
           exact
-          path="/customers/:customer_id/pay-account-balance"
+          path='/customers/:customer_id/pay-account-balance'
           render={(props) => renderWithLayout(CustomerPay, props)}
         ></Route>
         <Route
           exact
-          path="/customers/:customer_id/credit-history"
+          path='/customers/:customer_id/credit-history'
           render={(props) => renderWithLayout(CustomerCreditHistory, props)}
         ></Route>
         <Route
           exact
-          path="/signup"
+          path='/signup'
           render={() => authRenderWithLayout(SignUp)}
         ></Route>
         <Route
           exact
-          path="/signin"
+          path='/signin'
           render={() => authRenderWithLayout(SignIn)}
         ></Route>
-        <PrivateRoute exact path="/outlets" component={Outlet} />
-        <PrivateRoute exact path="/categories/add" component={CategoryAdd} />
+        <Route
+          exact
+          path='/outlets'
+          render={() => RenderWithLayoutOutlet(Outlet)}
+        ></Route>
+        <PrivateRoute exact path='/categories/add' component={CategoryAdd} />
         <PrivateRoute
           exact
-          path="/categories/:id/edit"
+          path='/categories/:id/edit'
           component={EditCategory}
         />
         <PrivateRoute
           exact
-          path="/categories/:id/delete"
+          path='/categories/:id/delete'
           component={DeleteCategory}
         />
-        <PrivateRoute exact path="/couriers" component={Couriers} />
-        <PrivateRoute exact path="/couriers/add" component={CourierAdd} />
-        <PrivateRoute exact path="/couriers/:id/edit" component={CourierEdit} />
+        <PrivateRoute exact path='/couriers' component={Couriers} />
+        <PrivateRoute exact path='/couriers/add' component={CourierAdd} />
+        <PrivateRoute exact path='/couriers/:id/edit' component={CourierEdit} />
         <PrivateRoute
           exact
-          path="/couriers/:id/delete"
+          path='/couriers/:id/delete'
           component={CourierDelete}
         />
-        <PrivateRoute exact path="/categoryWise" component={CategoryWise} />
-        <PrivateRoute exact path="/inventoryDump" component={InventoryDump} />
+        <PrivateRoute exact path='/categoryWise' component={CategoryWise} />
+        <PrivateRoute exact path='/inventoryDump' component={InventoryDump} />
         <PrivateRoute
           exact
-          path="/omniSalesSummary"
+          path='/omniSalesSummary'
           component={OmniSalesSummary}
         />
 
-        <PrivateRoute exact path="/productHistory" component={ProductHistory} />
-        <PrivateRoute exact path="/salesSummary" component={SalesSummary} />
+        <PrivateRoute exact path='/productHistory' component={ProductHistory} />
+        <PrivateRoute exact path='/salesSummary' component={SalesSummary} />
 
-        <PrivateRoute exact path="/stock" component={Stock} />
-        <PrivateRoute exact path="/stock/order" component={PurchaseOrder} />
-
-        <PrivateRoute exact path="/setup/users" component={Setup} />
-        <PrivateRoute exact path="/setup/outlets" component={Setup} />
-        <PrivateRoute exact path="/setup/receipts-templates" component={Setup} />
-        <PrivateRoute exact path="/setup/outlets/add" component={OutletAdd} />
-        <PrivateRoute exact path="/setup/users/add" component={UserAdd} />
-        <PrivateRoute exact path="/setup/receipts-templates/add" component={ReceiptAdd} />
-
-        <PrivateRoute exact path="/register/sell" component={Sell} />
+        <PrivateRoute exact path='/stock-control/purchase-orders' component={Stock} />
+        <PrivateRoute exact path='/stock-control/inventory-transfers' component={Stock} />
+        <PrivateRoute exact path='/stock-control/stock-adjustments' component={Stock} /> 
         <PrivateRoute
           exact
-          path="/register/salesHistory"
+          path='/stock-control/purchase-orders/add'
+          component={PurchaseOrder} />
+        <PrivateRoute
+          exact
+          path='/stock-control/stock-adjustments/add'
+          component={StockAdjustment} />
+          <PrivateRoute
+          exact
+          path='/stock-control/return-stock/add'
+          component={ReturnStock} />
+          <PrivateRoute
+          exact
+          path='/stock-control/inventory-transfers/add'
+          component={TransferOut} />
+
+
+        <PrivateRoute exact path='/stock-control/purchase-orders/:id/receive' component={ReceiveStock} />
+        <PrivateRoute
+          exact
+          path='/stock-control/inventory-transfers/:id/receive'
+          component={ReceiveStockTransfer} />
+        <PrivateRoute exact path='/setup/users' component={Setup} />
+        <PrivateRoute exact path='/setup/outlets' component={Setup} />
+        <PrivateRoute
+          exact
+          path='/setup/receipts-templates'
+          component={Setup}
+        />
+        <PrivateRoute exact path='/setup/outlets/add' component={OutletAdd} />
+        <PrivateRoute exact path='/setup/outlets/:id/edit' component={OutletEdit} />
+        <PrivateRoute exact path='/setup/users/add' component={UserAdd} />
+        <PrivateRoute exact path='/setup/users/:id/edit' component={UserEdit} />
+        <PrivateRoute
+          exact
+          path='/setup/receipts-templates/add'
+          component={ReceiptAdd}
+        />
+        <PrivateRoute exact path='/setup/receipts-templates/:id/edit' component={ReceiptEdit} />
+        <PrivateRoute exact path='/setup/receipts-templates/:id/delete' component={ReceiptDelete} />
+        <PrivateRoute exact path='/register/sell' component={Sell} />
+        <PrivateRoute
+          exact
+          path='/register/salesHistory'
           component={SalesHistory}
         />
       </Switch>

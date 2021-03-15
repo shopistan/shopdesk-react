@@ -42,7 +42,6 @@ const DeleteTax = () => {
         });
     };
 
-    console.log(history.location.data.tax_id);
 
 
     return (

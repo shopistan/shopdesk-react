@@ -1,4 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import "../style.scss";
+import { useHistory } from "react-router-dom";
+import * as ProductsApiUtil from '../../../../utils/api/products-api-utils';
+import * as SuppliersApiUtil from "../../../../utils/api/suppliers-api-utils";
+import * as StockApiUtil from '../../../../utils/api/stock-api-utils';
+import * as Helpers from "../../../../utils/helpers/scripts";
+import StockNestedProductsTable from "../../../organism/table/stock/stockNestedProductsTable";
+import moment from 'moment';
+
 
 import {
   Form,
@@ -7,10 +16,15 @@ import {
   Select,
   DatePicker,
   InputNumber,
+  Spin,
+  AutoComplete,
   Upload,
   message,
+  Row,
+  Col,
   Space,
   Switch,
+  Divider,
 } from "antd";
 
 import {
@@ -22,212 +36,629 @@ import {
 
 const { Option } = Select;
 
-function handleChange(value) {
-  console.log(`selected ${value}`);
-}
 
-function onChange(date, dateString) {
-  console.log(date, dateString);
-}
 
-const props = {
-  name: "file",
-  action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-  headers: {
-    authorization: "authorization-text",
-  },
-  onChange(info) {
-    if (info.file.status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-};
 
 const PurchaseOrder = () => {
-  const onFinish = (values) => {
-    console.log("Success:", values);
+  const [form] = Form.useForm();
+  const history = useHistory();
+  const [loading, setLoading] = useState(true);
+  const [showBulkUpload, setShowBulkUpload] = useState(false);
+  const [fileList, setFileList] = useState([]);
+  const [productsSearchResult, setProductsSearchResult] = useState([]);
+  const [productsTableData, setProductsTableData] = useState([]);
+  const [registereProductsData, setRegistereProductsData] = useState([]);
+  const [suppliers, setSuppliersData] = useState([]);
+  const [selectedSearchValue, setSelectedSearchValue] = useState("");
+  const [selectedProductId, setSelectedProductId] = useState("");
+  const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
+  const [orderDueDate, setOrderDueDate] = useState("");
+
+  var registeredProductsLimit = Helpers.registeredProductsPageLimit;
+
+
+
+  useEffect(() => {
+    fetchRegisteredProductsData();
+    fetchSuppliersData();
+    /*-----setting template data to fields value------*/
+    form.setFieldsValue({
+      order_reference_name: `Order - ${moment(new Date()).format("MM/DD/yyyy HH:mm:ss")}`,
+    });
+    /*-----setting template data to fields value------*/
+
+  }, []);
+
+
+  const handleSearch = async (value) => {
+
+    var currValue = value;
+    currValue = currValue.toLowerCase();
+    if (currValue === "") {
+      setProductsSearchResult([]);
+    }
+    else {
+      const filteredData = registereProductsData.filter((entry) => {
+        var searchValue = entry.searchName;
+        searchValue = searchValue.toLowerCase();
+
+        return searchValue.includes(currValue);
+      });
+      setProductsSearchResult(filteredData);
+    }
+
   };
+
+
+  const handleSelect = (value, option) => {
+    let productId = value.split('-');
+    console.log(option.children);
+    setSelectedSearchValue(option.children);
+    setSelectedProductId(productId[0]);  //passes productId
+  };
+
+
+
+  const fetchRegisteredProductsData = async (pageLimit = 20, pageNumber = 1) => {
+    const productsDiscountsViewResponse = await ProductsApiUtil.getRegisteredProducts(
+      registeredProductsLimit,
+      pageNumber
+    );
+    console.log(' productsDiscountsViewResponse:', productsDiscountsViewResponse);
+
+    if (productsDiscountsViewResponse.hasError) {
+      console.log('Cant fetch registered products Data -> ', productsDiscountsViewResponse.errorMessage);
+      message.error(productsDiscountsViewResponse.errorMessage, 3);
+      setLoading(false);
+    }
+    else {
+      console.log('res -> ', productsDiscountsViewResponse);
+      message.success(productsDiscountsViewResponse.message, 3);
+      /*-------for filtering products--------*/
+      var products = productsDiscountsViewResponse.products.data
+        || productsDiscountsViewResponse.products;
+
+      for (let i in products) {
+        var searchName = products[i].product_name;
+        if (Helpers.var_check(products[i].product_variant1_value)) {
+          searchName += " / " + products[i].product_variant1_value;
+        }
+        if (Helpers.var_check(products[i].product_variant2_value)) {
+          searchName += " / " + products[i].product_variant2_value;
+        }
+        products[i].searchName = searchName;
+        //products[i].qty = 0;   //imp but not set here ,set at addorder
+      }
+
+      setRegistereProductsData(products);
+
+      /*-------for filtering products--------*/
+      setLoading(false);
+
+    }
+  }
+
+
+
+  const fetchSuppliersData = async (pageLimit = 10, pageNumber = 1) => {
+
+    const SuppliersViewResponse = await SuppliersApiUtil.viewSuppliers(
+      pageLimit,
+      pageNumber
+    );
+    console.log("SuppliersViewResponse:", SuppliersViewResponse);
+
+    if (SuppliersViewResponse.hasError) {
+      console.log(
+        "Cant fetch suppliers -> ",
+        SuppliersViewResponse.errorMessage
+      );
+    } else {
+      console.log("res -> ", SuppliersViewResponse);
+      setSuppliersData(SuppliersViewResponse.suppliers.data || SuppliersViewResponse.suppliers);
+    }
+  };
+
+
+  const handleUpload = () => {
+    console.log(fileList[0]);   //imp
+    var file = fileList[0];
+
+    //const hide = message.loading('Products Bulk Import in progress..', 0);
+
+    if (file && fileExtention(file.name) === 'csv') {
+      var reader = new FileReader();
+      reader.readAsText(file);
+      reader.onload = function (evt) {
+        // code to convert file data and render in json format
+        var json = JSON.parse(Helpers.CSV2JSON(evt.target.result));
+        console.log(json);
+        //jsonOutput = JSON.parse((jsonOutput));
+        /*-------------------------------*/
+        var bulkProducts = [];
+        json.forEach((v, k) => {
+          registereProductsData.forEach((v2, k2) => {
+            if (v.SKU == v2.product_sku) {
+              let selectedItemCopy = JSON.parse(JSON.stringify(v2));
+              selectedItemCopy.qty = parseFloat(v.Quantity);
+              bulkProducts.push(selectedItemCopy);
+              return 0;
+            }
+          });
+        });  // end of for loop
+
+        //setProductsTableData(bulkProducts);   //imp 
+        handleCombineProductsTableData(bulkProducts, [...productsTableData]);
+        //setTimeout(hide, 1500);
+        message.success("Products Imported", 3);
+        /*-------------------------------*/
+
+      }
+      reader.onerror = function (evt) {
+        message.error('error reading file');
+      }
+    }
+    else {
+      message.error('Not a csv file');
+    }
+
+  };
+
+
+
+  const imageUploadProps = {
+    beforeUpload: file => {
+      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+      if (isJpgOrPng) {
+        message.error('You cant  upload JPG/PNG file!');
+      }
+      else { setFileList([file]); }
+
+      return false;
+    },
+    fileList,
+  };
+
+  function fileExtention(filename) {
+    var parts = filename.split('.');
+    return parts[parts.length - 1];
+  }
+
+
+  const onRemoveImage = (file) => {
+    setFileList([]);
+  };
+
+  const handleChangeProductsData = (productsData, productsTotalQuantity = 0) => {
+    setProductsTableData(productsData);
+    setProductsTotalQuantity(productsTotalQuantity);
+  };
+
+
+
+  const handleAddProduct = () => {
+    var formValues = form.getFieldsValue();
+
+    var productExistsCheck = false;
+    var newData = [...productsTableData];
+    //productsTableData
+    const index = registereProductsData.findIndex(
+      item => selectedProductId == item.product_id);
+
+    if (index > -1) {
+      //deep copy
+      const selectedItem = JSON.parse(JSON.stringify(registereProductsData[index]));
+      productsTableData.forEach((p) => {
+        if (p.product_id === selectedItem.product_id) {
+          productExistsCheck = true;
+          p.qty += parseFloat(formValues.product_qty);
+        }
+      }); //end of for loop
+
+      if (productExistsCheck) {
+        calculateProductsTotalQuantity(productsTableData);
+        setProductsTableData(productsTableData);
+      }
+      if (!productExistsCheck) {
+        selectedItem.qty = parseFloat(formValues.product_qty);
+        newData.push(selectedItem);
+        console.log("imp1-table", newData);
+        calculateProductsTotalQuantity(newData);
+        setProductsTableData(newData);
+      }
+
+    } //end of top first if
+  };
+
+
+  const calculateProductsTotalQuantity = (data) => {
+    var productsTotalQuantity = 0;
+    const newData = [...data];
+    newData.forEach(item => {
+      productsTotalQuantity = productsTotalQuantity + parseFloat(item.qty || 0);
+    });
+
+    setProductsTotalQuantity(productsTotalQuantity);
+  }
+
+
+
+  const handleCombineProductsTableData = (bulkProducts, tableProducts) => {
+    if (bulkProducts.length > tableProducts.length) {
+      bulkProducts.forEach((v, k) => {
+        tableProducts.forEach((v2, k2) => {
+          //console.log(v);
+          if (v.product_sku == v2.product_sku) {
+            v.qty = v.qty + parseFloat(v2.qty);
+            return 0;
+          }
+        });
+      });  // end of for loop
+
+      calculateProductsTotalQuantity(bulkProducts);
+      setProductsTableData(bulkProducts);
+    }   // first if
+
+    if (tableProducts.length >= bulkProducts.length) {
+      tableProducts.forEach((v, k) => {
+        bulkProducts.forEach((v2, k2) => {
+          // console.log(v);
+          if (v.product_sku == v2.product_sku) {
+            v.qty = v.qty + parseFloat(v2.qty);
+            //bulkProducts.push(selectedItemCopy);
+            return 0;
+          }
+        });
+      });  // end of for loop
+
+      calculateProductsTotalQuantity(tableProducts);
+      setProductsTableData(tableProducts);
+    }   // end of second if
+
+  };
+
+
+  const handleSaveChanges = async (e) => {
+    var formValues = form.getFieldsValue();
+    console.log("changed", formValues);
+
+    if (productsTableData.length === 0) {
+      message.error("No Products Added", 4);
+      return;
+    }
+
+    var addPurchaseOrderPostData = {};
+    //var clonedProducts = JSON.parse(JSON.stringify(productsTableData));
+    var clonedProductsPostData = [];
+    console.log("vvimp", productsTableData);
+    productsTableData.forEach((item, index) => {
+      clonedProductsPostData.push({ qty: item.qty, selected: item });
+    });
+    clonedProductsPostData.forEach((item, index) => {
+      delete item.selected['qty'];
+    });
+
+
+    addPurchaseOrderPostData.products = clonedProductsPostData;
+    addPurchaseOrderPostData.date_due = orderDueDate;
+    addPurchaseOrderPostData.po_name = formValues.order_reference_name;
+    addPurchaseOrderPostData.ordered_date = moment(new Date()).format("MM/DD/yyyy HH:mm:ss");
+    addPurchaseOrderPostData.supplier_id = formValues.supplier;
+
+    console.log("vvimp-final", clonedProductsPostData);
+
+    const hide = message.loading('Saving Changes in progress..', 0);
+    const res = await StockApiUtil.addPurchaseOrder(addPurchaseOrderPostData);
+    console.log('AddPoResponse:', res);
+
+    if (res.hasError) {
+      console.log('Cant Add Purchase Order -> ', res.errorMessage);
+      message.error(res.errorMessage, 3);
+      setTimeout(hide, 1500);
+    }
+    else {
+      console.log('res -> ', res);
+      message.success(res.message, 3);
+      setTimeout(hide, 1000);
+      setTimeout(() => {
+        history.push({
+          pathname: '/stock-control/purchase-orders',
+          activeKey: 'purchase-orders'
+        });
+      }, 2000);
+    }
+
+  }
+
+
+
+  const handleDownloadPoForm = async () => {
+
+    const hide = message.loading('Downloading in progress..', 0);
+    const downloadPoResponse = await StockApiUtil.downloadPoForm();
+    console.log("downloadPoResponse:", downloadPoResponse);
+
+    if (downloadPoResponse.hasError) {
+      console.log(
+        "Cant Download PO Form -> ",
+        downloadPoResponse.errorMessage
+      );
+
+      setTimeout(hide, 1500);
+
+    } else {
+      console.log("res -> ", downloadPoResponse);
+      var csv = "SKU,Quantity\n";
+      var arr = downloadPoResponse.product;
+      arr.forEach(function (row) {
+        csv += row.product_sku + ",0\n";
+      });
+
+      //var parent = document.getElementById("download_csv");
+      var hiddenElement = document.createElement("a");
+      //parent.appendChild(hiddenElement);
+      hiddenElement.href = "data:text/csv;charset=utf-8," + encodeURI(csv);
+      hiddenElement.target = "_blank";
+      hiddenElement.download = new Date().toUTCString() + "-Product-SKU.csv";
+      hiddenElement.click();
+      //parent.removeChild(hiddenElement); 
+      setTimeout(hide, 1500);
+    }
+
+
+  };
+
+
+  function onDatePickerChange(date, dateString) {
+    setOrderDueDate(dateString);
+  }
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+
+  const handleBulkSwitch = (checked) => {
+    setShowBulkUpload(checked);
+  };
+
+  const handleCancel = () => {
+    history.push({
+      pathname: '/stock-control/purchase-orders',
+      activeKey: 'purchase-orders'
+    });
+  };
+
+
 
   return (
     <div className="page stock-add">
       <div className="page__header">
         <h1>New Purchase Order</h1>
       </div>
+      <div style={{ textAlign: "center" }}>
+        {loading && <Spin size="large" tip="Loading..." />}
+      </div>
 
-      <div className="page__content">
-        <div className="page__form">
-          <Form
-            name="basic"
-            layout="vertical"
-            initialValues={{
-              remember: true,
-            }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-          >
-            {/* Form Section */}
-            <div className="form__section">
-              <div className="form__section__header">
+
+      {!loading &&
+        <div className="page__content">
+          <div className="page__form">
+            <Form
+              form={form}
+              name="basic"
+              layout="vertical"
+              initialValues={{
+                remember: true,
+              }}
+              onFinish={handleSaveChanges}
+              onFinishFailed={onFinishFailed}
+            >
+              {/* Form Section */}
+              <div className="form__section">
+                {/*<div className="form__section__header">
                 <h2>Details</h2>
+              </div> */}
+                <h4 className="stock-receive-details-heading">Details</h4>
+
+                {/* Row */}
+                <div className="form__row">
+                  <div className="form__col">
+                    <Form.Item
+                      label="Name / reference"
+                      name="order_reference_name"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input Name / reference",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                  </div>
+
+                  <div className="form__col">
+                    <Form.Item
+                      label="Supplier"
+                      name="supplier"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please select supplier",
+                        },
+                      ]}
+                    >
+                      <Select>
+                        {
+                          suppliers.map((obj, index) => {
+                            return (
+                              <option key={obj.supplier_id} value={obj.supplier_id}>
+                                {obj.supplier_name}
+                              </option>
+                            )
+                          })
+                        }
+                      </Select>
+                    </Form.Item>
+                  </div>
+                </div>
+                {/* Row */}
+
+                {/* Row */}
+                <div className="form__row">
+                  <div className="form__col">
+                    <Form.Item
+                      label="Delivery due"
+                      name="delivery_due_date"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please select Due date",
+                        },
+                      ]}
+                    >
+                      <DatePicker onChange={onDatePickerChange} />
+                    </Form.Item>
+                  </div>
+
+                  <div className="form__col"></div>
+                </div>
+                {/* Row */}
               </div>
+              {/* Form Section */}
 
-              {/* Row */}
-              <div className="form__row">
-                <div className="form__col">
-                  <Form.Item
-                    label="Name / reference"
-                    name="name"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input Name / reference",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
+              {/* Form Section */}
+              <div className="form__section">
+                <div className="form__section__header">
+                  <div className="switch__row">
+                    <Switch className="bulk-order-switch"
+                      onChange={handleBulkSwitch} />
+                    <h2>Bulk Order</h2>
+                  </div>
                 </div>
 
-                <div className="form__col">
-                  <Form.Item
-                    label="Supplier"
-                    name="supplier"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input product name",
-                      },
-                    ]}
-                  >
-                    <Select defaultValue="lucy" onChange={handleChange}>
-                      <Option value="jack">Jack</Option>
-                      <Option value="lucy">Lucy</Option>
-                      <Option value="Yiminghe">yiminghe</Option>
-                    </Select>
-                  </Form.Item>
-                </div>
-              </div>
-              {/* Row */}
 
-              {/* Row */}
-              <div className="form__row">
-                <div className="form__col">
-                  <Form.Item
-                    label="Name / reference"
-                    name="name"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input Name / reference",
-                      },
-                    ]}
-                  >
-                    <DatePicker onChange={onChange} />
-                  </Form.Item>
-                </div>
+                {showBulkUpload &&
+                  <div className="form__row">
+                    <div className="form__col">
+                      <Form.Item>
+                        <Upload {...imageUploadProps} onRemove={onRemoveImage}>
+                          <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                        </Upload>
+                      </Form.Item>
+                    </div>
 
-                <div className="form__col"></div>
-              </div>
-              {/* Row */}
-            </div>
-            {/* Form Section */}
-
-            {/* Form Section */}
-            <div className="form__section">
-              <div className="form__section__header">
-                <div className="switch__row">
-                  <h2>Bulk Order</h2>
-                  <Switch
-                    checkedChildren={<CheckOutlined />}
-                    unCheckedChildren={<CloseOutlined />}
-                    defaultChecked
-                  />
-                </div>
-              </div>
-
-              <div className="form__row">
-                <div className="form__col">
-                  <Form.Item>
-                    <Upload {...props}>
-                      <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                    </Upload>
-                  </Form.Item>
-                </div>
-
-                <div className="form__col">
-                  <Form.Item>
-                    <Button type="primary" icon={<DownloadOutlined />}>
-                      Add Product
+                    <div className="form__col">
+                      <Form.Item>
+                        <Button type="primary" icon={<DownloadOutlined />}
+                          style={{ width: "100%" }}
+                          id="download_csv"
+                          onClick={handleDownloadPoForm}>
+                          Download SKU CSV
                     </Button>
-                  </Form.Item>
-                </div>
-              </div>
+                      </Form.Item>
+                    </div>
+                  </div>}
 
-              <div className="form__row form__row--btn">
-                <div className="form__col">
-                  <Form.Item>
-                    <Button type="primary">Done</Button>
-                  </Form.Item>
-                </div>
-              </div>
-            </div>
-            {/* Form Section */}
+                {showBulkUpload &&
+                  <div className="form__row">
+                    <div className="form__col">
+                      <Form.Item>
+                        <Button type="default" onClick={handleUpload}
+                          style={{ width: "100%" }}>
+                          Done
+                    </Button>
+                      </Form.Item>
+                    </div>
+                  </div>}
 
-            {/* Form Section */}
-            <div className="form__section">
-              <div className="form__section__header">
+              </div>
+              {/* Form Section */}
+
+              {/* Form Section */}
+              <div className="form__section">
+                {/*<div className="form__section__header">
                 <div className="switch__row">
                   <h2>Order Products</h2>
                 </div>
-              </div>
+              </div> */}
+                <h4 className="stock-receive-products-heading stock-receive-row-heading">
+                  Order products
+                <label className="label-stock-count">
+                    {productsTotalQuantity}
+                  </label>
+                </h4>
 
-              <div className="form__row">
-                <div className="form__col">
-                  <Form.Item
-                    label="Name / reference"
-                    name="name"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input Name / reference",
-                      },
-                    ]}
+
+                <Row gutter={16, 16} >
+                  <Col xs={24} sm={24} md={12} className="stock-item-content">
+                    <Form.Item
+                      label="Search Product"
+                      name="search_product"
+                    >
+                      <AutoComplete style={{ width: "100%" }}
+                        dropdownMatchSelectWidth={500}
+                        value={selectedSearchValue}
+                        onSearch={handleSearch}
+                        onSelect={handleSelect}
+                        placeholder="search for product">
+                        {productsSearchResult && productsSearchResult.map((item) => (
+                          <Option key={item.product_id} value={item.product_id + `-${item.searchName}`}>
+                            {item.searchName}
+                          </Option>
+                        ))}
+                      </AutoComplete>
+
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={24} md={6} className="stock-item-content">
+                    <Form.Item
+                      label="QTY"
+                      name="product_qty"
+                    >
+                      <Input defaultValue={1} />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={24} md={6} className="stock-item-content">
+                    <Button type='default' className="stock-oder-add-btn"
+                      onClick={handleAddProduct} > Add
+                  </Button>
+                  </Col>
+                </Row>
+                <Divider />
+
+                {/* Table */}
+                <div className='table'>
+                  <StockNestedProductsTable
+                    tableData={productsTableData}
+                    tableDataLoading={loading}
+                    onChangeProductsData={handleChangeProductsData}
+                    tableType="order_stock" />
+                </div>
+                {/* Table */}
+                <Divider />
+
+
+                <div className='form__row--footer'>
+                  <Button type='secondary' onClick={handleCancel}>
+                    Cancel
+                    </Button>
+                  <Button
+                    type='primary'
+                    className='custom-btn custom-btn--primary'
+                    htmlType="submit"
                   >
-                    <Input />
-                  </Form.Item>
+                    Save
+                </Button>
                 </div>
 
-                <div className="form__col">
-                  <Form.Item
-                    label="Name / reference"
-                    name="name"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input Name / reference",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Button type="primary">Done</Button>
-                </div>
               </div>
-            </div>
-            {/* Form Section */}
-          </Form>
-        </div>
-      </div>
+              {/* Form Section */}
+            
+            </Form>
+
+          </div>
+        </div>}
     </div>
   );
 };

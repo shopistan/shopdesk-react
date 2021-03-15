@@ -24,11 +24,12 @@ const Users = () => {
     else {
       console.log('res -> ', usersViewResponse);
       message.success(usersViewResponse.message, 3);
-      setData(usersViewResponse.Users.data);
-      setPaginationData(usersViewResponse.Users.page);
+      setData(usersViewResponse.Users.data || usersViewResponse.Users);
+      setPaginationData(usersViewResponse.Users.page || {});
       setLoading(false);
     }
   }
+
 
   useEffect( () => {
     fetchUsersData();
