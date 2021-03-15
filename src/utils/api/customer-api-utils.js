@@ -81,3 +81,20 @@ export const rechargeCustomerAccount = async (customerData, paymetInfo) => {
     singleCustomerFormDataBody //body
   );
 };
+
+export const customerCreditDetails = async (customerId) => {
+  const formDataPair = {
+    'customer_id': customerId,
+  };
+  const singleCustomerFormDataBody = ApiCallUtil.constructFormData(
+    formDataPair
+  );
+  const url = UrlConstants.CUSTOMERS.CREDIT_HISTORY;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+    singleCustomerFormDataBody //body
+  );
+}
