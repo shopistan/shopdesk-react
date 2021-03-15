@@ -1,4 +1,4 @@
-const BASE_URL = 'https://shopdesk-develop-iiqzqqotsq-uc.a.run.app';
+const BASE_URL = 'https://cloud.shopdesk.co';
 const IMAGE_UPLOADS_URL = 'https://storage.googleapis.com/shopdesk-artifacts';
 
 const urls = {
@@ -88,6 +88,17 @@ const urls = {
     VIEW_PO: BASE_URL + '/api/stock_control/viewPo',
     VIEW_TRANSFER: BASE_URL + '/api/transfers/viewTransfer',
     VIEW_ADJUSTMENTS: BASE_URL + '/api/stock_control/viewAdjustment',
+    RECEIVE_PO: BASE_URL + '/api/stock_control/receivePo',
+    ADD_RECEIVE_PO: BASE_URL + '/api/stock_control/insertGrn',
+    ADD_PURCHASE_ORDER: BASE_URL + '/api/stock_control/addPo',
+    DOWNLOAD_PO_FORM: BASE_URL + '/api/omni_engine/productsku',
+    ADD_ADJUSTMENT: BASE_URL + '/api/integrations/stock_adjustment',
+    RETURN_STOCK: BASE_URL + '/api/stock_control/addReturn',
+    TRANSFER_OUT: BASE_URL + '/api/transfers/add',
+    CLOSE_PURCHASE_ORDER:  BASE_URL + '/api/stock_control/closePo',
+    CLOSE_TRANSFER_INVENTORY: BASE_URL + '/api/transfers/status',
+    RECEIVE_TRANSFER_IN:  BASE_URL + '/api/transfers/getTransfer',
+    RECEIVE_TRANSFER_STATUS: BASE_URL + '/api/transfers/status',
 
   }
 

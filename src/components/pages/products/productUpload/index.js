@@ -164,7 +164,7 @@ const ProductUpload = () => {
       console.log(file);
       const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
       if (isJpgOrPng) {
-        message.error('You cant only upload JPG/PNG file!');
+        message.error('You cant upload JPG/PNG file!');
       }
       else { setFileList([file]); }
 

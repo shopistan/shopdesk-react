@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table, Form, Typography, Menu, Dropdown, Button } from "antd";
+import { Table, Menu, Dropdown, Button } from "antd";
 import { ProfileOutlined, DownOutlined } from "@ant-design/icons";
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
@@ -31,20 +31,40 @@ const StockTable = (props) => {
 
         return (
             <Menu>
-                <Menu.Item key='0' onClick={() => history.push({ 
-                    pathname: "/stock-control/purchase-orders/add",
-                    data: record })}
-                    >
+                <Menu.Item key='0' onClick={() => handleReceive(record) }>
                     Receive
               </Menu.Item>
                 <Menu.Divider />
-                <Menu.Item key='1' onClick={() => history.push({ pathname: "/setup/users/add" })}>
+                <Menu.Item key='1' onClick={() => handleForceClose(record)}>
                     Force Close
               </Menu.Item>
                 <Menu.Divider />
             </Menu>
             )
     }
+
+
+    const handleReceive = (record) => {
+        if (props.tableType === 'inventory_transfers') {
+            history.push({ 
+                pathname: `/stock-control/inventory-transfers/${record.transfer_id}/receive`,
+                data: record, 
+            })
+        }
+        if (props.tableType === 'purchase_orders') {
+            history.push({ 
+                pathname: `/stock-control/purchase-orders/${record.purchase_order_id}/receive`,
+                data: record,
+            })
+        }
+
+    }
+            
+        
+    
+    const handleForceClose = (record) => {
+       props.onForceCloseOrderHandler(record);
+    };
 
 
 
@@ -150,19 +170,19 @@ const StockTable = (props) => {
         columns = [
             {
                 title: "Product",
-                //dataIndex: "transfer_name",
+                dataIndex: "product_sku",
             },
             {
                 title: "Date",
-                //dataIndex: "from_store",
+                dataIndex: "stock_adjustment_date",
             },
             {
                 title: "Reason",
-                ///dataIndex: "to_store",
+                dataIndex: "stock_adjustment_message",
             },
             {
                 title: "Quantity",
-                //dataIndex: 'transfer_date',
+                dataIndex: 'stock_adjustment_quantity',
             },
            
         ];

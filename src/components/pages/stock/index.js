@@ -44,28 +44,28 @@ function Stock() {
     <Menu>
       <Menu.Item
         key="0"
-        onClick={() => history.push({ pathname: "stock-control/purchase-orders/add" })}
+        onClick={() => history.push({ pathname: "/stock-control/purchase-orders/add" })}
       >
         <a>Order Stock</a>
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item
         key="1"
-        onClick={() => history.push({ pathname: "products/upload" })}
+        onClick={() => history.push({ pathname: "/stock-control/return-stock/add" })}
       >
         Return Stock
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item
         key="2"
-        onClick={() => history.push({ pathname: "products/lookup" })}
+        onClick={() => history.push({ pathname: "/stock-control/inventory-transfers/add" })}
       >
         Transfer Inventory
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item
         key="3"
-        onClick={() => history.push({ pathname: "products/discount" })}
+        onClick={() => history.push({ pathname: "/stock-control/stock-adjustments/add" })}
       >
         Stock Adjustment
       </Menu.Item>

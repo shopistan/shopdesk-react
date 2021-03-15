@@ -9,6 +9,12 @@ const EditSupplier = () => {
 
   useEffect(async () => {
     //console.log(history.location.data); working
+    if (history.location.data === undefined) {
+      history.push({
+          pathname: '/suppliers',
+      });
+    }
+
   }, []);
 
   const onFinish = async (values) => {
@@ -52,11 +58,11 @@ const EditSupplier = () => {
             name="basic"
             layout="vertical"
             initialValues={{
-              supplier_name: history.location.data.supplier_name,
-              contact_person: history.location.data.supplier_contact_name,
-              email: history.location.data.supplier_contact_email,
-              phone: history.location.data.supplier_contact_phone,
-              tax: history.location.data.supplier_tax_number,
+              supplier_name: history.location.data && history.location.data.supplier_name,
+              contact_person: history.location.data && history.location.data.supplier_contact_name,
+              email: history.location.data && history.location.data.supplier_contact_email,
+              phone: history.location.data && history.location.data.supplier_contact_phone,
+              tax: history.location.data && history.location.data.supplier_tax_number,
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}

@@ -10,6 +10,12 @@ const DeleteSupplier = () => {
 
     useEffect(async () => {
         //console.log(history.location.data); working
+        if (history.location.data === undefined) {
+            history.push({
+                pathname: '/suppliers',
+            });
+        }
+        
     }, []);
 
     const handleConfirm = async () => {
@@ -48,7 +54,8 @@ const DeleteSupplier = () => {
                 <div className='page__form'>
                     <div className='form__row'>
                         <div className='form__col'>
-                            <Text>Do you really want to delete '{history.location.data.supplier_name}'?</Text>
+                            <Text>Do you really want to delete '{
+                                history.location.data && history.location.data.supplier_name}'?</Text>
                         </div>
                     </div>
                     <br />

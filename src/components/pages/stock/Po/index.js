@@ -1,22 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { message } from "antd";
+import { message, Modal, Typography } from "antd";
 import ViewtableStock from "../../../organism/table/stock/stockTable";
 import * as StockApiUtil from '../../../../utils/api/stock-api-utils';
-import Constants from '../../../../utils/constants/constants';
-import { 
-    getDataFromLocalStorage,
-  } from "../../../../utils/local-storage/local-store-utils";
 
+const { Text } = Typography;
 
 
 const PurchaseOrder = (props) => {
   const [paginationLimit, setPaginationLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [isForceCloseModalVisible, setIsForceCloseModalVisible] = useState(false);
   const [data, setData] = useState([]);
+  const [forceCloseOrderData, setForceCloseOrderData] = useState({});
   const [paginationData, setPaginationData] = useState({});
-  const [activeStoreId, setActiveStoreId] = useState("");
-
 
 
   const fetchPurchaseOrdersData = async (pageLimit = 10, pageNumber = 1) => {
@@ -37,11 +34,9 @@ const PurchaseOrder = (props) => {
   }
 
 
-  useEffect( () => {
+  useEffect(() => {
     fetchPurchaseOrdersData();
-
   }, []);
-
 
 
   function handlePageChange(currentPg) {
@@ -51,17 +46,72 @@ const PurchaseOrder = (props) => {
   }
 
 
+
+  const confirmForceClose =  async () => {
+
+    var purchaseOrderId =  forceCloseOrderData.purchase_order_id;
+
+    const closePurchaseOrderResponse = await StockApiUtil.closePurchaseOrder(
+      purchaseOrderId
+    );
+    console.log('ClosePurchaseOrderResponse:', closePurchaseOrderResponse);
+
+    if (closePurchaseOrderResponse.hasError) {
+      console.log('Cant close Purchase Order -> ', closePurchaseOrderResponse.errorMessage);
+    }
+    else {
+      console.log('res -> ', closePurchaseOrderResponse);
+      message.success(closePurchaseOrderResponse.message, 3);
+      setIsForceCloseModalVisible(false);
+      fetchPurchaseOrdersData();
+    }
+
+  };
+
+
+  function handleForceCloseOrderEvent(tableRecord) {
+    setIsForceCloseModalVisible(true);
+    setForceCloseOrderData(tableRecord)
+  }
+
+
+  const handleCancelForceCloseModal = () => {
+    setIsForceCloseModalVisible(false);
+  };
+
+
+
+
+
   return (
     <div className='stock-po'>
 
-        {/* Table */}
-        <div className='table'>
-          <ViewtableStock  pageLimit={paginationLimit} tableData={data} tableDataLoading={loading}
-            onClickPageChanger={handlePageChange} paginationData={paginationData} 
-            tableType="purchase_orders" />
+      {/* Table */}
+      <div className='table'>
+        <ViewtableStock pageLimit={paginationLimit}
+          tableData={data}
+          tableDataLoading={loading}
+          onClickPageChanger={handlePageChange}
+          onForceCloseOrderHandler={handleForceCloseOrderEvent}
+          paginationData={paginationData}
+          tableType="purchase_orders" />
+      </div>
+
+
+      <Modal title="Please Confirm" visible={isForceCloseModalVisible}
+        onOk={confirmForceClose}
+        onCancel={handleCancelForceCloseModal}>
+      
+        <div className='form__row'>
+          <div className='form__col'>
+            <Text>Do you really want to Force Close '
+              {forceCloseOrderData.purchase_order_name}'?</Text>
+          </div>
         </div>
 
-        {/* Table */} 
+      </Modal>
+
+      {/* Table */}
     </div>
   );
 };

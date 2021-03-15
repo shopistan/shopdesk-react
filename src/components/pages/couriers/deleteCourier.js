@@ -10,6 +10,12 @@ const DeleteCourier  = () => {
 
     useEffect(async () => {
         //console.log(history.location.data); working
+        if (history.location.data === undefined) {
+            history.push({
+                pathname: '/couriers',
+            });
+        }
+        
     }, []);
 
     const handleConfirm = async () => {
@@ -49,7 +55,8 @@ const DeleteCourier  = () => {
 
                     <div className='form__row'>
                         <div className='form__col'>
-                            <Text>Do you really want to delete '{history.location.data.courier_name}'?</Text>
+                            <Text>Do you really want to delete '{
+                            history.location.data && history.location.data.courier_name}'?</Text>
                         </div>
 
                     </div>

@@ -59,8 +59,12 @@ import ReceiptDelete from "./components/pages/setup/receipt/receiptDelete";
 import SalesHistory from "./components/pages/register/salesHistory";
 import Sell from "./components/pages/register/sell";
 import Stock from "./components/pages/stock";
-import StockTransfer from "./components/pages/stock/Transfer";
 import PurchaseOrder from "./components/pages/stock/order";
+import ReceiveStock from "./components/pages/stock/stockReceive";
+import ReceiveStockTransfer from "./components/pages/stock/stockReceive/transfer";
+import StockAdjustment from "./components/pages/stock/order/adjustmentStock";
+import ReturnStock from "./components/pages/stock/order/returnStock";
+import TransferOut from "./components/pages/stock/order/transferInventory";
 
 
 
@@ -316,8 +320,29 @@ const Routes = () => {
         <PrivateRoute exact path='/stock-control/purchase-orders' component={Stock} />
         <PrivateRoute exact path='/stock-control/inventory-transfers' component={Stock} />
         <PrivateRoute exact path='/stock-control/stock-adjustments' component={Stock} /> 
-        <PrivateRoute exact path='/stock-control/purchase-orders/add' component={PurchaseOrder} />
+        <PrivateRoute
+          exact
+          path='/stock-control/purchase-orders/add'
+          component={PurchaseOrder} />
+        <PrivateRoute
+          exact
+          path='/stock-control/stock-adjustments/add'
+          component={StockAdjustment} />
+          <PrivateRoute
+          exact
+          path='/stock-control/return-stock/add'
+          component={ReturnStock} />
+          <PrivateRoute
+          exact
+          path='/stock-control/inventory-transfers/add'
+          component={TransferOut} />
 
+
+        <PrivateRoute exact path='/stock-control/purchase-orders/:id/receive' component={ReceiveStock} />
+        <PrivateRoute
+          exact
+          path='/stock-control/inventory-transfers/:id/receive'
+          component={ReceiveStockTransfer} />
         <PrivateRoute exact path='/setup/users' component={Setup} />
         <PrivateRoute exact path='/setup/outlets' component={Setup} />
         <PrivateRoute
