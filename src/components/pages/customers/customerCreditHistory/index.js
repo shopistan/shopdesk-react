@@ -5,7 +5,7 @@ import {
 } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import { customerCreditDetails } from '../../../../utils/api/customer-api-utils';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { message } from 'antd';
 
 const CustomerCreditHistory = (props) => {
@@ -88,6 +88,8 @@ const CustomerCreditHistory = (props) => {
               messageForCurrentCredit += '';
             }
 
+            const redirectInvoiceLink = `/invoice/${invoiceId}`;
+            const redirectCustomerLink = `/customers/${customerData.id}/view`;
             return (
               <VerticalTimelineElement
                 className='vertical-timeline-element--work'
@@ -98,8 +100,9 @@ const CustomerCreditHistory = (props) => {
               >
                 {/* <h3 className='vertical-timeline-element-title'></h3> */}
                 <h4 className='vertical-timeline-element-subtitle'>
-                  {customerData.customer_name} {isInvoiceData ? invoiceId : ''}{' '}
-                  {`invoice # ${invoiceId}`} of PK Rs. {balance}{' '}
+                  <Link to={redirectCustomerLink}>{customerData.customer_name}</Link>{' '}
+                  invoice # <Link to={redirectInvoiceLink}> {invoiceId}</Link>{' '}
+                  of PK Rs. {balance}{' '}
                   {isInvoiceData
                     ? `payed through account balance at outlet ${storeName}`
                     : ''}
