@@ -3,13 +3,12 @@
 
 .outlet {
   &__select {
-    display: flex;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    column-gap: 2rem;
+    row-gap: 2rem;
     cursor: pointer;
-
-    @include respond(mobile) {
-      flex-direction: column;
-    }
   }
 
   &__link {
@@ -38,8 +37,4 @@
 
 .loading-container {
   text-align: center;
-}
-
-.outlets-list-container{
-  display: grid !important;
 }
