@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useContext, useRef } from "react";
-import "./style.scss";
+//import "./style.scss";
 import { Table, Input, Form, InputNumber, Row, Col, Typography } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useHistory } from 'react-router-dom';
@@ -94,7 +94,7 @@ const EditableCell = ({
 /*------edittablecell------*/
 
 
-const StockNestedProductsTable = (props) => {
+const SellNestedProductsTable = (props) => {
     const history = useHistory();
     const [form] = Form.useForm();
     const [data, setData] = useState([]);
@@ -105,6 +105,7 @@ const StockNestedProductsTable = (props) => {
         var productsTotal = 0;
         var productsTotalQuantity = 0;
 
+
         const newData = [...data];
         const index = newData.findIndex(item => record.product_id === item.product_id);
         if (index > -1) {
@@ -112,8 +113,8 @@ const StockNestedProductsTable = (props) => {
             newData.splice(index, 1);
 
             newData.forEach(item => {
-                productsTotal = productsTotal + (parseFloat(item.qty || 0) * parseFloat(item.product_purchase_price));
-                productsTotalQuantity = productsTotalQuantity + parseFloat(item.qty || 0);
+                productsTotal = productsTotal + (parseFloat(item.qty) * parseFloat(item.product_sale_price));
+                productsTotalQuantity = productsTotalQuantity + item.qty;
             });
 
             setProductsTotalAmount(productsTotal);
@@ -137,9 +138,12 @@ const StockNestedProductsTable = (props) => {
                 ...row,
             });
             newData.forEach(item => {
-                productsTotal = productsTotal + (parseFloat(item.qty || 0) * parseFloat(item.product_purchase_price));
+                productsTotal = productsTotal + (parseFloat(item.qty || 0) * parseFloat(item.product_sale_price));
+                productsTotal = parseFloat(productsTotal).toFixed(2);
                 productsTotalQuantity = productsTotalQuantity + parseFloat(item.qty || 0);
             });
+
+            console.log(newData);
 
             setProductsTotalAmount(productsTotal);
             //setData(newData); //previous code imp one
@@ -152,7 +156,9 @@ const StockNestedProductsTable = (props) => {
         var productsTotal = 0;
         const newData = [...data];
         newData.forEach(item => {
-            productsTotal = productsTotal + (parseFloat(item.qty || 0) * parseFloat(item.product_purchase_price));
+            productsTotal = productsTotal + (parseFloat(item.qty || 0) * parseFloat(item.product_sale_price));
+            productsTotal = parseFloat(productsTotal).toFixed(2);
+
         });
         setProductsTotalAmount(productsTotal);
     }
@@ -164,7 +170,7 @@ const StockNestedProductsTable = (props) => {
         console.log("pro", props.tableData);
         calculateTotalAmount(props.tableData);
 
-    }, [props.tableData, props.tableDataLoading,]);  /* imp passing props to re-render */
+    }, [props.tableData, props.tableDataLoading ]);  /* imp passing props to re-render */
 
 
     const showTotalItemsBar = (total, range) => {
@@ -184,44 +190,18 @@ const StockNestedProductsTable = (props) => {
                 return (
                     <div>
                         {record.product_name &&
-                            <small>
-                                {
-                                    record.product_name
-                                    + '/' + record.product_variant1_value
-                                    + '/ ' + record.product_variant2_value
-                                }
-                            </small>
+                            record.product_variant1_value ? record.product_variant2_value ? <small>{record.product_name + '/ ' + record.product_variant1_value + '/ ' + record.product_variant2_value}</small>
+                                : <small>{record.product_name + ' / ' + record.product_variant1_value}</small>
+                            : record.product_variant2_value ? <small>{record.product_name + ' / ' + record.product_variant2_value}</small>
+                                : record.product_name
                         }
                     </div>
                 );
             }
+
         },
         {
-            title: "SKU",
-            dataIndex: "product_sku",
-            render: (_, record) => {
-                return (
-                    <div>
-                        {record.product_sku}
-                    </div>
-                );
-            }
-        },
-        {
-            title: "Quantity In Hand",
-            dataIndex: "product_quantity",
-            render: (_, record) => {
-                return (
-                    <div>
-                        {record.product_quantity}
-                    </div>
-                );
-            }
-        },
-        {
-            title: props.tableType ==='order_stock' ? "Ordered quantity"
-             : props.tableType ==='order_adjustment' ? "Adjusted quantity"
-             : "Ordered quantity",
+            title: "QTY",
             dataIndex: "qty",
             editable: true,
             render: (_, record) => {
@@ -234,11 +214,12 @@ const StockNestedProductsTable = (props) => {
         },
         {
             title: "Price",
-            dataIndex: "product_purchase_price",
+            dataIndex: "product_sale_price",
+            editable: true,
             render: (_, record) => {
                 return (
                     <div>
-                        {record.product_purchase_price}
+                        <InputNumber value={parseFloat(record.product_sale_price).toFixed(2) } />
                     </div>
                 );
             }
@@ -248,7 +229,7 @@ const StockNestedProductsTable = (props) => {
             render: (_, record) => {
                 return (
                     <div>
-                        {record.qty ? (parseFloat(record.qty) * parseFloat(record.product_purchase_price)).toFixed(2)
+                        {record.qty ? (parseFloat(record.qty) * parseFloat(record.product_sale_price)).toFixed(2)
                             : parseFloat(0)
                         }
                     </div>
@@ -335,12 +316,13 @@ const StockNestedProductsTable = (props) => {
                     //current: currentPageNumber,
                     //onChange: (page, pageSize) => handlePageChange(page, pageSize),
                 }}
-                footer={tableFooter}
+            //footer={tableFooter}
+            size="small"
             />
         </Form>
 
     );
 };
 
-export default StockNestedProductsTable;
+export default SellNestedProductsTable;
 

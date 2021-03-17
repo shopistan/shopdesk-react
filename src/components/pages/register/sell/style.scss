@@ -50,4 +50,48 @@
       }
     }
   }
+
+
+  .add-product-btn{
+    margin-top: 3rem;
+    width: 100%;
+    border: 2px solid #3da446 !important;
+    margin-bottom: 3rem;
+  }
+
+  
+  .mop-btns{
+    margin-bottom: 1rem !important;
+  }
+
+   /*sell customer table*/
+  .sell-customer-select-table {
+  width: 100%;
+  max-width: 100%;
+  }
+
+  .sell-customer-select-table th {
+  text-align: left;
+  font-size: 0.85em;
+  color: #999;
+  border-top: none !important;
+  }
+
+  .sell-customer-select-table .customer-del-btn-pull-right{
+    float: right !important;
+    border: none;
+    background: transparent;
+  }
+
+  .sell-customer-select-table .customer-del-btn-icon{
+    color: red;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  /*sell customer table*/
+
+
+
+
 }

@@ -4,7 +4,9 @@ const constants = {
     GET: 'get'
   },
   USER_DETAILS_KEY: 'user',
-  USER_AUTH_KEY: 'auth'
+  USER_AUTH_KEY: 'auth',
+  SELL_CURRENT_INVOICE_KEY: 'current_invoice',
+  SELL_INVOICE_QUEUE_KEY: 'invoice_queue'
 };
 
 export default constants;

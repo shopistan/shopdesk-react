@@ -1,0 +1,37 @@
+
+#printSalesTable{
+    //display: none !important;
+}
+
+.sales-invoice-table {
+	width: 100%;
+}
+
+.sales-invoice-table th,td:p:nth-child(1)  {
+	width: 10%;
+}
+.sales-invoice-table th,td:p:nth-child(2)  {
+	width: 50%;
+}
+.sales-invoice-table th,td:p:nth-child(3)  {
+	width: 20%;
+}
+.sales-invoice-table th,td:p:nth-child(4)  {
+	width: 20%;
+}
+.sales-invoice-table .card-pull-right  {
+	float: right !important;
+}
+
+.sales-invoice-table tr {
+	border-bottom: 1px solid #000;
+
+}
+.sales-invoice-table th {
+	text-align: left;
+	border-bottom: 2px dotted #000;
+}
+#printSalesTable hr {
+	border-right: 2px solid #000;
+}
+

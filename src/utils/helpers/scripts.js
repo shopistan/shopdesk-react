@@ -4,7 +4,7 @@
 //     return this.push.apply(this, rest);
 // };
 
-function uniqid() {
+export function uniqid() {
   var ts = String(new Date().getTime()),
     i = 0,
     out = "";
@@ -124,6 +124,7 @@ $(function() {
 export const registeredProductsPageLimit = 1000;
 export const suppliersPageLimit = 100;
 export const outletsPageLimit = 100;
+export const couriersPageLimit = 100;
 
 export function var_check(v) {
   if (typeof v !== "undefined" && v !== "" && v !== null) return true;
