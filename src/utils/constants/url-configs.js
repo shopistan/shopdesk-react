@@ -101,6 +101,11 @@ const urls = {
     RECEIVE_TRANSFER_IN:  BASE_URL + '/api/transfers/getTransfer',
     RECEIVE_TRANSFER_STATUS: BASE_URL + '/api/transfers/status',
 
+  },
+  SALES: {  
+    VIEW_HISTORY: BASE_URL + '/api/register/view',
+    GET_SALE_HISTORY: BASE_URL + '/api/register/get',
+
   }
 
 };
