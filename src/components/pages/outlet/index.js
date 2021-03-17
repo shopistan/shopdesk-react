@@ -56,6 +56,7 @@ const Outlet = () => {
       else {
         console.log('res -> ', userSelectOutletResponse);
         userSelectOutletResponse.refresh_token = loginCacheData.refresh_token; 
+        userSelectOutletResponse.user_info = loginCacheData.user_info; 
         clearDataFromLocalStorage();
         saveDataIntoLocalStorage("user", userSelectOutletResponse);
         setLoading(false);

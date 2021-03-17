@@ -71,6 +71,7 @@ const PurchaseOrder = () => {
 
 
   const handleSearch = async (value) => {
+    setSelectedSearchValue(value);
 
     var currValue = value;
     currValue = currValue.toLowerCase();

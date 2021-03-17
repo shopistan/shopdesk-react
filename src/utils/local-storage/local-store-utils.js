@@ -50,3 +50,11 @@ export const checkAuthTokenExpiration = (expirationDate) => {
     else { return false; }
 
 }
+
+
+export const getSellInvoiceDataFromLocalStorage = (key) => {
+  const dataFromLocalStorage = JSON.parse(window.localStorage.getItem(key));
+  return {
+    data: dataFromLocalStorage
+  };
+};

@@ -81,3 +81,27 @@ export const rechargeCustomerAccount = async (customerData, paymetInfo) => {
     singleCustomerFormDataBody //body
   );
 };
+
+
+export const searchCustomer = async (searchValue) => {
+  const formDataPair = {
+    q: searchValue,
+  }
+
+  const searchCustomerFormDataBody = ApiCallUtil.constructFormData(
+    formDataPair
+  );
+  const url = UrlConstants.CUSTOMERS.SEARCH;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+    searchCustomerFormDataBody,   //body
+  );
+
+};
+
+
+
+
