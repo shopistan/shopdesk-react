@@ -199,6 +199,7 @@ const SalesHistory = () => {
     if (getSaleHistoryResponse.hasError) {
       console.log('Cant fetch registered products Data -> ', getSaleHistoryResponse.errorMessage);
       message.error(getSaleHistoryResponse.errorMessage, 3);
+      setTimeout(hide, 1000);
     }
     else {
       console.log('res -> ', getSaleHistoryResponse);
@@ -239,7 +240,7 @@ const SalesHistory = () => {
     fetchSalesHistoryData(paginationLimit, currentPg);
   }
 
-  
+
 
 
   const OptionsDropdown = (
