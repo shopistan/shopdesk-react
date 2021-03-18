@@ -56,7 +56,9 @@ const urls = {
     IMG_UPLOAD: BASE_URL + '/api/products/do_upload',
     GET_REGISTERED_PRODUCTS: BASE_URL + '/api/products/getRegister',
     SAVE_DISCOUNTED: BASE_URL + '/api/promotions/setSpecial',
-    BULK_UPLOAD: BASE_URL + '/api/integrations/add_products'
+    BULK_UPLOAD: BASE_URL + '/api/integrations/add_products',
+    GET_MOVEMENT_REPORT: BASE_URL + '/api/reports/productMovementReport',
+
   },
   REPORTS: {
     SALES_SUMMARY: BASE_URL + '/api/reports/saleSummary',
@@ -105,6 +107,10 @@ const urls = {
   SALES: {  
     VIEW_HISTORY: BASE_URL + '/api/register/view',
     GET_SALE_HISTORY: BASE_URL + '/api/register/get',
+
+  },
+  DASHBOARD:{
+    VIEW_DATA: BASE_URL + '/api/reports/dashboard',
 
   }
 

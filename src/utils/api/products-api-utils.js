@@ -211,6 +211,24 @@ export const imageUpload = async (productImg) => {
 
 
 
+export const getProductMovementReport = async (productId) => {
+    const formDataPair = {
+        id: productId
+    };
+    
+    const producttMovementReportFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+    const url = UrlConstants.PRODUCTS.GET_MOVEMENT_REPORT;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        producttMovementReportFormDataBody //body
+    );
+};
+
+
+
 
 export const createComplexAddFormData =  (addProductData) => {
 
