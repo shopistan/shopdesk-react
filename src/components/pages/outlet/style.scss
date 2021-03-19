@@ -20,6 +20,9 @@
     border: 3px solid #eee;
 
     &:hover {
+      color: $color-white;
+      background-color: $color-primary;
+      border-color: $color-primary;
       transform: scale(0.9);
     }
 
@@ -31,7 +34,9 @@
   }
 
   &__active {
-    border: 3px solid $color-primary;
+    color: $color-white;
+    background-color: $color-primary;
+    border-color: $color-primary;
   }
 }
 

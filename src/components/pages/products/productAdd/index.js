@@ -413,41 +413,41 @@ const ProductAdd = () => {
   var ProductImageSrc = `${productImagePreviewSource}`; //imp to set image source
 
   return (
-    <div className='page dashboard'>
-      <div className='page__header'>
+    <div className="page dashboard">
+      <div className="page__header">
         <h1>New Product</h1>
       </div>
 
-      <div className='page__content'>
-        <div className='page__form'>
+      <div className="page__content">
+        <div className="page__form">
           <Form
             form={form}
-            name='basic'
-            layout='vertical'
+            name="basic"
+            layout="vertical"
             initialValues={{
               remember: true,
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
           >
-            <div className='form__row--footer'>
+            <div className="form__row--footer">
               <Button
-                type='primary'
-                className='product-btn-edit'
-                htmlType='submit'
+                type="primary"
+                className="product-btn-edit"
+                htmlType="submit"
               >
                 Add Product
               </Button>
             </div>
 
             {/* Form Section */}
-            <div className='form__section'>
+            <div className="form__section">
               {/* Row */}
-              <div className='form__row'>
-                <div className='form__col'>
+              <div className="form__row">
+                <div className="form__col">
                   <Form.Item
-                    label='SKU'
-                    name='sku'
+                    label="SKU"
+                    name="sku"
                     rules={[
                       {
                         required: true,
@@ -459,10 +459,10 @@ const ProductAdd = () => {
                   </Form.Item>
                 </div>
 
-                <div className='form__col'>
+                <div className="form__col">
                   <Form.Item
-                    label='Product Name'
-                    name='product_name'
+                    label="Product Name"
+                    name="product_name"
                     rules={[
                       {
                         required: true,
@@ -477,11 +477,11 @@ const ProductAdd = () => {
               {/* Row */}
 
               {/* Row */}
-              <div className='form__row'>
-                <div className='form__col'>
+              <div className="form__row">
+                <div className="form__col">
                   <Form.Item
-                    label='Product Description'
-                    name='product_description'
+                    label="Product Description"
+                    name="product_description"
                     /*rules={[
                     {
                       required: true,
@@ -496,11 +496,11 @@ const ProductAdd = () => {
               {/* Row */}
 
               {/* Row */}
-              <div className='form__row'>
-                <div className='form__col'>
+              <div className="form__row">
+                <div className="form__col">
                   <Form.Item
-                    label='Tax'
-                    name='tax'
+                    label="Tax"
+                    name="tax"
                     rules={[
                       {
                         required: true,
@@ -520,10 +520,10 @@ const ProductAdd = () => {
                   </Form.Item>
                 </div>
 
-                <div className='form__col'>
+                <div className="form__col">
                   <Form.Item
-                    label='Select Category'
-                    name='category'
+                    label="Select Category"
+                    name="category"
                     rules={[
                       {
                         required: true,
@@ -546,11 +546,11 @@ const ProductAdd = () => {
               {/* Row */}
 
               {/* Row */}
-              <div className='form__row'>
-                <div className='form__col'>
+              <div className="form__row">
+                <div className="form__col">
                   <Form.Item
-                    label='Purchase Price'
-                    name='purchase_price'
+                    label="Purchase Price"
+                    name="purchase_price"
                     rules={[
                       {
                         required: true,
@@ -561,13 +561,13 @@ const ProductAdd = () => {
                     <InputNumber
                       min={0}
                       defaultValue={0}
-                      className='u-width-100'
+                      className="u-width-100"
                       onChange={handlePurchaseChange}
                     />
                   </Form.Item>
                 </div>
 
-                <div className='form__col'>
+                <div className="form__col">
                   {/* <Form.Item>
                     <span>
                       <Checkbox
@@ -580,8 +580,8 @@ const ProductAdd = () => {
                   </Form.Item> */}
 
                   <Form.Item
-                    label='Sale Price'
-                    name='sale_price'
+                    label="Sale Price"
+                    name="sale_price"
                     rules={[
                       {
                         required: true,
@@ -592,14 +592,19 @@ const ProductAdd = () => {
                     <InputNumber
                       min={0}
                       defaultValue={0}
-                      className='u-width-100'
+                      className="u-width-100"
                       onChange={handleSaleChange}
                     />
 
+<<<<<<< HEAD
                   </Form.Item>
 
                   <Checkbox
                       className='inclusive-sale-price-check'
+=======
+                    <Checkbox
+                      className="inclusive-sale-price-check"
+>>>>>>> a864c043defabc16a6f9a6e3b7dfdba1aaceea03
                       onChange={onInclusiveTaxChecked}
                     >
                       <small>Sale price inclusive of tax</small>
@@ -610,11 +615,11 @@ const ProductAdd = () => {
               {/* Row */}
 
               {/* Row */}
-              <div className='form__row'>
-                <div className='form__col'>
+              <div className="form__row">
+                <div className="form__col">
                   <Form.Item
-                    label='Product Image'
-                    name='iamge'
+                    label="Product Image"
+                    name="iamge"
                     rules={[
                       {
                         required: false,
@@ -628,9 +633,9 @@ const ProductAdd = () => {
                   </Form.Item>
                 </div>
 
-                <div className='form__col form__col--button'>
-                  <Form.Item className='u-width-100'>
-                    <Button type='default' onClick={handleUpload}>
+                <div className="form__col form__col--button">
+                  <Form.Item className="u-width-100">
+                    <Button type="default" onClick={handleUpload}>
                       Upload
                     </Button>
                   </Form.Item>
@@ -639,10 +644,10 @@ const ProductAdd = () => {
               {/* Row */}
 
               {/* Row */}
-              <div className='form__row'>
-                <div className='form__col'>
+              <div className="form__row">
+                <div className="form__col">
                   <Form.Item>
-                    <img className='thumbnail' src={ProductImageSrc}></img>
+                    <img className="thumbnail" src={ProductImageSrc}></img>
                   </Form.Item>
                 </div>
               </div>
@@ -651,8 +656,8 @@ const ProductAdd = () => {
             {/* Form Section */}
 
             {/* Form Section */}
-            <div className='form__section'>
-              <div className='form__section__header'>
+            <div className="form__section">
+              <div className="form__section__header">
                 <h2>Attributes</h2>
                 <p>
                   The attributes allows you to store additional information for
@@ -662,16 +667,16 @@ const ProductAdd = () => {
               </div>
 
               <div>
-                <Form.List name='product_attributes' className='attribute'>
+                <Form.List name="product_attributes" className="attribute">
                   {(fields, { add, remove }) => (
-                    <div className='form__row form__row--full-col'>
-                      <div className='form__col'>
+                    <div className="form__row form__row--full-col">
+                      <div className="form__col">
                         {fields.map((field) => (
                           <Space
                             key={field.key}
                             style={{ display: "flex", marginBottom: 8 }}
-                            align='baseline'
-                            className='attribute__wrapper'
+                            align="baseline"
+                            className="attribute__wrapper"
                           >
                             <Form.Item
                               {...field}
@@ -683,9 +688,9 @@ const ProductAdd = () => {
                                   message: "Missing Atrribute Key",
                                 },
                               ]}
-                              className='attribute__input'
+                              className="attribute__input"
                             >
-                              <Input placeholder='Key' />
+                              <Input placeholder="Key" />
                             </Form.Item>
                             <Form.Item
                               {...field}
@@ -697,9 +702,9 @@ const ProductAdd = () => {
                                   message: "Missing Attribute Value",
                                 },
                               ]}
-                              className='attribute__input'
+                              className="attribute__input"
                             >
-                              <Input placeholder='Value' />
+                              <Input placeholder="Value" />
                             </Form.Item>
                             <MinusCircleOutlined
                               onClick={() => remove(field.name)}
@@ -708,10 +713,10 @@ const ProductAdd = () => {
                         ))}
                       </div>
 
-                      <div className='form__col'>
+                      <div className="form__col">
                         <Form.Item>
                           <Button
-                            type='dashed'
+                            type="dashed"
                             onClick={() => add()}
                             block
                             icon={<PlusOutlined />}
@@ -728,9 +733,9 @@ const ProductAdd = () => {
             {/* Form Section */}
 
             {/* Form Section */}
-            <div className='form__section'>
-              <div className='form__section__header'>
-                <div className='switch__row'>
+            <div className="form__section">
+              <div className="form__section__header">
+                <div className="switch__row">
                   <h2>Inventory Tracking</h2>
                   <Switch
                     checkedChildren={<CheckOutlined />}
@@ -741,8 +746,8 @@ const ProductAdd = () => {
                 </div>
               </div>
 
-              <div className='form__row'>
-                <div className='form__col'>
+              <div className="form__row">
+                <div className="form__col">
                   <p>
                     Leave this on if you want to keep track of your inventory
                     quantities. You'll be able to report on cost of goods sold,
@@ -757,17 +762,17 @@ const ProductAdd = () => {
               {userStores.length > 0 &&
                 inventoryTrackingCheck &&
                 !variantsCheck && (
-                  <div className='form__row'>
+                  <div className="inventory-tracking">
                     {userStores.map((store, index) => {
                       return (
-                        <div className='form__col'>
+                        <div className="inventory-tracking__field">
                           <Form.Item
                             label={store.store_name}
                             name={`${store.store_name}`}
                           >
                             <InputNumber
                               defaultValue={0}
-                              className='u-width-100'
+                              className="u-width-100"
                             />
                           </Form.Item>
                         </div>
@@ -780,9 +785,9 @@ const ProductAdd = () => {
             {/* Form Section */}
 
             {/* Form Section */}
-            <div className='form__section'>
-              <div className='form__section__header'>
-                <div className='switch__row'>
+            <div className="form__section">
+              <div className="form__section__header">
+                <div className="switch__row">
                   <h2>Variant Products</h2>
                   <Switch
                     checkedChildren={<CheckOutlined />}
@@ -793,8 +798,8 @@ const ProductAdd = () => {
                 </div>
               </div>
 
-              <div className='form__row'>
-                <div className='form__col'>
+              <div className="form__row">
+                <div className="form__col">
                   <p>
                     These are products that have different versions, like size
                     or color. Turn this on to specify up to two attributes (like
@@ -817,25 +822,25 @@ const ProductAdd = () => {
               {variantsCheck && (
                 <div>
                   {/*-Row-*/}
-                  <div className='form__row'>
-                    <div className='form__col'>
+                  <div className="form__row">
+                    <div className="form__col">
                       <Form.Item
-                        label='Attribute(e.g color, size)'
-                        name='product_variant1_name'
+                        label="Attribute(e.g color, size)"
+                        name="product_variant1_name"
                       >
-                        <Input placeholder='Attribute Name' />
+                        <Input placeholder="Attribute Name" />
                       </Form.Item>
                     </div>
-                    <div className='form__col'>
+                    <div className="form__col">
                       <Form.Item
-                        label='Value(e.g green, blue, red)'
-                        name='product_variant1_values'
+                        label="Value(e.g green, blue, red)"
+                        name="product_variant1_values"
                       >
                         <Select
-                          mode='multiple'
+                          mode="multiple"
                           //allowClear
                           style={{ width: "100%" }}
-                          placeholder='Add a tag'
+                          placeholder="Add a tag"
                           onSearch={handleProductVariantsTagChangeSearch}
                           onSelect={handleVariantsSelectTags}
                           onKeyDown={handleVariants1TagsKeyDown}
@@ -856,22 +861,22 @@ const ProductAdd = () => {
 
                   {/*-Row-*/}
 
-                  <div className='form__row'>
-                    <div className='form__col'>
-                      <Form.Item label='Attribute' name='product_variant2_name'>
+                  <div className="form__row">
+                    <div className="form__col">
+                      <Form.Item label="Attribute" name="product_variant2_name">
                         <Input
-                          placeholder='Attribute Name'
+                          placeholder="Attribute Name"
                           disabled={variant1Tags.length > 0 ? false : true}
                         />
                       </Form.Item>
                     </div>
-                    <div className='form__col'>
-                      <Form.Item label='Value' name='product_variant2_values'>
+                    <div className="form__col">
+                      <Form.Item label="Value" name="product_variant2_values">
                         <Select
-                          mode='multiple'
+                          mode="multiple"
                           //allowClear
                           style={{ width: "100%" }}
-                          placeholder='Add a tag'
+                          placeholder="Add a tag"
                           onSearch={handleProductVariantsTagChangeSearch}
                           onKeyDown={handleVariants2TagsKeyDown}
                           onDeselect={handleVariants2DeSelectTags}
@@ -891,9 +896,9 @@ const ProductAdd = () => {
                     </div>
                   </div>
 
-                  <div className='form__row'>
+                  <div className="form__row">
                     {/* Table */}
-                    <div className='table'>
+                    <div className="table">
                       <ProductsVariantsTable
                         tableData={productVariantsCombinations}
                         tableDataLoading={loading}

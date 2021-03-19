@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import { Table, Form, Typography } from "antd";
-import { useHistory } from 'react-router-dom';
-
+import { useHistory } from "react-router-dom";
 
 const SuppliersTable = (props) => {
   const [form] = Form.useForm();
@@ -9,12 +8,11 @@ const SuppliersTable = (props) => {
   const [currentPageNumber, setcurrentPageNumber] = useState(1);
   const history = useHistory();
 
-
   const handleDelete = (record) => {
     console.log(record);
     history.push({
       pathname: `/suppliers/${record.supplier_id}/delete`,
-      data: record // your data array of objects
+      data: record, // your data array of objects
     });
   };
 
@@ -22,38 +20,44 @@ const SuppliersTable = (props) => {
     console.log(record);
     history.push({
       pathname: `/suppliers/${record.supplier_id}/edit`,
-      data: record // your data array of objects
+      data: record, // your data array of objects
     });
   };
 
   const showTotalItemsBar = (total, range) => {
     console.log(range);
-    return `${range[0]}-${range[1]} of ${total} items`
+    return `${range[0]}-${range[1]} of ${total} items`;
   };
 
   const handlePageChange = (page, pageSize) => {
-    setcurrentPageNumber(page)
+    setcurrentPageNumber(page);
     props.onClickPageChanger(page);
   };
 
-
   useEffect(async () => {
     setData(props.tableData);
-    if(props.paginationData && (currentPageNumber > Math.ceil(props.paginationData.totalPages))) {
+    if (
+      props.paginationData &&
+      currentPageNumber > Math.ceil(props.paginationData.totalPages)
+    ) {
       setcurrentPageNumber(1);
     }
-
-  }, [props.tableData, props.tableDataLoading, props.paginationData]);  /* imp passing props to re-render */
+  }, [
+    props.tableData,
+    props.tableDataLoading,
+    props.paginationData,
+  ]); /* imp passing props to re-render */
 
   const columns = [
     {
-      title: "SupplierName",
+      title: "Supplier Name",
       dataIndex: "supplier_name",
-      width: "10%",
+      width: "20%",
     },
     {
-      title: "ContactPerson",
+      title: "Contact Person",
       dataIndex: "supplier_contact_name",
+      width: "20%",
     },
     {
       title: "Email",
@@ -68,24 +72,17 @@ const SuppliersTable = (props) => {
       dataIndex: "supplier_tax_number",
     },
     {
-      title: "operation",
+      title: "Operations",
       dataIndex: "operation",
-      width: "20%",
+
       render: (_, record) => {
         return (
-          <div className='action-btns'>
-            <Typography.Link
-              onClick={() => edit(record)}
-            >
-              Edit
-            </Typography.Link>
+          <div className="action-btns">
+            <Typography.Link onClick={() => edit(record)}>Edit</Typography.Link>
             {data.length >= 1 ? (
-              <Typography.Link
-                onClick={() => handleDelete(record)}
-              >
-                delete
+              <Typography.Link onClick={() => handleDelete(record)}>
+                Delete
               </Typography.Link>
-
             ) : null}
           </div>
         );
@@ -109,17 +106,14 @@ const SuppliersTable = (props) => {
     };
   });
 
-
-
   return (
     <Form form={form} component={false}>
-
       <Table
         bordered
         dataSource={data}
         columns={mergedColumns}
-        rowClassName='editable-row'
-        className='table-frame'
+        rowClassName="editable-row"
+        className="table-frame"
         pagination={{
           total: props.paginationData && props.paginationData.totalElements,
           showTotal: (total, range) => showTotalItemsBar(total, range),
@@ -131,10 +125,8 @@ const SuppliersTable = (props) => {
         }}
         loading={props.tableDataLoading}
       />
-
     </Form>
   );
 };
 
 export default SuppliersTable;
-

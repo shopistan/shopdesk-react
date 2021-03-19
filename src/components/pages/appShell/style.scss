@@ -67,7 +67,6 @@
   &__right {
     @extend %flex-between;
 
-    justify-content: flex-end;
     color: $color-white;
 
     @include respond(mobile) {
