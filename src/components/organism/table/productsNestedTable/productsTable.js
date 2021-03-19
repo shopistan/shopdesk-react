@@ -142,6 +142,7 @@ const ProductsTable = (props) => {
     {
       title: "Product Name",
       dataIndex: "product_name",
+      width: "20%",
       render: (_, record) => {
         return (
           <div>
@@ -166,7 +167,7 @@ const ProductsTable = (props) => {
       //dataIndex: "variant",
       render: (_, record) => {
         return (
-          <div className='action-btns'>
+          <div className="action-btns">
             <Typography.Link onClick={() => toggleVariants(record)}>
               {record.variant > 1 ? record.variant + " variants" : "-"}
             </Typography.Link>
@@ -182,7 +183,7 @@ const ProductsTable = (props) => {
       title: "Barcode",
       render: (_, record) => {
         return (
-          <div className='action-btns'>
+          <div className="action-btns">
             <BarcodeOutlined
               onClick={() => barcodeGenerator(record)}
             ></BarcodeOutlined>
@@ -195,7 +196,7 @@ const ProductsTable = (props) => {
       dataIndex: "operation",
       render: (_, record) => {
         return (
-          <div className='action-btns'>
+          <div className="action-btns">
             <Typography.Link onClick={() => edit(record)}>Edit</Typography.Link>
             {data.length >= 1 ? (
               <Typography.Link onClick={() => handleDelete(record)}>
@@ -229,8 +230,8 @@ const ProductsTable = (props) => {
       bordered
       dataSource={data}
       columns={mergedColumns}
-      rowClassName='editable-row'
-      className='table-frame'
+      rowClassName="editable-row"
+      className="table-frame"
       pagination={{
         total: props.paginationData && props.paginationData.totalElements,
         showTotal: (total, range) => showTotalItemsBar(total, range),
@@ -242,7 +243,7 @@ const ProductsTable = (props) => {
         position: ["topRight"],
       }}
       loading={props.tableDataLoading}
-      rowKey='product_id'
+      rowKey="product_id"
       expandedRowKeys={tableExpandedRows}
       expandedRowRender={tableExpandedRowRender}
       onExpand={onRowExpand}

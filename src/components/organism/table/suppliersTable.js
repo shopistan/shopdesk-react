@@ -77,11 +77,11 @@ const SuppliersTable = (props) => {
 
       render: (_, record) => {
         return (
-          <div className='action-btns'>
+          <div className="action-btns">
             <Typography.Link onClick={() => edit(record)}>Edit</Typography.Link>
             {data.length >= 1 ? (
               <Typography.Link onClick={() => handleDelete(record)}>
-                delete
+                Delete
               </Typography.Link>
             ) : null}
           </div>
@@ -112,8 +112,8 @@ const SuppliersTable = (props) => {
         bordered
         dataSource={data}
         columns={mergedColumns}
-        rowClassName='editable-row'
-        className='table-frame'
+        rowClassName="editable-row"
+        className="table-frame"
         pagination={{
           total: props.paginationData && props.paginationData.totalElements,
           showTotal: (total, range) => showTotalItemsBar(total, range),
