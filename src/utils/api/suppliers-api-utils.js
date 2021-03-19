@@ -41,6 +41,17 @@ export const viewSuppliers = async (limit, PageNumber) => {
     );
 };
 
+export const viewAllSuppliers = async () => {
+    
+    const url = UrlConstants.SUPPLIERS.VIEW_ALL;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+    );
+};
+
 export const deleteSupplier = async (supplierId) => {
     const formDataPair = {
         supplier_id: supplierId

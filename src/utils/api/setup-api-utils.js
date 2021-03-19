@@ -65,6 +65,42 @@ export const getOutlet = async (storeId) => {
 
 };
 
+export const userLoginForNewApiKey = async (refreshToken, neverExpire) => {
+  const formDataPair = {
+    refresh: refreshToken,
+    never_expire: neverExpire,
+  };
+
+  const LoginForNewApiKeyFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+  const url = UrlConstants.AUTH.LOGIN;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+    LoginForNewApiKeyFormDataBody , //body
+  );
+
+
+};
+
+export const selectOutletForNewApiKey = async (storeRandomId) => {
+  const formDataPair = {
+    store_random: storeRandomId,
+    type:  GenericConstants.X_API_KEY,
+  };
+
+  const selectOutletFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+  const url = UrlConstants.OULETS.SELECT_OUTLET;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+    selectOutletFormDataBody //body
+  );
+};
+
 
 export const viewUsers = async () => {
 

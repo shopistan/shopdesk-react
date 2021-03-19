@@ -39,9 +39,6 @@ const PrintSalesInvoice = (props) => {
 
     return (
 
-
-
-        <div id="printDiv">
             <div id="printSalesTable">
                 <center>
                     <img src={templateImageSrc}  style={{width: "70"}} /><br/> 
@@ -53,7 +50,8 @@ const PrintSalesInvoice = (props) => {
                     <b style={{fontSize: "10px"}}>Date: </b> <span>{today}</span><br />
                     <b style={{fontSize: "10px"}}>Sales Person: </b><span>{userName}</span><br />
                 </center>
-                <table class="sales-invoice-table">
+                <table class="print-sales-invoice sales-invoice-table"
+                    style={{width: "100%", borderBottom: "2px solid #000", borderTop: "2px solid #000"}}> 
                     <thead>
                         <tr>
                             <th>QTY</th>
@@ -68,10 +66,10 @@ const PrintSalesInvoice = (props) => {
                             return (
 
                                 <tr >
-                                    <td>{pro.qty}</td>
-                                    <td>{pro.searchName} </td>
-                                    <td>{pro.product_sale_price}</td>
-                                    <td>{(pro.qty*pro.product_sale_price).toFixed(2)}</td>
+                                    <td style={{textAlign: "center"}}>{pro.qty}</td>
+                                    <td  style={{textAlign: "center"}}>{pro.searchName} </td>
+                                    <td style={{textAlign: "center"}}>{pro.product_sale_price}</td>
+                                    <td style={{textAlign: "center"}}>{(pro.qty*pro.product_sale_price).toFixed(2)}</td>
                                 </tr>
 
                             )
@@ -82,7 +80,7 @@ const PrintSalesInvoice = (props) => {
                     </tbody>
 
                 </table>
-                <hr />
+                
                 <div style={{ width: "100%", borderBottom: "2px dotted #000" }}>
                     <p><span><b>Subtotal</b></span><span style={{ right: "20px", position: "absolute" }}>{(invoice.sub_total).toFixed(2)}</span></p>
                     <p><span><b>Tax</b></span><span style={{ right: "20px", position: "absolute" }}>{(invoice.tax).toFixed(2)}</span></p>
@@ -101,10 +99,7 @@ const PrintSalesInvoice = (props) => {
                 <hr />
 
             </div>
-        </div>
-
-
-
+        
 
 
     );

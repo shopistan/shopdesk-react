@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Table, Menu, Dropdown, Button } from "antd";
-import { ProfileOutlined, DownOutlined } from "@ant-design/icons";
+import { ProfileOutlined, DownOutlined, MinusCircleOutlined, SendOutlined } from "@ant-design/icons";
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 
@@ -21,7 +21,7 @@ const StockTable = (props) => {
                     icon={<ProfileOutlined />}
                     onClick={(e) => e.preventDefault()}
                 >
-                    More <DownOutlined />
+                     <DownOutlined />
                     </Button>
             </Dropdown>)
     };
@@ -32,10 +32,11 @@ const StockTable = (props) => {
         return (
             <Menu>
                 <Menu.Item key='0' onClick={() => handleReceive(record) }>
-                    Receive
+                    <SendOutlined /> Receive
               </Menu.Item>
                 <Menu.Divider />
                 <Menu.Item key='1' onClick={() => handleForceClose(record)}>
+                    <MinusCircleOutlined /> 
                     Force Close
               </Menu.Item>
                 <Menu.Divider />

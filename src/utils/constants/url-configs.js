@@ -6,7 +6,7 @@ const urls = {
   IMAGE_UPLOADS_URL,
   AUTH: {
     LOGIN: BASE_URL + '/api/users/login',
-    SIGNUP: BASE_URL + '/api/users/signupl'
+    SIGNUP: BASE_URL + '/api/users/signup'
   },
   TAX: {
     VIEW: BASE_URL + '/api/taxes/view',
@@ -26,7 +26,8 @@ const urls = {
     VIEW: BASE_URL + '/api/suppliers/view',
     ADD_SUPPLIER: BASE_URL + '/api/suppliers/add',
     EDIT_SUPPLIER: BASE_URL + '/api/suppliers/edit',
-    DELETE_SUPPLIER: BASE_URL + '/api/suppliers/delete'
+    DELETE_SUPPLIER: BASE_URL + '/api/suppliers/delete',
+    VIEW_ALL: BASE_URL + '/api/suppliers/viewAll',
   },
   OULETS: {
     SELECT_OUTLET: BASE_URL + '/api/users/selectStore'
@@ -58,6 +59,7 @@ const urls = {
     SAVE_DISCOUNTED: BASE_URL + '/api/promotions/setSpecial',
     BULK_UPLOAD: BASE_URL + '/api/integrations/add_products',
     GET_MOVEMENT_REPORT: BASE_URL + '/api/reports/productMovementReport',
+    GET_FULL_REGISTERED_PRODUCTS: BASE_URL + '/api/products/getFullRegister',
 
   },
   REPORTS: {

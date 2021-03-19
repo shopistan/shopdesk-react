@@ -6,6 +6,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import UrlConstants from '../../../../utils/constants/url-configs';
 import * as ProductsApiUtil from '../../../../utils/api/products-api-utils';
 import Joi_sd from '../../../../utils/helpers/joi-custom';
+import * as Helpers from "../../../../utils/helpers/scripts";
 
 
 const ProductUpload = () => {
@@ -35,10 +36,17 @@ const ProductUpload = () => {
       reader.readAsText(file);
       reader.onload = function (evt) {
         // code to convert file data and render in json format
-        var jsonOutput = csvJSON(evt.target.result);
-        console.log("json-out", jsonOutput);
-        jsonOutput = JSON.parse((jsonOutput));
-        console.log("json-out-aprse", jsonOutput);
+        //var json = csvJSON(evt.target.result); //2nd custom function for conversion
+        //console.log(json);
+        console.log(Helpers.CSV2JSON(evt.target.result));
+
+        var jsonOutput = JSON.parse(Helpers.CSV2JSON(evt.target.result));  //1st custom function for conversion
+        console.log(jsonOutput);
+
+
+        //console.log("json-out", jsonOutput);
+        //var jsonOutput = JSON.parse(json);
+        //console.log("json-out-aprse", jsonOutput);
         
         /*-------------------------------*/
         
@@ -58,7 +66,7 @@ const ProductUpload = () => {
           variantName2: "string",
           variantValue1: "string",
           variantValue2: "string",
-          attributes: "string"
+          //attributes: "string"
 
         };
         let checkFile = new Joi_sd(opt);
@@ -110,6 +118,7 @@ const ProductUpload = () => {
 
 
   async function uploadChunk(products) {
+    console.log(products);
 
     const productsBulkUploadResponse = await ProductsApiUtil.productsBulkUpload(products);
     console.log('productsBulkUploadResponse:', productsBulkUploadResponse);
@@ -143,8 +152,9 @@ const ProductUpload = () => {
       for (var j = 0; j < headers.length; j++) {
 
         //testing attributes data
-        if(headers[j]=='attributes'){ obj[headers[j]] = [{key: 'Build',value:'Wood'},{key: 'HS Code', value:'000'}]; }
-        else{obj[headers[j]] = currentline[j].replace(/\n/ig, ''); }
+        //if(headers[j]=='attributes'){ obj[headers[j]] = [{key: 'Build',value:'Wood'},{key: 'HS Code', value:'000'}]; }
+        //else{obj[headers[j]] = currentline[j].replace(/\n/ig, ''); }
+        obj[headers[j]] = currentline[j].replace(/\n/ig, ''); 
 
       }
       result.push(obj);
@@ -173,6 +183,10 @@ const ProductUpload = () => {
     fileList,
   };
 
+  const onRemoveImage = (file) => {
+    setFileList([]);
+  };
+
 
 
   var ProductBulkTemplateImageSrc = `${UrlConstants.BASE_URL}/template-files/bulk-products.csv`;  //imp to set image source
@@ -198,6 +212,7 @@ const ProductUpload = () => {
                 <Form.Item  >
                   <Upload {...imageUploadProps}
                     listType="picture"
+                    onRemove={onRemoveImage}
                   >
                     <Button icon={<UploadOutlined />}>Click to upload</Button>
                   </Upload>
