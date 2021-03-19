@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import { Table, Input, InputNumber, Pagination, Form, Typography } from "antd";
-import { useHistory } from 'react-router-dom';
-
+import { useHistory } from "react-router-dom";
 
 const CouriersTable = (props) => {
   const [form] = Form.useForm();
@@ -9,12 +8,11 @@ const CouriersTable = (props) => {
   const [currentPageNumber, setcurrentPageNumber] = useState(1);
   const history = useHistory();
 
-
   const handleDelete = (record) => {
     console.log(record);
     history.push({
       pathname: `/couriers/${record.courier_id}/delete`,
-      data: record // your data array of objects
+      data: record, // your data array of objects
     });
   };
 
@@ -22,29 +20,33 @@ const CouriersTable = (props) => {
     console.log(record);
     history.push({
       pathname: `/couriers/${record.courier_id}/edit`,
-      data: record // your data array of objects
+      data: record, // your data array of objects
     });
   };
 
   const showTotalItemsBar = (total, range) => {
     console.log(range);
-    return `${range[0]}-${range[1]} of ${total} items`
+    return `${range[0]}-${range[1]} of ${total} items`;
   };
 
   const handlePageChange = (page, pageSize) => {
-     setcurrentPageNumber(page)
-     props.onClickPageChanger(page); 
+    setcurrentPageNumber(page);
+    props.onClickPageChanger(page);
   };
-
 
   useEffect(async () => {
     setData(props.tableData);
-    if(props.paginationData && (currentPageNumber > Math.ceil(props.paginationData.totalPages))){
+    if (
+      props.paginationData &&
+      currentPageNumber > Math.ceil(props.paginationData.totalPages)
+    ) {
       setcurrentPageNumber(1);
-    } 
-
-
-  }, [props.tableData, props.tableDataLoading, props.paginationData ]);  /* imp passing props to re-render */
+    }
+  }, [
+    props.tableData,
+    props.tableDataLoading,
+    props.paginationData,
+  ]); /* imp passing props to re-render */
 
   const columns = [
     {
@@ -57,22 +59,15 @@ const CouriersTable = (props) => {
       dataIndex: "courier_code",
     },
     {
-      title: "operation",
+      title: "Operations",
       render: (_, record) => {
         return (
-          <div className='action-btns'>
-            <Typography.Link
-              onClick={() => edit(record)}
-            >
-              Edit
-            </Typography.Link>
+          <div className="action-btns">
+            <Typography.Link onClick={() => edit(record)}>Edit</Typography.Link>
             {data.length >= 1 ? (
-              <Typography.Link
-                onClick={() => handleDelete(record)}
-              >
-                delete
+              <Typography.Link onClick={() => handleDelete(record)}>
+                Delete
               </Typography.Link>
-
             ) : null}
           </div>
         );
@@ -96,17 +91,14 @@ const CouriersTable = (props) => {
     };
   });
 
-
-
   return (
     <Form form={form} component={false}>
-
       <Table
         bordered
         dataSource={data}
         columns={mergedColumns}
-        rowClassName='editable-row'
-        className='table-frame'
+        rowClassName="editable-row"
+        className="table-frame"
         pagination={{
           total: data && data.length,
           showTotal: (total, range) => showTotalItemsBar(total, range),
@@ -118,10 +110,8 @@ const CouriersTable = (props) => {
         }}
         loading={props.tableDataLoading}
       />
-
     </Form>
   );
 };
 
 export default CouriersTable;
-

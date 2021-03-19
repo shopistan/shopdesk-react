@@ -2,6 +2,7 @@ import React from "react";
 import { Form, Input, Button, message } from "antd";
 import { useHistory } from "react-router-dom";
 import * as CategoriesApiUtil from "../../../../utils/api/categories-api-utils";
+import BackButton from "../../../atoms/backButton";
 
 const CategoryAdd = () => {
   const history = useHistory();
@@ -36,7 +37,10 @@ const CategoryAdd = () => {
   return (
     <div className="page dashboard">
       <div className="page__header">
-        <h1>New Category</h1>
+        <h1>
+          <BackButton />
+          New Category
+        </h1>
       </div>
 
       <div className="page__content">

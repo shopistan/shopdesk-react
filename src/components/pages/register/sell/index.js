@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./style.scss";
-import moment from 'moment';
-
+import moment from "moment";
 
 import {
   Form,
@@ -14,6 +13,7 @@ import {
   Divider,
   Spin,
   InputNumber,
+  Collapse,
 } from "antd";
 
 import {
@@ -30,15 +30,13 @@ import {
   clearDataFromLocalStorage,
 } from "../../../../utils/local-storage/local-store-utils";
 import { useHistory } from "react-router-dom";
-import Constants from '../../../../utils/constants/constants';
-import * as ProductsApiUtil from '../../../../utils/api/products-api-utils';
-import * as CustomersApiUtil from '../../../../utils/api/customer-api-utils';
-import * as CouriersApiUtil from '../../../../utils/api/couriers-api-utils';
+import Constants from "../../../../utils/constants/constants";
+import * as ProductsApiUtil from "../../../../utils/api/products-api-utils";
+import * as CustomersApiUtil from "../../../../utils/api/customer-api-utils";
+import * as CouriersApiUtil from "../../../../utils/api/couriers-api-utils";
 import * as Helpers from "../../../../utils/helpers/scripts";
 import SellNestedProductsTable from "../../../organism/table/sell/sellNestedProductsTable";
 import PrintSalesInvoiceTable from "./sellInvoice";
-
-
 
 function Sell() {
   const history = useHistory();
@@ -60,17 +58,13 @@ function Sell() {
   const [productsTotalAmount, setProductsTotalAmount] = useState(0);
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
 
-
-
   const { Search } = Input;
   const { Option } = Select;
 
   var registeredProductsLimit = Helpers.registeredProductsPageLimit;
   var couriersPageLimit = Helpers.couriersPageLimit;
 
-
   useEffect(() => {
-
     if (history.location.selected_invoice_data !== undefined) {
       var selectedViewedInvoice = history.location.selected_invoice_data;
       var tmpInvoice = createNewInvoice();
@@ -91,47 +85,55 @@ function Sell() {
     fetchRegisteredProductsData();
     fetchCouriersData();
     startInvoice();
-
   }, []);
 
-
-
   const fetchCouriersData = async (pageLimit = 100, pageNumber = 1) => {
-    const couriersViewResponse = await CouriersApiUtil.viewCouriers(couriersPageLimit, pageNumber);
-    console.log('couriersViewResponse:', couriersViewResponse);
+    const couriersViewResponse = await CouriersApiUtil.viewCouriers(
+      couriersPageLimit,
+      pageNumber
+    );
+    console.log("couriersViewResponse:", couriersViewResponse);
 
     if (couriersViewResponse.hasError) {
-      console.log('Cant fetch couriers -> ', couriersViewResponse.errorMessage);
-    }
-    else {
-      console.log('res -> ', couriersViewResponse);
+      console.log("Cant fetch couriers -> ", couriersViewResponse.errorMessage);
+    } else {
+      console.log("res -> ", couriersViewResponse);
       message.success(couriersViewResponse.message, 3);
-      setCouriersData(couriersViewResponse.courier.data || couriersViewResponse.courier);
+      setCouriersData(
+        couriersViewResponse.courier.data || couriersViewResponse.courier
+      );
     }
-  }
+  };
 
-
-
-  const fetchRegisteredProductsData = async (pageLimit = 20, pageNumber = 1) => {
+  const fetchRegisteredProductsData = async (
+    pageLimit = 20,
+    pageNumber = 1
+  ) => {
     const productsDiscountsViewResponse = await ProductsApiUtil.getRegisteredProducts(
       registeredProductsLimit,
       pageNumber
     );
-    console.log(' productsDiscountsViewResponse:', productsDiscountsViewResponse);
+    console.log(
+      " productsDiscountsViewResponse:",
+      productsDiscountsViewResponse
+    );
 
     if (productsDiscountsViewResponse.hasError) {
-      console.log('Cant fetch registered products Data -> ', productsDiscountsViewResponse.errorMessage);
+      console.log(
+        "Cant fetch registered products Data -> ",
+        productsDiscountsViewResponse.errorMessage
+      );
       message.error(productsDiscountsViewResponse.errorMessage, 3);
       setLoading(false);
-    }
-    else {
-      console.log('res -> ', productsDiscountsViewResponse);
+    } else {
+      console.log("res -> ", productsDiscountsViewResponse);
       message.success(productsDiscountsViewResponse.message, 3);
       /*-------for filtering products--------*/
-      var products = productsDiscountsViewResponse.products.data
-        || productsDiscountsViewResponse.products;
+      var products =
+        productsDiscountsViewResponse.products.data ||
+        productsDiscountsViewResponse.products;
 
-      products.forEach(e => {
+      products.forEach((e) => {
         e.original_sale_price = e.product_sale_price;
         e.product_sale_price = parseFloat(e.discounted_price).toFixed(2);
       });
@@ -153,39 +155,39 @@ function Sell() {
       /*-------for filtering products--------*/
       //setRegistereProductsData(productsDiscountsViewResponse.products);
       setLoading(false);
-
-
     }
-  }
-
+  };
 
   const handleCustomerSearch = async (searchValue) => {
     console.log("imsiee");
-    const customersSearchResponse = await CustomersApiUtil.searchCustomer(searchValue);
-    console.log('customersSearchResponse:', customersSearchResponse);
+    const customersSearchResponse = await CustomersApiUtil.searchCustomer(
+      searchValue
+    );
+    console.log("customersSearchResponse:", customersSearchResponse);
 
     if (customersSearchResponse.hasError) {
-      console.log('Cant search Customer -> ', customersSearchResponse.errorMessage);
-    }
-    else {
-      console.log('res -> ', customersSearchResponse);
+      console.log(
+        "Cant search Customer -> ",
+        customersSearchResponse.errorMessage
+      );
+    } else {
+      console.log("res -> ", customersSearchResponse);
       message.success(customersSearchResponse.message, 3);
-      setCustomersData(customersSearchResponse.customers.data || customersSearchResponse.customers);
+      setCustomersData(
+        customersSearchResponse.customers.data ||
+          customersSearchResponse.customers
+      );
     }
-
   };
-
 
   const handleSearch = (value) => {
     setSelectedValue(value);
-
 
     var currValue = value;
     currValue = currValue.toLowerCase();
     if (currValue === "") {
       setProductsSearchResult([]);
-    }
-    else {
+    } else {
       const filteredData = registereProductsData.filter((entry) => {
         var searchValue = entry.searchName;
         searchValue = searchValue.toLowerCase();
@@ -194,21 +196,16 @@ function Sell() {
       });
       setProductsSearchResult(filteredData);
     }
-
-
   };
-
 
   const handleSelect = (value, option) => {
     console.log(value);
     console.log("imp", option);
-    setSelectedValue(option.children);  //working correctly
-    setSelectedProductId(value);  //passes productuinqId
+    setSelectedValue(option.children); //working correctly
+    setSelectedProductId(value); //passes productuinqId
   };
 
-
   const handleCustomerDelete = () => {
-
     if (saleInvoiceData.method == "Customer Layby") {
       saleInvoiceData.method = "Cash";
     }
@@ -217,21 +214,18 @@ function Sell() {
     setSaleInvoiceData(saleInvoiceData);
     setSelectedCutomer("");
     saleInvoiceData.hasCustomer = false;
-    setSaleInvoiceData(saleInvoiceData);  //imp
+    setSaleInvoiceData(saleInvoiceData); //imp
     updateCart(saleInvoiceData);
-
-
   };
-
 
   const handleCustomerSelect = (customerId, option) => {
     console.log(customerId);
     console.log("imp-cus", option);
-    setSelectedCustomerValue(option.children);  //working correctly
+    setSelectedCustomerValue(option.children); //working correctly
 
-    customersData.forEach(cus => {
+    customersData.forEach((cus) => {
       if (cus.customer_id === customerId) {
-        setSelectedCutomer(cus);  //passes customer
+        setSelectedCutomer(cus); //passes customer
         console.log(cus);
         saleInvoiceData.customer = cus;
         saleInvoiceData.hasCustomer = true;
@@ -239,11 +233,9 @@ function Sell() {
       }
     });
 
-    //setSaleInvoiceData(saleInvoiceData); 
+    //setSaleInvoiceData(saleInvoiceData);
     updateCart(saleInvoiceData);
-
   };
-
 
   const handleParkSale = (e) => {
     //setProductsTableData([]);
@@ -252,20 +244,16 @@ function Sell() {
     //setSaleInvoiceData({});
   };
 
-
   const handleDeleteSale = (e) => {
     saveDataIntoLocalStorage("current_invoice", null);
     let newInvoice = createNewInvoice();
     updateCart(newInvoice);
-
   };
-
 
   const handleDiscountChange = (e) => {
     saleInvoiceData.isDiscount = true;
     updateCart(saleInvoiceData);
   };
-
 
   const changeMethodOfPayment = (methodName) => {
     saleInvoiceData.method = methodName;
@@ -286,62 +274,61 @@ function Sell() {
     setIsMopModalVisible(false);
   };
 
-
-
   const handleTaxCategoryChange = (taxValue) => {
     //console.log(taxValue);
-    if (taxValue == 16) { saleInvoiceData.taxCategory = "simple_tax" }
-    if (taxValue == 5) { saleInvoiceData.taxCategory = "punjab_food_fbr" }
+    if (taxValue == 16) {
+      saleInvoiceData.taxCategory = "simple_tax";
+    }
+    if (taxValue == 5) {
+      saleInvoiceData.taxCategory = "punjab_food_fbr";
+    }
 
     updateCart(saleInvoiceData); //imp
   };
-
 
   const handleCourierChange = (value) => {
     //console.log(value);
     const clonedInvoice = { ...saleInvoiceData };
     clonedInvoice.courier_code = value;
     setSaleInvoiceData(clonedInvoice);
-
   };
-
 
   const handleInvoiceNoteChange = (e) => {
     //console.log(e.target.value);
     const clonedInvoice = { ...saleInvoiceData };
     clonedInvoice.reference = e.target.value;
     setSaleInvoiceData(clonedInvoice);
-
   };
 
   const handlePaidChange = (e) => {
     var costFormValues = costForm.getFieldsValue();
     //console.log(costFormValues);
-    var remainingBalance = parseFloat(costFormValues.paid - saleInvoiceData.payed).toFixed(2);
+    var remainingBalance = parseFloat(
+      costFormValues.paid - saleInvoiceData.payed
+    ).toFixed(2);
     let paidAmount;
     if (Helpers.var_check(costFormValues.paid)) {
       paidAmount = costFormValues.paid;
+    } else {
+      paidAmount = 0;
     }
-    else { paidAmount = 0; }
 
     const clonedInvoice = { ...saleInvoiceData };
 
     clonedInvoice.payed = paidAmount.toFixed(2);
 
     setSaleInvoiceData(clonedInvoice);
-
   };
 
-
-  const handleChangeProductsData = (productsData, productsTotalQuantity = 0) => {
+  const handleChangeProductsData = (
+    productsData,
+    productsTotalQuantity = 0
+  ) => {
     calculateProductsTotalQuantityAndAmount(productsData);
     //setProductsTableData(productsData);   //calling in updatecart now
     saleInvoiceData.products = productsData;
     updateCart(saleInvoiceData); //imp
-
   };
-
-
 
   const handleAddProduct = () => {
     var formValues = form.getFieldsValue();
@@ -351,11 +338,14 @@ function Sell() {
     var newData = [...productsTableData];
     //productsTableData
     const index = registereProductsData.findIndex(
-      item => selectedProductId == item.product_id);
+      (item) => selectedProductId == item.product_id
+    );
 
     if (index > -1) {
       //deep copy
-      const selectedItem = JSON.parse(JSON.stringify(registereProductsData[index]));
+      const selectedItem = JSON.parse(
+        JSON.stringify(registereProductsData[index])
+      );
       console.log(selectedItem);
       productsTableData.forEach((p) => {
         if (p.product_id === selectedItem.product_id) {
@@ -369,11 +359,10 @@ function Sell() {
         //setProductsTableData(productsTableData);  // caling in updatecart now imppp
         //update cart  imp
         saleInvoiceData.products = productsTableData;
-        saveDataIntoLocalStorage("current_invoice", saleInvoiceData);   //imp
+        saveDataIntoLocalStorage("current_invoice", saleInvoiceData); //imp
         updateCart(saleInvoiceData);
 
         //update cart  imp
-
       }
       if (!productExistsCheck) {
         selectedItem.qty = 1;
@@ -383,33 +372,29 @@ function Sell() {
         //setProductsTableData(newData);  // callng in updatecart now imppp
         //update cart  imp
         saleInvoiceData.products = newData;
-        saveDataIntoLocalStorage("current_invoice", saleInvoiceData);   //imp
+        saveDataIntoLocalStorage("current_invoice", saleInvoiceData); //imp
         updateCart(saleInvoiceData);
 
         //update cart  imp
       }
-
     } //end of top first if
   };
-
-
 
   const calculateProductsTotalQuantityAndAmount = (data) => {
     var productsTotalQuantity = 0;
     var productsTotal = 0;
 
     const newData = [...data];
-    newData.forEach(item => {
-      productsTotal = productsTotal + (parseFloat(item.qty || 0) * parseFloat(item.product_sale_price));
+    newData.forEach((item) => {
+      productsTotal =
+        productsTotal +
+        parseFloat(item.qty || 0) * parseFloat(item.product_sale_price);
       productsTotalQuantity = productsTotalQuantity + item.qty;
     });
 
     setProductsTotalQuantity(productsTotalQuantity);
     setProductsTotalAmount(productsTotal);
-
-  }
-
-
+  };
 
   const handlePayBill = (status, check = false) => {
     var formValues = form.getFieldsValue();
@@ -420,7 +405,9 @@ function Sell() {
       return;
     }
 
-    var localInvoiceQueue = getSellInvoiceDataFromLocalStorage(Constants.SELL_INVOICE_QUEUE_KEY);
+    var localInvoiceQueue = getSellInvoiceDataFromLocalStorage(
+      Constants.SELL_INVOICE_QUEUE_KEY
+    );
     console.log(localInvoiceQueue);
 
     var readFromLocalStorage = getDataFromLocalStorage(
@@ -437,39 +424,35 @@ function Sell() {
       
     }*/
 
-    var clonedInvoiceData = { ...saleInvoiceData };  //impp here
+    var clonedInvoiceData = { ...saleInvoiceData }; //impp here
     console.log(clonedInvoiceData);
 
-
-    clonedInvoiceData.status = status;  //imp
-    updateCart(clonedInvoiceData);  // impppp
+    clonedInvoiceData.status = status; //imp
+    updateCart(clonedInvoiceData); // impppp
 
     if (Helpers.var_check(localInvoiceQueue.data)) {
       localInvoiceQueue.data.push(saleInvoiceData);
 
       console.log("invoice_queue-insert");
       saveDataIntoLocalStorage("invoice_queue", localInvoiceQueue.data);
-      localStorage.setItem("current_invoice", null);   ///imp
+      localStorage.setItem("current_invoice", null); ///imp
     }
 
     if (status == "close") {
       // print function
       printSalesOverview();
     } else {
-      message.success("Invoice held", 5)
+      message.success("Invoice held", 5);
     }
 
     setSelectedCutomer("");
-    let newInvoice = createNewInvoice();  //new invoice again
+    let newInvoice = createNewInvoice(); //new invoice again
     updateCart(newInvoice);
-
-
-  }
-
+  };
 
   const printSalesOverview = () => {
-
-    var previewSalesInvoiceHtml = document.getElementById('printSalesTable').innerHTML;
+    var previewSalesInvoiceHtml = document.getElementById("printSalesTable")
+      .innerHTML;
     var doc =
       '<html><head><title>Close Me ~ Shopdesk</title><link rel="stylesheet" type="text/css" href="/printInvoice.scss" /></head><body onload="window.print(); window.close();">' +
       previewSalesInvoiceHtml +
@@ -480,16 +463,11 @@ function Sell() {
     // window.print(); window.close(); 'width: 80%, height=80%'
     popupWin.document.write(doc);
     //popupWin.document.close();  //vvimp for autoprint
-  }
-
-
-
-
+  };
 
   ////////////////imp funcyionality////////////////////
 
   const startInvoice = () => {
-
     var readFromLocalStorage = getDataFromLocalStorage(
       Constants.SELL_CURRENT_INVOICE_KEY
     );
@@ -498,16 +476,14 @@ function Sell() {
       : null;
 
     var currentInvoice;
-    var localInvoiceQueue = getSellInvoiceDataFromLocalStorage(Constants.SELL_INVOICE_QUEUE_KEY);
+    var localInvoiceQueue = getSellInvoiceDataFromLocalStorage(
+      Constants.SELL_INVOICE_QUEUE_KEY
+    );
     //console.log(localInvoiceQueue);
 
     /*-----------set user store id-------------*/
-    var userData = getDataFromLocalStorage(
-      Constants.USER_DETAILS_KEY
-    );
-    userData = userData.data
-      ? userData.data
-      : null;
+    var userData = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+    userData = userData.data ? userData.data : null;
 
     if (userData) {
       if (
@@ -516,7 +492,6 @@ function Sell() {
         setLocalStorageData(userData);
       }
     }
-
 
     if (readFromLocalStorage) {
       currentInvoice = readFromLocalStorage;
@@ -531,11 +506,7 @@ function Sell() {
       console.log("invoice_queue");
       saveDataIntoLocalStorage("invoice_queue", []);
     }
-
-
-  }
-
-
+  };
 
   ////////////////imp funcyionality////////////////////
 
@@ -578,13 +549,10 @@ function Sell() {
     data.discountAmount = 0;
     data.courier_code = "";
 
-
     setSaleInvoiceData(data);
 
     return data;
-  };
-
-
+  }
 
   function updateCart(invoiceData) {
     var formValues = form.getFieldsValue();
@@ -600,7 +568,6 @@ function Sell() {
       delete invoiceData[key];
     }
 
-
     var tableProducsData = clonedInvoiceData ? clonedInvoiceData.products : [];
 
     clonedInvoiceData.tax = 0;
@@ -609,9 +576,7 @@ function Sell() {
 
     for (let i in tableProducsData) {
       if (Helpers.var_check(tableProducsData[i].qty))
-        tableProducsData[i].qty = parseInt(
-          tableProducsData[i].qty
-        );
+        tableProducsData[i].qty = parseInt(tableProducsData[i].qty);
       else tableProducsData[i].qty = 0;
       if (Helpers.var_check(tableProducsData[i].product_sale_price))
         tableProducsData[i].product_sale_price = parseFloat(
@@ -620,23 +585,24 @@ function Sell() {
       else tableProducsData[i].product_sale_price = 0;
 
       clonedInvoiceData.tax +=
-        ((Helpers.var_check(formValues.tax_value) ? formValues.tax_value : tableProducsData[i].tax_value) *
-          (tableProducsData[i].qty *
-            tableProducsData[i].product_sale_price)) /
+        ((Helpers.var_check(formValues.tax_value)
+          ? formValues.tax_value
+          : tableProducsData[i].tax_value) *
+          (tableProducsData[i].qty * tableProducsData[i].product_sale_price)) /
         100;
 
       clonedInvoiceData.sub_total +=
-        tableProducsData[i].product_sale_price *
-        tableProducsData[i].qty;
+        tableProducsData[i].product_sale_price * tableProducsData[i].qty;
+    } //enf of for loop
 
-    }  //enf of for loop
+    clonedInvoiceData.products = tableProducsData; //imp
+    setProductsTableData(tableProducsData); //vvimp
 
-    clonedInvoiceData.products = tableProducsData;  //imp
-    setProductsTableData(tableProducsData);    //vvimp
-
-
-    clonedInvoiceData.total += clonedInvoiceData.tax + clonedInvoiceData.sub_total;
-    clonedInvoiceData.tax = parseFloat(parseFloat(clonedInvoiceData.tax).toFixed(2));
+    clonedInvoiceData.total +=
+      clonedInvoiceData.tax + clonedInvoiceData.sub_total;
+    clonedInvoiceData.tax = parseFloat(
+      parseFloat(clonedInvoiceData.tax).toFixed(2)
+    );
     clonedInvoiceData.sub_total = parseFloat(
       parseFloat(clonedInvoiceData.sub_total).toFixed(2)
     );
@@ -644,36 +610,33 @@ function Sell() {
       parseFloat(clonedInvoiceData.total).toFixed(2)
     );
 
-    var discountedInputValue = Helpers.var_check(costFormValues.discounted_value) ? costFormValues.discounted_value : 0;
+    var discountedInputValue = Helpers.var_check(
+      costFormValues.discounted_value
+    )
+      ? costFormValues.discounted_value
+      : 0;
     discountedInputValue = parseInt(discountedInputValue).toFixed(2);
     console.log(discountedInputValue);
     discountedInputValue = parseFloat(discountedInputValue);
 
-
     clonedInvoiceData.discountVal = discountedInputValue;
 
-    clonedInvoiceData.discountAmount = parseFloat((
-      (discountedInputValue * clonedInvoiceData.total) / 100).toFixed(2));
+    clonedInvoiceData.discountAmount = parseFloat(
+      ((discountedInputValue * clonedInvoiceData.total) / 100).toFixed(2)
+    );
     clonedInvoiceData.payed = parseFloat(
-      parseFloat(clonedInvoiceData.total - clonedInvoiceData.discountAmount).toFixed(
-        2
-      )
+      parseFloat(
+        clonedInvoiceData.total - clonedInvoiceData.discountAmount
+      ).toFixed(2)
     );
 
-
-    setSaleInvoiceData(clonedInvoiceData);  //imp
+    setSaleInvoiceData(clonedInvoiceData); //imp
     console.log(clonedInvoiceData);
 
     //saveDataIntoLocalStorage("current_invoice", clonedInvoiceData);   //imp
+  }
 
-  };
-
-
-
-
-
-  costForm.setFieldsValue({ paid: saleInvoiceData && saleInvoiceData.payed });   //imp
-
+  costForm.setFieldsValue({ paid: saleInvoiceData && saleInvoiceData.payed }); //imp
 
   const onFinish = (values) => {
     console.log("Success:", values);
@@ -683,305 +646,349 @@ function Sell() {
     console.log("Failed:", errorInfo);
   };
 
-
-
   console.log(saleInvoiceData);
+
+  const { Panel } = Collapse;
+
+  function callback(key) {
+    console.log(key);
+  }
 
   return (
     <>
-      <div className='page sell'>
-
-        {/* Left */}
-        <div className='info'>
-          <Form
-            form={form}
-            name='basic'
-            layout='vertical'
-            initialValues={{
-              remember: true,
-            }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-          >
-            <div style={{ textAlign: "center" }}>
-              {loading && <Spin size="large" tip="Loading Products..." />}
-            </div>
-
-            <Form.Item label='Search for products'>
-
-              <AutoComplete style={{ width: "100%" }}
-                dropdownMatchSelectWidth={250}
-                value={selectedValue}
-                onSearch={handleSearch}
-                onSelect={handleSelect}
-                placeholder="select a product">
-                {productsSearchResult && productsSearchResult.map((item) => (
-                  <Option key={item.product_id} value={item.product_id}>
-                    {item.searchName}
-                  </Option>
-                ))}
-
-              </AutoComplete>
-
-            </Form.Item>
-
-            <Button type='default' className="add-product-btn"
-              onClick={handleAddProduct}>
-              Add
-          </Button>
-
-            <Form.Item label='Courier' name="courier_code"
-            >
-              <Select onChange={handleCourierChange}>
-                {
-                  couriersData.map((obj, index) => {
-                    return (
-                      <option key={obj.courier_id} value={obj.courier_code}>
-                        {obj.courier_name}
-                      </option>
-                    )
-                  })
-                }
-              </Select>
-            </Form.Item>
-            <Form.Item label='Invoice Note' name="invoiceNote"
-              onChange={handleInvoiceNoteChange}
-            >
-              <Input placeholder='input Invoice Note' />
-            </Form.Item>
-            <Form.Item label='Tax Category' name="tax_value">
-              <Select onChange={handleTaxCategoryChange}>
-                <option key="1" value={16}>Simple</option>
-                <option key="2" value={5}>FBS</option>
-              </Select>
-            </Form.Item>
-          </Form>
-        </div>
-        {/* Left */}
-
-        {/* Right */}
-        <div className='checkout'>
-          <Form
-            form={costForm}
-            name='basic'
-            layout='vertical'
-            initialValues={{
-              remember: true,
-            }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-          >
-            <div className='header'>
-              <h3>Checkout &nbsp;
-              ({saleInvoiceData && saleInvoiceData.products ? saleInvoiceData.products.length : 0})Items</h3>
-
-              <div className='header__btns'>
-                <Button type='primary'
-                  onClick={() => handlePayBill('hold')}
-                >
-                  Park Sale</Button>
-                <Button
-                  onClick={handleDeleteSale}
-                >Delete Sale</Button>
-              </div>
-            </div>
-
-            <Form.Item>
-              <AutoComplete style={{ width: "100%" }}
-                dropdownMatchSelectWidth={250}
-                value={selectedCustomerValue}
-                onSearch={handleCustomerSearch}
-                onSelect={handleCustomerSelect}
-                placeholder="select customer">
-
-                {customersData && customersData.map((item) => (
-                  <Option key={item.cutomer_id} value={item.customer_id}>
-                    {item.customer_name}
-                  </Option>
-                ))}
-
-              </AutoComplete>
-
-            </Form.Item>
-            <Divider />
-
-            {/*-----------------*/}
-
-            {selectedCutomer &&
-              <div
-                style={{ borderTop: "0px solid #eee", marginTop: "5px", marginBottom: "5px" }}
+      <div className="page sell">
+        <Collapse defaultActiveKey={["1"]} onChange={callback} className="collapse">
+          <Panel header="Products" key="1" className="collapse__header">
+            {/* Left */}
+            <div className="info">
+              <Form
+                form={form}
+                name="basic"
+                layout="vertical"
+                initialValues={{
+                  remember: true,
+                }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
               >
-                <table className="sell-customer-select-table"
-                >
-                  <tbody>
-                    <tr>
-                      <th style={{ padding: "5px !important" }}>
-                        <i style={{ marginTop: "15px" }}></i>
-                      </th>
-                      <th style={{ padding: "5px !important" }}>
-                        <b>{selectedCutomer.customer_name}</b>
-                        <br />
-                        <small>
-                          {selectedCutomer.customer_email} |
-                      {selectedCutomer.customer_phone}
-                        </small>
-                      </th>
-                      <th style={{ padding: "5px !important" }}>
-                        <button
-                          className="customer-del-btn-pull-right"
-                        >
-                          <DeleteOutlined className="customer-del-btn-icon"
-                            onClick={handleCustomerDelete}
-                          />
-                        </button>
-                      </th>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>}
+                <div style={{ textAlign: "center" }}>
+                  {loading && <Spin size="large" tip="Loading Products..." />}
+                </div>
 
-            {/*-----------------*/}
-
-            <Divider />
-
-            {/* Table */}
-            <div className='table'>
-              <SellNestedProductsTable
-                tableData={productsTableData}
-                //tableDataLoading={loading}
-                onChangeProductsData={handleChangeProductsData}
-                tableType="register_sell" />
-            </div>
-            {/* Table */}
-
-            <Divider />
-
-            <div className='cost'>
-              <div className='cost__wrapper'>
-                <div className='cost__left'>
-                  <div className='cost__box'>
-                    <h3>Subtotal</h3>
-                    <span>{saleInvoiceData && saleInvoiceData.sub_total}</span>
-                  </div>
-
-                  <Form.Item label='Discount'
-                    name="discounted_value">
-                    <Input placeholder='0' defaultValue={0}
-                      addonAfter="%"
-                      onBlur={handleDiscountChange}
-                    />
-                  </Form.Item>
-
-                  <div className='cost__box'>
-                    <h3>Tax</h3>
-                    <span>{saleInvoiceData && saleInvoiceData.tax}</span>
-                  </div>
-
-                  <div className='cost__box'>
-                    <Button
-                      type='primary'
-                      icon={<EditOutlined />}
-                      onClick={showModal}
-                    >
-                      MOP
-                  </Button>
-                    <span>{saleInvoiceData && saleInvoiceData.method}</span>
-                  </div>
-
-                  <Modal
-                    title='Select mode of payment'
-                    visible={isMopModalVisible}
-                    onOk={handleOk}
-                    onCancel={handleCancel}
+                <Form.Item label="Search for products">
+                  <AutoComplete
+                    style={{ width: "100%" }}
+                    dropdownMatchSelectWidth={250}
+                    value={selectedValue}
+                    onSearch={handleSearch}
+                    onSelect={handleSelect}
+                    placeholder="select a product"
                   >
-                    <div className='modal__content'>
-                      <Button
-                        type='primary'
-                        icon={<DollarCircleOutlined />}
-                        className="u-width-100"
-                        style={{ marginBottom: "1rem" }}
-                        onClick={() => changeMethodOfPayment('Cash')}
-                      >
-                        Cash
+                    {productsSearchResult &&
+                      productsSearchResult.map((item) => (
+                        <Option key={item.product_id} value={item.product_id}>
+                          {item.searchName}
+                        </Option>
+                      ))}
+                  </AutoComplete>
+                </Form.Item>
+
+                <Button
+                  type="default"
+                  className="add-product-btn"
+                  onClick={handleAddProduct}
+                >
+                  Add
+                </Button>
+
+                <Form.Item label="Courier" name="courier_code">
+                  <Select onChange={handleCourierChange}>
+                    {couriersData.map((obj, index) => {
+                      return (
+                        <option key={obj.courier_id} value={obj.courier_code}>
+                          {obj.courier_name}
+                        </option>
+                      );
+                    })}
+                  </Select>
+                </Form.Item>
+                <Form.Item
+                  label="Invoice Note"
+                  name="invoiceNote"
+                  onChange={handleInvoiceNoteChange}
+                >
+                  <Input placeholder="input Invoice Note" />
+                </Form.Item>
+                <Form.Item label="Tax Category" name="tax_value">
+                  <Select onChange={handleTaxCategoryChange}>
+                    <option key="1" value={16}>
+                      Simple
+                    </option>
+                    <option key="2" value={5}>
+                      FBS
+                    </option>
+                  </Select>
+                </Form.Item>
+              </Form>
+            </div>
+            {/* Left */}
+          </Panel>
+          <Panel header="Checkout" key="2" className="collapse__header">
+            {/* Right */}
+            <div className="checkout">
+              <Form
+                form={costForm}
+                name="basic"
+                layout="vertical"
+                initialValues={{
+                  remember: true,
+                }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+              >
+                <div className="header">
+                  <h3>
+                    Checkout &nbsp; (
+                    {saleInvoiceData && saleInvoiceData.products
+                      ? saleInvoiceData.products.length
+                      : 0}
+                    )Items
+                  </h3>
+
+                  <div className="header__btns">
+                    <Button
+                      type="primary"
+                      onClick={() => handlePayBill("hold")}
+                      className="custom-btn custom-btn--primary"
+                    >
+                      Park Sale
                     </Button>
-                      <br />
-
-                      <Button
-                        type='primary'
-                        icon={<CreditCardOutlined />}
-                        className="u-width-100"
-                        style={{ marginBottom: "1rem" }}
-                        onClick={() => changeMethodOfPayment('Credit Card')}
-                      >
-                        Credit Card
-                    </Button>
-                      <br />
-
-                      <Button
-                        type='primary'
-                        icon={<EditOutlined />}
-                        className="u-width-100"
-                        style={{ marginBottom: "1rem" }}
-                        onClick={() => changeMethodOfPayment('Online')}
-                      >
-                        Online
-                    </Button>
-                      <br />
-
-                      <Button
-                        type='primary'
-                        icon={<EditOutlined />}
-                        className="u-width-100"
-                        style={{ marginBottom: "1rem" }}
-                        onClick={() => changeMethodOfPayment('Customer Layby')}
-                      >
-                        Customer Layby
-                    </Button>
-                      <br />
-
-                    </div>
-                  </Modal>
-                </div>
-                <div className='cost__right'>
-                  <Form.Item label='Paid' name="paid">
-
-                    <InputNumber className='u-width-100'
-                      //value={saleInvoiceData.payed}
-                      onBlur={handlePaidChange}
-                      disabled={saleInvoiceData && saleInvoiceData.method !== 'Cash'}
-                    />
-                  </Form.Item>
-
-                  <div className='cost__box'>
-                    <h3>Change</h3>
-                    <span>{saleInvoiceData
-                      && (saleInvoiceData.payed - (saleInvoiceData.total - saleInvoiceData.discountAmount)).toFixed(2)}</span>
+                    <Button onClick={handleDeleteSale}>Delete Sale</Button>
                   </div>
                 </div>
-              </div>
-              <Form.Item>
-                <Button type='primary' onClick={() => handlePayBill('close')}
-                  className='cost__btn'
-                  disabled={saleInvoiceData && saleInvoiceData.products && saleInvoiceData.products.length < 1}
-                >
-                  {saleInvoiceData &&
-                    (saleInvoiceData.total - saleInvoiceData.discountAmount).toFixed(2)}
 
-                </Button>
-              </Form.Item>
+                <Form.Item>
+                  <AutoComplete
+                    style={{ width: "100%" }}
+                    dropdownMatchSelectWidth={250}
+                    value={selectedCustomerValue}
+                    onSearch={handleCustomerSearch}
+                    onSelect={handleCustomerSelect}
+                    placeholder="select customer"
+                  >
+                    {customersData &&
+                      customersData.map((item) => (
+                        <Option key={item.cutomer_id} value={item.customer_id}>
+                          {item.customer_name}
+                        </Option>
+                      ))}
+                  </AutoComplete>
+                </Form.Item>
+                <Divider />
+
+                {/*-----------------*/}
+
+                {selectedCutomer && (
+                  <div
+                    style={{
+                      borderTop: "0px solid #eee",
+                      marginTop: "5px",
+                      marginBottom: "5px",
+                    }}
+                  >
+                    <table className="sell-customer-select-table">
+                      <tbody>
+                        <tr>
+                          <th style={{ padding: "5px !important" }}>
+                            <i style={{ marginTop: "15px" }}></i>
+                          </th>
+                          <th style={{ padding: "5px !important" }}>
+                            <b>{selectedCutomer.customer_name}</b>
+                            <br />
+                            <small>
+                              {selectedCutomer.customer_email} |
+                              {selectedCutomer.customer_phone}
+                            </small>
+                          </th>
+                          <th style={{ padding: "5px !important" }}>
+                            <button className="customer-del-btn-pull-right">
+                              <DeleteOutlined
+                                className="customer-del-btn-icon"
+                                onClick={handleCustomerDelete}
+                              />
+                            </button>
+                          </th>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+
+                {/*-----------------*/}
+
+                <Divider />
+
+                {/* Table */}
+                <div className="table">
+                  <SellNestedProductsTable
+                    tableData={productsTableData}
+                    //tableDataLoading={loading}
+                    onChangeProductsData={handleChangeProductsData}
+                    tableType="register_sell"
+                  />
+                </div>
+                {/* Table */}
+
+                <Divider />
+
+                <div className="cost">
+                  <div className="cost__wrapper">
+                    <div className="cost__left">
+                      <div className="cost__box">
+                        <h3>Subtotal</h3>
+                        <span>
+                          {saleInvoiceData && saleInvoiceData.sub_total}
+                        </span>
+                      </div>
+
+                      <Form.Item label="Discount" name="discounted_value">
+                        <Input
+                          placeholder="0"
+                          defaultValue={0}
+                          addonAfter="%"
+                          onBlur={handleDiscountChange}
+                        />
+                      </Form.Item>
+
+                      <div className="cost__box">
+                        <h3>Tax</h3>
+                        <span>{saleInvoiceData && saleInvoiceData.tax}</span>
+                      </div>
+
+                      <div className="cost__box">
+                        <Button
+                          type="primary"
+                          icon={<EditOutlined />}
+                          onClick={showModal}
+                          className="custom-btn custom-btn--primary"
+                        >
+                          MOP
+                        </Button>
+                        <span>{saleInvoiceData && saleInvoiceData.method}</span>
+                      </div>
+
+                      <Modal
+                        title="Select mode of payment"
+                        visible={isMopModalVisible}
+                        onOk={handleOk}
+                        onCancel={handleCancel}
+                      >
+                        <div className="modal__content">
+                          <Button
+                            type="primary"
+                            icon={<DollarCircleOutlined />}
+                            className="u-width-100 custom-btn custom-btn--primary"
+                            style={{ marginBottom: "1rem" }}
+                            onClick={() => changeMethodOfPayment("Cash")}
+                          >
+                            Cash
+                          </Button>
+                          <br />
+
+                          <Button
+                            type="primary"
+                            icon={<CreditCardOutlined />}
+                            className="u-width-100 custom-btn custom-btn--primary"
+                            style={{ marginBottom: "1rem" }}
+                            onClick={() => changeMethodOfPayment("Credit Card")}
+                          >
+                            Credit Card
+                          </Button>
+                          <br />
+
+                          <Button
+                            type="primary"
+                            icon={<EditOutlined />}
+                            className="u-width-100 custom-btn custom-btn--primary"
+                            style={{ marginBottom: "1rem" }}
+                            onClick={() => changeMethodOfPayment("Online")}
+                          >
+                            Online
+                          </Button>
+                          <br />
+
+                          <Button
+                            type="primary"
+                            icon={<EditOutlined />}
+                            className="u-width-100 custom-btn custom-btn--primary"
+                            style={{ marginBottom: "1rem" }}
+                            onClick={() =>
+                              changeMethodOfPayment("Customer Layby")
+                            }
+                          >
+                            Customer Layby
+                          </Button>
+                          <br />
+                        </div>
+                      </Modal>
+                    </div>
+                    <div className="cost__right">
+                      <Form.Item label="Paid" name="paid">
+                        <InputNumber
+                          className="u-width-100"
+                          //value={saleInvoiceData.payed}
+                          onBlur={handlePaidChange}
+                          disabled={
+                            saleInvoiceData && saleInvoiceData.method !== "Cash"
+                          }
+                        />
+                      </Form.Item>
+
+                      <div className="cost__box">
+                        <h3>Change</h3>
+                        <span>
+                          {saleInvoiceData &&
+                            (
+                              saleInvoiceData.payed -
+                              (saleInvoiceData.total -
+                                saleInvoiceData.discountAmount)
+                            ).toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <Form.Item>
+                    <Button
+                      type="primary"
+                      onClick={() => handlePayBill("close")}
+                      className="cost__btn custom-btn custom-btn--primary"
+                      disabled={
+                        saleInvoiceData &&
+                        saleInvoiceData.products &&
+                        saleInvoiceData.products.length < 1
+                      }
+                    >
+                      {saleInvoiceData &&
+                        (
+                          saleInvoiceData.total - saleInvoiceData.discountAmount
+                        ).toFixed(2)}
+                    </Button>
+                  </Form.Item>
+                </div>
+              </Form>
             </div>
-          </Form>
-        </div>
-        {/* Right */}
-
-
+            {/* Right */}
+          </Panel>
+        </Collapse>
       </div>
 
       {/* print sales overview */}
-      {saleInvoiceData && saleInvoiceData.products &&
-        <PrintSalesInvoiceTable user={localStorageData}
-          invoice={saleInvoiceData} />}
-
+      {saleInvoiceData && saleInvoiceData.products && (
+        <PrintSalesInvoiceTable
+          user={localStorageData}
+          invoice={saleInvoiceData}
+        />
+      )}
     </>
   );
 }
