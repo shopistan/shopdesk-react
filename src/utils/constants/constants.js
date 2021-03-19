@@ -6,7 +6,8 @@ const constants = {
   USER_DETAILS_KEY: 'user',
   USER_AUTH_KEY: 'auth',
   SELL_CURRENT_INVOICE_KEY: 'current_invoice',
-  SELL_INVOICE_QUEUE_KEY: 'invoice_queue'
+  SELL_INVOICE_QUEUE_KEY: 'invoice_queue',
+  X_API_KEY: "X-API-KEY",
 };
 
 export default constants;

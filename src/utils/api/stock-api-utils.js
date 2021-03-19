@@ -38,6 +38,9 @@ export const addReceivePurchaseOrder = async (receivePoData) => {
 
 
 export const addPurchaseOrder = async (addPurchaseOrderData) => {
+    /*const addPurchaseOrderFormDataBody = {
+        purchase: addPurchaseOrderData,
+    };*/
 
     const addPurchaseOrderFormDataBody =  $.param({purchase: addPurchaseOrderData});
     const url = UrlConstants.STOCK.ADD_PURCHASE_ORDER;

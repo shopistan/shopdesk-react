@@ -191,8 +191,10 @@ const ProductAdd = () => {
     addProductData.attributes =
       JSON.stringify(formValues.product_attributes) || [];
 
-    console.log("final-post-data", addProductData);
+    //console.log("final-post-data", addProductData);
 
+
+    const hide = message.loading('Saving changes in progress..', 0);
     const AddProductResponse = await ProductsApiUtil.addProduct(addProductData);
     console.log("AddProductResponse :", AddProductResponse);
     if (AddProductResponse.hasError) {
@@ -201,9 +203,11 @@ const ProductAdd = () => {
         AddProductResponse.errorMessage
       );
       message.error("cant add product", 3);
+      setTimeout(hide, 1000);
     } else {
       console.log("res -> ", AddProductResponse);
       message.success(AddProductResponse.message, 3);
+      setTimeout(hide, 1000);
       setTimeout(() => {
         history.push({
           pathname: "/products",
@@ -300,6 +304,8 @@ const ProductAdd = () => {
 
   const handleSaleChange = (value) => {
     /*--getting variants combinations--*/
+    console.log("inside");
+    console.log(value);
     setLoading(true);
     var variantsCombinations = ProductsVariantsCombination.calculateVaraintsCombinations(
       variant1Tags,
@@ -590,13 +596,20 @@ const ProductAdd = () => {
                       onChange={handleSaleChange}
                     />
 
+<<<<<<< HEAD
+                  </Form.Item>
+
+                  <Checkbox
+                      className='inclusive-sale-price-check'
+=======
                     <Checkbox
                       className="inclusive-sale-price-check"
+>>>>>>> a864c043defabc16a6f9a6e3b7dfdba1aaceea03
                       onChange={onInclusiveTaxChecked}
                     >
                       <small>Sale price inclusive of tax</small>
-                    </Checkbox>
-                  </Form.Item>
+                  </Checkbox>
+
                 </div>
               </div>
               {/* Row */}

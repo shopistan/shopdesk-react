@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../../style.scss";
 import { Form, Input, Button, Select, Badge, message, Spin, Modal, Divider } from "antd";
 import { AppstoreAddOutlined, PlusCircleOutlined, ArrowLeftOutlined } from "@ant-design/icons";
@@ -6,7 +6,10 @@ import { useHistory } from "react-router-dom";
 import WebHooksTable from "../../../../organism/table/setup/outlets/webHooksNestedTable";
 import * as SetupApiUtil from '../../../../../utils/api/setup-api-utils';
 import currencyData from "../currencyData.json";
-import { values } from "lodash";
+import Constants from '../../../../../utils/constants/constants';
+import {
+  getDataFromLocalStorage,
+} from "../../../../../utils/local-storage/local-store-utils";
 
 
 
@@ -29,9 +32,10 @@ function OutletEdit() {
   const [selectedCurrencyObj, setSelectedCurrencyObj] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [webHookDeleteId, setWebHookDeleteId] = useState("");
-  
+  const [userLocalStorageData, setUserLocalStorageData] = useState("");
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [webHookUrlName, setWebHookUrlName] = useState("");
+  const [generatedSecretKey, setGeneratedSecretKey] = useState("secret");
 
 
 
@@ -48,6 +52,12 @@ function OutletEdit() {
       fetchOutletWebHooks();
       getUserStoreData(history.location.data.store_id);
       fetchUsersTemplatesData();
+      /*--------------set user local data-------------------------------*/
+      var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+      readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
+      setUserLocalStorageData(readFromLocalStorage);
+      /*--------------set user local data-------------------------------*/
+
     }
 
   }, []);
@@ -113,6 +123,59 @@ function OutletEdit() {
       setTemplatesData(userTemplatesViewResponse.templates.data || userTemplatesViewResponse.templates);
       setLoading(false);
     }
+  }
+
+
+  {/*const requestUserLoginForNewApiKey = async (values) => {
+    let refreshToken = userLocalStorageData.refresh_token;
+    let never_expire = true;
+    const hide = message.loading('Generating Key in progress..', 0);
+    const loginResponse = await  SetupApiUtil.userLoginForNewApiKey(refreshToken, never_expire);
+    if (loginResponse.hasError) {
+      const errorMessage = loginResponse.errorMessage;
+      console.log('Cant login -> ', errorMessage);
+      setTimeout(hide, 1500);
+    } else {
+      const loggedInUserDetails = loginResponse.data;
+      console.log("Success:", loggedInUserDetails);
+      onSelectOutletForNewApiKey();
+      
+    }
+
+  };*/}
+
+
+
+  const onSelectOutletForNewApiKey = async () => {
+    const editStoreId = history.location.data.store_id;   //imp vv
+    var foundStoreObj = userLocalStorageData.auth.storeInfo.find(obj => {
+      return obj.store_id === editStoreId
+    });
+
+    if (foundStoreObj) {
+      const hide = message.loading('Generating Key in progress..', 0);
+      const userSelectOutletResponse = await SetupApiUtil.selectOutletForNewApiKey(foundStoreObj.store_random);
+      console.log('userSelectOutletResponse:', userSelectOutletResponse)
+      if (userSelectOutletResponse.hasError) {
+        console.log('Cant Select Outlet -> ', userSelectOutletResponse.errorMessage);
+        setTimeout(hide, 1500);
+      }
+      else {
+        console.log('res -> ', userSelectOutletResponse);
+        setTimeout(hide, 1500);
+        setGeneratedSecretKey(userSelectOutletResponse.api_key);
+        message.success("Secret Key Successfully Generated");
+
+      }
+    }
+    else { console.log("store not found"); }
+
+  }
+
+
+  const copySecretApiKey = () => {
+    navigator.clipboard.writeText(generatedSecretKey)
+
   }
 
 
@@ -236,14 +299,14 @@ function OutletEdit() {
   };
 
 
-  const  confirmAddWebHook = (e) => {
+  const confirmAddWebHook = (e) => {
     let check = urlCheck(webHookUrlName);
     console.log(webHookUrlName);
-    if(check){
+    if (check) {
       postAddWebHookData(webHookUrlName);
       setIsModalVisible(false);
     }
-    else{
+    else {
       setIsModalVisible(false);
       message.error("WebHook URL is invalid", 3)
     }
@@ -265,7 +328,7 @@ function OutletEdit() {
       activeKey: 'outlets'
     });
   };
-  
+
 
 
   function urlCheck(t) {
@@ -288,6 +351,15 @@ function OutletEdit() {
   const handleCancelDeleteModal = () => {
     setIsDeleteModalVisible(false);
   };
+
+
+  const copySecrectButton = (
+    <Button type='primary'
+      className='custom-btn custom-btn--primary'
+      onClick={copySecretApiKey}>
+      Copy
+    </Button>
+  )
 
 
 
@@ -431,18 +503,19 @@ function OutletEdit() {
 
               <div className='form__row'>
                 <div className='form__col form__col--btn'>
-                  <Search
-                    placeholder='input search text'
-                    allowClear
-                    enterButton='Copy'
-                    size='large'
-                  //onSearch={onSearch}
+                  <Input
+                    //name= "secret_api_key"
+                    addonAfter={copySecrectButton}
+                    value={generatedSecretKey}
+                    disabled
+                    type="password"
                   />
 
                   <Button
                     type='primary'
                     icon={<AppstoreAddOutlined />}
                     className='custom-btn custom-btn--primary'
+                    onClick={onSelectOutletForNewApiKey}
                   >
                     Generate Secret
                   </Button>
@@ -540,18 +613,18 @@ function OutletEdit() {
         </div>
         {/*end page content*/}
 
-        <Modal title="Basic Modal" visible={isModalVisible}  onOk={confirmAddWebHook}
+        <Modal title="Basic Modal" visible={isModalVisible} onOk={confirmAddWebHook}
           onCancel={handleCancelModal}>
           <label> Enter a url for webhook</label>
           <div className='form__row'>
             <div className='form__col'>
-            <Input addonBefore="http://"  onChange={handleChangeWebHookUrl} />
+              <Input addonBefore="http://" onChange={handleChangeWebHookUrl} />
             </div>
           </div>
         </Modal>
 
 
-        <Modal title="Basic Modal" visible={isDeleteModalVisible}  onOk={confirmDeleteWebHook}
+        <Modal title="Basic Modal" visible={isDeleteModalVisible} onOk={confirmDeleteWebHook}
           onCancel={handleCancelDeleteModal}>
           <label> Do you really want to delete this webhook?</label>
         </Modal>

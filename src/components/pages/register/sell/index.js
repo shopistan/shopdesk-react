@@ -210,8 +210,6 @@ function Sell() {
       saleInvoiceData.method = "Cash";
     }
     saleInvoiceData.customer = {};
-    saleInvoiceData.hasCustomer = false;
-    setSaleInvoiceData(saleInvoiceData);
     setSelectedCutomer("");
     saleInvoiceData.hasCustomer = false;
     setSaleInvoiceData(saleInvoiceData); //imp
