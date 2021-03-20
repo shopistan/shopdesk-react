@@ -596,15 +596,10 @@ const ProductAdd = () => {
                       onChange={handleSaleChange}
                     />
 
-<<<<<<< HEAD
                   </Form.Item>
 
                   <Checkbox
                       className='inclusive-sale-price-check'
-=======
-                    <Checkbox
-                      className="inclusive-sale-price-check"
->>>>>>> a864c043defabc16a6f9a6e3b7dfdba1aaceea03
                       onChange={onInclusiveTaxChecked}
                     >
                       <small>Sale price inclusive of tax</small>
