@@ -8,9 +8,14 @@ import {
 import { useEffect } from 'react';
 
 const CustomerForm = (props) => {
+  const history = useHistory();
   const { Option } = Select;
+  console.log(props);
+  console.log(history);
+
+
   const { match = {} } = props;
-  const { customer_id = {} } = match.params;
+  const { customer_id = {} } = match.params !== undefined && match.params;
 
   //These are used to set data in the ant form
   const [customerDataFields, setCustomerDataFields] = useState([]);
@@ -19,7 +24,7 @@ const CustomerForm = (props) => {
 
   console.log('customer props call is as');
 
-  const history = useHistory();
+
 
   useEffect(() => {
     if (isEditMode) {

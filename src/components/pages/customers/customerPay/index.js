@@ -11,6 +11,7 @@ import {
 
 const CustomerPay = (props) => {
   const { Option } = Select;
+  console.log(props);
 
   const { match = {} } = props;
   const { customer_id = {} } = match.params;

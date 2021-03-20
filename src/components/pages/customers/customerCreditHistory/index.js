@@ -12,6 +12,8 @@ const CustomerCreditHistory = (props) => {
   const [customerData, setCustomerData] = useState(null);
   const [creditsHistory, setCreditsHistory] = useState([]);
 
+  console.log(props);
+
   const { match = {} } = props;
   const { customer_id = {} } = match.params;
 
@@ -70,6 +72,9 @@ const CustomerCreditHistory = (props) => {
               return null;
             }
 
+            console.log(totalBalance);
+            
+
             const balance = Math.abs(totalBalance);
             const isInvoiceData = totalBalance < 0;
             const storeName = singleCreditHistory.store_name;
@@ -88,7 +93,23 @@ const CustomerCreditHistory = (props) => {
               messageForCurrentCredit += '';
             }
 
-            const redirectInvoiceLink = `/invoice/${invoiceId}`;
+           /*---------------------timelineitem Data---------------------------------*/
+            var timeLineItemData;
+         
+            if(totalBalance>0){
+              timeLineItemData = `payed account balance of PK Rs. ${balance} via ${paymentMethod } at outlet ${storeName}`;
+            }
+            if(totalBalance<0){
+              timeLineItemData = `of ${balance} payed through account balance at outlet ${storeName}`;
+            }
+            if(totalBalance===0){
+              timeLineItemData = `new account opend at outlet ${storeName}`;
+            }
+
+
+            /*---------------------timelineitem Data---------------------------------*/
+
+            const redirectInvoiceLink = `/register/invoice/${invoiceId}/view`;
             const redirectCustomerLink = `/customers/${customerData.id}/view`;
             return (
               <VerticalTimelineElement
@@ -101,11 +122,16 @@ const CustomerCreditHistory = (props) => {
                 {/* <h3 className='vertical-timeline-element-title'></h3> */}
                 <h4 className='vertical-timeline-element-subtitle'>
                   <Link to={redirectCustomerLink}>{customerData.customer_name}</Link>{' '}
-                  invoice # <Link to={redirectInvoiceLink}> {invoiceId}</Link>{' '}
-                  of PK Rs. {balance}{' '}
-                  {isInvoiceData
-                    ? `payed through account balance at outlet ${storeName}`
-                    : ''}
+                  
+                  {!isInvoiceData &&
+                    <>
+                    invoice #
+                    <Link to={redirectInvoiceLink}> {invoiceId}</Link>
+                    </>
+                  } &nbsp;
+                 
+                  {timeLineItemData}
+
                 </h4>
               </VerticalTimelineElement>
             );
