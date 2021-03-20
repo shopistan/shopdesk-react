@@ -1,0 +1,67 @@
+@import "../../../styles/variables";
+@import "../../../styles/mixins";
+
+.dashboard {
+    .page__section {
+        padding: 2rem 0;
+        border-bottom: 1px solid $color-grey-light-1;
+    }
+
+    .charts {
+        display: flex;
+    }
+
+    .sales {
+        flex: 1;
+    }
+
+    .items {
+        flex: 2;
+    }
+
+
+    .pie-chart-heading{
+          margin-bottom: 2rem;
+
+    }
+
+    /*--info cards-dashboard--*/
+
+    .info {
+        border: 2px solid #eee;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        text-align: center;
+    }
+
+    .data-info {
+        border: 1px solid #000 !important;
+        border-radius: 8px;
+        margin-bottom: 40px;
+        margin-top: 40px;
+        text-align: center;
+    }
+
+    .info .data {
+        font-weight: 100 !important;
+        padding: 10px 20px;
+    }
+
+
+    .data-info .data {
+        padding: 50px 20px !important;
+    }
+
+    .info .row {
+        border-top: 2px solid #eee;
+        font-size: 18px;
+        padding: 8px;
+        color: #777;
+    }
+    .info .row {
+        border-top: 1px solid #000 !important;
+    }
+
+    /*--info cards-dashboard--*/
+
+}

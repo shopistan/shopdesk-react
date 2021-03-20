@@ -82,6 +82,7 @@ export const rechargeCustomerAccount = async (customerData, paymetInfo) => {
   );
 };
 
+
 export const customerCreditDetails = async (customerId) => {
   const formDataPair = {
     'customer_id': customerId,
@@ -98,3 +99,28 @@ export const customerCreditDetails = async (customerId) => {
     singleCustomerFormDataBody //body
   );
 }
+
+
+
+export const searchCustomer = async (searchValue) => {
+  const formDataPair = {
+    q: searchValue,
+  }
+
+  const searchCustomerFormDataBody = ApiCallUtil.constructFormData(
+    formDataPair
+  );
+  const url = UrlConstants.CUSTOMERS.SEARCH;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+    searchCustomerFormDataBody,   //body
+  );
+}
+
+
+
+
+

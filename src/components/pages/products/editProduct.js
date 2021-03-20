@@ -188,15 +188,18 @@ const EditProduct = (props) => {
         delete productDataDeepClone['status'];  //imp to delete
 
 
+        const hide = message.loading('Saving changes in progress..', 0);
         const EditProductResponse = await ProductsApiUtil.editProduct(productDataDeepClone);
         console.log('getProductsResponse:', EditProductResponse);
         if (EditProductResponse.hasError) {
             console.log('product Editing UnSuccesfully -> ', EditProductResponse.errorMessage);
             message.error('product Editing UnSuccesfully', 3);
+            setTimeout(hide, 1000);
         }
         else {
             console.log('res -> ', EditProductResponse);
             message.success(EditProductResponse.message, 3);
+            setTimeout(hide, 1000);
             setTimeout(() => {
                 history.push({
                     pathname: '/products',
@@ -401,7 +404,6 @@ const EditProduct = (props) => {
                                         >
                                             <InputNumber
                                                 min={0}
-                                                max={100}
                                                 className='u-width-100'
                                             />
                                         </Form.Item>
@@ -428,7 +430,6 @@ const EditProduct = (props) => {
                                         >
                                             <InputNumber
                                                 min={0}
-                                                max={100}
                                                 className='u-width-100'
                                             />
                                         </Form.Item>

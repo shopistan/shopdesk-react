@@ -55,7 +55,7 @@ export const viewTaxes = async (limit, PageNumber) => {
   const formDataPair = {
     limit: limit,
     page: PageNumber,
-};;
+};
   const viewTaxesFormDataBody = ApiCallUtil.constructFormData(formDataPair);
   const url = UrlConstants.TAX.VIEW;
   const callType = GenericConstants.API_CALL_TYPE.POST;

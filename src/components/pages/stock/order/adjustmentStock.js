@@ -20,6 +20,7 @@ import {
   Col,
   Switch,
   Divider,
+  InputNumber,
 } from "antd";
 
 import {
@@ -200,6 +201,10 @@ const AdjustmentStock = () => {
 
   const handleAddProduct = () => {
     var formValues = form.getFieldsValue();
+    if(!selectedProductId){
+      message.warning("please select product!");
+      return;
+    }
 
     var productExistsCheck = false;
     var newData = [...productsTableData];
@@ -222,9 +227,10 @@ const AdjustmentStock = () => {
         setProductsTableData(productsTableData);
       }
       if (!productExistsCheck) {
-        selectedItem.qty = parseFloat(formValues.product_qty);
+        let inputQtyValue = Helpers.var_check(formValues.product_qty) ? formValues.product_qty : 1;
+        selectedItem.qty = parseFloat(inputQtyValue);
         newData.push(selectedItem);
-        console.log("imp1-table", newData);
+        //console.log("imp1-table", newData);
         calculateProductsTotalQuantity(newData);
         setProductsTableData(newData);
       }
@@ -526,7 +532,7 @@ const AdjustmentStock = () => {
                       label="QTY"
                       name="product_qty"
                     >
-                      <Input defaultValue={1} />
+                      <InputNumber defaultValue={1} />
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={24} md={6} className="stock-item-content">

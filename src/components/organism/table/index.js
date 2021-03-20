@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import { Table, Input, InputNumber, Pagination, Form, Typography } from "antd";
-import { useHistory } from 'react-router-dom';
-
+import { useHistory } from "react-router-dom";
 
 const EditableTable = (props) => {
   const [form] = Form.useForm();
@@ -9,12 +8,11 @@ const EditableTable = (props) => {
   const [currentPageNumber, setcurrentPageNumber] = useState(1);
   const history = useHistory();
 
-
   const handleDelete = (record) => {
     console.log(record);
     history.push({
       pathname: `/categories/${record.category_id}/delete`,
-      data: record // your data array of objects
+      data: record, // your data array of objects
     });
   };
 
@@ -22,53 +20,49 @@ const EditableTable = (props) => {
     console.log(record);
     history.push({
       pathname: `/categories/${record.category_id}/edit`,
-      data: record // your data array of objects
+      data: record, // your data array of objects
     });
   };
 
   const showTotalItemsBar = (total, range) => {
     console.log(range);
-    return `${range[0]}-${range[1]} of ${total} items`
+    return `${range[0]}-${range[1]} of ${total} items`;
   };
 
   const handlePageChange = (page, pageSize) => {
-     setcurrentPageNumber(page)
-     props.onClickPageChanger(page); 
+    setcurrentPageNumber(page);
+    props.onClickPageChanger(page);
   };
-
 
   useEffect(async () => {
     setData(props.tableData);
-    if( currentPageNumber > Math.ceil(props.paginationData.totalPages)){
-      setcurrentPageNumber(1);}
-
-  }, [props.tableData, props.tableDataLoading, props.paginationData ]);  /* imp passing props to re-render */
+    if (currentPageNumber > Math.ceil(props.paginationData.totalPages)) {
+      setcurrentPageNumber(1);
+    }
+  }, [
+    props.tableData,
+    props.tableDataLoading,
+    props.paginationData,
+  ]); /* imp passing props to re-render */
 
   const columns = [
     {
-      title: "CategoryName",
+      title: "Category Name",
       dataIndex: "category_name",
       width: "50%",
       editable: true,
     },
     {
-      title: "operation",
+      title: "Operations",
       dataIndex: "operation",
       render: (_, record) => {
         return (
           <div className='action-btns'>
-            <Typography.Link
-              onClick={() => edit(record)}
-            >
-              Edit
-            </Typography.Link>
+            <Typography.Link onClick={() => edit(record)}>Edit</Typography.Link>
             {data.length >= 1 ? (
-              <Typography.Link
-                onClick={() => handleDelete(record)}
-              >
-                delete
+              <Typography.Link onClick={() => handleDelete(record)}>
+                Delete
               </Typography.Link>
-
             ) : null}
           </div>
         );
@@ -92,11 +86,8 @@ const EditableTable = (props) => {
     };
   });
 
-
-
   return (
     <Form form={form} component={false}>
-
       <Table
         bordered
         dataSource={data}
@@ -114,10 +105,8 @@ const EditableTable = (props) => {
         }}
         loading={props.tableDataLoading}
       />
-
     </Form>
   );
 };
 
 export default EditableTable;
-

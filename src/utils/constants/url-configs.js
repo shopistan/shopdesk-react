@@ -6,7 +6,7 @@ const urls = {
   IMAGE_UPLOADS_URL,
   AUTH: {
     LOGIN: BASE_URL + '/api/users/login',
-    SIGNUP: BASE_URL + '/api/users/signupl'
+    SIGNUP: BASE_URL + '/api/users/signup'
   },
   TAX: {
     VIEW: BASE_URL + '/api/taxes/view',
@@ -26,7 +26,8 @@ const urls = {
     VIEW: BASE_URL + '/api/suppliers/view',
     ADD_SUPPLIER: BASE_URL + '/api/suppliers/add',
     EDIT_SUPPLIER: BASE_URL + '/api/suppliers/edit',
-    DELETE_SUPPLIER: BASE_URL + '/api/suppliers/delete'
+    DELETE_SUPPLIER: BASE_URL + '/api/suppliers/delete',
+    VIEW_ALL: BASE_URL + '/api/suppliers/viewAll',
   },
   OULETS: {
     SELECT_OUTLET: BASE_URL + '/api/users/selectStore'
@@ -42,7 +43,8 @@ const urls = {
     VIEW_SINGLE: BASE_URL + '/api/customers/get',
     EDIT_CUSTOMER: BASE_URL + '/api/customers/edit',
     RECHARGE: BASE_URL + '/api/customers/recharge',
-    CREDIT_HISTORY: BASE_URL + '/api/customers/credit'
+    CREDIT_HISTORY: BASE_URL + '/api/customers/credit',
+    SEARCH: BASE_URL + '/api/customers/search',
   },
   PRODUCTS: {
     VIEW: BASE_URL + '/api/products/view',
@@ -56,7 +58,10 @@ const urls = {
     IMG_UPLOAD: BASE_URL + '/api/products/do_upload',
     GET_REGISTERED_PRODUCTS: BASE_URL + '/api/products/getRegister',
     SAVE_DISCOUNTED: BASE_URL + '/api/promotions/setSpecial',
-    BULK_UPLOAD: BASE_URL + '/api/integrations/add_products'
+    BULK_UPLOAD: BASE_URL + '/api/integrations/add_products',
+    GET_MOVEMENT_REPORT: BASE_URL + '/api/reports/productMovementReport',
+    GET_FULL_REGISTERED_PRODUCTS: BASE_URL + '/api/products/getFullRegister',
+
   },
   REPORTS: {
     SALES_SUMMARY: BASE_URL + '/api/reports/saleSummary',
@@ -100,6 +105,15 @@ const urls = {
     CLOSE_TRANSFER_INVENTORY: BASE_URL + '/api/transfers/status',
     RECEIVE_TRANSFER_IN:  BASE_URL + '/api/transfers/getTransfer',
     RECEIVE_TRANSFER_STATUS: BASE_URL + '/api/transfers/status',
+
+  },
+  SALES: {  
+    VIEW_HISTORY: BASE_URL + '/api/register/view',
+    GET_SALE_HISTORY: BASE_URL + '/api/register/get',
+
+  },
+  DASHBOARD:{
+    VIEW_DATA: BASE_URL + '/api/reports/dashboard',
 
   }
 

@@ -3,7 +3,7 @@ import { signUp } from "../../../utils/api/auth-api-utils";
 import { saveDataIntoLocalStorage } from "../../../utils/local-storage/local-store-utils";
 import { useHistory } from 'react-router-dom';
 
-import { Form, Input, Button, message } from "antd";
+import { Form, Input, Button, message, InputNumber } from "antd";
 
 const SignUp = () => {
   const history = useHistory();
@@ -19,6 +19,13 @@ const SignUp = () => {
     //   password: 'a',
     //   phoneNumber: 'a'
     // };
+
+    if (values.password !== values.confirmPassword) {
+      message.error("Passwords does not match", 4);
+      return;
+    }
+
+
     const signUpResponse = await signUp(
       values.fullName,
       values.email,
@@ -147,7 +154,7 @@ const SignUp = () => {
                     },
                   ]}
                 >
-                  <Input />
+                  <InputNumber className='u-width-100' />
                 </Form.Item>
               </div>
 

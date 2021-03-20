@@ -20,10 +20,11 @@ export const addProduct = async (productAddData) => {
 
 
 export const productsBulkUpload = async (bulkProducts) => {
-    const bulkProductsDataBody = {
-        products: bulkProducts
-    };
+    /*const bulkProductsDataBody = {
+        products: bulkProducts,
+    };*/
 
+    const bulkProductsDataBody =  $.param({products: bulkProducts});
     const url = UrlConstants.PRODUCTS.BULK_UPLOAD;
     const callType = GenericConstants.API_CALL_TYPE.POST;
 
@@ -92,6 +93,17 @@ export const getRegisteredProducts = async (limit, PageNumber) => {
         url, //api url
         callType, //calltype
         viewRegisteredProductsFormDataBody,
+    );
+};
+
+export const getFullRegisteredProducts = async () => {
+    
+    const url = UrlConstants.PRODUCTS.GET_FULL_REGISTERED_PRODUCTS;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
     );
 };
 
@@ -206,6 +218,24 @@ export const imageUpload = async (productImg) => {
         url, //api url
         callType, //calltype
         imageUploadFormDataBody //body
+    );
+};
+
+
+
+export const getProductMovementReport = async (productId) => {
+    const formDataPair = {
+        id: productId
+    };
+    
+    const producttMovementReportFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+    const url = UrlConstants.PRODUCTS.GET_MOVEMENT_REPORT;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        producttMovementReportFormDataBody //body
     );
 };
 

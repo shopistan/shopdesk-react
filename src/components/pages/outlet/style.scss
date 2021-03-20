@@ -3,13 +3,12 @@
 
 .outlet {
   &__select {
-    display: flex;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    column-gap: 2rem;
+    row-gap: 2rem;
     cursor: pointer;
-
-    @include respond(mobile) {
-      flex-direction: column;
-    }
   }
 
   &__link {
@@ -21,6 +20,9 @@
     border: 3px solid #eee;
 
     &:hover {
+      color: $color-white;
+      background-color: $color-primary;
+      border-color: $color-primary;
       transform: scale(0.9);
     }
 
@@ -32,14 +34,12 @@
   }
 
   &__active {
-    border: 3px solid $color-primary;
+    color: $color-white;
+    background-color: $color-primary;
+    border-color: $color-primary;
   }
 }
 
 .loading-container {
   text-align: center;
-}
-
-.outlets-list-container{
-  display: grid !important;
 }

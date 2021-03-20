@@ -23,8 +23,6 @@
 
 // Sider
 .sider {
-  background-color: $color-asphalt !important;
-
   @include respond(mobile) {
     display: none;
   }
@@ -70,7 +68,6 @@
     @extend %flex-between;
 
     color: $color-white;
-    width: 95%;
 
     @include respond(mobile) {
       width: 100%;
