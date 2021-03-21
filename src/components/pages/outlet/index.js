@@ -4,7 +4,7 @@ import "./style.scss";
 import { 
   saveDataIntoLocalStorage,
   getDataFromLocalStorage,
-  clearDataFromLocalStorage,
+  clearLocalUserData,
   checkUserAuthFromLocalStorage, 
 } from "../../../utils/local-storage/local-store-utils";
 import { useHistory } from 'react-router-dom';
@@ -57,7 +57,7 @@ const Outlet = () => {
         console.log('res -> ', userSelectOutletResponse);
         userSelectOutletResponse.refresh_token = loginCacheData.refresh_token; 
         userSelectOutletResponse.user_info = loginCacheData.user_info; 
-        clearDataFromLocalStorage();
+        clearLocalUserData();
         saveDataIntoLocalStorage("user", userSelectOutletResponse);
         setLoading(false);
         message.success('Store Change Succesfull ', 3);

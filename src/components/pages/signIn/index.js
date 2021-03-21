@@ -4,6 +4,7 @@ import { Form, Input, Button, Checkbox, message } from "antd";
 import { login } from "../../../utils/api/auth-api-utils";
 import { saveDataIntoLocalStorage } from "../../../utils/local-storage/local-store-utils";
 import { useHistory } from 'react-router-dom';
+import Constants from '../../../utils/constants/constants';
 
 const SignIn = () => {
   const history = useHistory();
@@ -19,8 +20,8 @@ const SignIn = () => {
       const errorMessage = loginResponse.errorMessage;
       message.error('Login UnSuccesfull ', 3);
     } else {
-      const loggedInUserDetails = loginResponse.data;
-      saveDataIntoLocalStorage("user", loggedInUserDetails);
+      const loggedInUserDetails = loginResponse;
+      saveDataIntoLocalStorage(Constants.USER_DETAILS_KEY, loggedInUserDetails);
       message.success('Login Succesfull ', 3);
       setTimeout(() => {
         window.open('/outlets', "_self");

@@ -106,14 +106,14 @@ const Routes = () => {
 
     if(checkAuthTokenExpiration(authExpirationTokenDate)){
       message.info("Logging Out Redirecting....", 5);
-      return <Redirect to='/signin' />
+      return <Redirect to='/sign-in' />
     }
 
 
     return (
       <AppShell {...props}>
         {readFromLocalStorage == null ? (
-          <Redirect to='/signin' />
+          <Redirect to='/sign-in' />
         ) : authenticateDashboard ? (
           <Component />
         ) : (
@@ -176,7 +176,7 @@ const Routes = () => {
 
     if(checkAuthTokenExpiration(authExpirationTokenDate)){
       message.info("Logging Out Redirecting....", 5);
-      return <Redirect to='/signin' />
+      return <Redirect to='/sign-in' />
     }
 
 
@@ -191,7 +191,7 @@ const Routes = () => {
                <Redirect to='/outlets' />
               )
           ) : (
-            <Redirect to='/signin' />
+            <Redirect to='/sign-in' />
           )
         }
       />
@@ -282,7 +282,7 @@ const Routes = () => {
         ></Route>
         <Route
           exact
-          path='/signin'
+          path='/sign-in'
           render={() => authRenderWithLayout(SignIn)}
         ></Route>
         <Route
