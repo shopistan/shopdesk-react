@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { message } from "antd";
-import moment from 'moment';
+
 
 // Components
 import AppShell from "./components/pages/appShell";
@@ -28,6 +28,7 @@ import CustomerForm from "./components/pages/customers/customerForm";
 import CustomerProfile from "./components/pages/customers/customerProfile";
 import CustomerPay from "./components/pages/customers/customerPay";
 import CustomerCreditHistory from "./components/pages/customers/customerCreditHistory";
+import CustomerDelete from "./components/pages/customers/deleteCustomer";
 import Couriers from "./components/pages/couriers";
 import CourierAdd from "./components/pages/couriers/courierAdd";
 import CourierEdit from "./components/pages/couriers/editCourier";
@@ -58,6 +59,7 @@ import ReceiptEdit from "./components/pages/setup/receipt/receiptEdit";
 import ReceiptDelete from "./components/pages/setup/receipt/receiptDelete";
 import SalesHistory from "./components/pages/register/salesHistory";
 import Sell from "./components/pages/register/sell";
+import ViewInvoice from "./components/pages/register/invoice/viewInvoice";
 import Stock from "./components/pages/stock";
 import PurchaseOrder from "./components/pages/stock/order";
 import ReceiveStock from "./components/pages/stock/stockReceive";
@@ -232,46 +234,47 @@ const Routes = () => {
           path='/products/discount'
           component={ProductDiscount}
         />
-        <Route
+        <PrivateRoute
           exact
           path='/customers'
-          render={() => renderWithLayout(Customers)}
-        ></Route>
-        <Route
+          component= {Customers}
+        />
+        <PrivateRoute
           exact
           path='/customers/add'
-          render={() => renderWithLayout(CustomerForm)}
-        ></Route>
-        <Route
+          component={(props) =>  <CustomerForm {...props} />}
+        />
+        <PrivateRoute
           exact
           path='/customers/:customer_id/view'
-          render={(props) => renderWithLayout(CustomerProfile, props)}
-        ></Route>
-        <Route
+          component={(props) =>  <CustomerProfile {...props} />}
+        />
+        <PrivateRoute
           exact
           path='/customers/:customer_id/edit'
-          render={(props) => {
-            return renderWithLayout(CustomerForm, props, {
-              isCustomerEditMode: true,
-            });
-          }}
-        ></Route>
-
-        <Route
+          component={(props) =>  <CustomerForm  {...props} isCustomerEditMode={true}  /> }
+        />
+        <PrivateRoute
+          exact
+          path='/customers/:customer_id/delete'
+          component={(props) =>  <CustomerDelete  {...props}  /> }
+        />
+        <PrivateRoute
           exact
           path='/customers/profile'
-          render={() => renderWithLayout(CustomerProfile)}
-        ></Route>
-        <Route
+          component={(props) =>  <CustomerProfile {...props} />}
+        />
+        <PrivateRoute
           exact
           path='/customers/:customer_id/pay-account-balance'
-          render={(props) => renderWithLayout(CustomerPay, props)}
-        ></Route>
-        <Route
+          component={(props) =>  <CustomerPay {...props} />}
+          
+        />
+        <PrivateRoute
           exact
           path='/customers/:customer_id/credit-history'
-          render={(props) => renderWithLayout(CustomerCreditHistory, props)}
-        ></Route>
+          component={(props) =>  <CustomerCreditHistory {...props} />}
+        />
         <Route
           exact
           path='/signup'
@@ -366,6 +369,11 @@ const Routes = () => {
           exact
           path='/register/salesHistory'
           component={SalesHistory}
+        />
+        <PrivateRoute
+          exact
+          path='/register/invoice/:invoice_id/view'
+          component={(props) =>  <ViewInvoice {...props} />}
         />
       </Switch>
     </div>

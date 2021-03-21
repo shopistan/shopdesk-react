@@ -43,7 +43,9 @@ const urls = {
     VIEW_SINGLE: BASE_URL + '/api/customers/get',
     EDIT_CUSTOMER: BASE_URL + '/api/customers/edit',
     RECHARGE: BASE_URL + '/api/customers/recharge',
+    CREDIT_HISTORY: BASE_URL + '/api/customers/credit',
     SEARCH: BASE_URL + '/api/customers/search',
+    DELETE: BASE_URL + '/api/customers/delete',
   },
   PRODUCTS: {
     VIEW: BASE_URL + '/api/products/view',

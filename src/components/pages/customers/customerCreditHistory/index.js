@@ -1,34 +1,153 @@
-import React from "react";
-
-import { Timeline } from "antd";
+import React, { useEffect, useState } from 'react';
 import {
-  EditOutlined,
-  CreditCardOutlined,
-  HistoryOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+  VerticalTimeline,
+  VerticalTimelineElement
+} from 'react-vertical-timeline-component';
+import 'react-vertical-timeline-component/style.min.css';
+import { customerCreditDetails } from '../../../../utils/api/customer-api-utils';
+import { ArrowLeftOutlined } from "@ant-design/icons";
+import { Link, useHistory } from 'react-router-dom';
+import { message, Button } from 'antd';
 
-const CustomerCredirHistory = () => {
+const CustomerCreditHistory = (props) => {
+  const [customerData, setCustomerData] = useState(null);
+  const [creditsHistory, setCreditsHistory] = useState([]);
+
+  console.log(props);
+
+  const { match = {} } = props;
+  const { customer_id = {} } = match.params;
+
+  const history = useHistory();
+
+  const popPage = () => {
+    history.goBack();
+  };
+
+  const fetchCustomerCreditHistory = async (customerId) => {
+    if (!customerId) {
+      return popPage();
+    }
+    const customerCreditHistoryResponse = await customerCreditDetails(
+      customerId
+    );
+    if (customerCreditHistoryResponse.hasError) {
+      message.success(customerCreditHistoryResponse.message, 3);
+      return popPage();
+    }
+
+    const customerData = customerCreditHistoryResponse.customer;
+    const creditsHistoryData = customerCreditHistoryResponse.history;
+
+    if (!customerData) {
+      message.error('Customer not found');
+      return popPage();
+    } else if (!creditsHistoryData) {
+      message.error('Credits history data not found');
+      return popPage();
+    }
+    setCustomerData(customerData);
+    setCreditsHistory(creditsHistoryData);
+    console.log('creditsHistoryData:  ', creditsHistoryData);
+    console.log('customerData:  ', customerData);
+  };
+
+  useEffect(() => {
+    fetchCustomerCreditHistory(customer_id);
+  }, []);
+
+
+
+  const handleCancel = () => {
+    history.goBack();
+  };
+
+
   return (
-    <div className="page customer-profile">
-      <div className="page__header">
-        <h1>Customer Credit History</h1>
+    <div className='page customer-profile'>
+      <div className='page__header'>
+        <h1><Button type="primary" shape="circle" className="back-btn"
+          icon={<ArrowLeftOutlined />}
+          onClick={handleCancel} />Customer Credit History</h1>
       </div>
 
-      <div className="page__content">
-        <Timeline mode="left">
-          <Timeline.Item label="2015-09-01">Create a services</Timeline.Item>
-          <Timeline.Item label="2015-09-01 09:12:11">
-            Solve initial network problems
-          </Timeline.Item>
-          <Timeline.Item>Technical testing</Timeline.Item>
-          <Timeline.Item label="2015-09-01 09:12:11">
-            Network problems being solved
-          </Timeline.Item>
-        </Timeline>
+      <div className='page__content'>
+        <VerticalTimeline>
+          {creditsHistory.map((singleCreditHistory) => {
+            const totalBalance = +singleCreditHistory.balance;
+            const invoiceActualId = singleCreditHistory.invoice_id
+            const invoiceId = singleCreditHistory.invoice_show_id
+              ? singleCreditHistory.invoice_show_id
+              : '';
+            if (isNaN(totalBalance)) {
+              return null;
+            }
+
+
+            const balance = Math.abs(totalBalance);
+            const isInvoiceData = totalBalance < 0;
+            const storeName = singleCreditHistory.store_name;
+            const paymentMethod = singleCreditHistory.method;
+            const creditDateTime = singleCreditHistory.date;
+
+            const colorOfCircle = isInvoiceData ? 'red' : 'green';
+            let messageForCurrentCredit;
+
+            messageForCurrentCredit += customerData.customer_name + ' ';
+            if (isInvoiceData) {
+              messageForCurrentCredit += `invoice # ${invoiceId} `;
+            }
+            messageForCurrentCredit += `of PK Rs. ${balance}`;
+            if (isInvoiceData) {
+              messageForCurrentCredit += '';
+            }
+
+            /*---------------------timelineitem Data---------------------------------*/
+            var timeLineItemData;
+            if (totalBalance > 0) {
+              timeLineItemData = `payed account balance of PK Rs. ${balance} via ${paymentMethod} at outlet ${storeName}`;
+            }
+            if (totalBalance < 0) {
+              timeLineItemData = `of ${balance} payed through account balance at outlet ${storeName}`;
+            }
+            if (totalBalance === 0) {
+              timeLineItemData = `new account opend at outlet ${storeName}`;
+            }
+            /*---------------------timelineitem Data---------------------------------*/
+
+            const redirectInvoiceLink = `/register/invoice/${invoiceActualId}/view`;
+            const redirectCustomerLink = `/customers/${customerData.id}/view`;
+
+            return (
+              <VerticalTimelineElement
+                className='vertical-timeline-element--work'
+                contentStyle={{ background: '#f5f5f6', color: '#black' }}
+                contentArrowStyle={{ borderRight: '7px solid  #f5f5f6' }}
+                date={creditDateTime}
+                iconStyle={{ background: colorOfCircle }}
+              >
+                {/* <h3 className='vertical-timeline-element-title'></h3> */}
+                <h4 className='vertical-timeline-element-subtitle'>
+                  <Link to={redirectCustomerLink}>{customerData.customer_name}</Link>{' '}
+
+                  {isInvoiceData &&
+                    <>
+                      invoice #
+                    <Link to={redirectInvoiceLink}> {invoiceId}</Link>
+                    </>
+                  } &nbsp;
+
+                  {timeLineItemData}
+
+                </h4>
+              </VerticalTimelineElement>
+            );
+          })}
+
+        </VerticalTimeline>
       </div>
     </div>
   );
 };
 
-export default CustomerCredirHistory;
+export default CustomerCreditHistory;

@@ -192,7 +192,8 @@ const TransferInventory = () => {
       productsTableData.forEach((p) => {
         if (p.product_id === selectedItem.product_id) {
           productExistsCheck = true;
-          p.qty += parseFloat(formValues.product_qty);
+          let inputQtyValue = Helpers.var_check(formValues.product_qty) ? formValues.product_qty : 1;
+          p.qty += parseFloat(inputQtyValue);
         }
       }); //end of for loop
 

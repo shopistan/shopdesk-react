@@ -110,10 +110,7 @@ const SalesHistory = () => {
       setSalesHistoryData(salesData);
       setPaginationData(salesHistoryViewResponse.invoices.page || {});
       /*-------setting continue sales data---------*/
-      const filteredData = salesData.filter((sale) => {
-        return sale.invoice_status === salesTypeEnum.PARKED;
-      });
-      setSelectedTabData(filteredData);
+      handletabChange(currentTab); //imp
       /*-------setting continue sales data---------*/
       setLoading(false);
 

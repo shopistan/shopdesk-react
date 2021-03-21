@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
 
-import { Button, Form, Input, Select, message } from "antd";
+import { Button, Form, Input, Select, message, Row, Col } from "antd";
 import { useHistory } from "react-router-dom";
-import {} from "@ant-design/icons";
+import { } from "@ant-design/icons";
 
 import {
   getSingleCustomer,
   rechargeCustomerAccount,
 } from "../../../../utils/api/customer-api-utils";
 
+
+
 const CustomerPay = (props) => {
   const { Option } = Select;
+  console.log(props);
 
   const { match = {} } = props;
   const { customer_id = {} } = match.params;
@@ -80,6 +83,11 @@ const CustomerPay = (props) => {
     history.push(`/customers/${customer_id}/view`);
   };
 
+
+  const handleCancel = () => {
+    history.goBack();
+};
+
   return (
     <div className="page customer-profile">
       <div className="page__header">
@@ -87,96 +95,104 @@ const CustomerPay = (props) => {
       </div>
 
       <div className="page__content">
-        <div className="info">
-          <ul>
-            <li>
-              <span>Name:</span>
-              <span>{customerData.name}</span>
-            </li>
-            <li>
-              <span>Phone:</span>
-              <span>{customerData.phone}</span>
-            </li>
-            <li>
-              <span>Email:</span>
-              <span>{customerData.email}</span>
-            </li>
-            <li>
-              <span>Sex:</span>
-              <span>{customerData.gender}</span>
-            </li>
-            <li>
-              <span>Balance:</span>
-              <span>{customerData.balance}</span>
-            </li>
-            <li>
-              <span>Code:</span>
-              <span>{customerData.code}</span>
-            </li>
-          </ul>
-        </div>
 
-        <div className="page__form">
-          <Form
-            name="basic"
-            layout="vertical"
-            onFinish={onNewBalanceSubmitted}
-            initialValues={{
-              remember: true,
-            }}
-          >
-            <div className="form__row">
-              <div className="form__col">
-                <Form.Item
-                  label="Payment Type"
-                  name="payment_type"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please select payment type!",
-                    },
-                  ]}
-                >
-                  <Select defaultValue="Cash" onChange={handleChange}>
-                    <Option value="cash">Cash</Option>
-                    <Option value="credit card">Credit Card</Option>
-                  </Select>
-                </Form.Item>
-              </div>
+        <Row>
+          <Col xs={24} sm={24} md={24} lg={16} className="customer-details-section">
+            <div className="info">
+              <ul>
+                <li>
+                  <span>Name:</span>
+                  <span>{customerData.name}</span>
+                </li>
+                <li>
+                  <span>Phone:</span>
+                  <span>{customerData.phone}</span>
+                </li>
+                <li>
+                  <span>Email:</span>
+                  <span>{customerData.email}</span>
+                </li>
+                <li>
+                  <span>Sex:</span>
+                  <span>{customerData.gender}</span>
+                </li>
+                <li>
+                  <span>Balance:</span>
+                  <span>{customerData.balance}</span>
+                </li>
+                <li>
+                  <span>Code:</span>
+                  <span>{customerData.code}</span>
+                </li>
+              </ul>
             </div>
+          </Col>
 
-            <div className="form__row">
-              <div className="form__col">
-                <Form.Item
-                  label="Amount"
-                  name="payment_amount"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input amount!",
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-              </div>
-            </div>
 
-            <div className="form__row--footer">
-              <Button type="secondary" htmlType="submit">
-                Cancel
-              </Button>
-
-              <Button
-                type="primary"
-                htmlType="submit"
-                className="custom-btn custom-btn--primary"
+          <Col xs={24} sm={24} md={24} lg={8}>
+            <div className="page__form">
+              <Form
+                name="basic"
+                layout="vertical"
+                onFinish={onNewBalanceSubmitted}
+                initialValues={{
+                  remember: true,
+                }}
               >
-                Confirm
+                <div className="form__row">
+                  <div className="form__col">
+                    <Form.Item
+                      label="Payment Type"
+                      name="payment_type"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please select payment type!",
+                        },
+                      ]}
+                    >
+                      <Select defaultValue="Cash" onChange={handleChange}>
+                        <Option value="cash">Cash</Option>
+                        <Option value="credit card">Credit Card</Option>
+                      </Select>
+                    </Form.Item>
+                  </div>
+                </div>
+
+                <div className="form__row">
+                  <div className="form__col">
+                    <Form.Item
+                      label="Amount"
+                      name="payment_amount"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input amount!",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                  </div>
+                </div>
+
+                <div className="form__row--footer">
+                  <Button type="secondary" onClick={handleCancel}>
+                    Cancel
               </Button>
+
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    className="custom-btn custom-btn--primary"
+                  >
+                    Confirm
+              </Button>
+                </div>
+              </Form>
             </div>
-          </Form>
-        </div>
+          </Col>
+        </Row>
       </div>
     </div>
   );

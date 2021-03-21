@@ -83,6 +83,25 @@ export const rechargeCustomerAccount = async (customerData, paymetInfo) => {
 };
 
 
+export const customerCreditDetails = async (customerId) => {
+  const formDataPair = {
+    'customer_id': customerId,
+  };
+  const singleCustomerFormDataBody = ApiCallUtil.constructFormData(
+    formDataPair
+  );
+  const url = UrlConstants.CUSTOMERS.CREDIT_HISTORY;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+    singleCustomerFormDataBody //body
+  );
+}
+
+
+
 export const searchCustomer = async (searchValue) => {
   const formDataPair = {
     q: searchValue,
@@ -99,8 +118,27 @@ export const searchCustomer = async (searchValue) => {
     callType, //calltype
     searchCustomerFormDataBody,   //body
   );
+}
 
-};
+
+export const deleteCustomer = async (customerId) => {
+  const formDataPair = {
+    customer_id: customerId,
+  }
+
+  const deleteCustomerFormDataBody = ApiCallUtil.constructFormData(
+    formDataPair
+  );
+  const url = UrlConstants.CUSTOMERS.DELETE;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+    deleteCustomerFormDataBody,   //body
+  );
+}
+
 
 
 
