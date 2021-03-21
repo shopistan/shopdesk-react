@@ -256,7 +256,8 @@ const PurchaseOrder = () => {
       productsTableData.forEach((p) => {
         if (p.product_id === selectedItem.product_id) {
           productExistsCheck = true;
-          p.qty += parseFloat(formValues.product_qty);
+          let inputQtyValue = Helpers.var_check(formValues.product_qty) ? formValues.product_qty : 1;
+          p.qty += parseFloat(inputQtyValue);
         }
       }); //end of for loop
 
@@ -351,7 +352,7 @@ const PurchaseOrder = () => {
     addPurchaseOrderPostData.ordered_date = moment(new Date()).format("MM/DD/yyyy HH:mm:ss");
     addPurchaseOrderPostData.supplier_id = formValues.supplier;
 
-    console.log("vvimp-final", clonedProductsPostData);
+    //console.log("vvimp-final", clonedProductsPostData);
 
     const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.addPurchaseOrder(addPurchaseOrderPostData);

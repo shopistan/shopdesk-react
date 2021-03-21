@@ -121,6 +121,25 @@ export const searchCustomer = async (searchValue) => {
 }
 
 
+export const deleteCustomer = async (customerId) => {
+  const formDataPair = {
+    customer_id: customerId,
+  }
+
+  const deleteCustomerFormDataBody = ApiCallUtil.constructFormData(
+    formDataPair
+  );
+  const url = UrlConstants.CUSTOMERS.DELETE;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+    deleteCustomerFormDataBody,   //body
+  );
+}
+
+
 
 
 

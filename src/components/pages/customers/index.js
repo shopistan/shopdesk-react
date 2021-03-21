@@ -47,6 +47,72 @@ const Customers = () => {
     fetchCustomersData();
   }, []);
 
+
+
+
+
+  function download_csv(csv, filename) {
+    var csvFile;
+    var downloadLink;
+
+    // CSV FILE
+    csvFile = new Blob([csv], { type: "text/csv" });
+
+    // Download link
+    downloadLink = document.createElement("a");
+
+    // File name
+    downloadLink.download = filename;
+
+    // We have to create a link to the file
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+
+    // Make sure that the link is not displayed
+    downloadLink.style.display = "none";
+
+    // Add the link to your DOM
+    document.body.appendChild(downloadLink);
+
+    // Lanzamos
+    downloadLink.click();
+  }
+
+
+  function export_table_to_csv(html, filename) {
+    var csv = [];
+    //imp selection below
+    var rows = document.querySelectorAll("div#customers-list-table  tr");
+
+    for (var i = 0; i < rows.length; i++) {
+      var row = [], cols = rows[i].querySelectorAll("td, th");
+
+      for (var j = 0; j < cols.length-1; j++)
+        row.push(cols[j].innerText);
+
+      csv.push(row.join(","));
+    }
+
+    // Download CSV
+    download_csv(csv.join("\n"), filename);
+  }
+
+
+  const DownloadToCsv = (e) => {
+
+    if (data.length > 0) {
+      var html = document.getElementById('customers-list-table').innerHTML;
+
+      export_table_to_csv(html, "customers_" + new Date().toUTCString() + ".csv")
+
+    }
+    else { message.error("No Customer Data Found", 3) }
+
+  }
+
+
+
+
+
   return (
     <div className="page categories">
       <div className="page__header">
@@ -64,11 +130,14 @@ const Customers = () => {
             Add New
           </Button>
 
-          <Button type="primary" className="custom-btn custom-btn--primary">
+          {/*<Button type="primary" className="custom-btn custom-btn--primary">
             Fetch All
-          </Button>
+          </Button>*/}
 
-          <Button type="primary" className="custom-btn custom-btn--primary">
+          <Button type="primary" className="custom-btn custom-btn--primary"
+            onClick={DownloadToCsv}
+
+          >
             Export CSV
           </Button>
         </div>
@@ -82,6 +151,7 @@ const Customers = () => {
             tableDataLoading={loading}
             onClickPageChanger={handlePageChange}
             currentPageIndex={currentPage}
+            tableId='customers-list-table'
           />
         </div>
         {/* Table */}

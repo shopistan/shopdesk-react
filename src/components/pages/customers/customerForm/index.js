@@ -11,11 +11,11 @@ const CustomerForm = (props) => {
   const history = useHistory();
   const { Option } = Select;
   console.log(props);
-  console.log(history);
+  console.log("hsitory-object",history);
 
 
   const { match = {} } = props;
-  const { customer_id = {} } = match.params !== undefined && match.params;
+  const { customer_id = {} } =  match.params;
 
   //These are used to set data in the ant form
   const [customerDataFields, setCustomerDataFields] = useState([]);

@@ -5,8 +5,9 @@ import {
 } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import { customerCreditDetails } from '../../../../utils/api/customer-api-utils';
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Link, useHistory } from 'react-router-dom';
-import { message } from 'antd';
+import { message, Button } from 'antd';
 
 const CustomerCreditHistory = (props) => {
   const [customerData, setCustomerData] = useState(null);
@@ -55,16 +56,26 @@ const CustomerCreditHistory = (props) => {
     fetchCustomerCreditHistory(customer_id);
   }, []);
 
+
+
+  const handleCancel = () => {
+    history.goBack();
+  };
+
+
   return (
     <div className='page customer-profile'>
       <div className='page__header'>
-        <h1>Customer Credit History</h1>
+        <h1><Button type="primary" shape="circle" className="back-btn"
+          icon={<ArrowLeftOutlined />}
+          onClick={handleCancel} />Customer Credit History</h1>
       </div>
 
       <div className='page__content'>
         <VerticalTimeline>
           {creditsHistory.map((singleCreditHistory) => {
             const totalBalance = +singleCreditHistory.balance;
+            const invoiceActualId = singleCreditHistory.invoice_id
             const invoiceId = singleCreditHistory.invoice_show_id
               ? singleCreditHistory.invoice_show_id
               : '';
@@ -72,8 +83,6 @@ const CustomerCreditHistory = (props) => {
               return null;
             }
 
-            console.log(totalBalance);
-            
 
             const balance = Math.abs(totalBalance);
             const isInvoiceData = totalBalance < 0;
@@ -93,24 +102,22 @@ const CustomerCreditHistory = (props) => {
               messageForCurrentCredit += '';
             }
 
-           /*---------------------timelineitem Data---------------------------------*/
+            /*---------------------timelineitem Data---------------------------------*/
             var timeLineItemData;
-         
-            if(totalBalance>0){
-              timeLineItemData = `payed account balance of PK Rs. ${balance} via ${paymentMethod } at outlet ${storeName}`;
+            if (totalBalance > 0) {
+              timeLineItemData = `payed account balance of PK Rs. ${balance} via ${paymentMethod} at outlet ${storeName}`;
             }
-            if(totalBalance<0){
+            if (totalBalance < 0) {
               timeLineItemData = `of ${balance} payed through account balance at outlet ${storeName}`;
             }
-            if(totalBalance===0){
+            if (totalBalance === 0) {
               timeLineItemData = `new account opend at outlet ${storeName}`;
             }
-
-
             /*---------------------timelineitem Data---------------------------------*/
 
-            const redirectInvoiceLink = `/register/invoice/${invoiceId}/view`;
+            const redirectInvoiceLink = `/register/invoice/${invoiceActualId}/view`;
             const redirectCustomerLink = `/customers/${customerData.id}/view`;
+
             return (
               <VerticalTimelineElement
                 className='vertical-timeline-element--work'
@@ -122,14 +129,14 @@ const CustomerCreditHistory = (props) => {
                 {/* <h3 className='vertical-timeline-element-title'></h3> */}
                 <h4 className='vertical-timeline-element-subtitle'>
                   <Link to={redirectCustomerLink}>{customerData.customer_name}</Link>{' '}
-                  
-                  {!isInvoiceData &&
+
+                  {isInvoiceData &&
                     <>
-                    invoice #
+                      invoice #
                     <Link to={redirectInvoiceLink}> {invoiceId}</Link>
                     </>
                   } &nbsp;
-                 
+
                   {timeLineItemData}
 
                 </h4>

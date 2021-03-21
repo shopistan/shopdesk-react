@@ -104,6 +104,7 @@ const CustomersTable = (props) => {
         bordered
         dataSource={data}
         columns={mergedColumns}
+        id={props.tableId} //imp to pass table id here
         rowClassName='editable-row'
         className='table-frame'
         pagination={{

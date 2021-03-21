@@ -154,9 +154,12 @@ const ReturnStock = () => {
 
 
   const handleAddProduct = () => {
-    console.log("inside");
     var formValues = form.getFieldsValue();
-    console.log("changed", formValues);
+  
+    if(!selectedProductId){
+      message.warning("please select product!");
+      return;
+    }
 
     var productExistsCheck = false;
     var newData = [...productsTableData];
@@ -170,7 +173,8 @@ const ReturnStock = () => {
       productsTableData.forEach((p) => {
         if (p.product_id === selectedItem.product_id) {
           productExistsCheck = true;
-          p.qty += parseFloat(formValues.product_qty);
+          let inputQtyValue = Helpers.var_check(formValues.product_qty) ? formValues.product_qty : 1;
+          p.qty += parseFloat(inputQtyValue);
         }
       }); //end of for loop
 
