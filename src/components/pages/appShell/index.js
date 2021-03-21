@@ -34,7 +34,7 @@ const AppShell = (props) => {
   const toggleLogout = () => {
     clearLocalUserData();
     history.push({
-      pathname: "/signin",
+      pathname: "/sign-in",
     });
   };
 

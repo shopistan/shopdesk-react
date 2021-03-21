@@ -88,7 +88,7 @@ const SideMenu = () => {
         } else if (e.key === "signup") {
           history.push("/signup");
         } else if (e.key === "signin") {
-          history.push("/signin");
+          history.push("/sign-in");
         } else if (e.key === "outlets" || e.key === "users" || e.key === "receipts") {
           if (e.key === "outlets") {
             history.push({

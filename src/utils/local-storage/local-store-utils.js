@@ -2,7 +2,7 @@ import Constants from '../../utils/constants/constants';
 import moment from 'moment';
 
 export const clearLocalUserData = () => {
-  localStorage.removeItem(Constants.USER_AUTH_KEY);
+  localStorage.removeItem(Constants.USER_DETAILS_KEY);
 };
 
 export const saveDataIntoLocalStorage = (key, value) => {
@@ -21,11 +21,15 @@ export const saveDataIntoLocalStorage = (key, value) => {
 };
 
 export const getDataFromLocalStorage = (key) => {
-  const dataFromLocalStorage = JSON.parse(window.localStorage.getItem(key));
-  return {
-    hasError: dataFromLocalStorage ? true : false,
-    data: dataFromLocalStorage
-  };
+  try {
+    const dataFromLocalStorage = JSON.parse(window.localStorage.getItem(key));
+    return {
+      hasError: dataFromLocalStorage ? true : false,
+      data: dataFromLocalStorage
+    };
+  } catch (err) {
+    return {};
+  }
 };
 
 export const clearDataFromLocalStorage = () => {
