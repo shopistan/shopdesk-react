@@ -47,8 +47,6 @@ const AdjustmentStock = () => {
   const [selectedProductId, setSelectedProductId] = useState("");
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
 
-  var registeredProductsLimit = Helpers.registeredProductsPageLimit;
-
 
 
   useEffect(() => {
@@ -56,7 +54,8 @@ const AdjustmentStock = () => {
   }, []);
 
 
-  const handleSearch = async (value) => {
+  const handleSearch = (value) => {
+    setSelectedSearchValue(value);
 
     var currValue = value;
     currValue = currValue.toLowerCase();
@@ -77,19 +76,15 @@ const AdjustmentStock = () => {
 
 
   const handleSelect = (value, option) => {
-    let productId = value.split('-');
     console.log(option.children);
     setSelectedSearchValue(option.children);
-    setSelectedProductId(productId[0]);  //passes productId
+    setSelectedProductId(value);  //passes productId
   };
 
 
 
-  const fetchRegisteredProductsData = async (pageLimit = 20, pageNumber = 1) => {
-    const productsDiscountsViewResponse = await ProductsApiUtil.getRegisteredProducts(
-      registeredProductsLimit,
-      pageNumber
-    );
+  const fetchRegisteredProductsData = async () => {
+    const productsDiscountsViewResponse = await ProductsApiUtil.getFullRegisteredProducts();
     console.log(' productsDiscountsViewResponse:', productsDiscountsViewResponse);
 
     if (productsDiscountsViewResponse.hasError) {
@@ -312,7 +307,7 @@ const AdjustmentStock = () => {
         products: adjustmentProducts,
     };
 
-    console.log("vvimp-final", addStockAdjustmentPostData);
+    //console.log("vvimp-final", addStockAdjustmentPostData);
 
     const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.addStockAdjustment(addStockAdjustmentPostData);
@@ -511,7 +506,6 @@ const AdjustmentStock = () => {
                   <Col xs={24} sm={24} md={12} className="stock-item-content">
                     <Form.Item
                       label="Search Product"
-                      name="search_product"
                     >
                       <AutoComplete style={{ width: "100%" }}
                         dropdownMatchSelectWidth={500}
@@ -520,7 +514,7 @@ const AdjustmentStock = () => {
                         onSelect={handleSelect}
                         placeholder="search for product">
                         {productsSearchResult && productsSearchResult.map((item) => (
-                          <Option key={item.product_id} value={item.product_id + `-${item.searchName}`}>
+                          <Option key={item.product_id} value={item.product_id}>
                             {item.searchName}
                           </Option>
                         ))}

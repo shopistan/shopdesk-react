@@ -61,7 +61,6 @@ function Sell() {
   const { Search } = Input;
   const { Option } = Select;
 
-  var registeredProductsLimit = Helpers.registeredProductsPageLimit;
   var couriersPageLimit = Helpers.couriersPageLimit;
 
   useEffect(() => {
@@ -105,14 +104,8 @@ function Sell() {
     }
   };
 
-  const fetchRegisteredProductsData = async (
-    pageLimit = 20,
-    pageNumber = 1
-  ) => {
-    const productsDiscountsViewResponse = await ProductsApiUtil.getRegisteredProducts(
-      registeredProductsLimit,
-      pageNumber
-    );
+  const fetchRegisteredProductsData = async () => {
+    const productsDiscountsViewResponse = await ProductsApiUtil.getFullRegisteredProducts();
     console.log(
       " productsDiscountsViewResponse:",
       productsDiscountsViewResponse
@@ -199,8 +192,8 @@ function Sell() {
   };
 
   const handleSelect = (value, option) => {
-    console.log(value);
-    console.log("imp", option);
+    //console.log(value);
+    //console.log("imp", option);
     setSelectedValue(option.children); //working correctly
     setSelectedProductId(value); //passes productuinqId
   };
@@ -556,8 +549,8 @@ function Sell() {
     var formValues = form.getFieldsValue();
     var costFormValues = costForm.getFieldsValue();
 
-    console.log(formValues);
-    console.log(costFormValues);
+    //console.log(formValues);
+    //console.log(costFormValues);
 
     //var clonedInvoiceData = JSON.parse(JSON.stringify(invoiceData));
     var clonedInvoiceData = { ...invoiceData };

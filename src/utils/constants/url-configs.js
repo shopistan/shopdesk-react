@@ -1,4 +1,4 @@
-const BASE_URL = 'https://cloud.shopdesk.co';
+const BASE_URL = 'https://shopdesk-develop-iiqzqqotsq-uc.a.run.app';
 const IMAGE_UPLOADS_URL = 'https://storage.googleapis.com/shopdesk-artifacts';
 
 const urls = {

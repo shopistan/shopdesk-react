@@ -1,25 +1,54 @@
-import React, { useEffect } from 'react';
-import { Button, Typography, message } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Typography, message, Spin } from 'antd';
 import { useHistory } from 'react-router-dom';
 import * as TaxApiUtil from '../../../utils/api/tax-api-utils';
 
 const { Text } = Typography;
 
-const DeleteTax = () => {
+const DeleteTax = (props) => {
     const history = useHistory();
+    const [selectedTaxData, setSelectedTaxData] = useState({});
+    const [loading, setLoading] = useState(true);
+
+    const { match = {} } = props;
+    const { tax_id = {} } = match !== undefined && match.params;
+
 
     useEffect(async () => {
-        if (history.location.data === undefined) {
-            history.push({
-                pathname: '/taxes',
-            });
+        if (tax_id !== undefined) { getTax(tax_id); }
+        else {
+            message.error("Tax Id cannot be null", 2);
+            setTimeout(() => {
+                history.goBack();
+            }, 1000);
         }
 
     }, []);
 
+
+    const getTax = async (TaxId) => {
+        const gettaxResponse = await TaxApiUtil.getTax(TaxId);
+        console.log('gettaxResponse:', gettaxResponse);
+        if (gettaxResponse.hasError) {
+            console.log('getTax Cant Fetched -> ', gettaxResponse.errorMessage);
+            setLoading(false);
+        }
+        else {
+            console.log('res -> ', gettaxResponse);
+            message.success(gettaxResponse.message, 2);
+            const taxData = gettaxResponse.tax[0];  //vvimp
+            setSelectedTaxData(taxData);
+            setLoading(false);
+
+        }
+    }
+
+
     const handleConfirm = async () => {
-        const taxDeleteResponse = await TaxApiUtil.deleteTax(history.location.data.tax_id);
+        const hide = message.loading('Saving Changes in progress..', 0);
+        const taxDeleteResponse = await TaxApiUtil.deleteTax(selectedTaxData.tax_id);
         console.log('taxDeleteResponse:', taxDeleteResponse);
+        setTimeout(hide, 1500);
 
         if (taxDeleteResponse.hasError) {
             console.log('Cant delete Tax -> ', taxDeleteResponse.errorMessage);
@@ -28,6 +57,7 @@ const DeleteTax = () => {
         else {
             console.log('res -> ', taxDeleteResponse);
             message.success(taxDeleteResponse.message, 3);
+            setTimeout(hide, 1500);
             setTimeout(() => {
                 history.push({
                     pathname: '/taxes',
@@ -35,6 +65,8 @@ const DeleteTax = () => {
             }, 2000);
         }
     };
+
+
 
     const handleCancel = () => {
         history.push({
@@ -49,28 +81,32 @@ const DeleteTax = () => {
             <div className='page__header'>
                 <h1 className='page__title'>Delete Tax</h1>
             </div>
+            <div style={{ textAlign: "center" }}>
+                {loading && <Spin size="large" tip="Loading..." />}
+            </div>
 
-            <div className='page__content'>
-                <div className='page__form'>
-                    <div className='form__row'>
-                        <div className='form__col'>
-                            <Text>Do you really want to delete '{history.location.data && history.location.data.tax_name }'?</Text>
+            {!loading &&
+                <div className='page__content'>
+                    <div className='page__form'>
+                        <div className='form__row'>
+                            <div className='form__col'>
+                                <Text>Do you really want to delete '{selectedTaxData !== undefined && selectedTaxData.tax_name}'?</Text>
+                            </div>
+                        </div>
+                        <br />
+                        <div className='form__row--footer'>
+                            <Button type='primary' danger
+                                onClick={() => handleConfirm()}>
+                                Confirm
+                        </Button>
+
+                            <Button
+                                onClick={() => handleCancel()}>
+                                Cancel
+                        </Button>
                         </div>
                     </div>
-                    <br />
-                    <div className='form__row--footer'>
-                        <Button type='primary' danger
-                            onClick={() => handleConfirm()}>
-                            Confirm
-                        </Button>
-
-                        <Button
-                            onClick={() => handleCancel()}>
-                            Cancel
-                        </Button>
-                    </div>
-                </div>
-            </div>
+                </div>}
         </div>
     );
 };

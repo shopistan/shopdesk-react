@@ -122,7 +122,7 @@ const StockTable = (props) => {
                 dataIndex: 'transfer_date_received',
                 render: (_, record) => {
                     return (
-                      <span> { moment(record.transfer_date_received).format("MM DD, yyyy")} </span>
+                      <span> { record.transfer_date_received && moment(record.transfer_date_received).format("MM DD, yyyy")} </span>
                     );
                 },
             },

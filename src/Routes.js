@@ -217,8 +217,16 @@ const Routes = () => {
         <PrivateRoute exact path='/suppliers/add' component={SupplierAdd} />
         <PrivateRoute exact path='/taxes' component={Taxes} />
         <PrivateRoute exact path='/taxes/add' component={TaxAdd} />
-        <PrivateRoute exact path='/taxes/:id/edit' component={TaxEdit} />
-        <PrivateRoute exact path='/taxes/:id/delete' component={TaxDelete} />
+        <PrivateRoute
+          exact
+          path='/taxes/:tax_id/edit'
+          component={(props) =>  <TaxEdit {...props} />}
+        />
+         <PrivateRoute
+          exact
+          path='/taxes/:tax_id/delete'
+          component={(props) =>  <TaxDelete {...props} />}
+        />
         <PrivateRoute exact path='/products' component={Products} />
         <PrivateRoute exact path='/products/add' component={ProductAdd} />
         <PrivateRoute exact path='/products/upload' component={ProductUpload} />
@@ -293,13 +301,13 @@ const Routes = () => {
         <PrivateRoute exact path='/categories/add' component={CategoryAdd} />
         <PrivateRoute
           exact
-          path='/categories/:id/edit'
-          component={EditCategory}
+          path='/categories/:cat_id/edit'
+          component={(props) =>  <EditCategory {...props} />}
         />
         <PrivateRoute
           exact
-          path='/categories/:id/delete'
-          component={DeleteCategory}
+          path='/categories/:cat_id/delete'
+          component={(props) =>  <DeleteCategory {...props} />}
         />
         <PrivateRoute exact path='/couriers' component={Couriers} />
         <PrivateRoute exact path='/couriers/add' component={CourierAdd} />

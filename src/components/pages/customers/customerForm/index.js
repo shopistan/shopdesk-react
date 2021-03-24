@@ -10,8 +10,8 @@ import { useEffect } from 'react';
 const CustomerForm = (props) => {
   const history = useHistory();
   const { Option } = Select;
-  console.log(props);
-  console.log("hsitory-object",history);
+  //console.log(props);
+  //console.log("hsitory-object",history);
 
 
   const { match = {} } = props;
