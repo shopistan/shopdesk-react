@@ -41,13 +41,13 @@ const SignUp = () => {
       console.log('Cant SignUP -> ', errorMessage );
       message.error('SignUP UnSuccesfull ', 3);
     } else {
-      const signedUpUserDetails = signUpResponse.data;
+      const signedUpUserDetails = signUpResponse;
       saveDataIntoLocalStorage();
       message.success('SignUp Succesfull ', 3);
       console.log('res -> ', signedUpUserDetails );
         setTimeout(() => {
           history.push({
-            pathname: '/signin',
+            pathname: '/sign-in',
           });
         }, 2000);
 

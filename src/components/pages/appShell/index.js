@@ -15,7 +15,7 @@ import {
 import SideMenu from "../../molecules/menu";
 import {
   getDataFromLocalStorage,
-  clearDataFromLocalStorage,
+  clearLocalUserData,
   checkUserAuthFromLocalStorage,
 } from "../../../utils/local-storage/local-store-utils";
 import Constants from "../../../utils/constants/constants";
@@ -32,9 +32,9 @@ const AppShell = (props) => {
   };
 
   const toggleLogout = () => {
-    clearDataFromLocalStorage();
+    clearLocalUserData();
     history.push({
-      pathname: "/signin",
+      pathname: "/sign-in",
     });
   };
 
