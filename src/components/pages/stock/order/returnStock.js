@@ -39,8 +39,8 @@ const ReturnStock = () => {
   const [selectedProductId, setSelectedProductId] = useState("");
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
 
-  var registeredProductsLimit = Helpers.registeredProductsPageLimit;
-  var suppliersPageLimit = Helpers.suppliersPageLimit;
+  //var registeredProductsLimit = Helpers.registeredProductsPageLimit;
+  //var suppliersPageLimit = Helpers.suppliersPageLimit;
 
 
 
@@ -49,14 +49,15 @@ const ReturnStock = () => {
     fetchSuppliersData();
     /*-----setting template data to fields value------*/
     form.setFieldsValue({
-      order_reference_name: `Return - ${moment(new Date()).format("MM/DD/yyyy HH:mm:ss")}`,
+      order_reference_name: `Return - ${moment(new Date()).format("yyyy/MM/DD HH:mm:ss")}`,
     });
     /*-----setting template data to fields value------*/
 
   }, []);
 
 
-  const handleSearch = async (value) => {
+  const handleSearch = (value) => {
+    setSelectedSearchValue(value);
 
     var currValue = value;
     currValue = currValue.toLowerCase();
@@ -77,19 +78,15 @@ const ReturnStock = () => {
 
 
   const handleSelect = (value, option) => {
-    let productId = value.split('-');
     console.log(option.children);
     setSelectedSearchValue(option.children);
-    setSelectedProductId(productId[0]);  //passes productId
+    setSelectedProductId(value);  //passes productId
   };
 
 
 
-  const fetchRegisteredProductsData = async (pageLimit = 20, pageNumber = 1) => {
-    const productsDiscountsViewResponse = await ProductsApiUtil.getRegisteredProducts(
-      registeredProductsLimit,
-      pageNumber
-    );
+  const fetchRegisteredProductsData = async () => {
+    const productsDiscountsViewResponse = await ProductsApiUtil.getFullRegisteredProducts();
     console.log(' productsDiscountsViewResponse:', productsDiscountsViewResponse);
 
     if (productsDiscountsViewResponse.hasError) {
@@ -126,12 +123,9 @@ const ReturnStock = () => {
 
 
 
-  const fetchSuppliersData = async (pageLimit = 20, pageNumber = 1) => {
+  const fetchSuppliersData = async () => {
 
-    const SuppliersViewResponse = await SuppliersApiUtil.viewSuppliers(
-      suppliersPageLimit,
-      pageNumber
-    );
+    const SuppliersViewResponse = await SuppliersApiUtil.viewAllSuppliers();
     console.log("SuppliersViewResponse:", SuppliersViewResponse);
 
     if (SuppliersViewResponse.hasError) {
@@ -230,11 +224,11 @@ const ReturnStock = () => {
     returnStockPostData.date_due = "";
     returnStockPostData.po_name = formValues.order_reference_name;
     returnStockPostData.return_name = returnStockPostData.po_name;
-    returnStockPostData.ordered_date = moment(new Date()).format("MM/DD/yyyy HH:mm:ss");
+    returnStockPostData.ordered_date = moment(new Date()).format("yyyy/MM/DD HH:mm:ss");  //imp to have in the same format
     returnStockPostData.return_date = returnStockPostData.ordered_date;
     returnStockPostData.supplier_id = formValues.supplier;
 
-    console.log("vvimp-final", returnStockPostData);
+    //console.log("vvimp-final", returnStockPostData);
 
     const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.returnStock(returnStockPostData);
@@ -385,7 +379,6 @@ const ReturnStock = () => {
                   <Col xs={24} sm={24} md={12} className="stock-item-content">
                     <Form.Item
                       label="Search Product"
-                      name="search_product"
                     >
                       <AutoComplete style={{ width: "100%" }}
                         dropdownMatchSelectWidth={500}
@@ -394,7 +387,7 @@ const ReturnStock = () => {
                         onSelect={handleSelect}
                         placeholder="search for product">
                         {productsSearchResult && productsSearchResult.map((item) => (
-                          <Option key={item.product_id} value={item.product_id + `-${item.searchName}`}>
+                          <Option key={item.product_id} value={item.product_id}>
                             {item.searchName}
                           </Option>
                         ))}

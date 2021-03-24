@@ -54,9 +54,6 @@ const PurchaseOrder = () => {
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
   const [orderDueDate, setOrderDueDate] = useState("");
 
-  var registeredProductsLimit = Helpers.registeredProductsPageLimit;
-  var suppliersPageLimit = Helpers.suppliersPageLimit;
-
 
 
   useEffect(() => {
@@ -64,14 +61,14 @@ const PurchaseOrder = () => {
     fetchSuppliersData();
     /*-----setting template data to fields value------*/
     form.setFieldsValue({
-      order_reference_name: `Order - ${moment(new Date()).format("MM/DD/yyyy HH:mm:ss")}`,
+      order_reference_name: `Order - ${moment(new Date()).format("yyyy//MM/DD HH:mm:ss")}`,
     });
     /*-----setting template data to fields value------*/
 
   }, []);
 
 
-  const handleSearch = async (value) => {
+  const handleSearch = (value) => {
     setSelectedSearchValue(value);
 
     var currValue = value;
@@ -93,19 +90,17 @@ const PurchaseOrder = () => {
 
 
   const handleSelect = (value, option) => {
-    let productId = value.split('-');
+    //let productId = value.split('-');
+    //console.log(value);
     console.log(option.children);
-    setSelectedSearchValue(option.children);
-    setSelectedProductId(productId[0]);  //passes productId
+    setSelectedSearchValue(option.children);  //searchName
+    setSelectedProductId(value);  //passes productId
   };
 
 
 
-  const fetchRegisteredProductsData = async (pageLimit = 20, pageNumber = 1) => {
-    const productsDiscountsViewResponse = await ProductsApiUtil.getRegisteredProducts(
-      registeredProductsLimit,
-      pageNumber
-    );
+  const fetchRegisteredProductsData = async () => {
+    const productsDiscountsViewResponse = await ProductsApiUtil.getFullRegisteredProducts();
     console.log(' productsDiscountsViewResponse:', productsDiscountsViewResponse);
 
     if (productsDiscountsViewResponse.hasError) {
@@ -142,12 +137,9 @@ const PurchaseOrder = () => {
 
 
 
-  const fetchSuppliersData = async (pageLimit = 10, pageNumber = 1) => {
+  const fetchSuppliersData = async () => {
 
-    const SuppliersViewResponse = await SuppliersApiUtil.viewSuppliers(
-      suppliersPageLimit,
-      pageNumber
-    );
+    const SuppliersViewResponse = await SuppliersApiUtil.viewAllSuppliers();
     console.log("SuppliersViewResponse:", SuppliersViewResponse);
 
     if (SuppliersViewResponse.hasError) {
@@ -269,7 +261,7 @@ const PurchaseOrder = () => {
         let inputQtyValue = Helpers.var_check(formValues.product_qty) ? formValues.product_qty : 1;
         selectedItem.qty = parseFloat(inputQtyValue);
         newData.push(selectedItem);
-        console.log("imp1-table", newData);
+        //console.log("imp1-table", newData);
         calculateProductsTotalQuantity(newData);
         setProductsTableData(newData);
       }
@@ -349,7 +341,7 @@ const PurchaseOrder = () => {
     addPurchaseOrderPostData.products = clonedProductsPostData;
     addPurchaseOrderPostData.date_due = orderDueDate;
     addPurchaseOrderPostData.po_name = formValues.order_reference_name;
-    addPurchaseOrderPostData.ordered_date = moment(new Date()).format("MM/DD/yyyy HH:mm:ss");
+    addPurchaseOrderPostData.ordered_date = moment(new Date()).format("yyyy//MM//DD HH:mm:ss");
     addPurchaseOrderPostData.supplier_id = formValues.supplier;
 
     //console.log("vvimp-final", clonedProductsPostData);
@@ -601,7 +593,7 @@ const PurchaseOrder = () => {
                   <Col xs={24} sm={24} md={12} className="stock-item-content">
                     <Form.Item
                       label="Search Product"
-                      name="search_product"
+                      //name="search_product"
                     >
                       <AutoComplete style={{ width: "100%" }}
                         dropdownMatchSelectWidth={500}
@@ -609,8 +601,9 @@ const PurchaseOrder = () => {
                         onSearch={handleSearch}
                         onSelect={handleSelect}
                         placeholder="search for product">
+
                         {productsSearchResult && productsSearchResult.map((item) => (
-                          <Option key={item.product_id} value={item.product_id + `-${item.searchName}`}>
+                          <Option key={item.product_id} value={item.product_id}>
                             {item.searchName}
                           </Option>
                         ))}

@@ -38,11 +38,11 @@ export const addReceivePurchaseOrder = async (receivePoData) => {
 
 
 export const addPurchaseOrder = async (addPurchaseOrderData) => {
-    /*const addPurchaseOrderFormDataBody = {
+    const addPurchaseOrderFormData = {
         purchase: addPurchaseOrderData,
-    };*/
+    };
 
-    const addPurchaseOrderFormDataBody =  $.param({purchase: addPurchaseOrderData});
+    const addPurchaseOrderFormDataBody =  $.param(addPurchaseOrderFormData);
     const url = UrlConstants.STOCK.ADD_PURCHASE_ORDER;
     const callType = GenericConstants.API_CALL_TYPE.POST;
 
@@ -150,8 +150,11 @@ export const closeTransferInventoryOrder = async (closeTransferInventoryId) => {
 };
 
 export const returnStock = async (returnStockData) => {
+    const returnStockFormData = {
+        return: returnStockData,
+    };
 
-    const returnStockFormDataBody =  $.param({return: returnStockData});
+    const returnStockFormDataBody =  $.param(returnStockFormData);
     const url = UrlConstants.STOCK.RETURN_STOCK;
     const callType = GenericConstants.API_CALL_TYPE.POST;
 
@@ -215,8 +218,11 @@ export const viewInventoryTransfers = async (limit, pageNumber) => {
 
 
 export const transferInventory = async (transferInventoryData) => {
+    const  transferInventoryFormData = {
+        transfer: transferInventoryData,
+    };
 
-    const transferInventoryFormDataBody =  $.param({transfer: transferInventoryData});
+    const transferInventoryFormDataBody =  $.param(transferInventoryFormData);
     const url = UrlConstants.STOCK.TRANSFER_OUT;
     const callType = GenericConstants.API_CALL_TYPE.POST;
 

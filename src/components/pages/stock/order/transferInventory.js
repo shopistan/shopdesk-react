@@ -46,7 +46,6 @@ const TransferInventory = () => {
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
   const [currentStoreId, setCurrentStoreId] = useState("");
 
-  var registeredProductsLimit = Helpers.registeredProductsPageLimit;
   var outletsPageLimit = Helpers.outletsPageLimit;
 
 
@@ -56,7 +55,7 @@ const TransferInventory = () => {
     fetchOutletsData();
     /*-----setting template data to fields value------*/
     form.setFieldsValue({
-      order_reference_name: `Transfer - ${moment(new Date()).format("MM/DD/yyyy HH:mm:ss")}`,
+      order_reference_name: `Transfer - ${moment(new Date()).format("yyyy//MM/DD HH:mm:ss")}`,
     });
     /*-----setting template data to fields value------*/
 
@@ -79,7 +78,8 @@ const TransferInventory = () => {
   }, []);
 
 
-  const handleSearch = async (value) => {
+  const handleSearch = (value) => {
+    setSelectedSearchValue(value);
 
     var currValue = value;
     currValue = currValue.toLowerCase();
@@ -100,19 +100,15 @@ const TransferInventory = () => {
 
 
   const handleSelect = (value, option) => {
-    let productId = value.split('-');
     console.log(option.children);
     setSelectedSearchValue(option.children);
-    setSelectedProductId(productId[0]);  //passes productId
+    setSelectedProductId(value);  //passes productId
   };
 
 
 
-  const fetchRegisteredProductsData = async (pageLimit = 20, pageNumber = 1) => {
-    const productsDiscountsViewResponse = await ProductsApiUtil.getRegisteredProducts(
-      registeredProductsLimit,
-      pageNumber
-    );
+  const fetchRegisteredProductsData = async () => {
+    const productsDiscountsViewResponse = await ProductsApiUtil.getFullRegisteredProducts();
     console.log(' productsDiscountsViewResponse:', productsDiscountsViewResponse);
 
     if (productsDiscountsViewResponse.hasError) {
@@ -250,12 +246,12 @@ const TransferInventory = () => {
     transferInventoryPostData.supplier_id = "";
     transferInventoryPostData.po_name = formValues.order_reference_name;
     transferInventoryPostData.transfer_name = transferInventoryPostData.po_name;
-    transferInventoryPostData.ordered_date = moment(new Date()).format("MM/DD/yyyy HH:mm:ss");
+    transferInventoryPostData.ordered_date = moment(new Date()).format("yyyy//MM/DD HH:mm:ss");
     transferInventoryPostData.transfer_date = transferInventoryPostData.ordered_date;
     transferInventoryPostData.destination_store_id = formValues.destination_outlet;
     transferInventoryPostData.source_store_id = currentStoreId;
 
-    console.log("vvimp-final", transferInventoryPostData);
+    //console.log("vvimp-final", transferInventoryPostData);
 
     const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.transferInventory(transferInventoryPostData);
@@ -375,25 +371,6 @@ const TransferInventory = () => {
 
               {/* Form Section */}
               <div className="form__section">
-                {/*<div className="form__section__header">
-                  <div className="switch__row">
-                    <Switch className="bulk-order-switch"
-                      onChange={handleBulkSwitch} />
-                    <h2>Bulk Order</h2>
-                  </div>
-                </div>  */}
-
-
-              </div>
-              {/* Form Section */}
-
-              {/* Form Section */}
-              <div className="form__section">
-                {/*<div className="form__section__header">
-                <div className="switch__row">
-                  <h2>Order Products</h2>
-                </div>
-              </div> */}
                 <h4 className="stock-receive-products-heading stock-receive-row-heading">
                   Products
                 <label className="label-stock-count">
@@ -406,7 +383,6 @@ const TransferInventory = () => {
                   <Col xs={24} sm={24} md={12} className="stock-item-content">
                     <Form.Item
                       label="Search Product"
-                      name="search_product"
                     >
                       <AutoComplete style={{ width: "100%" }}
                         dropdownMatchSelectWidth={500}
@@ -414,8 +390,9 @@ const TransferInventory = () => {
                         onSearch={handleSearch}
                         onSelect={handleSelect}
                         placeholder="search for product">
+                          
                         {productsSearchResult && productsSearchResult.map((item) => (
-                          <Option key={item.product_id} value={item.product_id + `-${item.searchName}`}>
+                          <Option key={item.product_id} value={item.product_id}>
                             {item.searchName}
                           </Option>
                         ))}
