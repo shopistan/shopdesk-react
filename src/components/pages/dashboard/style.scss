@@ -9,6 +9,16 @@
 
   .charts {
     display: flex;
+
+    @include respond(mobile) {
+      flex-direction: column;
+    }
+
+    .sales {
+      @include respond(mobile) {
+        margin-bottom: 4rem;
+      }
+    }
   }
 
   .sales {
