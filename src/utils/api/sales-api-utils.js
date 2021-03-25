@@ -49,15 +49,16 @@ export const registerInvoice = async (invoiceQueue) => {
     const registerInvoiceFormData = {
         dataArray: invoiceQueue,
     };
+    
 
-    //const registerInvoiceFormDataBody =  $.param(registerInvoiceFormData);
+    const registerInvoiceFormDataBody =  $.param(registerInvoiceFormData);
     const url = UrlConstants.SALES.REGISTER_INVOICE;
     const callType = GenericConstants.API_CALL_TYPE.POST;
 
     return await ApiCallUtil.http(
         url, //api url
         callType, //calltype
-        registerInvoiceFormData //body
+        registerInvoiceFormDataBody //body
     );
 
 };
