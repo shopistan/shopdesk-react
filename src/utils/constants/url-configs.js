@@ -28,6 +28,7 @@ const urls = {
     EDIT_SUPPLIER: BASE_URL + '/api/suppliers/edit',
     DELETE_SUPPLIER: BASE_URL + '/api/suppliers/delete',
     VIEW_ALL: BASE_URL + '/api/suppliers/viewAll',
+    GET_SUPPLIER: BASE_URL + '/api/suppliers/get',
   },
   OULETS: {
     SELECT_OUTLET: BASE_URL + '/api/users/selectStore'
@@ -36,7 +37,8 @@ const urls = {
     VIEW: BASE_URL + '/api/couriers/view',
     ADD_COURIER: BASE_URL + '/api/couriers/add',
     EDIT_COURIER: BASE_URL + '/api/couriers/edit',
-    DELETE_COURIER: BASE_URL + '/api/couriers/delete'
+    DELETE_COURIER: BASE_URL + '/api/couriers/delete',
+    GET_COURIER: BASE_URL + '/api/couriers/get',
   },
   CUSTOMERS: {
     VIEW: BASE_URL + '/api/customers/view',
@@ -111,6 +113,7 @@ const urls = {
   SALES: {  
     VIEW_HISTORY: BASE_URL + '/api/register/view',
     GET_SALE_HISTORY: BASE_URL + '/api/register/get',
+    REGISTER_INVOICE: BASE_URL + '/api/register/add',
 
   },
   DASHBOARD:{

@@ -50,7 +50,7 @@ const PrintSalesInvoice = (props) => {
                     <b style={{fontSize: "10px"}}>Date: </b> <span>{today}</span><br />
                     <b style={{fontSize: "10px"}}>Sales Person: </b><span>{userName}</span><br />
                 </center>
-                <table class="print-sales-invoice sales-invoice-table"
+                <table className="print-sales-invoice sales-invoice-table"
                     style={{width: "100%", borderBottom: "2px solid #000", borderTop: "2px solid #000"}}> 
                     <thead>
                         <tr>
@@ -65,7 +65,7 @@ const PrintSalesInvoice = (props) => {
                         {invoice.products.map(pro => {
                             return (
 
-                                <tr >
+                                <tr key={pro.product_id} >
                                     <td style={{textAlign: "center"}}>{pro.qty}</td>
                                     <td  style={{textAlign: "center"}}>{pro.searchName} </td>
                                     <td style={{textAlign: "center"}}>{pro.product_sale_price}</td>

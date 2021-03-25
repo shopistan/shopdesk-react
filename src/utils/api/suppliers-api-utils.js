@@ -25,6 +25,25 @@ export const addSupplier = async (supplierName, supplierContactName,
     );
 };
 
+
+export const getSupplier = async (supplierId) => {
+    const formDataPair = {
+        supplier_id: supplierId,
+      
+    };
+    const getSupplierFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+    const url = UrlConstants.SUPPLIERS.GET_SUPPLIER;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        getSupplierFormDataBody //body
+    );
+};
+
+
+
 export const viewSuppliers = async (limit, PageNumber) => {
     const formDataPair = {
         limit: limit,

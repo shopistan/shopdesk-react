@@ -11,3 +11,5 @@ const constants = {
 };
 
 export default constants;
+
+export var ROOT_SYNC_SCOPE = false;

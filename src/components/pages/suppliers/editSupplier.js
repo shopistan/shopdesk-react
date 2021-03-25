@@ -1,25 +1,75 @@
-import React, { useEffect } from "react";
-import { Form, Input, Button, message } from "antd";
+import React, { useEffect, useState } from "react";
+import { Form, Input, Button, message, Spin } from "antd";
 import * as SuppliersApiUtil from "../../../utils/api/suppliers-api-utils";
 import { useHistory } from "react-router-dom";
 
-const EditSupplier = () => {
+const EditSupplier = (props) => {
   const history = useHistory();
-  const [form] = Form.useForm();
+  const [supplierDataFields, setSupplierDataFields] = useState([]);
+  const [SupplierData, setSupplierData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const { match = {} } = props;
+  const { supplier_id = {} } = match !== undefined && match.params;
 
-  useEffect(async () => {
-    //console.log(history.location.data); working
-    if (history.location.data === undefined) {
-      history.push({
-          pathname: '/suppliers',
-      });
+  
+
+  useEffect(() => {
+    if (supplier_id !== undefined) { getSupplier(supplier_id); }
+    else {
+      message.error("Supplier Id cannot be null", 2);
+      setTimeout(() => {
+        history.goBack();
+      }, 1000);
     }
 
   }, []);
 
+
+  const getSupplier = async (supplierId) => {
+    const getSupplierResponse = await SuppliersApiUtil.getSupplier(supplierId);
+    console.log('getSupplierResponse:', getSupplierResponse);
+    if (getSupplierResponse.hasError) {
+      console.log('Supplier Cant Fetched -> ', getSupplierResponse.errorMessage);
+      setLoading(false);
+    }
+    else {
+      message.success(getSupplierResponse.message, 2);
+      const supplierData = getSupplierResponse.supplier[0];  //vvimp
+      setSupplierData(supplierData);
+      const fieldsForAntForm = [
+        {
+          name: ['supplier_name'],
+          value: supplierData.supplier_name
+        },
+        {
+          name: ['contact_person'],
+          value: supplierData.supplier_contact_name
+        },
+        {
+          name: ['phone'],
+          value: supplierData.supplier_contact_phone
+        },
+        {
+          name: ['email'],
+          value: supplierData.supplier_contact_email
+        },
+        {
+          name: ['tax'],
+          value: supplierData.supplier_tax_number
+        },
+      ];
+
+      setSupplierDataFields(fieldsForAntForm); 
+      setLoading(false);
+    }
+  }
+
+
+
   const onFinish = async (values) => {
+    const hide = message.loading('Saving Changes in progress..', 0);
     const supplierEditResponse = await SuppliersApiUtil.editSupplier(
-      history.location.data.supplier_id,
+      SupplierData.supplier_id,
       values.supplier_name,
       values.contact_person,
       values.phone,
@@ -31,9 +81,11 @@ const EditSupplier = () => {
     if (supplierEditResponse.hasError) {
       console.log("Cant Edit Supplier -> ", supplierEditResponse.errorMessage);
       message.error("Cant Edit Supplier", 3);
+      setTimeout(hide, 1500);
     } else {
       console.log("res -> ", supplierEditResponse);
       message.success("Supplier Editing Succesfull ", 3);
+      setTimeout(hide, 1500);
       setTimeout(() => {
         history.push({
           pathname: "/suppliers",
@@ -51,19 +103,18 @@ const EditSupplier = () => {
       <div className="page__header">
         <h1 className="page__title">Edit Supplier</h1>
       </div>
+      <div style={{ textAlign: "center" }}>
+        {loading && <Spin size="large" tip="Loading..." />}
+      </div>
 
+
+      {!loading &&
       <div className="page__content">
         <div className="page__form">
           <Form
             name="basic"
+            fields={supplierDataFields}
             layout="vertical"
-            initialValues={{
-              supplier_name: history.location.data && history.location.data.supplier_name,
-              contact_person: history.location.data && history.location.data.supplier_contact_name,
-              email: history.location.data && history.location.data.supplier_contact_email,
-              phone: history.location.data && history.location.data.supplier_contact_phone,
-              tax: history.location.data && history.location.data.supplier_tax_number,
-            }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
           >
@@ -162,7 +213,7 @@ const EditSupplier = () => {
             </div>
           </Form>
         </div>
-      </div>
+      </div>}
     </div>
   );
 };

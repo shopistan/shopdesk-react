@@ -511,9 +511,9 @@ const ProductAdd = () => {
                     <Select onChange={handleTaxChange}>
                       {taxes.map((obj, index) => {
                         return (
-                          <option key={obj.tax_id} value={obj.tax_id}>
+                          <Option key={obj.tax_id} value={obj.tax_id}>
                             {`${obj.tax_name}(${obj.tax_value}%)`}
-                          </option>
+                          </Option>
                         );
                       })}
                     </Select>
@@ -534,9 +534,9 @@ const ProductAdd = () => {
                     <Select>
                       {categories.map((obj, index) => {
                         return (
-                          <option key={obj.category_id} value={obj.category_id}>
+                          <Option key={obj.category_id} value={obj.category_id}>
                             {obj.category_name}
-                          </option>
+                          </Option>
                         );
                       })}
                     </Select>
@@ -560,7 +560,7 @@ const ProductAdd = () => {
                   >
                     <InputNumber
                       min={0}
-                      defaultValue={0}
+                      //defaultValue={0}
                       className="u-width-100"
                       onChange={handlePurchaseChange}
                     />
@@ -591,7 +591,7 @@ const ProductAdd = () => {
                   >
                     <InputNumber
                       min={0}
-                      defaultValue={0}
+                      //defaultValue={0}
                       className="u-width-100"
                       onChange={handleSaleChange}
                     />
@@ -766,7 +766,7 @@ const ProductAdd = () => {
                             name={`${store.store_name}`}
                           >
                             <InputNumber
-                              defaultValue={0}
+                              //defaultValue={0}
                               className="u-width-100"
                             />
                           </Form.Item>
@@ -844,9 +844,9 @@ const ProductAdd = () => {
                           {variant1Tags.length > 0 &&
                             variant1Tags.map((obj, index) => {
                               return (
-                                <option key={index} value={obj}>
+                                <Option key={index} value={obj}>
                                   {obj}
-                                </option>
+                                </Option>
                               );
                             })}
                         </Select>
@@ -881,9 +881,9 @@ const ProductAdd = () => {
                           {variant2Tags.length > 0 &&
                             variant2Tags.map((obj, index) => {
                               return (
-                                <option key={index} value={obj}>
+                                <Option key={index} value={obj}>
                                   {obj}
-                                </option>
+                                </Option>
                               );
                             })}
                         </Select>

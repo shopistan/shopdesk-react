@@ -1,34 +1,63 @@
-import React, {  useEffect } from 'react';
-import { Button, Typography, message } from 'antd';
+import React, {  useEffect, useState } from 'react';
+import { Button, Typography, message, Spin } from 'antd';
 import { useHistory } from 'react-router-dom';
 import * as CouriersApiUtil from '../../../utils/api/couriers-api-utils';
 
 const { Text } = Typography;
 
-const DeleteCourier  = () => {
+const DeleteCourier  = (props) => {
     const history = useHistory();
+    const [selectedCourierData, setSelectedCourierData] = useState({});
+    const [loading, setLoading] = useState(true);
+    console.log("props", props);
+    const { match = {} } = props;
+    const { courier_id = {} } = match !== undefined && match.params;
 
-    useEffect(async () => {
-        //console.log(history.location.data); working
-        if (history.location.data === undefined) {
-            history.push({
-                pathname: '/couriers',
-            });
+
+
+    useEffect(() => {
+        if (courier_id !== undefined) { getCourier(courier_id); }
+        else {
+            message.error("Courier Id cannot be null", 2);
+            setTimeout(() => {
+                history.goBack();
+            }, 1000);
         }
         
     }, []);
 
+
+    const getCourier = async (courierId) => {
+        const getCourierResponse = await CouriersApiUtil.getCourier(courierId);
+        console.log('getCourierResponse:', getCourierResponse);
+        if (getCourierResponse.hasError) {
+            console.log('Courier Cant Fetched -> ', getCourierResponse.errorMessage);
+            setLoading(false);
+        }
+        else {
+            message.success(getCourierResponse.message, 2);
+            const courierData = getCourierResponse.courier[0];  //vvimp
+            setSelectedCourierData(courierData); 
+            setLoading(false);
+        }
+    }
+
+
+
     const handleConfirm = async () => {
-        const courierDeleteResponse = await  CouriersApiUtil.deleteCourier(history.location.data.courier_id);
+        const hide = message.loading('Saving Changes in progress..', 0);
+        const courierDeleteResponse = await  CouriersApiUtil.deleteCourier(courier_id);
         console.log('courierDeleteResponse:', courierDeleteResponse);
 
         if (courierDeleteResponse.hasError) {
             console.log('Cant delete courier -> ', courierDeleteResponse.errorMessage);
             message.error('Courier deletion UnSuccesfull ', 3);
+            setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', courierDeleteResponse);
             message.success('Courier deletion Succesfull ', 3);
+            setTimeout(hide, 1500);
             setTimeout(() => {
                 history.push({
                   pathname: '/couriers',
@@ -49,14 +78,19 @@ const DeleteCourier  = () => {
             <div className='page__header'>
                 <h1 className='page__title'>Delete Couriers</h1>
             </div>
+            <div style={{ textAlign: "center" }}>
+                {loading && <Spin size="large" tip="Loading..." />}
+            </div>
 
+
+            {!loading &&
             <div className='page__content'>
                 <div className='page__form'>
 
                     <div className='form__row'>
                         <div className='form__col'>
                             <Text>Do you really want to delete '{
-                            history.location.data && history.location.data.courier_name}'?</Text>
+                            selectedCourierData !== undefined && selectedCourierData.courier_name}'?</Text>
                         </div>
 
                     </div>
@@ -73,7 +107,7 @@ const DeleteCourier  = () => {
                         </Button>
                     </div>
                 </div>
-            </div>
+            </div>}
         </div>
     );
 };
