@@ -1,7 +1,7 @@
 import React from "react";
 import { signUp } from "../../../utils/api/auth-api-utils";
 import { saveDataIntoLocalStorage } from "../../../utils/local-storage/local-store-utils";
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 
 import { Form, Input, Button, message, InputNumber } from "antd";
 
@@ -25,7 +25,6 @@ const SignUp = () => {
       return;
     }
 
-
     const signUpResponse = await signUp(
       values.fullName,
       values.email,
@@ -38,19 +37,18 @@ const SignUp = () => {
 
     if (signUpResponse.hasError) {
       const errorMessage = signUpResponse.errorMessage;
-      console.log('Cant SignUP -> ', errorMessage );
-      message.error('SignUP UnSuccesfull ', 3);
+      console.log("Cant SignUP -> ", errorMessage);
+      message.error("SignUP UnSuccesfull ", 3);
     } else {
       const signedUpUserDetails = signUpResponse;
       saveDataIntoLocalStorage();
-      message.success('SignUp Succesfull ', 3);
-      console.log('res -> ', signedUpUserDetails );
-        setTimeout(() => {
-          history.push({
-            pathname: '/sign-in',
-          });
-        }, 2000);
-
+      message.success("SignUp Succesfull ", 3);
+      console.log("res -> ", signedUpUserDetails);
+      setTimeout(() => {
+        history.push({
+          pathname: "/sign-in",
+        });
+      }, 2000);
     }
 
     console.log("Success:", values);
@@ -192,7 +190,11 @@ const SignUp = () => {
 
               <div className='form__col form__col--button'>
                 <Form.Item className='u-width-100'>
-                  <Button type='primary' htmlType='submit'>
+                  <Button
+                    type='primary'
+                    htmlType='submit'
+                    className='custom-btn custom-btn--primary'
+                  >
                     Submit
                   </Button>
                 </Form.Item>
