@@ -15,6 +15,10 @@
     display: none;
   }
 
+  @include respond(mobile) {
+    height: calc(100vh - 12.8rem);
+  }
+
   &__header {
     padding: 0 0 3rem 0;
     border-bottom: 1px solid $color-grey-light-1;

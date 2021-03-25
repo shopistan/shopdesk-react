@@ -4,6 +4,10 @@
 .sell {
   display: flex;
 
+  @include respond(mobile) {
+    flex-direction: column;
+  }
+
   .info,
   .checkout {
     padding: 0 2rem;
@@ -16,6 +20,7 @@
   // Checkout
   .checkout {
     flex: 2;
+    overflow: auto;
 
     .header {
       margin-bottom: 2rem;
@@ -27,18 +32,22 @@
     .cost {
       &__wrapper {
         display: flex;
+
+        @include respond(mobile) {
+          flex-direction: column;
+        }
       }
 
-      &__left {
+      &__left,
+      &__right {
         flex: 1;
         padding-right: 2rem;
         border-right: 1px solid #f7f7f7;
-      }
 
-      &__right {
-        flex: 1;
-        padding-left: 2rem;
-        border-left: 1px solid #f7f7f7;
+        @include respond(mobile) {
+          padding: 0;
+          margin-bottom: 2rem;
+        }
       }
 
       &__box {

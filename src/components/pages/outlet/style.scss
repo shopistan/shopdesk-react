@@ -9,6 +9,11 @@
     column-gap: 2rem;
     row-gap: 2rem;
     cursor: pointer;
+
+    @include respond(mobile) {
+      grid-template-columns: 1fr;
+      margin-bottom: 6rem;
+    }
   }
 
   &__link {
@@ -18,6 +23,7 @@
     display: inline-block;
     transition: all 0.3s;
     border: 3px solid #eee;
+    text-transform: capitalize;
 
     &:hover {
       color: $color-white;
