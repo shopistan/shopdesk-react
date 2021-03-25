@@ -42,26 +42,27 @@ const EditProduct = (props) => {
     const [isImageUpload, setIsImageUpload] = useState(false);
     const [fileList, setFileList] = useState([]);
     const [inclusiveTax, setInclusiveTax] = useState(false);
-
+    const { match = {} } = props;
+    const { product_id = {} } = match !== undefined && match.params;
 
     const { getFieldDecorator } = form;
 
 
     useEffect( () => {
-        //console.log(history.location.data); //working
-        if (history.location.data === undefined) {
-            history.push({
-                pathname: '/products',
-            });
+        if (product_id !== undefined) { fetchProductData(product_id); }
+        else {
+            message.error("Product Id cannot be null", 2);
+            setTimeout(() => {
+                history.goBack();
+            }, 1000);
         }
-        else { fetchProductData(); }
 
     }, []);
 
 
-    const fetchProductData = async (values) => {
+    const fetchProductData = async (productId) => {
 
-        const getProductsResponse = await ProductsApiUtil.getProduct(history.location.data.product_id);
+        const getProductsResponse = await ProductsApiUtil.getProduct(productId);
         console.log('getProductsResponse:', getProductsResponse);
         if (getProductsResponse.hasError) {
             console.log('Product Cant Fetched -> ', getProductsResponse.errorMessage);
@@ -165,7 +166,7 @@ const EditProduct = (props) => {
         //console.log("changed", values);
 
         var formValues = form.getFieldsValue();
-        console.log("changed", formValues);
+        //console.log("changed", formValues);
 
         const productDataDeepClone = JSON.parse(JSON.stringify(productData)); //imp to make adeep copy
 
@@ -193,7 +194,7 @@ const EditProduct = (props) => {
         console.log('getProductsResponse:', EditProductResponse);
         if (EditProductResponse.hasError) {
             console.log('product Editing UnSuccesfully -> ', EditProductResponse.errorMessage);
-            message.error('product Editing UnSuccesfully', 3);
+            message.error(EditProductResponse.errorMessage, 3);
             setTimeout(hide, 1000);
         }
         else {
@@ -352,9 +353,9 @@ const EditProduct = (props) => {
                                                 {
                                                     taxes.map((obj, index) => {
                                                         return (
-                                                            <option key={obj.tax_id} value={obj.tax_id}>
+                                                            <Option key={obj.tax_id} value={obj.tax_id}>
                                                                 {`${obj.tax_name}(${obj.tax_value}%)`}
-                                                            </option>
+                                                            </Option>
                                                         )
                                                     })
                                                 }
@@ -377,9 +378,9 @@ const EditProduct = (props) => {
                                                 {
                                                     categories.map((obj, index) => {
                                                         return (
-                                                            <option key={obj.category_id} value={obj.category_id}>
+                                                            <Option key={obj.category_id} value={obj.category_id}>
                                                                 {obj.category_name}
-                                                            </option>
+                                                            </Option>
                                                         )
                                                     })
                                                 }

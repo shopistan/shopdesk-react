@@ -210,8 +210,8 @@ function Sell() {
   };
 
   const handleCustomerSelect = (customerId, option) => {
-    console.log(customerId);
-    console.log("imp-cus", option);
+    //console.log(customerId);
+    //console.log("imp-cus", option);
     setSelectedCustomerValue(option.children); //working correctly
 
     customersData.forEach((cus) => {
@@ -305,8 +305,9 @@ function Sell() {
     }
 
     const clonedInvoice = { ...saleInvoiceData };
-
     clonedInvoice.payed = paidAmount.toFixed(2);
+
+    //costForm.setFieldsValue({ paid: clonedInvoiceData && clonedInvoiceData.payed }); //imp
 
     setSaleInvoiceData(clonedInvoice);
   };
@@ -624,10 +625,12 @@ function Sell() {
     setSaleInvoiceData(clonedInvoiceData); //imp
     console.log(clonedInvoiceData);
 
+    costForm.setFieldsValue({ paid: clonedInvoiceData && clonedInvoiceData.payed }); //imp
+
     //saveDataIntoLocalStorage("current_invoice", clonedInvoiceData);   //imp
   }
 
-  costForm.setFieldsValue({ paid: saleInvoiceData && saleInvoiceData.payed }); //imp
+  //costForm.setFieldsValue({ paid: saleInvoiceData && saleInvoiceData.payed }); //imp
 
   const onFinish = (values) => {
     console.log("Success:", values);
@@ -694,9 +697,9 @@ function Sell() {
               <Select onChange={handleCourierChange}>
                 {couriersData.map((obj, index) => {
                   return (
-                    <option key={obj.courier_id} value={obj.courier_code}>
+                    <Option key={obj.courier_id} value={obj.courier_code}>
                       {obj.courier_name}
-                    </option>
+                    </Option>
                   );
                 })}
               </Select>
@@ -710,12 +713,12 @@ function Sell() {
             </Form.Item>
             <Form.Item label="Tax Category" name="tax_value">
               <Select onChange={handleTaxCategoryChange}>
-                <option key="1" value={16}>
+                <Option key="1" value={16}>
                   Simple
-                </option>
-                <option key="2" value={5}>
+                </Option>
+                <Option key="2" value={5}>
                   FBS
-                </option>
+                </Option>
               </Select>
             </Form.Item>
           </Form>
@@ -840,7 +843,7 @@ function Sell() {
                   <Form.Item label="Discount" name="discounted_value">
                     <Input
                       placeholder="0"
-                      defaultValue={0}
+                      //defaultValue={0}
                       addonAfter="%"
                       onBlur={handleDiscountChange}
                     />

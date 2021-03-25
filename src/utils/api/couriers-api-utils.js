@@ -19,6 +19,23 @@ export const addCourier = async (courierName, courierCode) => {
     );
 };
 
+
+export const getCourier = async (courierId) => {
+    const formDataPair = {
+        id: courierId,
+    };
+    const getCourierFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+    const url = UrlConstants.COURIERS.GET_COURIER;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        getCourierFormDataBody //body
+    );
+};
+
+
 export const viewCouriers = async (limit, PageNumber) => {
     const formDataPair = {
         limit: limit,

@@ -126,6 +126,7 @@ export const suppliersPageLimit = 100;
 export const outletsPageLimit = 100;
 export const couriersPageLimit = 100;
 
+
 export function var_check(v) {
   if (typeof v !== "undefined" && v !== "" && v !== null) return true;
   else return false;

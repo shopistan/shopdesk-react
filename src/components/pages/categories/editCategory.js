@@ -8,11 +8,10 @@ const EditCategory = (props) => {
     const [categoryDataFields, setCategoryDataFields] = useState([]);
     const [selectedCategoryName, setSelectedCategoryName] = useState("");
     const [loading, setLoading] = useState(true);
-
-    //console.log("props", props)
     const { match = {} } = props;
     const { cat_id = {} } = match !== undefined && match.params;
 
+    
 
     useEffect(() => {
         //console.log("history", history);  //working
@@ -119,7 +118,7 @@ const EditCategory = (props) => {
                                 <div className='form__col form__col--button'>
                                     <Form.Item className='u-width-100'>
                                         <Button type='primary' htmlType='submit'>
-                                            Done
+                                            Edit
                                     </Button>
                                     </Form.Item>
                                 </div>

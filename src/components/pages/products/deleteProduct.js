@@ -6,26 +6,30 @@ import * as ProductsApiUtil from '../../../utils/api/products-api-utils';
 
 const { Text } = Typography;
 
-const DeleteProduct = () => {
+const DeleteProduct = (props) => {
     const history = useHistory();
     const [productData, setproductData] = useState({});
     const [loading, setLoading] = useState(true);
+    const { match = {} } = props;
+    const { product_id = {} } = match !== undefined && match.params;
+
+    
 
     useEffect( () => {
-        //console.log(history.location.data); //working
-        if(history.location.data === undefined){
-            history.push({
-              pathname: '/products',
-          });
+        if (product_id !== undefined) { fetchProductData(product_id); }
+        else {
+            message.error("Product Id cannot be null", 2);
+            setTimeout(() => {
+                history.goBack();
+            }, 1000);
         }
-        else{fetchProductData();}
 
     }, []);
 
 
-    const fetchProductData = async (values) => {
+    const fetchProductData = async (productId) => {
 
-        const getProductsResponse = await ProductsApiUtil.getProduct(history.location.data.product_id);
+        const getProductsResponse = await ProductsApiUtil.getProduct(productId);
         console.log('getProductsResponse:', getProductsResponse);
         if (getProductsResponse.hasError) {
             console.log('Product Cant Fetched -> ', getProductsResponse.errorMessage);
@@ -41,16 +45,19 @@ const DeleteProduct = () => {
     
 
     const handleConfirm = async () => {
+        const hide = message.loading('Saving changes in progress..', 0);
         const productDeleteResponse = await ProductsApiUtil.deleteProduct(productData.product_id);
         console.log('productDeleteResponse:', productDeleteResponse);
 
         if (productDeleteResponse.hasError) {
             console.log('Cant delete a product -> ', productDeleteResponse.errorMessage);
-            message.error(productDeleteResponse.message, 3);
+            message.error(productDeleteResponse.errorMessage, 3);
+            setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', productDeleteResponse);
             message.success(productDeleteResponse.message, 3);
+            setTimeout(hide, 1500);
             setTimeout(() => {
                 history.push({
                   pathname: '/products',

@@ -1,34 +1,60 @@
-import React, { useEffect } from 'react';
-import { Button, Typography, message } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Typography, message, Spin } from 'antd';
 import { useHistory } from 'react-router-dom';
 import * as SuppliersApiUtil from '../../../utils/api/suppliers-api-utils';
 
 const { Text } = Typography;
 
-const DeleteSupplier = () => {
+const DeleteSupplier = (props) => {
     const history = useHistory();
+    const [SupplierData, setSupplierData] = useState({});
+    const [loading, setLoading] = useState(true);
+    const { match = {} } = props;
+    const { supplier_id = {} } = match !== undefined && match.params;
 
-    useEffect(async () => {
-        //console.log(history.location.data); working
-        if (history.location.data === undefined) {
-            history.push({
-                pathname: '/suppliers',
-            });
+    
+
+    useEffect(() => {
+        if (supplier_id !== undefined) { getSupplier(supplier_id); }
+        else {
+            message.error("Supplier Id cannot be null", 2);
+            setTimeout(() => {
+                history.goBack();
+            }, 1000);
         }
-        
+
     }, []);
 
+
+    const getSupplier = async (supplierId) => {
+        const getSupplierResponse = await SuppliersApiUtil.getSupplier(supplierId);
+        console.log('getSupplierResponse:', getSupplierResponse);
+        if (getSupplierResponse.hasError) {
+            console.log('Supplier Cant Fetched -> ', getSupplierResponse.errorMessage);
+            setLoading(false);
+        }
+        else {
+            message.success(getSupplierResponse.message, 2);
+            const supplierData = getSupplierResponse.supplier[0];  //vvimp
+            setSupplierData(supplierData);
+            setLoading(false);
+        }
+    }
+
     const handleConfirm = async () => {
-        const supplierDeleteResponse = await SuppliersApiUtil.deleteSupplier(history.location.data.supplier_id);
+        const hide = message.loading('Saving Changes in progress..', 0);
+        const supplierDeleteResponse = await SuppliersApiUtil.deleteSupplier(SupplierData.supplier_id);
         console.log('supplierDeleteResponse:', supplierDeleteResponse);
 
         if (supplierDeleteResponse.hasError) {
             console.log('Cant delete a Category -> ', supplierDeleteResponse.errorMessage);
             message.error('Supplier deletion UnSuccesfull ', 3);
+            setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', supplierDeleteResponse);
             message.success('Supplier deletion Succesfull ', 3);
+            setTimeout(hide, 1500);
             setTimeout(() => {
                 history.push({
                     pathname: '/suppliers',
@@ -49,29 +75,34 @@ const DeleteSupplier = () => {
             <div className='page__header'>
                 <h1 className='page__title'>Delete Supplier</h1>
             </div>
+            <div style={{ textAlign: "center" }}>
+                {loading && <Spin size="large" tip="Loading..." />}
+            </div>
 
-            <div className='page__content'>
-                <div className='page__form'>
-                    <div className='form__row'>
-                        <div className='form__col'>
-                            <Text>Do you really want to delete '{
-                                history.location.data && history.location.data.supplier_name}'?</Text>
+
+            {!loading &&
+                <div className='page__content'>
+                    <div className='page__form'>
+                        <div className='form__row'>
+                            <div className='form__col'>
+                                <Text>Do you really want to delete '{
+                                    SupplierData !== undefined && SupplierData.supplier_name}'?</Text>
+                            </div>
+                        </div>
+                        <br />
+                        <div className='form__row--footer'>
+                            <Button type='primary' danger
+                                onClick={() => handleConfirm()}>
+                                Confirm
+                        </Button>
+
+                            <Button
+                                onClick={() => handleCancel()}>
+                                Cancel
+                        </Button>
                         </div>
                     </div>
-                    <br />
-                    <div className='form__row--footer'>
-                        <Button type='primary' danger
-                            onClick={() => handleConfirm()}>
-                            Confirm
-                        </Button>
-
-                        <Button
-                            onClick={() => handleCancel()}>
-                            Cancel
-                        </Button>
-                    </div>
-                </div>
-            </div>
+                </div>}
         </div>
     );
 };

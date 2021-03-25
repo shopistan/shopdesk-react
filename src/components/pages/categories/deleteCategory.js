@@ -9,11 +9,11 @@ const DeleteCategory = (props) => {
     const history = useHistory();
     const [selectedCategoryName, setSelectedCategoryName] = useState("");
     const [loading, setLoading] = useState(true);
-
     const { match = {} } = props;
     const { cat_id = {} } = match !== undefined && match.params;
 
 
+    
     useEffect( () => {
         if (cat_id !== undefined) { getCategory(cat_id); }
         else {

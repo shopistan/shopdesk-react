@@ -14,9 +14,8 @@ import {
 
 
 
-
-function OutletEdit() {
-  const { Option } = Select;
+function OutletEdit(props) {
+  const { Option, OptGroup } = Select;
   const { Search } = Input;
   const [show, setShow] = React.useState(true);
 
@@ -36,28 +35,31 @@ function OutletEdit() {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [webHookUrlName, setWebHookUrlName] = useState("");
   const [generatedSecretKey, setGeneratedSecretKey] = useState("secret");
+  const { match = {} } = props;
+  const { outlet_id = {} } = match !== undefined && match.params;
 
 
 
   useEffect(() => {
-    if (history.location.data === undefined) {
-      history.push({
-        pathname: '/setup/outlets',
-      });
-    }
-    else {
+
+    if (outlet_id !== undefined) {
       var currenciesDataArr = [...currencyData];
-      console.log(currenciesDataArr);
+      //console.log(currenciesDataArr);
       setCurrenciesData(currenciesDataArr);
       fetchOutletWebHooks();
-      getUserStoreData(history.location.data.store_id);
+      getUserStoreData(outlet_id);
       fetchUsersTemplatesData();
       /*--------------set user local data-------------------------------*/
       var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
       readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
       setUserLocalStorageData(readFromLocalStorage);
       /*--------------set user local data-------------------------------*/
-
+    }
+    else {
+      message.error("Oulet Id cannot be null", 2);
+      setTimeout(() => {
+        history.goBack();
+      }, 1000);
     }
 
   }, []);
@@ -126,7 +128,7 @@ function OutletEdit() {
   }
 
 
-  {/*const requestUserLoginForNewApiKey = async (values) => {
+  /*const requestUserLoginForNewApiKey = async (values) => {
     let refreshToken = userLocalStorageData.refresh_token;
     let never_expire = true;
     const hide = message.loading('Generating Key in progress..', 0);
@@ -142,12 +144,12 @@ function OutletEdit() {
       
     }
 
-  };*/}
+  };*/
 
 
 
   const onSelectOutletForNewApiKey = async () => {
-    const editStoreId = history.location.data.store_id;   //imp vv
+    const editStoreId = outlet_id;   //imp vv
     var foundStoreObj = userLocalStorageData.auth.storeInfo.find(obj => {
       return obj.store_id === editStoreId
     });
@@ -420,11 +422,11 @@ function OutletEdit() {
                       {
                         currenciesData.map((obj, index) => {
                           return (
-                            <option key={obj.code} value={obj.code}>
+                            <Option key={obj.code} value={obj.code}>
                               <img className="currency-flag-img"
                                 src={`/images/flags/${((obj.code).substring(0, 2)).toLowerCase()}.png`} />
                               {obj.name}
-                            </option>
+                            </Option>
                           )
                         })
                       }
@@ -450,9 +452,9 @@ function OutletEdit() {
                       {
                         templatesData.map((obj, index) => {
                           return (
-                            <option key={obj.template_id} value={obj.template_id}>
+                            <Option  key={obj.template_id} value={obj.template_id}>
                               {obj.template_name}
-                            </option>
+                            </Option>
                           )
                         })
                       }

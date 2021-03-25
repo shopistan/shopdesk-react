@@ -3,6 +3,8 @@
 import UrlConstants from '../constants/url-configs';
 import GenericConstants from '../constants/constants';
 import * as ApiCallUtil from './generic-api-utils';
+import $ from 'jquery';
+
 
 export const getSalesHistory = async (pageLimit, pageNumber, limitCheck) => {
 
@@ -37,6 +39,25 @@ export const getSalesInvoiceHistory = async (invoiceId) => {
         url, //api url
         callType, //calltype
         getSalesInvoiceHistoryFormDataBody //body
+    );
+
+};
+
+
+
+export const registerInvoice = async (invoiceQueue) => {
+    const registerInvoiceFormData = {
+        dataArray: invoiceQueue,
+    };
+
+    //const registerInvoiceFormDataBody =  $.param(registerInvoiceFormData);
+    const url = UrlConstants.SALES.REGISTER_INVOICE;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        registerInvoiceFormData //body
     );
 
 };
