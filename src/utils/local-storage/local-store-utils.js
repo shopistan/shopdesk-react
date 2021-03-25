@@ -2,7 +2,7 @@ import Constants from '../../utils/constants/constants';
 import moment from 'moment';
 
 export const clearLocalUserData = () => {
-  localStorage.removeItem(Constants.USER_DETAILS_KEY);
+  clearKeyFromLocalStorage(Constants.USER_DETAILS_KEY);
 };
 
 export const saveDataIntoLocalStorage = (key, value) => {
@@ -36,6 +36,12 @@ export const clearDataFromLocalStorage = () => {
   localStorage.clear();
 };
 
+
+export const clearKeyFromLocalStorage = (key) => {
+  localStorage.removeItem(key);
+};
+
+
 export const checkUserAuthFromLocalStorage = (key) => {
   const dataFromLocalStorage = JSON.parse(window.localStorage.getItem(key));
   return {
@@ -49,7 +55,8 @@ export const checkAuthTokenExpiration = (expirationDate) => {
   currentDate = moment(currentDate).format('yyyy-MM-DD HH:mm');
   authExpirationTokenDate = moment(expirationDate).format('yyyy-MM-DD HH:mm');
   if (currentDate > authExpirationTokenDate) {
-    clearDataFromLocalStorage();
+    //clearDataFromLocalStorage();  //vimp previous version
+    clearKeyFromLocalStorage(Constants.USER_DETAILS_KEY);
     return true;
   } else {
     return false;

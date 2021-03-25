@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./style.scss";
 import moment from "moment";
+import $ from 'jquery';
+
 
 import {
   Form,
@@ -31,9 +33,11 @@ import {
 } from "../../../../utils/local-storage/local-store-utils";
 import { useHistory } from "react-router-dom";
 import Constants from "../../../../utils/constants/constants";
+import UrlConstants from '../../../../utils/constants/url-configs';
 import * as ProductsApiUtil from "../../../../utils/api/products-api-utils";
 import * as CustomersApiUtil from "../../../../utils/api/customer-api-utils";
 import * as CouriersApiUtil from "../../../../utils/api/couriers-api-utils";
+import * as SalesApiUtil from '../../../../utils/api/sales-api-utils';
 import * as Helpers from "../../../../utils/helpers/scripts";
 import SellNestedProductsTable from "../../../organism/table/sell/sellNestedProductsTable";
 import PrintSalesInvoiceTable from "./sellInvoice";
@@ -57,6 +61,10 @@ function Sell() {
   const [selectedCutomer, setSelectedCutomer] = useState("");
   const [productsTotalAmount, setProductsTotalAmount] = useState(0);
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
+  const [syncStatus, setSyncStatus] = useState(false);
+
+
+  var clearSync = false;
 
   const { Search } = Input;
   const { Option } = Select;
@@ -77,13 +85,20 @@ function Sell() {
         tmpInvoice.customer = selectedViewedInvoice.customer;
         tmpInvoice.hasCustomer = true;
       }
-      saveDataIntoLocalStorage("current_invoice", tmpInvoice);
+      saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, tmpInvoice);
       //console.log(tmpInvoice);
     }
 
     fetchRegisteredProductsData();
     fetchCouriersData();
     startInvoice();
+
+
+    return () => {
+      console.log("unmount");
+      clearSync = true;
+    }
+
   }, []);
 
   const fetchCouriersData = async (pageLimit = 100, pageNumber = 1) => {
@@ -141,6 +156,7 @@ function Sell() {
         }
         products[i].searchName = searchName;
         //products[i].qty = 0;   //imp but not set here ,set at addorder
+        products[i].original_tax_value = products[i].tax_value;
       }
 
       setRegistereProductsData(products);
@@ -152,7 +168,6 @@ function Sell() {
   };
 
   const handleCustomerSearch = async (searchValue) => {
-    console.log("imsiee");
     const customersSearchResponse = await CustomersApiUtil.searchCustomer(
       searchValue
     );
@@ -165,10 +180,10 @@ function Sell() {
       );
     } else {
       console.log("res -> ", customersSearchResponse);
-      message.success(customersSearchResponse.message, 3);
+      //message.success(customersSearchResponse.message, 3);
       setCustomersData(
         customersSearchResponse.customers.data ||
-          customersSearchResponse.customers
+        customersSearchResponse.customers
       );
     }
   };
@@ -228,15 +243,9 @@ function Sell() {
     updateCart(saleInvoiceData);
   };
 
-  const handleParkSale = (e) => {
-    //setProductsTableData([]);
-    //updateCart([]);
-    /////////////////
-    //setSaleInvoiceData({});
-  };
 
   const handleDeleteSale = (e) => {
-    saveDataIntoLocalStorage("current_invoice", null);
+    saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, null);
     let newInvoice = createNewInvoice();
     updateCart(newInvoice);
   };
@@ -281,6 +290,7 @@ function Sell() {
     //console.log(value);
     const clonedInvoice = { ...saleInvoiceData };
     clonedInvoice.courier_code = value;
+    saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, clonedInvoice );  //imp
     setSaleInvoiceData(clonedInvoice);
   };
 
@@ -288,6 +298,7 @@ function Sell() {
     //console.log(e.target.value);
     const clonedInvoice = { ...saleInvoiceData };
     clonedInvoice.reference = e.target.value;
+    saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, clonedInvoice);  //imp
     setSaleInvoiceData(clonedInvoice);
   };
 
@@ -324,7 +335,6 @@ function Sell() {
 
   const handleAddProduct = () => {
     var formValues = form.getFieldsValue();
-    console.log("ins");
 
     var productExistsCheck = false;
     var newData = [...productsTableData];
@@ -351,7 +361,7 @@ function Sell() {
         //setProductsTableData(productsTableData);  // caling in updatecart now imppp
         //update cart  imp
         saleInvoiceData.products = productsTableData;
-        saveDataIntoLocalStorage("current_invoice", saleInvoiceData); //imp
+        saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, saleInvoiceData); //imp
         updateCart(saleInvoiceData);
 
         //update cart  imp
@@ -364,7 +374,7 @@ function Sell() {
         //setProductsTableData(newData);  // callng in updatecart now imppp
         //update cart  imp
         saleInvoiceData.products = newData;
-        saveDataIntoLocalStorage("current_invoice", saleInvoiceData); //imp
+        saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, saleInvoiceData);  //vvimp
         updateCart(saleInvoiceData);
 
         //update cart  imp
@@ -392,6 +402,8 @@ function Sell() {
     var formValues = form.getFieldsValue();
     console.log("changed", formValues);
 
+    console.log(status);
+
     if (productsTableData.length === 0) {
       message.error("No Products Added", 4);
       return;
@@ -413,7 +425,6 @@ function Sell() {
 
     /*if (check) {
       currentInvoice = readFromLocalStorage;
-      
     }*/
 
     var clonedInvoiceData = { ...saleInvoiceData }; //impp here
@@ -423,11 +434,10 @@ function Sell() {
     updateCart(clonedInvoiceData); // impppp
 
     if (Helpers.var_check(localInvoiceQueue.data)) {
-      localInvoiceQueue.data.push(saleInvoiceData);
-
-      console.log("invoice_queue-insert");
-      saveDataIntoLocalStorage("invoice_queue", localInvoiceQueue.data);
-      localStorage.setItem("current_invoice", null); ///imp
+      localInvoiceQueue.data.push(saleInvoiceData);  //imp
+      console.log("invoice-queue-insert");
+      saveDataIntoLocalStorage(Constants.SELL_INVOICE_QUEUE_KEY, localInvoiceQueue.data);
+      localStorage.setItem(Constants.SELL_CURRENT_INVOICE_KEY, null); ///imp
     }
 
     if (status == "close") {
@@ -495,12 +505,103 @@ function Sell() {
     }
 
     if (!localInvoiceQueue.data) {
-      console.log("invoice_queue");
-      saveDataIntoLocalStorage("invoice_queue", []);
+      console.log("invoice-queue-initialization");
+      saveDataIntoLocalStorage(Constants.SELL_INVOICE_QUEUE_KEY, []);
     }
+
+    /*-----imp to call sync----*/
+    if(clearSync === false){setTimeout(sync, 3000);}   
+    /*-----imp to call sync----*/
+
+
   };
 
   ////////////////imp funcyionality////////////////////
+  ////////////////imp functionality////////////////////
+
+  // Invoice Sync Function
+  const sync = () => {
+ 
+    var userData = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+    userData = userData.data ? userData.data : null;
+    //console.log(userData);
+    var localInvoiceQueue = getSellInvoiceDataFromLocalStorage(
+      Constants.SELL_INVOICE_QUEUE_KEY
+    );
+    localInvoiceQueue = localInvoiceQueue.data ? localInvoiceQueue.data : null;
+    console.log(localInvoiceQueue);
+
+    if (
+      Helpers.var_check(localInvoiceQueue) &&
+      localInvoiceQueue.length > 0
+    ) {
+      
+      //setSyncStatus(true);
+      /*---------------register-invoice-Data------------------------*/
+      /*---------------register-invoice-Data------------------------*/
+      $.ajax({
+        type: "POST",
+        url: UrlConstants.SALES.REGISTER_INVOICE,
+        dataType: "json",
+        headers: {
+          Authorization: userData.auth_token,
+          "Content-Type": "application/json"
+        },
+        data: JSON.stringify({
+          dataArray: localInvoiceQueue
+        }),
+        success: function (res) {
+          console.log(res);
+          var index = -1;
+          var invoicesData = res.Invoices_added;
+          for (let i in invoicesData) {
+            for (let i2 in localInvoiceQueue) {
+              if (
+                invoicesData[i] ==
+                localInvoiceQueue[i2].invoiceNo
+              ) {
+                index = i2;
+                break;
+              }
+            }
+            if (index != -1) {
+              localInvoiceQueue.splice(index, 1);
+              saveDataIntoLocalStorage(Constants.SELL_INVOICE_QUEUE_KEY, localInvoiceQueue);
+              console.log("found add index", index);
+            }
+          }
+
+          console.log(invoicesData);
+          setTimeout(sync, 3000);
+
+        },
+        error: function (err) {
+          console.log(err);
+          //setSyncStatus(false);
+          console.log("Fail");
+          setTimeout(sync, 3000);
+
+        }
+      });
+
+      /*---------------register-invoice-Data------------------------*/
+      /*---------------register-invoice-Data------------------------*/
+      
+    }
+
+    else {
+      console.log(clearSync);
+      setSyncStatus(false);
+      if(clearSync === false){setTimeout(sync, 3000);}
+      console.log("-- syncing --");
+
+    }
+
+  }
+
+  ////////////////imp functionality////////////////////
+
+  ////////////////imp functionality////////////////////
 
   function createNewInvoice() {
     ///////////////
@@ -523,7 +624,7 @@ function Sell() {
     // $scope.invoice
     var data = {};
     data.isDiscount = false;
-    data.dateTime = moment(new Date()).format("yyyy//MM/DD hh:mm A");
+    data.dateTime = moment(new Date()).format("yyyy/MM/DD hh:mm:ss");
     data.invoiceNo = Helpers.uniqid();
     data.store_id = readFromLocalStorage.auth.store_random;
     data.user_id = readFromLocalStorage.user_info.user_random;
@@ -626,11 +727,13 @@ function Sell() {
     console.log(clonedInvoiceData);
 
     costForm.setFieldsValue({ paid: clonedInvoiceData && clonedInvoiceData.payed }); //imp
+    
+    //saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, clonedInvoiceData);  //imp
 
     //saveDataIntoLocalStorage("current_invoice", clonedInvoiceData);   //imp
+
   }
 
-  //costForm.setFieldsValue({ paid: saleInvoiceData && saleInvoiceData.payed }); //imp
 
   const onFinish = (values) => {
     console.log("Success:", values);
@@ -732,7 +835,7 @@ function Sell() {
             name="basic"
             layout="vertical"
             initialValues={{
-              remember: true,
+              discounted_value: 0
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
