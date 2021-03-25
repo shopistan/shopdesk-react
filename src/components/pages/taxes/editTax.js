@@ -8,9 +8,9 @@ const EditTax = (props) => {
   const [taxDataFields, setTaxDataFields] = useState([]);
   const [selectedTaxData, setSelectedTaxData] = useState({});
   const [loading, setLoading] = useState(true);
-
   const { match = {} } = props;
   const { tax_id = {} } = match !== undefined && match.params;
+  
 
 
   useEffect(() => {
@@ -25,8 +25,8 @@ const EditTax = (props) => {
   }, []);
 
 
-  const getTax = async (TaxId) => {
-    const gettaxResponse = await TaxApiUtil.getTax(TaxId);
+  const getTax = async (taxId) => {
+    const gettaxResponse = await TaxApiUtil.getTax(taxId);
     console.log('gettaxResponse:', gettaxResponse);
     if (gettaxResponse.hasError) {
       console.log('getTax Cant Fetched -> ', gettaxResponse.errorMessage);
