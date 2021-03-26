@@ -23,6 +23,7 @@ import {
   CreditCardOutlined,
   DollarCircleOutlined,
   DeleteOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import {
   getDataFromLocalStorage,
@@ -290,7 +291,7 @@ function Sell() {
     //console.log(value);
     const clonedInvoice = { ...saleInvoiceData };
     clonedInvoice.courier_code = value;
-    saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, clonedInvoice );  //imp
+    saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, clonedInvoice);  //imp
     setSaleInvoiceData(clonedInvoice);
   };
 
@@ -401,8 +402,7 @@ function Sell() {
   const handlePayBill = (status, check = false) => {
     var formValues = form.getFieldsValue();
     console.log("changed", formValues);
-
-    console.log(status);
+    //console.log(status);
 
     if (productsTableData.length === 0) {
       message.error("No Products Added", 4);
@@ -500,7 +500,7 @@ function Sell() {
       updateCart(currentInvoice);
     } else {
       currentInvoice = createNewInvoice();
-      console.log("see1", currentInvoice);
+      //console.log("see1", currentInvoice);
       updateCart(currentInvoice);
     }
 
@@ -510,18 +510,17 @@ function Sell() {
     }
 
     /*-----imp to call sync----*/
-    if(clearSync === false){setTimeout(sync, 3000);}   
+    if (clearSync === false) { setTimeout(sync, 3000); }
     /*-----imp to call sync----*/
 
 
   };
 
   ////////////////imp funcyionality////////////////////
-  ////////////////imp functionality////////////////////
+  ////////////////imp funcyionality////////////////////
 
-  // Invoice Sync Function
-  const sync = () => {
- 
+  const sync = async () => {
+
     var userData = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
     userData = userData.data ? userData.data : null;
     //console.log(userData);
@@ -535,67 +534,58 @@ function Sell() {
       Helpers.var_check(localInvoiceQueue) &&
       localInvoiceQueue.length > 0
     ) {
-      
+
       //setSyncStatus(true);
-      /*---------------register-invoice-Data------------------------*/
-      /*---------------register-invoice-Data------------------------*/
-      $.ajax({
-        type: "POST",
-        url: UrlConstants.SALES.REGISTER_INVOICE,
-        dataType: "json",
-        headers: {
-          Authorization: userData.auth_token,
-          "Content-Type": "application/json"
-        },
-        data: JSON.stringify({
-          dataArray: localInvoiceQueue
-        }),
-        success: function (res) {
-          console.log(res);
-          var index = -1;
-          var invoicesData = res.Invoices_added;
-          for (let i in invoicesData) {
-            for (let i2 in localInvoiceQueue) {
-              if (
-                invoicesData[i] ==
-                localInvoiceQueue[i2].invoiceNo
-              ) {
-                index = i2;
-                break;
-              }
-            }
-            if (index != -1) {
-              localInvoiceQueue.splice(index, 1);
-              saveDataIntoLocalStorage(Constants.SELL_INVOICE_QUEUE_KEY, localInvoiceQueue);
-              console.log("found add index", index);
+      const registerInvoiceResponse = await SalesApiUtil.registerInvoice(localInvoiceQueue);
+      console.log(
+        " registerInvoiceResponse:",
+        registerInvoiceResponse
+      );
+
+      if (registerInvoiceResponse.hasError) {
+        console.log(
+          "Cant add registered Invoice Data -> ",
+          registerInvoiceResponse.errorMessage
+        );
+        message.error(registerInvoiceResponse.errorMessage, 3);
+        //setSyncStatus(false);
+        console.log("Fail");
+        setTimeout(sync, 3000);
+
+      }
+      else {
+        var index = -1;
+        var invoicesData = registerInvoiceResponse.Invoices_added;
+        for (let i in invoicesData) {
+          for (let i2 in localInvoiceQueue) {
+            if (
+              invoicesData[i] ==
+              localInvoiceQueue[i2].invoiceNo
+            ) {
+              index = i2;
+              break;
             }
           }
-
-          console.log(invoicesData);
-          setTimeout(sync, 3000);
-
-        },
-        error: function (err) {
-          console.log(err);
-          //setSyncStatus(false);
-          console.log("Fail");
-          setTimeout(sync, 3000);
-
+          if (index != -1) {
+            localInvoiceQueue.splice(index, 1);
+            saveDataIntoLocalStorage(Constants.SELL_INVOICE_QUEUE_KEY, localInvoiceQueue);
+            console.log("found add index", index);
+          }
         }
-      });
 
-      /*---------------register-invoice-Data------------------------*/
-      /*---------------register-invoice-Data------------------------*/
-      
+        console.log("invoices-response", invoicesData);
+        setTimeout(sync, 3000);
+
+      }
     }
 
     else {
-      console.log(clearSync);
-      setSyncStatus(false);
-      if(clearSync === false){setTimeout(sync, 3000);}
+      //console.log(clearSync);
+      //setSyncStatus(false);
+      if (clearSync === false) { setTimeout(sync, 3000); }
       console.log("-- syncing --");
-
     }
+
 
   }
 
@@ -727,8 +717,10 @@ function Sell() {
     console.log(clonedInvoiceData);
 
     costForm.setFieldsValue({ paid: clonedInvoiceData && clonedInvoiceData.payed }); //imp
-    
-    //saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, clonedInvoiceData);  //imp
+
+    if (tableProducsData.length > 0) {
+      saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, clonedInvoiceData);  //imp
+    }
 
     //saveDataIntoLocalStorage("current_invoice", clonedInvoiceData);   //imp
 
@@ -894,7 +886,7 @@ function Sell() {
                   <tbody>
                     <tr>
                       <th style={{ padding: "5px !important" }}>
-                        <i style={{ marginTop: "15px" }}></i>
+                        <i style={{ marginTop: "15px" }}><UserOutlined /></i>
                       </th>
                       <th style={{ padding: "5px !important" }}>
                         <b>{selectedCutomer.customer_name}</b>

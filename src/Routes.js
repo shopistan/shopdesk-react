@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { message } from "antd";
+import { useHistory } from "react-router-dom";
 
 
 // Components
@@ -71,6 +72,9 @@ import TransferOut from "./components/pages/stock/order/transferInventory";
 
 
 const Routes = () => {
+  const history = useHistory();
+
+
   const renderWithLayout = (Component, props, attrs = {}) => {
     return (
       <AppShell {...props}>
@@ -125,6 +129,7 @@ const Routes = () => {
 
 
   const authRenderWithLayout = (Component, props) => {
+    console.log("props-in-sigin", props);
     var readFromLocalStorage = getDataFromLocalStorage("user");
     readFromLocalStorage = readFromLocalStorage.data
       ? readFromLocalStorage.data
@@ -154,14 +159,20 @@ const Routes = () => {
   };
 
   const PrivateRoute = ({ component: Component, ...rest }) => {
+    //console.log(rest.path.split('/'));
     var readFromLocalStorage = getDataFromLocalStorage("user");
     var authExpirationTokenDate;
+    const routePathName = rest.path.split('/')[1];  //imp to split path
+    var userRouteScopes = [];
+    var adminUser = false;
+    
 
     readFromLocalStorage = readFromLocalStorage.data
       ? readFromLocalStorage.data
       : null;
     var authenticateDashboard = false;
     if (readFromLocalStorage) {
+      userRouteScopes = readFromLocalStorage.scopes || [];
       if (
         checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
       ) {
@@ -174,10 +185,24 @@ const Routes = () => {
     }
 
 
+
     if(checkAuthTokenExpiration(authExpirationTokenDate)){
       message.info("Logging Out Redirecting....", 5);
       return <Redirect to='/sign-in' />
     }
+    else {
+      if(userRouteScopes.includes("*")  ){
+        adminUser = true;
+      }
+      if(adminUser === false){
+        if(!userRouteScopes.includes(routePathName) && routePathName !== 'dashboard' ){
+          message.warning("You are not authorized to view this page", 3);
+          return <Redirect to='/dashboard' />
+        }
+      } 
+    }
+    
+
 
 
     return (
@@ -327,16 +352,16 @@ const Routes = () => {
           path='/couriers/:courier_id/delete'
           component={(props) =>  <CourierDelete {...props} />}
         />
-        <PrivateRoute exact path='/categoryWise' component={CategoryWise} />
-        <PrivateRoute exact path='/inventoryDump' component={InventoryDump} />
+        <PrivateRoute exact path='/reports/categoryWise' component={CategoryWise} />
+        <PrivateRoute exact path='/reports/inventoryDump' component={InventoryDump} />
         <PrivateRoute
           exact
-          path='/omniSalesSummary'
+          path='/reports/omniSalesSummary'
           component={OmniSalesSummary}
         />
 
-        <PrivateRoute exact path='/productHistory' component={ProductHistory} />
-        <PrivateRoute exact path='/salesSummary' component={SalesSummary} />
+        <PrivateRoute exact path='/reports/productHistory' component={ProductHistory} />
+        <PrivateRoute exact path='/reports/salesSummary' component={SalesSummary} />
 
         <PrivateRoute exact path='/stock-control/purchase-orders' component={Stock} />
         <PrivateRoute exact path='/stock-control/inventory-transfers' component={Stock} />

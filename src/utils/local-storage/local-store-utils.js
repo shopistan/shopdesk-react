@@ -3,6 +3,7 @@ import moment from 'moment';
 
 export const clearLocalUserData = () => {
   clearKeyFromLocalStorage(Constants.USER_DETAILS_KEY);
+  saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, null);
 };
 
 export const saveDataIntoLocalStorage = (key, value) => {

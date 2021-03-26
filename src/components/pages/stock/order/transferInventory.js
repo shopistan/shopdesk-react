@@ -55,7 +55,7 @@ const TransferInventory = () => {
     fetchOutletsData();
     /*-----setting template data to fields value------*/
     form.setFieldsValue({
-      order_reference_name: `Transfer - ${moment(new Date()).format("yyyy//MM/DD HH:mm:ss")}`,
+      order_reference_name: `Transfer - ${moment(new Date()).format("yyyy/MM/DD HH:mm:ss")}`,
     });
     /*-----setting template data to fields value------*/
 
@@ -246,7 +246,7 @@ const TransferInventory = () => {
     transferInventoryPostData.supplier_id = "";
     transferInventoryPostData.po_name = formValues.order_reference_name;
     transferInventoryPostData.transfer_name = transferInventoryPostData.po_name;
-    transferInventoryPostData.ordered_date = moment(new Date()).format("yyyy//MM/DD HH:mm:ss");
+    transferInventoryPostData.ordered_date = moment(new Date()).format("yyyy/MM/DD HH:mm:ss");
     transferInventoryPostData.transfer_date = transferInventoryPostData.ordered_date;
     transferInventoryPostData.destination_store_id = formValues.destination_outlet;
     transferInventoryPostData.source_store_id = currentStoreId;
@@ -309,7 +309,7 @@ const TransferInventory = () => {
               name="basic"
               layout="vertical"
               initialValues={{
-                remember: true,
+                product_qty: 1,
               }}
               onFinish={handleSaveChanges}
               onFinishFailed={onFinishFailed}
@@ -405,7 +405,7 @@ const TransferInventory = () => {
                       label="QTY"
                       name="product_qty"
                     >
-                      <InputNumber defaultValue={1} />
+                      <InputNumber />
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={24} md={6} className="stock-item-content">
