@@ -42,12 +42,13 @@ const CategorySalesSummaryTable = (props) => {
                             return (
                                 <>
                                     <tr>
-                                        <td colspan="8" style={{ backgroundColor: "#eef9fb" }}><strong>{item.categoryName}</strong></td>
+                                        <td colSpan="8" style={{ backgroundColor: "#eef9fb" }}><strong>{item.categoryName}</strong></td>
                                     </tr>
 
                                     {item.sales.map(salesObj => {
                                         return (
-                                            <tr>
+                                            <tr key={salesObj.product_id}>
+
                                                 <td>{salesObj.product_sku}</td>
                                                 <td>{salesObj.product_name}</td>
                                                 <td>{parseFloat(salesObj.quantity).toFixed(2)}</td>
@@ -72,7 +73,7 @@ const CategorySalesSummaryTable = (props) => {
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td colspan="8"><strong>&nbsp;</strong></td>
+                                        <td colSpan="8"><strong>&nbsp;</strong></td>
                                     </tr>
                                 </>
                             )

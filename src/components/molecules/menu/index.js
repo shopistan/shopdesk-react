@@ -26,12 +26,30 @@ import {
 const SideMenu = () => {
   const history = useHistory();
 
+  var userRouteScopes = [];
+  const appRouteScopes =
+  {
+    categories: "categories",
+    couriers: "couriers",
+    taxes: "taxes",
+    suppliers: "suppliers",
+    products: "products",
+    customers: "customers",
+    register: "register",
+    reports: "reports",
+    setup: "setup",
+    stock: "stock-control",
+  };
+  var adminUser = false;
+
+
   var readFromLocalStorage = getDataFromLocalStorage("user");
   readFromLocalStorage = readFromLocalStorage.data
     ? readFromLocalStorage.data
     : null;
   var authenticateDashboard = false;
   if (readFromLocalStorage) {
+    userRouteScopes = readFromLocalStorage.scopes || [];
     console.log(
       checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
     );
@@ -43,6 +61,12 @@ const SideMenu = () => {
       authenticateDashboard = false;
     }
   }
+
+
+  if(userRouteScopes.includes("*")){
+    adminUser = true;
+  }
+
 
   const { SubMenu } = Menu;
 
@@ -72,15 +96,15 @@ const SideMenu = () => {
         } else if (e.key === "couriers") {
           history.push("/couriers");
         } else if (e.key === "salesSummary") {
-          history.push("/salesSummary");
+          history.push("/reports/salesSummary");
         } else if (e.key === "inventoryDump") {
-          history.push("/inventoryDump");
+          history.push("/reports/inventoryDump");
         } else if (e.key === "productHistory") {
-          history.push("/productHistory");
+          history.push("/reports/productHistory");
         } else if (e.key === "omniSalesSummary") {
-          history.push("/omniSalesSummary");
+          history.push("/reports/omniSalesSummary");
         } else if (e.key === "categoryWise") {
-          history.push("/categoryWise");
+          history.push("/reports/categoryWise");
         } else if (e.key === "salesHistory") {
           history.push("/register/salesHistory");
         } else if (e.key === "sell") {
@@ -140,49 +164,59 @@ const SideMenu = () => {
 
       {readFromLocalStorage && authenticateDashboard && (
         <React.Fragment>
+          {(userRouteScopes.includes(appRouteScopes.categories) || adminUser) &&
           <Menu.Item key="categories" icon={<TagsOutlined />}>
             Categories
-          </Menu.Item>
+          </Menu.Item>}
+          {(userRouteScopes.includes(appRouteScopes.suppliers) || adminUser) &&
           <Menu.Item key="suppliers" icon={<SendOutlined />}>
             Suppliers
-          </Menu.Item>
+          </Menu.Item>}
+          {(userRouteScopes.includes(appRouteScopes.taxes) || adminUser) &&
           <Menu.Item key="taxes" icon={<BankOutlined />}>
             Taxes
-          </Menu.Item>
+          </Menu.Item>}
+          {(userRouteScopes.includes(appRouteScopes.products) || adminUser) &&
           <Menu.Item key="products" icon={<ShopOutlined />}>
             Products
-          </Menu.Item>
+          </Menu.Item>}
+          {(userRouteScopes.includes(appRouteScopes.customers) || adminUser) &&
           <Menu.Item key="customers" icon={<UserOutlined />}>
             Customers
-          </Menu.Item>
+          </Menu.Item>}
+          {(userRouteScopes.includes(appRouteScopes.couriers) || adminUser) &&
           <Menu.Item key="couriers" icon={<BarcodeOutlined />}>
             Couriers
-          </Menu.Item>
+          </Menu.Item>}
+          {(userRouteScopes.includes(appRouteScopes.register) || adminUser) &&
           <SubMenu key="sub1" icon={<LaptopOutlined />} title="Register">
             <Menu.Item key="sell">Sell</Menu.Item>
             <Menu.Item key="salesHistory">Sales History</Menu.Item>
-          </SubMenu>
+          </SubMenu>}
+          {(userRouteScopes.includes(appRouteScopes.stock) || adminUser) &&
           <SubMenu key="sub2" icon={<StockOutlined />} title="Stock Control">
             <Menu.Item key="purchaseOrders">Purchase Orders</Menu.Item>
             <Menu.Item key="inventoryTransfers">Inventory Transfers</Menu.Item>
             <Menu.Item key="stockAdjustments">Stock Adjustment</Menu.Item>
-          </SubMenu>
+          </SubMenu>}
           <SubMenu key="sub3" icon={<ApartmentOutlined />} title="Ecommerce">
             <Menu.Item key="13">Orders</Menu.Item>
             <Menu.Item key="14">Inventory Sync</Menu.Item>
           </SubMenu>
+          {(userRouteScopes.includes(appRouteScopes.reports) || adminUser) &&
           <SubMenu key="reports" icon={<BarChartOutlined />} title="Reports">
             <Menu.Item key="salesSummary">Sales Summary</Menu.Item>
             <Menu.Item key="inventoryDump">Inventory Dump</Menu.Item>
             <Menu.Item key="productHistory">Product History</Menu.Item>
             <Menu.Item key="omniSalesSummary">Omni Sales Summary</Menu.Item>
             <Menu.Item key="categoryWise">Category Wise</Menu.Item>
-          </SubMenu>
+          </SubMenu>}
+          {(userRouteScopes.includes(appRouteScopes.setup) || adminUser) &&
           <SubMenu key="sub5" icon={<SettingOutlined />} title="Setup">
             <Menu.Item key="outlets">Outlets</Menu.Item>
             <Menu.Item key="users">Users</Menu.Item>
             <Menu.Item key="receipts">Receipt Templates</Menu.Item>
-          </SubMenu>
+          </SubMenu>}
         </React.Fragment>
       )}
 
