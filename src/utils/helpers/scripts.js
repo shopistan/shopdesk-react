@@ -158,6 +158,7 @@ export const registeredProductsPageLimit = 1000;
 export const suppliersPageLimit = 100;
 export const outletsPageLimit = 100;
 export const couriersPageLimit = 100;
+export const templatesPageLimit = 100;
 
 
 export function var_check(v) {

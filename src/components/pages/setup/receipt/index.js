@@ -45,7 +45,7 @@ const Receipts = () => {
  
 
   return (
-    <div className='setup-users'>
+    <div className='setup-templates'>
 
         {/* Table */}
         <div className='table'>

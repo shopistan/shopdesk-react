@@ -201,7 +201,7 @@ const Routes = () => {
         }
       } 
     }
-    
+
 
 
 
@@ -400,18 +400,29 @@ const Routes = () => {
         <PrivateRoute
           exact
           path='/setup/outlets/:outlet_id/edit'
-          //component={OutletEdit}
           component={(props) =>  <OutletEdit {...props} />}
         />
         <PrivateRoute exact path='/setup/users/add' component={UserAdd} />
-        <PrivateRoute exact path='/setup/users/:id/edit' component={UserEdit} />
+        <PrivateRoute
+          exact
+          path='/setup/users/:user_id/edit'
+          component={(props) =>  <UserEdit {...props} />}
+        />
         <PrivateRoute
           exact
           path='/setup/receipts-templates/add'
           component={ReceiptAdd}
         />
-        <PrivateRoute exact path='/setup/receipts-templates/:id/edit' component={ReceiptEdit} />
-        <PrivateRoute exact path='/setup/receipts-templates/:id/delete' component={ReceiptDelete} />
+        <PrivateRoute
+          exact
+          path='/setup/receipts-templates/:template_id/edit'
+          component={(props) =>  <ReceiptEdit {...props} />}
+        />
+        <PrivateRoute
+          exact 
+          path='/setup/receipts-templates/:template_id/delete'
+          component={(props) =>  <ReceiptDelete {...props} />}
+        />
         <PrivateRoute exact path='/register/sell' component={Sell} />
         <PrivateRoute
           exact

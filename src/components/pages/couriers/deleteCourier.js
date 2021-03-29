@@ -9,7 +9,6 @@ const DeleteCourier  = (props) => {
     const history = useHistory();
     const [selectedCourierData, setSelectedCourierData] = useState({});
     const [loading, setLoading] = useState(true);
-    console.log("props", props);
     const { match = {} } = props;
     const { courier_id = {} } = match !== undefined && match.params;
 

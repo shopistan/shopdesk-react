@@ -14,12 +14,13 @@ import {
 import { useHistory } from "react-router-dom";
 import "../style.scss";
 import * as SetupApiUtil from '../../../../utils/api/setup-api-utils';
+import * as Helpers from "../../../../utils/helpers/scripts";
 import {
     ArrowLeftOutlined,
 } from "@ant-design/icons";
 
 
-function EditUser() {
+function EditUser(props) {
     const history = useHistory();
     const [form] = Form.useForm();
     const { Option } = Select;
@@ -28,36 +29,45 @@ function EditUser() {
     const [userData, setUserData] = useState({});
     const [loading, setLoading] = useState(true);
     const [passwordChangeSwitch, setPasswordChangeSwitch] = useState(false);
+    const { match = {} } = props;
+    const { user_id = {} } = match !== undefined && match.params;
+
+    var outletsPageLimit = Helpers.outletsPageLimit;
 
 
 
     useEffect(() => {
-        if (history.location.data === undefined) {
-            history.push({
-                pathname: '/setup/users',
-            });
-        }
-        else {
-            fetchUserData(history.location.data.user_id);
+        if (user_id !== undefined) {
+            fetchUserData(user_id);
             fetchOutletsData();
         }
+        else {
+            message.error("User Id cannot be null", 2);
+            setTimeout(() => {
+                history.push({
+                    pathname: '/setup/users',
+                    activeKey: 'users'
+                });
+            }, 1000);
+        }
+
     }, []);
 
 
 
     const fetchOutletsData = async (pageLimit = 10, pageNumber = 1) => {
-        const outletsViewResponse = await SetupApiUtil.viewOutlets(pageLimit, pageNumber);
+        const outletsViewResponse = await SetupApiUtil.viewOutlets(outletsPageLimit, pageNumber);
         console.log('outletsViewResponse:', outletsViewResponse);
 
         if (outletsViewResponse.hasError) {
             console.log('Cant fetch Outlets Data -> ', outletsViewResponse.errorMessage);
-            setLoading(false);
+            //setLoading(false);
         }
         else {
             console.log('res -> ', outletsViewResponse);
             message.success(outletsViewResponse.message, 3);
             setOutletsData(outletsViewResponse.outlets.data || outletsViewResponse.outlets);
-            setLoading(false);
+            //setLoading(false);
         }
     }
 
@@ -204,7 +214,9 @@ function EditUser() {
                 /> Edit User
                 </h1>
             </div>
+            
 
+            {!loading &&
             <div className="page__content">
                 <div className="page__form">
                     <Form
@@ -369,7 +381,7 @@ function EditUser() {
                         </div>
                     </Form>
                 </div>
-            </div>
+            </div>}
         </div>
     );
 }
