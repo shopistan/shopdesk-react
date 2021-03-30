@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import { Table, Form, Input, Select, InputNumber } from "antd";
 const EditableContext = React.createContext(null);
 
+const { Option } = Select;
 
 
 /*------edittableRow------*/
@@ -38,7 +39,7 @@ const EditableCell = ({
 
     useEffect(() => {
         if (editing) {
-            //inputRef.current.focus();
+            inputRef.current.focus();
         }
     }, [editing]);
 
@@ -63,19 +64,19 @@ const EditableCell = ({
     var inputNode;
 
     inputNode = inputType === 'number' ?
-        <InputNumber onPressEnter={save} onBlur={save} />
-        : inputType === 'select' ? <Select onPressEnter={save} >
+        <InputNumber ref={inputRef}  onBlur={save} />
+        : inputType === 'select' ? <Select ref={inputRef} onChange={save} >
             {
                 taxesData.map((obj, index) => {
                     return (
-                        <option key={obj.tax_id} value={obj.tax_id}>
+                        <Option key={obj.tax_id} value={obj.tax_id}>
                             {`${obj.tax_name}(${obj.tax_value}%)`}
-                        </option>
+                        </Option>
                     )
                 })
             }
         </Select>
-            : <Input onPressEnter={save} onBlur={save} />;
+            : <Input ref={inputRef} onBlur={save} />;
 
 
 
@@ -129,6 +130,7 @@ const ProductsVariantsNestedTable = (props) => {
 
     useEffect(() => {
         setData(props.tableData);
+        //console.log(props.tableData);
         setCurrentExpandedRow(props.currentExpandedRow);
 
     }, [props.userStores, props.tableData, props.taxes, props.currentExpandedRow]);  /* imp passing props to re-render */
@@ -140,7 +142,7 @@ const ProductsVariantsNestedTable = (props) => {
         {
             title: "Outlet Name",
             //dataIndex: "store_id",
-            //width: "20%",
+            //width: "30%",
             render: (_, record) => {
                 return (
                     <div>
@@ -169,9 +171,9 @@ const ProductsVariantsNestedTable = (props) => {
                             {
                                 props.taxes.map((obj, index) => {
                                     return (
-                                        <option key={obj.tax_id} value={obj.tax_id}>
+                                        <Option key={obj.tax_id} value={obj.tax_id}>
                                             {`${obj.tax_name}(${obj.tax_value}%)`}
-                                        </option>
+                                        </Option>
                                     )
                                 })
                             }
@@ -184,6 +186,7 @@ const ProductsVariantsNestedTable = (props) => {
             title: "Quantity",
             dataIndex: "qty",
             editable: true,
+            //width: "30%",
         },
     ];
 

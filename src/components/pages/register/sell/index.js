@@ -303,25 +303,24 @@ function Sell() {
     setSaleInvoiceData(clonedInvoice);
   };
 
-  const handlePaidChange = (e) => {
+
+  const handlePaidChange = (value) => {
+    var inputValue = parseFloat(value);
     var costFormValues = costForm.getFieldsValue();
     //console.log(costFormValues);
-    var remainingBalance = parseFloat(
-      costFormValues.paid - saleInvoiceData.payed
-    ).toFixed(2);
     let paidAmount;
-    if (Helpers.var_check(costFormValues.paid)) {
-      paidAmount = costFormValues.paid;
+    if (Helpers.var_check(inputValue) && !isNaN(inputValue)) {
+      paidAmount = inputValue;
     } else {
       paidAmount = 0;
     }
 
     const clonedInvoice = { ...saleInvoiceData };
     clonedInvoice.payed = paidAmount.toFixed(2);
-
+    
     //costForm.setFieldsValue({ paid: clonedInvoiceData && clonedInvoiceData.payed }); //imp
-
     setSaleInvoiceData(clonedInvoice);
+
   };
 
   const handleChangeProductsData = (
@@ -1019,7 +1018,7 @@ function Sell() {
                     <InputNumber
                       className="u-width-100"
                       //value={saleInvoiceData.payed}
-                      onBlur={handlePaidChange}
+                      onChange={handlePaidChange}
                       disabled={
                         saleInvoiceData && saleInvoiceData.method !== "Cash"
                       }

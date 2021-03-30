@@ -31,6 +31,7 @@ import * as ProductsApiUtil from "../../../../utils/api/products-api-utils";
 import * as TaxexApiUtil from "../../../../utils/api/tax-api-utils";
 import * as CategoriesApiUtil from "../../../../utils/api/categories-api-utils";
 import UrlConstants from "../../../../utils/constants/url-configs";
+import * as Helpers from "../../../../utils/helpers/scripts";
 import Constants from "../../../../utils/constants/constants";
 import * as ProductsVariantsCombination from "./calculateProductsVariantsCombination";
 
@@ -146,6 +147,8 @@ const ProductAdd = () => {
     //console.log("changed", formValues);
 
     var addProductData = {}; ///imp
+    var productVar1Name = formValues.product_variant1_name;
+    var productVar2Name = formValues.product_variant2_name;
 
     //var productVariantsDataDeepClone = JSON.parse(JSON.stringify(productVariantsCombinations)); //imp to make adeep copy
     var productVariantsDataDeepClone = [...productVariantsCombinations]; //imp to make adeep copy
@@ -166,6 +169,13 @@ const ProductAdd = () => {
       });
     });
 
+
+    if (variant1Tags.length > 0 && !Helpers.var_check(formValues.product_variant1_name )) {
+      productVar1Name = "Variant 1";}
+    if (variant2Tags.length > 0 && !Helpers.var_check(formValues.product_variant2_name )) {
+      productVar2Name = "Variant 2";}
+
+
     addProductData.sku = formValues.sku;
     addProductData.var = productVariantsDataDeepClone.length > 0 ? true : false; //imp see this later
     addProductData.track = inventoryTrackingCheck;
@@ -181,8 +191,8 @@ const ProductAdd = () => {
     addProductData.product_name = formValues.product_name;
     addProductData.sale_price = formValues.sale_price;
     addProductData.purchase_price = formValues.purchase_price;
-    addProductData.var1_name = formValues.product_variant1_name || "";
-    addProductData.var2_name = formValues.product_variant2_name || "";
+    addProductData.var1_name = productVar1Name;
+    addProductData.var2_name = productVar2Name;
     if (productVariantsDataDeepClone.length > 0) {
       addProductData.varData = productVariantsDataDeepClone;
     } //imp see this later
@@ -893,7 +903,7 @@ const ProductAdd = () => {
 
                   <div className="form__row">
                     {/* Table */}
-                    <div className="table">
+                    <div className="table" style={{width: "100%"}}>
                       <ProductsVariantsTable
                         tableData={productVariantsCombinations}
                         tableDataLoading={loading}

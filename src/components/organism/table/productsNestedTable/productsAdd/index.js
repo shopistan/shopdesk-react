@@ -139,12 +139,13 @@ const ProductsVariantsTable = (props) => {
   };
 
   const toggleExpandByVariantId = (variantRowId) => {
+    //console.log(variantRowId);
     var expandedRows = tableExpandedRows;
-    const index = expandedRows.indexOf(variantRowId.toString());
+    const index = expandedRows.indexOf(variantRowId);
     if (index > -1) {
       expandedRows.splice(index, 1);
     } else {
-      expandedRows.push(variantRowId.toString()); /*imp convert to string[]*/
+      expandedRows.push(variantRowId); /*imp convert to string[]*/
       console.log(expandedRows);
     }
 
