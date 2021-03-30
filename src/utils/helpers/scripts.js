@@ -22,14 +22,14 @@ function CSVToArray(strData, strDelimiter) {
   var objPattern = new RegExp(
     // Delimiters.
     "(\\" +
-      strDelimiter +
-      "|\\r?\\n|\\r|^)" +
-      // Quoted fields.
-      '(?:"([^"]*(?:""[^"]*)*)"|' +
-      // Standard fields.
-      '([^"\\' +
-      strDelimiter +
-      "\\r\\n]*))",
+    strDelimiter +
+    "|\\r?\\n|\\r|^)" +
+    // Quoted fields.
+    '(?:"([^"]*(?:""[^"]*)*)"|' +
+    // Standard fields.
+    '([^"\\' +
+    strDelimiter +
+    "\\r\\n]*))",
     "gi"
   );
   // Create an array to hold our data. Give the array
@@ -88,6 +88,39 @@ export function CSV2JSON(csv) {
   return str;
 }
 
+
+export function CSV2JSONUpdated(csv) {
+  var array = CSVToArray(csv);
+  var objArray = [];
+  for (var i = 1; i < array.length-1; i++) {
+    objArray[i - 1] = {};
+    for (var k = 0; k < array[0].length && k < array[i].length; k++) {
+      var key = array[0][k];
+      if (key == 'attributes') {
+        array[i][k] = array[i][k].replace('[', '');
+        array[i][k] = array[i][k].replace(']', '');
+        var str = array[i][k];
+        var indices = [];
+        var indices1 = [];
+        for (var j = 0; j < str.length; j++) {
+          if (str[j] === "{") indices.push(j);
+          if (str[j] === "}") indices1.push(j);
+        }
+        var arr = [];
+        for (var v = 0; v < indices.length; v++) {
+          arr.push(array[i][k].substring(indices[v], indices1[v] + 1));
+        }
+        array[i][k] = arr;
+      }
+      objArray[i - 1][key] = array[i][k];
+    }
+  }
+  var json = JSON.stringify(objArray);
+  var str = json.replace(/},/g, "},\r\n");
+  return str;
+}
+
+
 /*
 
 $(function() {
@@ -125,6 +158,7 @@ export const registeredProductsPageLimit = 1000;
 export const suppliersPageLimit = 100;
 export const outletsPageLimit = 100;
 export const couriersPageLimit = 100;
+export const templatesPageLimit = 100;
 
 
 export function var_check(v) {

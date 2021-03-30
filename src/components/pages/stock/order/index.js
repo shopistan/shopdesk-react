@@ -61,7 +61,7 @@ const PurchaseOrder = () => {
     fetchSuppliersData();
     /*-----setting template data to fields value------*/
     form.setFieldsValue({
-      order_reference_name: `Order - ${moment(new Date()).format("yyyy//MM/DD HH:mm:ss")}`,
+      order_reference_name: `Order - ${moment(new Date()).format("yyyy/MM/DD HH:mm:ss")}`,
     });
     /*-----setting template data to fields value------*/
 
@@ -341,7 +341,7 @@ const PurchaseOrder = () => {
     addPurchaseOrderPostData.products = clonedProductsPostData;
     addPurchaseOrderPostData.date_due = orderDueDate;
     addPurchaseOrderPostData.po_name = formValues.order_reference_name;
-    addPurchaseOrderPostData.ordered_date = moment(new Date()).format("yyyy//MM//DD HH:mm:ss");
+    addPurchaseOrderPostData.ordered_date = moment(new Date()).format("yyyy/MM/DD HH:mm:ss");
     addPurchaseOrderPostData.supplier_id = formValues.supplier;
 
     //console.log("vvimp-final", clonedProductsPostData);
@@ -447,7 +447,7 @@ const PurchaseOrder = () => {
               name="basic"
               layout="vertical"
               initialValues={{
-                remember: true,
+                product_qty: 1,
               }}
               onFinish={handleSaveChanges}
               onFinishFailed={onFinishFailed}
@@ -616,7 +616,7 @@ const PurchaseOrder = () => {
                       label="QTY"
                       name="product_qty"
                     >
-                      <InputNumber defaultValue={1} />
+                      <InputNumber />
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={24} md={6} className="stock-item-content">

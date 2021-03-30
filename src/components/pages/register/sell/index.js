@@ -22,6 +22,7 @@ import {
   CreditCardOutlined,
   DollarCircleOutlined,
   DeleteOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import {
   getDataFromLocalStorage,
@@ -297,25 +298,24 @@ function Sell() {
     setSaleInvoiceData(clonedInvoice);
   };
 
-  const handlePaidChange = (e) => {
+
+  const handlePaidChange = (value) => {
+    var inputValue = parseFloat(value);
     var costFormValues = costForm.getFieldsValue();
     //console.log(costFormValues);
-    var remainingBalance = parseFloat(
-      costFormValues.paid - saleInvoiceData.payed
-    ).toFixed(2);
     let paidAmount;
-    if (Helpers.var_check(costFormValues.paid)) {
-      paidAmount = costFormValues.paid;
+    if (Helpers.var_check(inputValue) && !isNaN(inputValue)) {
+      paidAmount = inputValue;
     } else {
       paidAmount = 0;
     }
 
     const clonedInvoice = { ...saleInvoiceData };
     clonedInvoice.payed = paidAmount.toFixed(2);
-
+    
     //costForm.setFieldsValue({ paid: clonedInvoiceData && clonedInvoiceData.payed }); //imp
-
     setSaleInvoiceData(clonedInvoice);
+
   };
 
   const handleChangeProductsData = (
@@ -402,8 +402,7 @@ function Sell() {
   const handlePayBill = (status, check = false) => {
     var formValues = form.getFieldsValue();
     console.log("changed", formValues);
-
-    console.log(status);
+    //console.log(status);
 
     if (productsTableData.length === 0) {
       message.error("No Products Added", 4);
@@ -504,7 +503,7 @@ function Sell() {
       updateCart(currentInvoice);
     } else {
       currentInvoice = createNewInvoice();
-      console.log("see1", currentInvoice);
+      //console.log("see1", currentInvoice);
       updateCart(currentInvoice);
     }
 
@@ -521,10 +520,10 @@ function Sell() {
   };
 
   ////////////////imp funcyionality////////////////////
-  ////////////////imp functionality////////////////////
+  ////////////////imp funcyionality////////////////////
 
-  // Invoice Sync Function
-  const sync = () => {
+  const sync = async () => {
+
     var userData = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
     userData = userData.data ? userData.data : null;
     //console.log(userData);
@@ -720,11 +719,11 @@ function Sell() {
     setSaleInvoiceData(clonedInvoiceData); //imp
     console.log(clonedInvoiceData);
 
-    costForm.setFieldsValue({
-      paid: clonedInvoiceData && clonedInvoiceData.payed,
-    }); //imp
+    costForm.setFieldsValue({ paid: clonedInvoiceData && clonedInvoiceData.payed }); //imp
 
-    //saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, clonedInvoiceData);  //imp
+    if (tableProducsData.length > 0) {
+      saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, clonedInvoiceData);  //imp
+    }
 
     //saveDataIntoLocalStorage("current_invoice", clonedInvoiceData);   //imp
   }
@@ -888,7 +887,7 @@ function Sell() {
                   <tbody>
                     <tr>
                       <th style={{ padding: "5px !important" }}>
-                        <i style={{ marginTop: "15px" }}></i>
+                        <i style={{ marginTop: "15px" }}><UserOutlined /></i>
                       </th>
                       <th style={{ padding: "5px !important" }}>
                         <b>{selectedCutomer.customer_name}</b>
@@ -1021,7 +1020,7 @@ function Sell() {
                     <InputNumber
                       className='u-width-100'
                       //value={saleInvoiceData.payed}
-                      onBlur={handlePaidChange}
+                      onChange={handlePaidChange}
                       disabled={
                         saleInvoiceData && saleInvoiceData.method !== "Cash"
                       }

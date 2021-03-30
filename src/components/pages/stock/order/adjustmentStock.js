@@ -405,7 +405,7 @@ const AdjustmentStock = () => {
               name="basic"
               layout="vertical"
               initialValues={{
-                remember: true,
+                product_qty: 1,
               }}
               onFinish={handleSaveChanges}
               onFinishFailed={onFinishFailed}
@@ -527,7 +527,7 @@ const AdjustmentStock = () => {
                       label="QTY"
                       name="product_qty"
                     >
-                      <InputNumber defaultValue={1} />
+                      <InputNumber />
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={24} md={6} className="stock-item-content">

@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import WebHooksTable from "../../../../organism/table/setup/outlets/webHooksNestedTable";
 import * as SetupApiUtil from '../../../../../utils/api/setup-api-utils';
 import currencyData from "../currencyData.json";
+import * as Helpers from "../../../../../utils/helpers/scripts";
 import Constants from '../../../../../utils/constants/constants';
 import {
   getDataFromLocalStorage,
@@ -39,6 +40,9 @@ function OutletEdit(props) {
   const { outlet_id = {} } = match !== undefined && match.params;
 
 
+  var templatesPageLimit = Helpers.templatesPageLimit;
+
+
 
   useEffect(() => {
 
@@ -58,14 +62,17 @@ function OutletEdit(props) {
     else {
       message.error("Oulet Id cannot be null", 2);
       setTimeout(() => {
-        history.goBack();
+        history.push({
+          pathname: '/setup/outlets',
+          activeKey: 'outlets'
+        });
       }, 1000);
     }
 
   }, []);
 
 
-  const fetchOutletWebHooks = async (pageLimit = 20, pageNumber = 1) => {
+  const fetchOutletWebHooks = async (pageLimit = 10, pageNumber = 1) => {
     const getWebHooksViewResponse = await SetupApiUtil.getWebHooks(pageLimit, pageNumber);
     console.log('getWebHooksViewResponse:', getWebHooksViewResponse);
 
@@ -111,8 +118,8 @@ function OutletEdit(props) {
   }
 
 
-  const fetchUsersTemplatesData = async (pageLimit = 50, pageNumber = 1) => {
-    const userTemplatesViewResponse = await SetupApiUtil.viewTemplates(pageLimit, pageNumber);
+  const fetchUsersTemplatesData = async (pageLimit = 10, pageNumber = 1) => {
+    const userTemplatesViewResponse = await SetupApiUtil.viewTemplates(templatesPageLimit, pageNumber);
     console.log('userTemplatesViewResponse:', userTemplatesViewResponse);
 
     if (userTemplatesViewResponse.hasError) {
@@ -376,6 +383,7 @@ function OutletEdit(props) {
           icon={<ArrowLeftOutlined />}
           onClick={handleCancel} />Edit Outlet</h1>
       </div>
+
 
       <div className='page__content'>
         <div className='page__form'>

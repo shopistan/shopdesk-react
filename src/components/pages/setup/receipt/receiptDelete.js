@@ -1,34 +1,65 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import "../style.scss";
-import { Button, Typography, message } from 'antd';
+import { Button, Typography, message, Spin } from 'antd';
 import { useHistory } from 'react-router-dom';
 import * as SetupApiUtil from '../../../../utils/api/setup-api-utils';
 import {
     ArrowLeftOutlined,
-  } from "@ant-design/icons";
+} from "@ant-design/icons";
 
 
 const { Text } = Typography;
 
 
 
-
-const ReceiptDelete = () => {
+const ReceiptDelete = (props) => {
     const history = useHistory();
+    const [templateData, setTemplateData] = useState({});
+    const [loading, setLoading] = useState(true);
+    const { match = {} } = props;
+    const { template_id = {} } = match !== undefined && match.params;
+
+
 
     useEffect(async () => {
-        if (history.location.data === undefined) {
-            history.push({
-                pathname: '/setup/receipts-templates',
-                activeKey: 'receipts-templates',
-            });
+        if (template_id !== undefined) {
+            getTemplateData(template_id);
+        }
+        else {
+            message.error("Template Id cannot be null", 2);
+            setTimeout(() => {
+                history.push({
+                    pathname: '/setup/receipts-templates',
+                    activeKey: 'receipts-templates',
+                });
+            }, 1000);
         }
 
     }, []);
 
 
+    const getTemplateData = async (templateId) => {
+        const getTepmlateResponse = await SetupApiUtil.getTemplate(templateId);
+        console.log('getTepmlateResponse:', getTepmlateResponse);
+
+        if (getTepmlateResponse.hasError) {
+            console.log('Cant get template Data -> ', getTepmlateResponse.errorMessage);
+            setLoading(false);
+        }
+        else {
+            console.log('res -> ', getTepmlateResponse);
+            var receivedTemplateData = getTepmlateResponse.template;
+            message.success(getTepmlateResponse.message, 3);
+            setTemplateData(receivedTemplateData);
+            setLoading(false);
+
+        }
+    }
+
+
+
     const handleConfirm = async () => {
-        const receiptDeleteResponse = await SetupApiUtil.deleteTemplate(history.location.data.template_id);
+        const receiptDeleteResponse = await SetupApiUtil.deleteTemplate(templateData.template_id);
         console.log('receiptDeleteResponse:', receiptDeleteResponse);
 
         if (receiptDeleteResponse.hasError) {
@@ -58,6 +89,9 @@ const ReceiptDelete = () => {
 
     return (
         <div className='page categoryDel'>
+            <div style={{ textAlign: "center" }}>
+                {loading && <Spin size="large" tip="Loading..." />}
+            </div>
             <div className='page__header'>
                 <h1 className='page__title'>
                     <Button type="primary" shape="circle" className="back-btn"
@@ -67,13 +101,15 @@ const ReceiptDelete = () => {
                 </h1>
             </div>
 
+
+            {!loading &&
             <div className='page__content'>
                 <div className='page__form'>
 
                     <div className='form__row'>
                         <div className='form__col'>
                             <Text>
-                                Do you really want to delete '{history.location.data && history.location.data.template_name}'?</Text>
+                                Do you really want to delete '{templateData !== undefined && templateData.template_name}'?</Text>
                         </div>
 
                     </div>
@@ -90,7 +126,7 @@ const ReceiptDelete = () => {
                         </Button>
                     </div>
                 </div>
-            </div>
+            </div>}
         </div>
     );
 };

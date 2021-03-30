@@ -81,7 +81,6 @@ const TransferInventory = (props) => {
 
 
   function handleForceCloseOrderEvent(tableRecord) {
-    console.log("imp", tableRecord);
     setIsForceCloseModalVisible(true);
     setForceCloseOrderData(tableRecord)
   }

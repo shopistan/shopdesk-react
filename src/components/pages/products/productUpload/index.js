@@ -9,16 +9,18 @@ import Joi_sd from '../../../../utils/helpers/joi-custom';
 import * as Helpers from "../../../../utils/helpers/scripts";
 
 
+var bulkProcess = {
+  process: 'Started',
+  totalCount: 0,
+  doneCount: 0,
+  chunk: 50,
+};
+
+
 
 const ProductUpload = () => {
   const [fileList, setFileList] = useState([]);
 
-  var bulkProcess = {
-    process: "Started",
-    totalCount: 0,
-    doneCount: 0,
-    chunk: 50,
-  };
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
@@ -36,14 +38,9 @@ const ProductUpload = () => {
         // code to convert file data and render in json format
         //var json = csvJSON(evt.target.result); //2nd custom function for conversion
         //console.log(json);
-        console.log(Helpers.CSV2JSON(evt.target.result));
-
-        var jsonOutput = JSON.parse(Helpers.CSV2JSON(evt.target.result));  //1st custom function for conversion
-        console.log(jsonOutput);
-
-        //console.log("json-out", jsonOutput);
-        //var jsonOutput = JSON.parse(json);
-        //console.log("json-out-aprse", jsonOutput);
+        //console.log(Helpers.CSV2JSONUpdated(evt.target.result));
+        var jsonOutput = JSON.parse(Helpers.CSV2JSONUpdated(evt.target.result));  //1st custom function for conversion
+        //console.log(jsonOutput);
 
         /*-------------------------------*/
 
@@ -98,7 +95,6 @@ const ProductUpload = () => {
 
         uploadChunk(bulkProcess.queue.splice(0, bulkProcess.chunk));
 
-        //document.getElementById("fileContents").innerHTML = csvJSON(evt.target.result);
       };
       reader.onerror = function (evt) {
         message.error("error reading file");
@@ -121,12 +117,11 @@ const ProductUpload = () => {
         "Cant Upload Bulk products -> ",
         productsBulkUploadResponse.errorMessage
       );
-      message.error("Cant Upload Bulk products ", 3);
-      //setLoading(false);
+      message.error(productsBulkUploadResponse.errorMessage, 3);
+      
     } else {
       console.log("res -> ", productsBulkUploadResponse);
-      //message.success(productsBulkUploadResponse.message, 3);
-      //setLoading(false);
+
       if (bulkProcess.queue.length > 0) {
         uploadChunk(bulkProcess.queue.splice(0, bulkProcess.chunk));
       } else {

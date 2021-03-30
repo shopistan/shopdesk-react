@@ -46,19 +46,20 @@ export const getSalesInvoiceHistory = async (invoiceId) => {
 
 
 export const registerInvoice = async (invoiceQueue) => {
-    const registerInvoiceFormData = {
+    const registerInvoiceDataBody = {
         dataArray: invoiceQueue,
     };
     
-
-    const registerInvoiceFormDataBody =  $.param(registerInvoiceFormData);
+    //const registerInvoiceFormDataBody =  $.param(registerInvoiceFormData);
     const url = UrlConstants.SALES.REGISTER_INVOICE;
     const callType = GenericConstants.API_CALL_TYPE.POST;
+    const headers = {'Content-Type': 'application/json'};
 
     return await ApiCallUtil.http(
         url, //api url
         callType, //calltype
-        registerInvoiceFormDataBody //body
+        registerInvoiceDataBody, //body
+        headers,
     );
 
 };

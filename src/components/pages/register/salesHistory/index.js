@@ -180,6 +180,7 @@ const SalesHistory = () => {
     if (Helpers.var_check(localInvoiceQueue.data)) {
       localInvoiceQueue.data.push(localCurrentInvoice);  //insert
       saveDataIntoLocalStorage("invoice_queue", localInvoiceQueue.data); //insert into cache
+      message.success("Invoice held", 3);
       saveDataIntoLocalStorage("current_invoice", null);   ///imp make empty current invoice
     }
 
