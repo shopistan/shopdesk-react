@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./style.scss";
 import moment from "moment";
-import $ from 'jquery';
-
+import $ from "jquery";
 
 import {
   Form,
@@ -34,11 +33,11 @@ import {
 } from "../../../../utils/local-storage/local-store-utils";
 import { useHistory } from "react-router-dom";
 import Constants from "../../../../utils/constants/constants";
-import UrlConstants from '../../../../utils/constants/url-configs';
+import UrlConstants from "../../../../utils/constants/url-configs";
 import * as ProductsApiUtil from "../../../../utils/api/products-api-utils";
 import * as CustomersApiUtil from "../../../../utils/api/customer-api-utils";
 import * as CouriersApiUtil from "../../../../utils/api/couriers-api-utils";
-import * as SalesApiUtil from '../../../../utils/api/sales-api-utils';
+import * as SalesApiUtil from "../../../../utils/api/sales-api-utils";
 import * as Helpers from "../../../../utils/helpers/scripts";
 import SellNestedProductsTable from "../../../organism/table/sell/sellNestedProductsTable";
 import PrintSalesInvoiceTable from "./sellInvoice";
@@ -63,7 +62,6 @@ function Sell() {
   const [productsTotalAmount, setProductsTotalAmount] = useState(0);
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
   const [syncStatus, setSyncStatus] = useState(false);
-
 
   var clearSync = false;
 
@@ -94,12 +92,10 @@ function Sell() {
     fetchCouriersData();
     startInvoice();
 
-
     return () => {
       console.log("unmount");
       clearSync = true;
-    }
-
+    };
   }, []);
 
   const fetchCouriersData = async (pageLimit = 100, pageNumber = 1) => {
@@ -184,7 +180,7 @@ function Sell() {
       //message.success(customersSearchResponse.message, 3);
       setCustomersData(
         customersSearchResponse.customers.data ||
-        customersSearchResponse.customers
+          customersSearchResponse.customers
       );
     }
   };
@@ -244,7 +240,6 @@ function Sell() {
     updateCart(saleInvoiceData);
   };
 
-
   const handleDeleteSale = (e) => {
     saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, null);
     let newInvoice = createNewInvoice();
@@ -291,7 +286,7 @@ function Sell() {
     //console.log(value);
     const clonedInvoice = { ...saleInvoiceData };
     clonedInvoice.courier_code = value;
-    saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, clonedInvoice);  //imp
+    saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, clonedInvoice); //imp
     setSaleInvoiceData(clonedInvoice);
   };
 
@@ -299,7 +294,7 @@ function Sell() {
     //console.log(e.target.value);
     const clonedInvoice = { ...saleInvoiceData };
     clonedInvoice.reference = e.target.value;
-    saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, clonedInvoice);  //imp
+    saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, clonedInvoice); //imp
     setSaleInvoiceData(clonedInvoice);
   };
 
@@ -361,7 +356,10 @@ function Sell() {
         //setProductsTableData(productsTableData);  // caling in updatecart now imppp
         //update cart  imp
         saleInvoiceData.products = productsTableData;
-        saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, saleInvoiceData); //imp
+        saveDataIntoLocalStorage(
+          Constants.SELL_CURRENT_INVOICE_KEY,
+          saleInvoiceData
+        ); //imp
         updateCart(saleInvoiceData);
 
         //update cart  imp
@@ -374,7 +372,10 @@ function Sell() {
         //setProductsTableData(newData);  // callng in updatecart now imppp
         //update cart  imp
         saleInvoiceData.products = newData;
-        saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, saleInvoiceData);  //vvimp
+        saveDataIntoLocalStorage(
+          Constants.SELL_CURRENT_INVOICE_KEY,
+          saleInvoiceData
+        ); //vvimp
         updateCart(saleInvoiceData);
 
         //update cart  imp
@@ -433,9 +434,12 @@ function Sell() {
     updateCart(clonedInvoiceData); // impppp
 
     if (Helpers.var_check(localInvoiceQueue.data)) {
-      localInvoiceQueue.data.push(saleInvoiceData);  //imp
+      localInvoiceQueue.data.push(saleInvoiceData); //imp
       console.log("invoice-queue-insert");
-      saveDataIntoLocalStorage(Constants.SELL_INVOICE_QUEUE_KEY, localInvoiceQueue.data);
+      saveDataIntoLocalStorage(
+        Constants.SELL_INVOICE_QUEUE_KEY,
+        localInvoiceQueue.data
+      );
       localStorage.setItem(Constants.SELL_CURRENT_INVOICE_KEY, null); ///imp
     }
 
@@ -509,10 +513,10 @@ function Sell() {
     }
 
     /*-----imp to call sync----*/
-    if (clearSync === false) { setTimeout(sync, 3000); }
+    if (clearSync === false) {
+      setTimeout(sync, 3000);
+    }
     /*-----imp to call sync----*/
-
-
   };
 
   ////////////////imp funcyionality////////////////////
@@ -529,64 +533,64 @@ function Sell() {
     localInvoiceQueue = localInvoiceQueue.data ? localInvoiceQueue.data : null;
     console.log(localInvoiceQueue);
 
-    if (
-      Helpers.var_check(localInvoiceQueue) &&
-      localInvoiceQueue.length > 0
-    ) {
-
+    if (Helpers.var_check(localInvoiceQueue) && localInvoiceQueue.length > 0) {
       //setSyncStatus(true);
-      const registerInvoiceResponse = await SalesApiUtil.registerInvoice(localInvoiceQueue);
-      console.log(
-        " registerInvoiceResponse:",
-        registerInvoiceResponse
-      );
-
-      if (registerInvoiceResponse.hasError) {
-        console.log(
-          "Cant add registered Invoice Data -> ",
-          registerInvoiceResponse.errorMessage
-        );
-        message.error(registerInvoiceResponse.errorMessage, 3);
-        //setSyncStatus(false);
-        console.log("Fail");
-        setTimeout(sync, 3000);
-
-      }
-      else {
-        var index = -1;
-        var invoicesData = registerInvoiceResponse.Invoices_added;
-        for (let i in invoicesData) {
-          for (let i2 in localInvoiceQueue) {
-            if (
-              invoicesData[i] ==
-              localInvoiceQueue[i2].invoiceNo
-            ) {
-              index = i2;
-              break;
+      /*---------------register-invoice-Data------------------------*/
+      /*---------------register-invoice-Data------------------------*/
+      $.ajax({
+        type: "POST",
+        url: UrlConstants.SALES.REGISTER_INVOICE,
+        dataType: "json",
+        headers: {
+          Authorization: userData.auth_token,
+          "Content-Type": "application/json",
+        },
+        data: JSON.stringify({
+          dataArray: localInvoiceQueue,
+        }),
+        success: function (res) {
+          console.log(res);
+          var index = -1;
+          var invoicesData = res.Invoices_added;
+          for (let i in invoicesData) {
+            for (let i2 in localInvoiceQueue) {
+              if (invoicesData[i] == localInvoiceQueue[i2].invoiceNo) {
+                index = i2;
+                break;
+              }
+            }
+            if (index != -1) {
+              localInvoiceQueue.splice(index, 1);
+              saveDataIntoLocalStorage(
+                Constants.SELL_INVOICE_QUEUE_KEY,
+                localInvoiceQueue
+              );
+              console.log("found add index", index);
             }
           }
-          if (index != -1) {
-            localInvoiceQueue.splice(index, 1);
-            saveDataIntoLocalStorage(Constants.SELL_INVOICE_QUEUE_KEY, localInvoiceQueue);
-            console.log("found add index", index);
-          }
-        }
 
-        console.log("invoices-response", invoicesData);
+          console.log(invoicesData);
+          setTimeout(sync, 3000);
+        },
+        error: function (err) {
+          console.log(err);
+          //setSyncStatus(false);
+          console.log("Fail");
+          setTimeout(sync, 3000);
+        },
+      });
+
+      /*---------------register-invoice-Data------------------------*/
+      /*---------------register-invoice-Data------------------------*/
+    } else {
+      console.log(clearSync);
+      setSyncStatus(false);
+      if (clearSync === false) {
         setTimeout(sync, 3000);
-
       }
-    }
-
-    else {
-      //console.log(clearSync);
-      //setSyncStatus(false);
-      if (clearSync === false) { setTimeout(sync, 3000); }
       console.log("-- syncing --");
     }
-
-
-  }
+  };
 
   ////////////////imp functionality////////////////////
 
@@ -722,9 +726,7 @@ function Sell() {
     }
 
     //saveDataIntoLocalStorage("current_invoice", clonedInvoiceData);   //imp
-
   }
-
 
   const onFinish = (values) => {
     console.log("Success:", values);
@@ -744,13 +746,13 @@ function Sell() {
 
   return (
     <>
-      <div className="page sell">
+      <div className='page sell'>
         {/* Left */}
-        <div className="info">
+        <div className='info'>
           <Form
             form={form}
-            name="basic"
-            layout="vertical"
+            name='basic'
+            layout='vertical'
             initialValues={{
               remember: true,
             }}
@@ -758,17 +760,17 @@ function Sell() {
             onFinishFailed={onFinishFailed}
           >
             <div style={{ textAlign: "center" }}>
-              {loading && <Spin size="large" tip="Loading Products..." />}
+              {loading && <Spin size='large' tip='Loading Products...' />}
             </div>
 
-            <Form.Item label="Search for products">
+            <Form.Item label='Search for products'>
               <AutoComplete
                 style={{ width: "100%" }}
                 dropdownMatchSelectWidth={250}
                 value={selectedValue}
                 onSearch={handleSearch}
                 onSelect={handleSelect}
-                placeholder="select a product"
+                placeholder='select a product'
               >
                 {productsSearchResult &&
                   productsSearchResult.map((item) => (
@@ -780,14 +782,14 @@ function Sell() {
             </Form.Item>
 
             <Button
-              type="default"
-              className="add-product-btn"
+              type='default'
+              className='add-product-btn'
               onClick={handleAddProduct}
             >
               Add
             </Button>
 
-            <Form.Item label="Courier" name="courier_code">
+            <Form.Item label='Courier' name='courier_code'>
               <Select onChange={handleCourierChange}>
                 {couriersData.map((obj, index) => {
                   return (
@@ -799,18 +801,18 @@ function Sell() {
               </Select>
             </Form.Item>
             <Form.Item
-              label="Invoice Note"
-              name="invoiceNote"
+              label='Invoice Note'
+              name='invoiceNote'
               onChange={handleInvoiceNoteChange}
             >
-              <Input placeholder="input Invoice Note" />
+              <Input placeholder='input Invoice Note' />
             </Form.Item>
-            <Form.Item label="Tax Category" name="tax_value">
+            <Form.Item label='Tax Category' name='tax_value'>
               <Select onChange={handleTaxCategoryChange}>
-                <Option key="1" value={16}>
+                <Option key='1' value={16}>
                   Simple
                 </Option>
-                <Option key="2" value={5}>
+                <Option key='2' value={5}>
                   FBS
                 </Option>
               </Select>
@@ -820,18 +822,18 @@ function Sell() {
         {/* Left */}
 
         {/* Right */}
-        <div className="checkout">
+        <div className='checkout'>
           <Form
             form={costForm}
-            name="basic"
-            layout="vertical"
+            name='basic'
+            layout='vertical'
             initialValues={{
-              discounted_value: 0
+              discounted_value: 0,
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
           >
-            <div className="header">
+            <div className='checkout__header'>
               <h3>
                 Checkout &nbsp; (
                 {saleInvoiceData && saleInvoiceData.products
@@ -840,11 +842,11 @@ function Sell() {
                 )Items
               </h3>
 
-              <div className="header__btns">
+              <div className='header__btns'>
                 <Button
-                  type="primary"
+                  type='primary'
                   onClick={() => handlePayBill("hold")}
-                  className="custom-btn custom-btn--primary"
+                  className='custom-btn custom-btn--primary'
                 >
                   Park Sale
                 </Button>
@@ -859,7 +861,7 @@ function Sell() {
                 value={selectedCustomerValue}
                 onSearch={handleCustomerSearch}
                 onSelect={handleCustomerSelect}
-                placeholder="select customer"
+                placeholder='select customer'
               >
                 {customersData &&
                   customersData.map((item) => (
@@ -881,7 +883,7 @@ function Sell() {
                   marginBottom: "5px",
                 }}
               >
-                <table className="sell-customer-select-table">
+                <table className='sell-customer-select-table'>
                   <tbody>
                     <tr>
                       <th style={{ padding: "5px !important" }}>
@@ -896,9 +898,9 @@ function Sell() {
                         </small>
                       </th>
                       <th style={{ padding: "5px !important" }}>
-                        <button className="customer-del-btn-pull-right">
+                        <button className='customer-del-btn-pull-right'>
                           <DeleteOutlined
-                            className="customer-del-btn-icon"
+                            className='customer-del-btn-icon'
                             onClick={handleCustomerDelete}
                           />
                         </button>
@@ -914,46 +916,46 @@ function Sell() {
             <Divider />
 
             {/* Table */}
-            <div className="table">
+            <div className='table'>
               <SellNestedProductsTable
                 tableData={productsTableData}
                 //tableDataLoading={loading}
                 onChangeProductsData={handleChangeProductsData}
-                tableType="register_sell"
+                tableType='register_sell'
               />
             </div>
             {/* Table */}
 
             <Divider />
 
-            <div className="cost">
-              <div className="cost__wrapper">
-                <div className="cost__left">
-                  <div className="cost__box">
+            <div className='cost'>
+              <div className='cost__wrapper'>
+                <div className='cost__left'>
+                  <div className='cost__box'>
                     <h3>Subtotal</h3>
                     <span>{saleInvoiceData && saleInvoiceData.sub_total}</span>
                   </div>
 
-                  <Form.Item label="Discount" name="discounted_value">
+                  <Form.Item label='Discount' name='discounted_value'>
                     <Input
-                      placeholder="0"
+                      placeholder='0'
                       //defaultValue={0}
-                      addonAfter="%"
+                      addonAfter='%'
                       onBlur={handleDiscountChange}
                     />
                   </Form.Item>
 
-                  <div className="cost__box">
+                  <div className='cost__box'>
                     <h3>Tax</h3>
                     <span>{saleInvoiceData && saleInvoiceData.tax}</span>
                   </div>
 
-                  <div className="cost__box">
+                  <div className='cost__box'>
                     <Button
-                      type="primary"
+                      type='primary'
                       icon={<EditOutlined />}
                       onClick={showModal}
-                      className="custom-btn custom-btn--primary"
+                      className='custom-btn custom-btn--primary'
                     >
                       MOP
                     </Button>
@@ -961,16 +963,16 @@ function Sell() {
                   </div>
 
                   <Modal
-                    title="Select mode of payment"
+                    title='Select mode of payment'
                     visible={isMopModalVisible}
                     onOk={handleOk}
                     onCancel={handleCancel}
                   >
-                    <div className="modal__content">
+                    <div className='modal__content'>
                       <Button
-                        type="primary"
+                        type='primary'
                         icon={<DollarCircleOutlined />}
-                        className="u-width-100 custom-btn custom-btn--primary"
+                        className='u-width-100 custom-btn custom-btn--primary'
                         style={{ marginBottom: "1rem" }}
                         onClick={() => changeMethodOfPayment("Cash")}
                       >
@@ -979,9 +981,9 @@ function Sell() {
                       <br />
 
                       <Button
-                        type="primary"
+                        type='primary'
                         icon={<CreditCardOutlined />}
-                        className="u-width-100 custom-btn custom-btn--primary"
+                        className='u-width-100 custom-btn custom-btn--primary'
                         style={{ marginBottom: "1rem" }}
                         onClick={() => changeMethodOfPayment("Credit Card")}
                       >
@@ -990,9 +992,9 @@ function Sell() {
                       <br />
 
                       <Button
-                        type="primary"
+                        type='primary'
                         icon={<EditOutlined />}
-                        className="u-width-100 custom-btn custom-btn--primary"
+                        className='u-width-100 custom-btn custom-btn--primary'
                         style={{ marginBottom: "1rem" }}
                         onClick={() => changeMethodOfPayment("Online")}
                       >
@@ -1001,9 +1003,9 @@ function Sell() {
                       <br />
 
                       <Button
-                        type="primary"
+                        type='primary'
                         icon={<EditOutlined />}
-                        className="u-width-100 custom-btn custom-btn--primary"
+                        className='u-width-100 custom-btn custom-btn--primary'
                         style={{ marginBottom: "1rem" }}
                         onClick={() => changeMethodOfPayment("Customer Layby")}
                       >
@@ -1013,10 +1015,10 @@ function Sell() {
                     </div>
                   </Modal>
                 </div>
-                <div className="cost__right">
-                  <Form.Item label="Paid" name="paid">
+                <div className='cost__right'>
+                  <Form.Item label='Paid' name='paid'>
                     <InputNumber
-                      className="u-width-100"
+                      className='u-width-100'
                       //value={saleInvoiceData.payed}
                       onChange={handlePaidChange}
                       disabled={
@@ -1025,7 +1027,7 @@ function Sell() {
                     />
                   </Form.Item>
 
-                  <div className="cost__box">
+                  <div className='cost__box'>
                     <h3>Change</h3>
                     <span>
                       {saleInvoiceData &&
@@ -1040,9 +1042,9 @@ function Sell() {
               </div>
               <Form.Item>
                 <Button
-                  type="primary"
+                  type='primary'
                   onClick={() => handlePayBill("close")}
-                  className="cost__btn custom-btn custom-btn--primary"
+                  className='cost__btn custom-btn custom-btn--primary'
                   disabled={
                     saleInvoiceData &&
                     saleInvoiceData.products &&
