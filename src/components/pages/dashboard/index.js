@@ -18,6 +18,9 @@ const Dashboard = () => {
   const [salesChartData, setSalesChartData] = useState(null);
   const [mostSoldData, setMostSoldData] = useState(null);
   const [pieChartData, setPieChartData] = useState(null);
+  const [dashboardInfo, setDashboardInfo] = useState(false);
+
+
 
   useEffect(async () => {
     fetchDashboardData();
@@ -43,6 +46,7 @@ const Dashboard = () => {
       setTimeout(hide, 1000);
       setLoading(false);
       message.success(fetchDashboardDataviewResponse.message, 3);
+      setDashboardInfo(fetchDashboardDataviewResponse.status);
 
       /*------formulating data for dashboard graphs------------------*/
 
@@ -182,10 +186,14 @@ const Dashboard = () => {
 
       {!loading && (
         <div className="page__content">
-          <div className="page__section">
-            <h2 className="section__heading">Daily Sales</h2>
+          {!dashboardInfo &&
+            <img src="/images/bg2.svg" />}
 
-            {salesChartData && (
+
+          {(salesChartData && dashboardInfo) &&
+            <div className="page__section">
+              <h2 className="section__heading">Daily Sales</h2>
+
               <div>
                 <Line
                   data={salesHistoryLineChartDataSets}
@@ -224,65 +232,67 @@ const Dashboard = () => {
                       ],
                     },
                     responsive: true,
+                    maintainAspectRatio: true,  //imp 
                   }}
                 />
               </div>
-            )}
-          </div>
+            </div>}
+
 
           {/* Info Boxes */}
-          <div className="page__section">
-            {/* New */}
-            {salesToday && (
-              <div className="info-cards">
-                <div className="info-card">
-                  <HistoryOutlined
-                    style={{ fontSize: "32px" }}
-                    className="info-card__icon"
-                  />
-                  <h2 className="info-card__value">
-                    {parseFloat(salesToday.sales_today).toFixed(2)}
-                  </h2>
-                  <h3 className="info-card__title">Sales Today</h3>
-                </div>
+          {(mostSoldData && dashboardInfo) &&
+            <div className="page__section">
+              {/* New */}
+              {(salesToday && dashboardInfo) && (
+                <div className="info-cards">
+                  <div className="info-card">
+                    <HistoryOutlined
+                      style={{ fontSize: "32px" }}
+                      className="info-card__icon"
+                    />
+                    <h2 className="info-card__value">
+                      {parseFloat(salesToday.sales_today).toFixed(2)}
+                    </h2>
+                    <h3 className="info-card__title">Sales Today</h3>
+                  </div>
 
-                <div className="info-card">
-                  <ShoppingCartOutlined
-                    style={{ fontSize: "32px" }}
-                    className="info-card__icon"
-                  />
-                  <h2 className="info-card__value">
-                    {parseInt(salesToday.sale_count)}
-                  </h2>
-                  <h3 className="info-card__title">Sales Count</h3>
-                </div>
+                  <div className="info-card">
+                    <ShoppingCartOutlined
+                      style={{ fontSize: "32px" }}
+                      className="info-card__icon"
+                    />
+                    <h2 className="info-card__value">
+                      {parseInt(salesToday.sale_count)}
+                    </h2>
+                    <h3 className="info-card__title">Sales Count</h3>
+                  </div>
 
-                <div className="info-card">
-                  <TagsOutlined
-                    style={{ fontSize: "32px" }}
-                    className="info-card__icon"
-                  />
-                  <h2 className="info-card__value">
-                    {parseInt(salesToday.product_sold)}
-                  </h2>
-                  <h3 className="info-card__title">Products Sold</h3>
-                </div>
+                  <div className="info-card">
+                    <TagsOutlined
+                      style={{ fontSize: "32px" }}
+                      className="info-card__icon"
+                    />
+                    <h2 className="info-card__value">
+                      {parseInt(salesToday.product_sold)}
+                    </h2>
+                    <h3 className="info-card__title">Products Sold</h3>
+                  </div>
 
-                <div className="info-card">
-                  <RiseOutlined
-                    style={{ fontSize: "32px" }}
-                    className="info-card__icon"
-                  />
-                  <h2 className="info-card__value">
-                    {parseFloat(salesToday.gross_profit).toFixed(2)}
-                  </h2>
-                  <h3 className="info-card__title">Gross Profit</h3>
+                  <div className="info-card">
+                    <RiseOutlined
+                      style={{ fontSize: "32px" }}
+                      className="info-card__icon"
+                    />
+                    <h2 className="info-card__value">
+                      {parseFloat(salesToday.gross_profit).toFixed(2)}
+                    </h2>
+                    <h3 className="info-card__title">Gross Profit</h3>
+                  </div>
                 </div>
-              </div>
-            )}
-            {/* New */}
+              )}
+              {/* New */}
 
-            {/* {salesToday && (
+              {/* {salesToday && (
               <div>
                 <Row gutter={(16, 16)}>
                   <Col xs={24} sm={12} md={6}>
@@ -336,14 +346,16 @@ const Dashboard = () => {
                 </Row>
               </div>
             )} */}
-          </div>
+
+            </div>}
+
 
           {/* Charts */}
-          <div className="page__section charts">
-            <div className="sales">
-              <h2 className="section__heading">Sales History</h2>
+          {(mostSoldData && dashboardInfo) &&
+            <div className="page__section charts">
+              <div className="sales">
+                <h2 className="section__heading">Sales History</h2>
 
-              {pieChartData && (
                 <Pie
                   data={salesHistoryPieChartDataSets}
                   options={{
@@ -354,13 +366,11 @@ const Dashboard = () => {
                     },
                   }}
                 />
-              )}
-            </div>
+              </div>
 
-            <div className="items">
-              <h2 className="section__heading">Most Sold Items</h2>
+              <div className="items">
+                <h2 className="section__heading">Most Sold Items</h2>
 
-              {mostSoldData && (
                 <div>
                   <Line
                     data={salesHistoryMostSoldLineChartDataSets}
@@ -387,13 +397,14 @@ const Dashboard = () => {
                         ],
                       },
                       responsive: true,
-                      //maintainAspectRatio: false,  //imp must disabled
+                      maintainAspectRatio: true,  //imp 
                     }}
                   />
                 </div>
-              )}
-            </div>
-          </div>
+              </div>
+
+            </div>}
+
         </div>
       )}
     </div>
