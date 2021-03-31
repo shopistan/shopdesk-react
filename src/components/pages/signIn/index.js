@@ -3,12 +3,11 @@ import React from "react";
 import { Form, Input, Button, Checkbox, message } from "antd";
 import { login } from "../../../utils/api/auth-api-utils";
 import { saveDataIntoLocalStorage } from "../../../utils/local-storage/local-store-utils";
-import { useHistory } from 'react-router-dom';
-import Constants from '../../../utils/constants/constants';
+import { useHistory } from "react-router-dom";
+import Constants from "../../../utils/constants/constants";
 
 const SignIn = () => {
   const history = useHistory();
-
 
   const onFinish = async (values) => {
     //The values that will be in form data:
@@ -18,13 +17,13 @@ const SignIn = () => {
     const loginResponse = await login(values.username, values.password);
     if (loginResponse.hasError) {
       const errorMessage = loginResponse.errorMessage;
-      message.error('Login UnSuccesfull ', 3);
+      message.error("Login UnSuccesfull ", 3);
     } else {
       const loggedInUserDetails = loginResponse;
       saveDataIntoLocalStorage(Constants.USER_DETAILS_KEY, loggedInUserDetails);
-      message.success('Login Succesfull ', 3);
+      message.success("Login Succesfull ", 3);
       setTimeout(() => {
-        window.open('/outlets', "_self");
+        window.open("/outlets", "_self");
       }, 2000);
     }
 
@@ -83,7 +82,11 @@ const SignIn = () => {
             </Form.Item>
 
             <Form.Item>
-              <Button type='primary' htmlType='submit'>
+              <Button
+                type='primary'
+                htmlType='submit'
+                className='custom-btn custom-btn--primary'
+              >
                 Submit
               </Button>
             </Form.Item>

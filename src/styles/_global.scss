@@ -29,6 +29,12 @@
       flex-direction: column;
     }
 
+    h1 {
+      @include respond(mobile) {
+        margin-bottom: 2rem;
+      }
+    }
+
     &__buttons {
       button {
         margin: 0 0.5rem;
