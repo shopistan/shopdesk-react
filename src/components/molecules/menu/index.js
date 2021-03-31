@@ -25,6 +25,7 @@ import {
 
 const SideMenu = () => {
   const history = useHistory();
+  const [openKeys, setOpenKeys] = useState([]);
 
   var userRouteScopes = [];
   const appRouteScopes =
@@ -69,13 +70,28 @@ const SideMenu = () => {
 
 
   const { SubMenu } = Menu;
+  // submenu keys of first level
+  const rootSubmenuKeys = ['register', 'stock', 'setup', 'reports', 'ecommerce'];
+
+  const onOpenChange = keys => {
+    const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1);
+    if (rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
+      setOpenKeys(keys);
+    } else {
+      setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
+    }
+  };
+
+
 
   return (
     <Menu
       theme="dark"
       mode="inline"
-      className="side-menu"
+      className="side-menu side-menu-padding"
       defaultSelectedKeys={["dashboard"]}
+      openKeys={openKeys}
+      onOpenChange={onOpenChange} 
       onClick={(e) => {
         if (e.key === "dashboard") {
           if (readFromLocalStorage && authenticateDashboard) {
@@ -189,17 +205,17 @@ const SideMenu = () => {
             Couriers
           </Menu.Item>}
           {(userRouteScopes.includes(appRouteScopes.register) || adminUser) &&
-          <SubMenu key="sub1" icon={<LaptopOutlined />} title="Register">
+          <SubMenu key="register" icon={<LaptopOutlined />} title="Register">
             <Menu.Item key="sell">Sell</Menu.Item>
             <Menu.Item key="salesHistory">Sales History</Menu.Item>
           </SubMenu>}
           {(userRouteScopes.includes(appRouteScopes.stock) || adminUser) &&
-          <SubMenu key="sub2" icon={<StockOutlined />} title="Stock Control">
+          <SubMenu key="stock" icon={<StockOutlined />} title="Stock Control">
             <Menu.Item key="purchaseOrders">Purchase Orders</Menu.Item>
             <Menu.Item key="inventoryTransfers">Inventory Transfers</Menu.Item>
             <Menu.Item key="stockAdjustments">Stock Adjustment</Menu.Item>
           </SubMenu>}
-          <SubMenu key="sub3" icon={<ApartmentOutlined />} title="Ecommerce">
+          <SubMenu key="ecommerce" icon={<ApartmentOutlined />} title="Ecommerce">
             <Menu.Item key="13">Orders</Menu.Item>
             <Menu.Item key="14">Inventory Sync</Menu.Item>
           </SubMenu>
@@ -212,7 +228,7 @@ const SideMenu = () => {
             <Menu.Item key="categoryWise">Category Wise</Menu.Item>
           </SubMenu>}
           {(userRouteScopes.includes(appRouteScopes.setup) || adminUser) &&
-          <SubMenu key="sub5" icon={<SettingOutlined />} title="Setup">
+          <SubMenu key="setup" icon={<SettingOutlined />} title="Setup">
             <Menu.Item key="outlets">Outlets</Menu.Item>
             <Menu.Item key="users">Users</Menu.Item>
             <Menu.Item key="receipts">Receipt Templates</Menu.Item>

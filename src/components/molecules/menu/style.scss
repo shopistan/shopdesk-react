@@ -24,6 +24,10 @@
       color: $color-white !important;
     }
   }
+
+  .ant-menu-submenu-arrow::before, .ant-menu-submenu-arrow::after {
+    background: $color-black !important;
+  }
 }
 
 .side-menu {
@@ -37,6 +41,10 @@
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+.side-menu-padding{
+  padding-bottom: 5rem !important;
 }
 
 .mobile__menu {
