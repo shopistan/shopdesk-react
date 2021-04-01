@@ -19,11 +19,26 @@ const Dashboard = () => {
   const [mostSoldData, setMostSoldData] = useState(null);
   const [pieChartData, setPieChartData] = useState(null);
   const [dashboardInfo, setDashboardInfo] = useState(false);
+  const [screenWidth, setScreenWidth] = useState(null);
 
 
 
   useEffect(async () => {
+
+    function updateSize() {
+      var screen = window.innerWidth
+        || document.documentElement.clientWidth
+        || document.body.clientWidth;
+
+      //console.log("here");
+      //window.location.reload();
+      setScreenWidth(screen);
+    }
+
+    window.addEventListener('resize', updateSize);
     fetchDashboardData();
+    return () => window.removeEventListener('resize', updateSize);
+
   }, []);
 
   const fetchDashboardData = async (e) => {
@@ -46,13 +61,17 @@ const Dashboard = () => {
       setTimeout(hide, 1000);
       setLoading(false);
       message.success(fetchDashboardDataviewResponse.message, 3);
-      setDashboardInfo(fetchDashboardDataviewResponse.status);
+      setDashboardInfo(fetchDashboardDataviewResponse.status);  //imp
+      let screen = window.innerWidth
+        || document.documentElement.clientWidth
+        || document.body.clientWidth;
+      setScreenWidth(screen);  //imp
 
       /*------formulating data for dashboard graphs------------------*/
 
       var dashboardData = fetchDashboardDataviewResponse;
       let salesToday = dashboardData.salesToday[0];
-      console.log(salesToday);
+      //console.log(salesToday);
 
       setSalesToday(salesToday);
 
@@ -73,7 +92,7 @@ const Dashboard = () => {
 
       setSalesChartData(salesChartData);
 
-      console.log(salesChartData);
+      //console.log(salesChartData);
 
       let mostSoldData = {
         data: [],
@@ -175,6 +194,8 @@ const Dashboard = () => {
     };
   }
 
+
+
   return (
     <div className="page dashboard">
       <div className="page__header">
@@ -195,46 +216,91 @@ const Dashboard = () => {
               <h2 className="section__heading">Daily Sales</h2>
 
               <div>
-                <Line
-                  data={salesHistoryLineChartDataSets}
-                  options={{
-                    title: {
-                      display: true,
-                      text: "Sales History",
-                    },
-                    scales: {
-                      yAxes: [
-                        {
-                          scaleLabel: {
+                {(screenWidth && screenWidth < 700) &&
+                  <Line
+                    data={salesHistoryLineChartDataSets}
+                    width={100}
+                    height={100}
+                    options={{
+                      title: {
+                        display: true,
+                        text: "Sales History",
+                      },
+                      scales: {
+                        yAxes: [
+                          {
+                            scaleLabel: {
+                              display: true,
+                              labelString: "units",
+                            },
                             display: true,
-                            labelString: "units",
+                            text: "units",
+                            position: "left",
+                            id: "y-axis-1",
+                            ticks: {
+                              beginAtZero: true,
+                            },
                           },
-                          display: true,
-                          text: "units",
-                          position: "left",
-                          id: "y-axis-1",
-                          ticks: {
-                            beginAtZero: true,
-                          },
-                        },
-                        {
-                          scaleLabel: {
+                          {
+                            scaleLabel: {
+                              display: true,
+                              labelString: "sales ($)",
+                            },
                             display: true,
-                            labelString: "sales ($)",
+                            position: "right",
+                            id: "y-axis-2",
+                            ticks: {
+                              beginAtZero: true,
+                            },
                           },
-                          display: true,
-                          position: "right",
-                          id: "y-axis-2",
-                          ticks: {
-                            beginAtZero: true,
+                        ],
+                      },
+                      responsive: true,
+                      maintainAspectRatio: true,  //imp 
+                    }}
+                  />}
+
+                {(screenWidth && screenWidth > 700) &&
+                  <Line
+                    data={salesHistoryLineChartDataSets}
+                    options={{
+                      title: {
+                        display: true,
+                        text: "Sales History",
+                      },
+                      scales: {
+                        yAxes: [
+                          {
+                            scaleLabel: {
+                              display: true,
+                              labelString: "units",
+                            },
+                            display: true,
+                            text: "units",
+                            position: "left",
+                            id: "y-axis-1",
+                            ticks: {
+                              beginAtZero: true,
+                            },
                           },
-                        },
-                      ],
-                    },
-                    responsive: true,
-                    maintainAspectRatio: true,  //imp 
-                  }}
-                />
+                          {
+                            scaleLabel: {
+                              display: true,
+                              labelString: "sales ($)",
+                            },
+                            display: true,
+                            position: "right",
+                            id: "y-axis-2",
+                            ticks: {
+                              beginAtZero: true,
+                            },
+                          },
+                        ],
+                      },
+                      responsive: true,
+                      maintainAspectRatio: true,  //imp 
+                    }}
+                  />}
               </div>
             </div>}
 
@@ -372,34 +438,34 @@ const Dashboard = () => {
                 <h2 className="section__heading">Most Sold Items</h2>
 
                 <div>
-                  <Line
-                    data={salesHistoryMostSoldLineChartDataSets}
-                    options={{
-                      title: {
-                        display: true,
-                        text: "Most Sold",
-                      },
-                      scales: {
-                        yAxes: [
-                          {
-                            scaleLabel: {
+                    <Line
+                      data={salesHistoryMostSoldLineChartDataSets}
+                      options={{
+                        title: {
+                          display: true,
+                          text: "Most Sold",
+                        },
+                        scales: {
+                          yAxes: [
+                            {
+                              scaleLabel: {
+                                display: true,
+                                labelString: "units",
+                              },
                               display: true,
-                              labelString: "units",
+                              text: "units",
+                              position: "left",
+                              id: "y-axis-1",
+                              ticks: {
+                                beginAtZero: true,
+                              },
                             },
-                            display: true,
-                            text: "units",
-                            position: "left",
-                            id: "y-axis-1",
-                            ticks: {
-                              beginAtZero: true,
-                            },
-                          },
-                        ],
-                      },
-                      responsive: true,
-                      maintainAspectRatio: true,  //imp 
-                    }}
-                  />
+                          ],
+                        },
+                        responsive: true,
+                        maintainAspectRatio: true,  //imp 
+                      }}
+                    />
                 </div>
               </div>
 
