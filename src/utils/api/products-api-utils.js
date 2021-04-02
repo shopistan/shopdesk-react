@@ -109,7 +109,7 @@ export const getFullRegisteredProducts = async () => {
 };
 
 export const saveProductsDiscountedData = async (discountedProducts) => {
-    var discountedProductsFormDataBody = new FormData();
+    /*var discountedProductsFormDataBody = new FormData();
     for (let i = 0; i < discountedProducts.length; i++) {
         Object.entries(discountedProducts[i]).forEach(
             ([formDataKey, formDataValue]) => {
@@ -119,15 +119,16 @@ export const saveProductsDiscountedData = async (discountedProducts) => {
                 );
             }
         );
-    }
+    }*/
 
+    const discountedProductsFormDataBody = $.param({ products: discountedProducts });
     const url = UrlConstants.PRODUCTS.SAVE_DISCOUNTED;
     const callType = GenericConstants.API_CALL_TYPE.POST;
 
     return await ApiCallUtil.http(
         url, //api url
         callType, //calltype
-        discountedProductsFormDataBody
+        discountedProductsFormDataBody,  //body
     );
 };
 

@@ -17,7 +17,7 @@ const EditableCell = ({
     children,
     ...restProps
 }) => {
-    const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+    const inputNode = inputType === 'number' ? <InputNumber className='u-width-100' /> : <Input />;
 
 
     return (
@@ -89,9 +89,9 @@ const ProductsDiscountsTable = (props) => {
 
 
     const handlePageChange = (page, pageSize) => {
-        console.log(page);
+        /*console.log(page);
         setcurrentPageNumber(page)
-        props.onClickPageChanger(page);
+        props.onClickPageChanger(page);*/
     };
 
 
@@ -131,7 +131,7 @@ const ProductsDiscountsTable = (props) => {
         {
             title: "SKU",
             dataIndex: "product_sku",
-            width: "30%",
+            width: "20%",
         },
         {
             title: "Varaints",
@@ -164,9 +164,9 @@ const ProductsDiscountsTable = (props) => {
                 return (
                     <div>
                         {record.product_sale_price && 
-                            <span className={`${discounted_percentage > 1 ? 'products-discount-tag' : 'products-zero-discount-tag'}`}>
+                            <span className={`${discounted_percentage >= 1 ? 'products-discount-tag' : 'products-zero-discount-tag'}`}>
                                 {record.product_sale_price == '0' || isNaN(discounted_percentage) ? '0%'
-                                 : discounted_percentage > 1  ? discounted_percentage + '%' 
+                                 : discounted_percentage >= 1  ? discounted_percentage + '%' 
                                  : '0%'
                                 }
                             </span>
@@ -178,12 +178,12 @@ const ProductsDiscountsTable = (props) => {
         {
             title: "Special Price",
             dataIndex: "discounted_price",
-            width: "15%",
+            width: "30%",
             editable: true,
             render: (_, record) => {
                 return (
                     <span>
-                        <Input value={record.discounted_price} readOnly  />
+                        <Input className='u-width-100' value={record.discounted_price} readOnly  />
                     </span>
                 );
             }
@@ -249,13 +249,13 @@ const ProductsDiscountsTable = (props) => {
                 rowClassName='editable-row'
                 components={components}
                 pagination={{
-                    total: props.paginationData && props.paginationData.totalElements,
+                    total: props.data && props.data.length,
                     showTotal: (total, range) => showTotalItemsBar(total, range),
                     defaultPageSize: 20,
                     pageSize: parseInt(props.pageLimit),
                     showSizeChanger: false,
-                    current: currentPageNumber,
-                    onChange: (page, pageSize) => handlePageChange(page, pageSize),
+                    //current: currentPageNumber,
+                    //onChange: (page, pageSize) => handlePageChange(page, pageSize),
                     //position: ["topRight"]
                 }}
                 loading={props.tableDataLoading}
