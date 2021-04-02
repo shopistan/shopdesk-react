@@ -21,6 +21,7 @@ const ProductDiscount = () => {
   const onSearch = async (e) => {
     var searchValue = e.target.value;
     if (searchValue === "") {
+      setLoading(true);
       fetchProductsDiscountsData(paginationLimit, currentPage);
     }
     else {
@@ -48,7 +49,7 @@ const ProductDiscount = () => {
   }
 
   const fetchProductsDiscountsData = async (pageLimit = 20, pageNumber = 1) => {
-    const productsDiscountsViewResponse = await ProductsApiUtil.getRegisteredProducts(pageLimit, pageNumber);
+    const productsDiscountsViewResponse = await ProductsApiUtil.getFullRegisteredProducts();
     console.log(' productsDiscountsViewResponse:', productsDiscountsViewResponse);
 
     if (productsDiscountsViewResponse.hasError) {
@@ -60,24 +61,28 @@ const ProductDiscount = () => {
       console.log('res -> ', productsDiscountsViewResponse);
       message.success(productsDiscountsViewResponse.message, 3);
       setData(productsDiscountsViewResponse.products.data || productsDiscountsViewResponse.products );
-      setPaginationData(productsDiscountsViewResponse.products.page || {});
+      //setPaginationData(productsDiscountsViewResponse.products.page || {});
       setLoading(false);
     }
   }
 
 
   const saveProductsDiscountedData = async (ProductDiscountedData) => {
+    //console.log(ProductDiscountedData);
+    const hide = message.loading('Saving changes in progress..', 0);
     const saveproductsDiscountedDataResponse = await ProductsApiUtil.saveProductsDiscountedData(ProductDiscountedData);
     console.log('saveproductsDiscountedDataResponse:', saveproductsDiscountedDataResponse);
 
     if (saveproductsDiscountedDataResponse.hasError) {
       console.log('Cant save products Discounted Data -> ', saveproductsDiscountedDataResponse.errorMessage);
-      message.error('Cant save products Discounted Data ', 3);
+      message.error(saveproductsDiscountedDataResponse.errorMessage, 3);
+      setTimeout(hide, 1000);
       setLoading(false);
     }
     else {
       console.log('res -> ', saveproductsDiscountedDataResponse);
       message.success(saveproductsDiscountedDataResponse.message, 3);
+      setTimeout(hide, 1000);
       setLoading(false);
     }
   }
@@ -91,19 +96,19 @@ const ProductDiscount = () => {
   function handleChange(value) {
     setPaginationLimit(value);
     //setCurrentPage(1);
-    setLoading(true);
+    /*setLoading(true);
     if (currentPage > Math.ceil(paginationData.totalElements / value)) {
       fetchProductsDiscountsData(value, 1);
     }
     else {
       fetchProductsDiscountsData(value, currentPage);
-    }
+    } */
   }
 
   function handlePageChange(currentPg) {
-    setCurrentPage(currentPg);
+    /*setCurrentPage(currentPg);
     setLoading(true);
-    fetchProductsDiscountsData(paginationLimit, currentPg);
+    fetchProductsDiscountsData(paginationLimit, currentPg);*/
   }
 
 
@@ -129,6 +134,7 @@ const ProductDiscount = () => {
       }); /*--end of foreach--*/
 
       setData(newData);
+      message.success("Discount applied", 3);
       console.log("save-values-new", newData); //coreect
     }
 
@@ -172,7 +178,7 @@ const ProductDiscount = () => {
             onFinishFailed={onFinishFailed}
           >
             <div className='form__row--footer'>
-              <Button type='primary' className='product-btn-edit' htmlType='submit' >
+              <Button type='primary' className="custom-btn custom-btn--primary" htmlType='submit' >
                 Save
               </Button>
             </div>
@@ -243,7 +249,8 @@ const ProductDiscount = () => {
         <div className='table'>{/* Insert Table Here */}
           <ProductsDiscountsTable
             pageLimit={paginationLimit} tableData={data} tableDataLoading={loading}
-            paginationData={paginationData} onClickPageChanger={handlePageChange}
+            //paginationData={paginationData}
+            //onClickPageChanger={handlePageChange}
             onSelectedTableRows={handleSelectedRows}
             onSaveProductsSpecialPrice={handleSaveSpecialPrice} />
         </div>
