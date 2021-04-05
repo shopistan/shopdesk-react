@@ -1,0 +1,28 @@
+steps:
+  # build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/shopdesk-react-stage', '.']
+    # push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/shopdesk-react-stage']
+    # Deploy container image to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      [
+        'run',
+        'deploy',
+        'shopdesk-react-stage',
+        '--image',
+        'gcr.io/$PROJECT_ID/shopdesk-react-stage',
+        '--region',
+        'us-central1',
+        '--platform',
+        'managed',
+        '--allow-unauthenticated',
+        '--memory',
+        '2Gi',
+        '--set-env-vars',
+        'NODE_ENV=$_NODE_ENV',
+      ]
+images:
+  - gcr.io/$PROJECT_ID/shopdesk-react-stage
