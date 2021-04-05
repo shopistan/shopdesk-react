@@ -19,16 +19,21 @@ const Categories = () => {
   const { Search } = Input;
 
   const onSearch = async (e) => {
-    const currValue = e.target.value;
+    var currValue = e.target.value;
+    currValue = currValue.toLowerCase();
     if (currValue === "") {
+      setLoading(true);
       fetchCategoriesData(paginationLimit, currentPage);
     } else {
       const filteredData = data.filter((entry) => {
         var item_name = entry.category_name;
         item_name = item_name.toLowerCase();
-        return item_name.includes(currValue.toLowerCase());
+        return item_name.includes(currValue);
       });
       setData(filteredData);
+      paginationData.totalElements = filteredData.length;
+      setPaginationData(paginationData);
+      setPaginationLimit(paginationLimit);
     }
   };
 

@@ -23,6 +23,7 @@ const Couriers = () => {
     var currValue = e.target.value;
     currValue = currValue.toLowerCase();
     if (currValue === "") {
+      setLoading(true);
       fetchCouriersData(paginationLimit, currentPage);
     } else {
       const filteredData = data.filter((entry) => {
@@ -35,6 +36,9 @@ const Couriers = () => {
         );
       });
       setData(filteredData);
+      paginationData.totalElements = filteredData.length;
+      setPaginationData(paginationData);
+      setPaginationLimit(paginationLimit);
     }
   };
 
@@ -117,7 +121,7 @@ const Couriers = () => {
 
           <div className="action-row__element">
             <Search
-              placeholder="search category"
+              placeholder="search courier"
               allowClear
               //enterButton='Search'
               size="large"

@@ -18,31 +18,39 @@ export const viewOutlets = async () => {
 
 
 export const addOutlet = async (addOutletData) => {
+  const addOutletFormDataBody = {
+    store: addOutletData
+  };
 
-  const addOutletFormDataBody =  $.param({store: addOutletData});
-
+  //const addOutletFormDataBody =  $.param({store: addOutletData});
   const url = UrlConstants.SETUP.ADD_OUTLET;
   const callType = GenericConstants.API_CALL_TYPE.POST;
+  const headers = { 'Content-Type': 'application/json' };
 
   return await ApiCallUtil.http(
     url, //api url
     callType, //calltype
     addOutletFormDataBody, //body
+    headers,
   );
 
 };
 
 
 export const editOutlet = async (editOutletData) => {
+  const editOutletFormDataBody = {
+    store: editOutletData
+  };
 
-  const editOutletFormDataBody =  $.param({store: editOutletData});
   const url = UrlConstants.SETUP.EDIT_OUTLET;
   const callType = GenericConstants.API_CALL_TYPE.POST;
+  const headers = { 'Content-Type': 'application/json' };
 
   return await ApiCallUtil.http(
     url, //api url
     callType, //calltype
     editOutletFormDataBody, //body
+    headers,
   );
 
 };
@@ -115,29 +123,37 @@ export const viewUsers = async () => {
 
 
 export const addUser = async (addUserData) => {
-
-  const addUserFormDataBody =  $.param({addUser: addUserData});
+  const  addUserFormDataBody = {
+    addUser: addUserData
+  };
+  
   const url = UrlConstants.SETUP.ADD_USER;
   const callType = GenericConstants.API_CALL_TYPE.POST;
+  const headers = { 'Content-Type': 'application/json' };
 
   return await ApiCallUtil.http(
     url, //api url
     callType, //calltype
     addUserFormDataBody,  //body
+    headers,
   );
 };
 
 
 export const editUser = async (editUserData) => {
+  const editUserFormDataBody = {
+    user: editUserData,
+  };
  
-  const editUserFormDataBody =  $.param({user: editUserData});
   const url = UrlConstants.SETUP.EDIT_USER;
   const callType = GenericConstants.API_CALL_TYPE.POST;
+  const headers = { 'Content-Type': 'application/json' };
 
   return await ApiCallUtil.http(
     url, //api url
     callType, //calltype
     editUserFormDataBody,  //body
+    headers,
   );
 };
 
@@ -201,15 +217,19 @@ export const getTemplate = async (templateId) => {
 
 
 export const editTemplate = async (editTemplateData) => {
+  const editTemplateFormDataBody = {
+    template: editTemplateData
+  };
 
-  const editTemplateFormDataBody =  $.param({template: editTemplateData});
   const url = UrlConstants.SETUP.EDIT_TEMPLATE;
   const callType = GenericConstants.API_CALL_TYPE.POST;
+  const headers = { 'Content-Type': 'application/json' };
 
   return await ApiCallUtil.http(
     url, //api url
     callType, //calltype
     editTemplateFormDataBody,  //body
+    headers,
   );
 };
 
@@ -233,15 +253,19 @@ export const deleteTemplate = async (TemplateId) => {
 
 
 export const addTemplate = async (addTemplateData) => {
+  const addTemplateFormDataBody = {
+    template: addTemplateData
+  };
 
-  const addTemplateFormDataBody =  $.param({template: addTemplateData});
   const url = UrlConstants.SETUP.ADD_TEMPLATE;
   const callType = GenericConstants.API_CALL_TYPE.POST;
+  const headers = { 'Content-Type': 'application/json' };
 
   return await ApiCallUtil.http(
     url, //api url
     callType, //calltype
     addTemplateFormDataBody, //body
+    headers,
   );
 };
 
