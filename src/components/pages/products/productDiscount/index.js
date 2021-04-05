@@ -18,35 +18,36 @@ const ProductDiscount = () => {
   const { Option } = Select;
   const { Search } = Input;
 
-  const onSearch = async (e) => {
-    var searchValue = e.target.value;
-    if (searchValue === "") {
+
+  const onSearch = (value) => {
+    console.log(value);
+    var currValue = value;
+    currValue = currValue.toLowerCase();
+    if (currValue === "") {
       setLoading(true);
-      fetchProductsDiscountsData(paginationLimit, currentPage);
-    }
-    else {
-      var pageNumber = 1;
-      const productsSearchResponse = await ProductsApiUtil.searchProducts(paginationLimit, pageNumber, searchValue);
-      console.log('productsSearchResponse:', productsSearchResponse);
-      if (productsSearchResponse.hasError) {
-        console.log('Cant Search Products -> ', productsSearchResponse.errorMessage);
-      }
-      else {
-        console.log('res -> ', productsSearchResponse);
-        const newData = [...productsSearchResponse.products.data];
-        newData.forEach((itemObj, indx) => {
-          if (itemObj.hasOwnProperty('discounted_price') !== true) {
-            itemObj.discounted_price = 0;
-          }
-        }); /*--end of foreach--*/
+      fetchProductsDiscountsData();
+    } else {
+      const filteredData = data.filter((entry) => {
+        var productName = entry.product_name;
+        productName = productName.toLowerCase();
+        var productSku = entry.product_sku;
+        productSku = productSku.toLowerCase();
+        var discountedPrice = entry.discounted_price;
+        discountedPrice = discountedPrice.toLowerCase();
+        var salePrice = entry.product_sale_price;
+        salePrice = salePrice.toLowerCase();
+      
+        return (
+          productName.includes(currValue) ||
+          productSku.includes(currValue) ||
+          discountedPrice.includes(currValue)||
+          salePrice.includes(currValue)
+        );
+      });
 
-        //console.log("newdata-search", newData);
-        setData(newData);
-        setPaginationData(productsSearchResponse.products.page);
-      }
+      setData(filteredData);
     }
-
-  }
+  };
 
   const fetchProductsDiscountsData = async (pageLimit = 20, pageNumber = 1) => {
     const productsDiscountsViewResponse = await ProductsApiUtil.getFullRegisteredProducts();
@@ -193,9 +194,10 @@ const ProductDiscount = () => {
                     <Search
                       placeholder='Search for Products'
                       allowClear
-                      //enterButton='Search'
+                      enterButton='Search'
                       size='large'
-                      onChange={onSearch}
+                      onSearch={onSearch}
+                      //onChange={onSearch}
                     />
                   </Form.Item>
                 </div>

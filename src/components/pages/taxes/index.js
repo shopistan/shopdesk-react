@@ -21,6 +21,7 @@ const Taxes = () => {
     var currValue = e.target.value;
     currValue = currValue.toLowerCase();
     if (currValue === "") {
+      setLoading(true);
       fetchTaxesData(paginationLimit, currentPage);
     } else {
       const filteredData = data.filter((entry) => {

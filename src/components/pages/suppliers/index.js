@@ -22,6 +22,7 @@ const Suppliers = () => {
     var currValue = e.target.value;
     currValue = currValue.toLowerCase();
     if (currValue === "") {
+      setLoading(true);
       fetchSuppliersData(paginationLimit, currentPage);
     } else {
       const filteredData = data.filter((entry) => {
@@ -44,6 +45,9 @@ const Suppliers = () => {
       });
 
       setData(filteredData);
+      paginationData.totalElements = filteredData.length;
+      setPaginationData(paginationData);
+      setPaginationLimit(paginationLimit);
     }
   };
 
@@ -127,7 +131,7 @@ const Suppliers = () => {
 
           <div className="action-row__element">
             <Search
-              placeholder="search category"
+              placeholder="search supplier"
               allowClear
               //enterButton='Search'
               size="large"
