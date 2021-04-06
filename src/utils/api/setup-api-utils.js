@@ -17,6 +17,17 @@ export const viewOutlets = async () => {
 };
 
 
+export const viewAllOutlets = async () => {
+  const url = UrlConstants.SETUP.VIEW_ALL;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+      url, //api url
+      callType //calltype
+  );
+};
+
+
 export const addOutlet = async (addOutletData) => {
   const addOutletFormDataBody = {
     store: addOutletData

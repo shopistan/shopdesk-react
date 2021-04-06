@@ -143,11 +143,8 @@ const TransferInventory = () => {
     }
   }
 
-  const fetchOutletsData = async (pageLimit = 10, pageNumber = 1) => {
-    const outletsViewResponse = await SetupApiUtil.viewOutlets(
-        outletsPageLimit,
-        pageNumber
-    );
+  const fetchOutletsData = async () => {
+    const outletsViewResponse = await SetupApiUtil.viewAllOutlets();
     console.log('outletsViewResponse:', outletsViewResponse);
 
     if (outletsViewResponse.hasError) {

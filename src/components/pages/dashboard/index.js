@@ -306,7 +306,7 @@ const Dashboard = () => {
 
 
           {/* Info Boxes */}
-          {(mostSoldData && dashboardInfo) &&
+          {(salesToday && dashboardInfo) &&
             <div className="page__section">
               {/* New */}
               {(salesToday && dashboardInfo) && (
@@ -417,7 +417,7 @@ const Dashboard = () => {
 
 
           {/* Charts */}
-          {(mostSoldData && dashboardInfo) &&
+          {(mostSoldData && pieChartData && dashboardInfo) &&
             <div className="page__section charts">
               <div className="sales">
                 <h2 className="section__heading">Sales History</h2>
