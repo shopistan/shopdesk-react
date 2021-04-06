@@ -69,6 +69,8 @@ function Sell() {
   const { Option } = Select;
 
   var couriersPageLimit = Helpers.couriersPageLimit;
+  var mounted = true;
+
 
   useEffect(() => {
     if (history.location.selected_invoice_data !== undefined) {
@@ -95,24 +97,26 @@ function Sell() {
     return () => {
       console.log("unmount");
       clearSync = true;
+      mounted = false;
     };
   }, []);
 
-  const fetchCouriersData = async (pageLimit = 100, pageNumber = 1) => {
-    const couriersViewResponse = await CouriersApiUtil.viewCouriers(
-      couriersPageLimit,
-      pageNumber
-    );
+
+
+  const fetchCouriersData = async () => {
+    const couriersViewResponse = await CouriersApiUtil.viewAllCouriers();
     console.log("couriersViewResponse:", couriersViewResponse);
 
     if (couriersViewResponse.hasError) {
       console.log("Cant fetch couriers -> ", couriersViewResponse.errorMessage);
     } else {
       console.log("res -> ", couriersViewResponse);
-      message.success(couriersViewResponse.message, 3);
-      setCouriersData(
-        couriersViewResponse.courier.data || couriersViewResponse.courier
-      );
+      if (mounted) {     //imp if unmounted
+        message.success(couriersViewResponse.message, 3);
+        setCouriersData(
+          couriersViewResponse.courier.data || couriersViewResponse.courier
+        );
+      }
     }
   };
 
@@ -132,34 +136,38 @@ function Sell() {
       setLoading(false);
     } else {
       console.log("res -> ", productsDiscountsViewResponse);
-      message.success(productsDiscountsViewResponse.message, 3);
-      /*-------for filtering products--------*/
-      var products =
-        productsDiscountsViewResponse.products.data ||
-        productsDiscountsViewResponse.products;
 
-      products.forEach((e) => {
-        e.original_sale_price = e.product_sale_price;
-        e.product_sale_price = parseFloat(e.discounted_price).toFixed(2);
-      });
+      if (mounted) {     //imp if unmounted
+        message.success(productsDiscountsViewResponse.message, 3);
+        /*-------for filtering products--------*/
+        var products =
+          productsDiscountsViewResponse.products.data ||
+          productsDiscountsViewResponse.products;
 
-      for (let i in products) {
-        var searchName = products[i].product_name;
-        if (Helpers.var_check(products[i].product_variant1_value)) {
-          searchName += " / " + products[i].product_variant1_value;
+        products.forEach((e) => {
+          e.original_sale_price = e.product_sale_price;
+          e.product_sale_price = parseFloat(e.discounted_price).toFixed(2);
+        });
+
+        for (let i in products) {
+          var searchName = products[i].product_name;
+          if (Helpers.var_check(products[i].product_variant1_value)) {
+            searchName += " / " + products[i].product_variant1_value;
+          }
+          if (Helpers.var_check(products[i].product_variant2_value)) {
+            searchName += " / " + products[i].product_variant2_value;
+          }
+          products[i].searchName = searchName;
+          //products[i].qty = 0;   //imp but not set here ,set at addorder
+          products[i].original_tax_value = products[i].tax_value;
         }
-        if (Helpers.var_check(products[i].product_variant2_value)) {
-          searchName += " / " + products[i].product_variant2_value;
-        }
-        products[i].searchName = searchName;
-        //products[i].qty = 0;   //imp but not set here ,set at addorder
-        products[i].original_tax_value = products[i].tax_value;
+
+        setRegistereProductsData(products);
+
+        /*-------for filtering products--------*/
+        //setRegistereProductsData(productsDiscountsViewResponse.products);
       }
 
-      setRegistereProductsData(products);
-
-      /*-------for filtering products--------*/
-      //setRegistereProductsData(productsDiscountsViewResponse.products);
       setLoading(false);
     }
   };
@@ -519,82 +527,86 @@ function Sell() {
     /*-----imp to call sync----*/
   };
 
-  ////////////////imp funcyionality////////////////////
-  ////////////////imp funcyionality////////////////////
+  
 
+   ////////////////imp functionality////////////////////
+
+  // Invoice Sync Function
   const sync = async () => {
 
-    var userData = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
-    userData = userData.data ? userData.data : null;
-    //console.log(userData);
     var localInvoiceQueue = getSellInvoiceDataFromLocalStorage(
       Constants.SELL_INVOICE_QUEUE_KEY
     );
-    localInvoiceQueue = localInvoiceQueue.data ? localInvoiceQueue.data : null;
-    console.log(localInvoiceQueue);
 
-    if (Helpers.var_check(localInvoiceQueue) && localInvoiceQueue.length > 0) {
-      //setSyncStatus(true);
-      /*---------------register-invoice-Data------------------------*/
-      /*---------------register-invoice-Data------------------------*/
-      $.ajax({
-        type: "POST",
-        url: UrlConstants.SALES.REGISTER_INVOICE,
-        dataType: "json",
-        headers: {
-          Authorization: userData.auth_token,
-          "Content-Type": "application/json",
-        },
-        data: JSON.stringify({
-          dataArray: localInvoiceQueue,
-        }),
-        success: function (res) {
-          console.log(res);
-          var index = -1;
-          var invoicesData = res.Invoices_added;
-          for (let i in invoicesData) {
-            for (let i2 in localInvoiceQueue) {
-              if (invoicesData[i] == localInvoiceQueue[i2].invoiceNo) {
-                index = i2;
-                break;
-              }
-            }
-            if (index != -1) {
-              localInvoiceQueue.splice(index, 1);
-              saveDataIntoLocalStorage(
-                Constants.SELL_INVOICE_QUEUE_KEY,
-                localInvoiceQueue
-              );
-              console.log("found add index", index);
+    localInvoiceQueue = localInvoiceQueue.data
+      ? localInvoiceQueue.data
+      : null;
+
+    //console.log(localInvoiceQueue);
+
+    if (
+      Helpers.var_check(localInvoiceQueue) &&
+      localInvoiceQueue.length > 0
+    ) {
+
+      setSyncStatus(true);
+      const registerInvoiceResponse = await SalesApiUtil.registerInvoice(localInvoiceQueue);
+      console.log(
+        " registerInvoiceResponse:",
+        registerInvoiceResponse
+      );
+
+      if (registerInvoiceResponse.hasError) {
+        console.log(
+          "Cant add registered Invoice Data -> ",
+          registerInvoiceResponse.errorMessage
+        );
+        message.error(registerInvoiceResponse.errorMessage, 3);
+        setSyncStatus(false);
+        console.log("Fail");
+        setTimeout(sync, 3000);
+
+      }
+      else {
+        var index = -1;
+        var invoicesData = registerInvoiceResponse.Invoices_added;
+        for (let i in invoicesData) {
+          for (let i2 in localInvoiceQueue) {
+            if (
+              invoicesData[i] ==
+              localInvoiceQueue[i2].invoiceNo
+            ) {
+              index = i2;
+              break;
             }
           }
+          if (index != -1) {
+            localInvoiceQueue.splice(index, 1);
+            saveDataIntoLocalStorage(Constants.SELL_INVOICE_QUEUE_KEY, localInvoiceQueue);
+            console.log(index);
+          }
+        }
 
-          console.log(invoicesData);
-          setTimeout(sync, 3000);
-        },
-        error: function (err) {
-          console.log(err);
-          //setSyncStatus(false);
-          console.log("Fail");
-          setTimeout(sync, 3000);
-        },
-      });
 
-      /*---------------register-invoice-Data------------------------*/
-      /*---------------register-invoice-Data------------------------*/
-    } else {
-      console.log(clearSync);
+        console.log(invoicesData);
+        setTimeout(sync, 3000);
+
+      }
+    }
+
+    else {
       setSyncStatus(false);
       if (clearSync === false) {
         setTimeout(sync, 3000);
       }
       console.log("-- syncing --");
     }
-  };
 
-  ////////////////imp functionality////////////////////
+  }
 
-  ////////////////imp functionality////////////////////
+    ////////////////imp functionality////////////////////
+
+    ////////////////imp functionality////////////////////
 
   function createNewInvoice() {
     ///////////////

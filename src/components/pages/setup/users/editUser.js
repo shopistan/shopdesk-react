@@ -56,7 +56,7 @@ function EditUser(props) {
 
 
     const fetchOutletsData = async (pageLimit = 10, pageNumber = 1) => {
-        const outletsViewResponse = await SetupApiUtil.viewOutlets(outletsPageLimit, pageNumber);
+        const outletsViewResponse = await SetupApiUtil.viewAllOutlets();
         console.log('outletsViewResponse:', outletsViewResponse);
 
         if (outletsViewResponse.hasError) {

@@ -16,9 +16,9 @@ function UserAdd() {
   const [selectedOutlets, setSelectedOutlets] = useState([]);
 
 
-  const fetchOutletsData = async (pageLimit = 10, pageNumber = 1) => {
+  const fetchOutletsData = async () => {
     setLoading(true);
-    const outletsViewResponse = await SetupApiUtil.viewOutlets(pageLimit, pageNumber);
+    const outletsViewResponse = await SetupApiUtil.viewAllOutlets();
     console.log('outletsViewResponse:', outletsViewResponse);
 
     if (outletsViewResponse.hasError) {

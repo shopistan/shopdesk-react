@@ -35,6 +35,7 @@ const urls = {
   },
   COURIERS: {
     VIEW: BASE_URL + '/api/couriers/view',
+    VIEW_ALL: BASE_URL + '/api/couriers/viewAll',
     ADD_COURIER: BASE_URL + '/api/couriers/add',
     EDIT_COURIER: BASE_URL + '/api/couriers/edit',
     DELETE_COURIER: BASE_URL + '/api/couriers/delete',
@@ -74,6 +75,7 @@ const urls = {
   },
   SETUP: {
     VIEW: BASE_URL + '/api/stores/view',
+    VIEW_ALL: BASE_URL + '/api/stores/viewAll',
     VIEW_USERS: BASE_URL + '/api/users/viewUsers',
     VIEW_TEMPLATES: BASE_URL + '/api/templates/view',
     ADD_OUTLET: BASE_URL + '/api/stores/add',

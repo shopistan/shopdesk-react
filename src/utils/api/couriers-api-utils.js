@@ -52,6 +52,18 @@ export const viewCouriers = async (limit, PageNumber) => {
     );
 };
 
+
+export const viewAllCouriers = async () => {
+    const url = UrlConstants.COURIERS.VIEW_ALL;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+  
+    return await ApiCallUtil.http(
+        url, //api url
+        callType //calltype
+    );
+};
+
+
 export const deleteCourier = async (courierId) => {
     const formDataPair = {
         id: courierId
