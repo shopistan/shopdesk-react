@@ -47,10 +47,16 @@ const AdjustmentStock = () => {
   const [selectedProductId, setSelectedProductId] = useState("");
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
 
+  var mounted = true;
 
 
   useEffect(() => {
     fetchRegisteredProductsData();
+    
+    return () => {
+      mounted = false;
+    }
+
   }, []);
 
 
@@ -94,27 +100,30 @@ const AdjustmentStock = () => {
     }
     else {
       console.log('res -> ', productsDiscountsViewResponse);
-      message.success(productsDiscountsViewResponse.message, 3);
-      /*-------for filtering products--------*/
-      var products = productsDiscountsViewResponse.products.data
-        || productsDiscountsViewResponse.products;
 
-      for (let i in products) {
-        var searchName = products[i].product_name;
-        if (Helpers.var_check(products[i].product_variant1_value)) {
-          searchName += " / " + products[i].product_variant1_value;
+      if (mounted) {     //imp if unmounted
+        message.success(productsDiscountsViewResponse.message, 3);
+        /*-------for filtering products--------*/
+        var products = productsDiscountsViewResponse.products.data
+          || productsDiscountsViewResponse.products;
+
+        for (let i in products) {
+          var searchName = products[i].product_name;
+          if (Helpers.var_check(products[i].product_variant1_value)) {
+            searchName += " / " + products[i].product_variant1_value;
+          }
+          if (Helpers.var_check(products[i].product_variant2_value)) {
+            searchName += " / " + products[i].product_variant2_value;
+          }
+          products[i].searchName = searchName;
+          //products[i].qty = 0;   //imp but not set here ,set at addorder
         }
-        if (Helpers.var_check(products[i].product_variant2_value)) {
-          searchName += " / " + products[i].product_variant2_value;
-        }
-        products[i].searchName = searchName;
-        //products[i].qty = 0;   //imp but not set here ,set at addorder
+
+        setRegistereProductsData(products);
+
+        /*-------for filtering products--------*/
+        setLoading(false);
       }
-
-      setRegistereProductsData(products);
-
-      /*-------for filtering products--------*/
-      setLoading(false);
 
     }
   }

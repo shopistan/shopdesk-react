@@ -109,6 +109,7 @@ const CouriersTable = (props) => {
           onChange: (page, pageSize) => handlePageChange(page, pageSize),
         }}
         loading={props.tableDataLoading}
+        rowKey="courier_id"
       />
     </Form>
   );

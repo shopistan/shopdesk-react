@@ -45,15 +45,20 @@ const SalesHistory = () => {
   const [localCurrentInvoice, setLocalCurrentInvoice] = useState("");
   const [loading, setLoading] = useState(true);
 
+  var mounted = true;
+
 
   const salesTypeEnum = { PARKED: "1", COMPLETED: "0" }
   const salesHistoryEnum = { CONTINUE: "continue-sales", PROCESS: "process-returns", ALL: "all-sales" }
 
 
-
   useEffect(() => {
-  
-      fetchSalesHistoryData();
+
+    fetchSalesHistoryData();
+
+    return () => {
+      mounted = false;
+    }
 
   }, []);  //imp to render when history prop changes
 
@@ -78,8 +83,8 @@ const SalesHistory = () => {
         var invoiceMethod = entry.invoice_method;
         invoiceMethod = invoiceMethod.toLowerCase();
 
-        return invoiceDate.includes(currValue) || invoiceShowId.includes(currValue) || invoiceUserName.includes(currValue)  || invoiceMethod.includes(currValue);
-      
+        return invoiceDate.includes(currValue) || invoiceShowId.includes(currValue) || invoiceUserName.includes(currValue) || invoiceMethod.includes(currValue);
+
       });
 
       setSelectedTabData(filteredData);
@@ -105,15 +110,16 @@ const SalesHistory = () => {
     }
     else {
       console.log('res -> ', salesHistoryViewResponse);
-      var salesData = salesHistoryViewResponse.invoices.data || salesHistoryViewResponse.invoices;
-      message.success(salesHistoryViewResponse.message, 3);
-      setSalesHistoryData(salesData);
-      setPaginationData(salesHistoryViewResponse.invoices.page || {});
-      /*-------setting continue sales data---------*/
-      handletabChange(currentTab); //imp
-      /*-------setting continue sales data---------*/
-      setLoading(false);
-
+      if (mounted) {     //imp if unmounted
+        var salesData = salesHistoryViewResponse.invoices.data || salesHistoryViewResponse.invoices;
+        message.success(salesHistoryViewResponse.message, 3);
+        setSalesHistoryData(salesData);
+        setPaginationData(salesHistoryViewResponse.invoices.page || {});
+        /*-------setting continue sales data---------*/
+        handletabChange(currentTab); //imp
+        /*-------setting continue sales data---------*/
+        setLoading(false);
+      }
     }
   }
 
@@ -215,7 +221,7 @@ const SalesHistory = () => {
 
 
 
-  const  handleCancelModal = () => {
+  const handleCancelModal = () => {
     setIsViewInvoiceModalVisible(false);
 
   }
@@ -372,7 +378,7 @@ const SalesHistory = () => {
           You can choose to return to that sale to complete it,
               or save that sale and continue with this one.</p>
 
-          
+
         </Modal>
 
         {/*--Modal for navigation to register screen*/}

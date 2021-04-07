@@ -15,6 +15,8 @@ function UserAdd() {
   const [userBrandName, setUserBrandName] = useState("");
   const [selectedOutlets, setSelectedOutlets] = useState([]);
 
+  var mounted = true;
+
 
   const fetchOutletsData = async () => {
     setLoading(true);
@@ -27,9 +29,11 @@ function UserAdd() {
     }
     else {
       console.log('res -> ', outletsViewResponse);
-      message.success(outletsViewResponse.message, 3);
-      setStoresData(outletsViewResponse.outlets.data || outletsViewResponse.outlets);
-      setLoading(false);
+      if (mounted) {     //imp if unmounted
+        message.success(outletsViewResponse.message, 3);
+        setStoresData(outletsViewResponse.outlets.data || outletsViewResponse.outlets);
+        setLoading(false);
+      }
     }
   }
 
@@ -45,8 +49,10 @@ function UserAdd() {
     }
     else {
       console.log('res -> ', getUsernameResponse);
-      setUserBrandName(getUsernameResponse.username);
-      setLoading(false);
+      if (mounted) {     //imp if unmounted
+        setUserBrandName(getUsernameResponse.username);
+        setLoading(false);
+      }
     }
   }
 
@@ -54,6 +60,10 @@ function UserAdd() {
   useEffect(() => {
     fetchOutletsData();
     getUserNameData();
+
+    return () => {
+      mounted = false;
+    }
 
   }, []);
 

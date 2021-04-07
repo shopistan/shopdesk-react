@@ -20,6 +20,7 @@ const TransferInventory = (props) => {
   const [paginationData, setPaginationData] = useState({});
   const [activeStoreId, setActiveStoreId] = useState("");
 
+  var mounted = true;
 
 
   const fetchInventoryTransfersData = async (pageLimit = 10, pageNumber = 1) => {
@@ -32,10 +33,12 @@ const TransferInventory = (props) => {
     }
     else {
       console.log('res -> ', inventoryTransfersViewResponse);
-      message.success(inventoryTransfersViewResponse.message, 3);
-      setData(inventoryTransfersViewResponse.transfer.data || inventoryTransfersViewResponse.transfer);
-      setPaginationData(inventoryTransfersViewResponse.transfer.page || {});
-      setLoading(false);
+      if (mounted) {     //imp if unmounted
+        message.success(inventoryTransfersViewResponse.message, 3);
+        setData(inventoryTransfersViewResponse.transfer.data || inventoryTransfersViewResponse.transfer);
+        setPaginationData(inventoryTransfersViewResponse.transfer.page || {});
+        setLoading(false);
+      }
     }
   }
 
@@ -46,6 +49,10 @@ const TransferInventory = (props) => {
     readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
     if (readFromLocalStorage) {
       setActiveStoreId(readFromLocalStorage.auth.current_store);  //string
+    }
+
+    return () => {
+      mounted = false;
     }
 
   }, []);
