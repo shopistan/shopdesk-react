@@ -39,9 +39,10 @@ const ReturnStock = () => {
   const [selectedProductId, setSelectedProductId] = useState("");
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
 
+  var mounted = true;
+
   //var registeredProductsLimit = Helpers.registeredProductsPageLimit;
   //var suppliersPageLimit = Helpers.suppliersPageLimit;
-
 
 
   useEffect(() => {
@@ -52,6 +53,10 @@ const ReturnStock = () => {
       order_reference_name: `Return - ${moment(new Date()).format("yyyy/MM/DD HH:mm:ss")}`,
     });
     /*-----setting template data to fields value------*/
+
+    return () => {
+      mounted = false;
+    }
 
   }, []);
 
@@ -96,27 +101,30 @@ const ReturnStock = () => {
     }
     else {
       console.log('res -> ', productsDiscountsViewResponse);
-      message.success(productsDiscountsViewResponse.message, 3);
-      /*-------for filtering products--------*/
-      var products = productsDiscountsViewResponse.products.data
-        || productsDiscountsViewResponse.products;
 
-      for (let i in products) {
-        var searchName = products[i].product_name;
-        if (Helpers.var_check(products[i].product_variant1_value)) {
-          searchName += " / " + products[i].product_variant1_value;
+      if (mounted) {     //imp if unmounted
+        message.success(productsDiscountsViewResponse.message, 3);
+        /*-------for filtering products--------*/
+        var products = productsDiscountsViewResponse.products.data
+          || productsDiscountsViewResponse.products;
+
+        for (let i in products) {
+          var searchName = products[i].product_name;
+          if (Helpers.var_check(products[i].product_variant1_value)) {
+            searchName += " / " + products[i].product_variant1_value;
+          }
+          if (Helpers.var_check(products[i].product_variant2_value)) {
+            searchName += " / " + products[i].product_variant2_value;
+          }
+          products[i].searchName = searchName;
+          //products[i].qty = 0;   //imp but not set here ,set at addorder
         }
-        if (Helpers.var_check(products[i].product_variant2_value)) {
-          searchName += " / " + products[i].product_variant2_value;
-        }
-        products[i].searchName = searchName;
-        //products[i].qty = 0;   //imp but not set here ,set at addorder
+
+        setRegistereProductsData(products);
+
+        /*-------for filtering products--------*/
+        setLoading(false);
       }
-
-      setRegistereProductsData(products);
-
-      /*-------for filtering products--------*/
-      setLoading(false);
 
     }
   }
@@ -135,7 +143,9 @@ const ReturnStock = () => {
       );
     } else {
       console.log("res -> ", SuppliersViewResponse);
-      setSuppliersData(SuppliersViewResponse.suppliers.data || SuppliersViewResponse.suppliers);
+      if (mounted) {     //imp if unmounted
+        setSuppliersData(SuppliersViewResponse.suppliers.data || SuppliersViewResponse.suppliers);
+      }
     }
   };
 
@@ -149,8 +159,8 @@ const ReturnStock = () => {
 
   const handleAddProduct = () => {
     var formValues = form.getFieldsValue();
-  
-    if(!selectedProductId){
+
+    if (!selectedProductId) {
       message.warning("please select product!");
       return;
     }
@@ -300,7 +310,7 @@ const ReturnStock = () => {
 
                 {/* Row */}
                 <div className="form__row">
-                <div className="form__col">
+                  <div className="form__col">
                     <Form.Item
                       label="Name / reference"
                       name="order_reference_name"
@@ -438,7 +448,7 @@ const ReturnStock = () => {
 
               </div>
               {/* Form Section */}
-            
+
             </Form>
 
           </div>

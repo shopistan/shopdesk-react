@@ -124,6 +124,7 @@ const SuppliersTable = (props) => {
           onChange: (page, pageSize) => handlePageChange(page, pageSize),
         }}
         loading={props.tableDataLoading}
+        rowKey="supplier_id"
       />
     </Form>
   );

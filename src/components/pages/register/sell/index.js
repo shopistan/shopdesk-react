@@ -68,7 +68,6 @@ function Sell() {
   const { Search } = Input;
   const { Option } = Select;
 
-  var couriersPageLimit = Helpers.couriersPageLimit;
   var mounted = true;
 
 
@@ -98,7 +97,8 @@ function Sell() {
       console.log("unmount");
       clearSync = true;
       mounted = false;
-    };
+    }
+
   }, []);
 
 
@@ -166,9 +166,10 @@ function Sell() {
 
         /*-------for filtering products--------*/
         //setRegistereProductsData(productsDiscountsViewResponse.products);
+
+        setLoading(false);
       }
 
-      setLoading(false);
     }
   };
 

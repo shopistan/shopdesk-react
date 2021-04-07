@@ -17,6 +17,8 @@ function OutletAdd() {
   const [currenciesData, setCurrenciesData] = useState([]);
   const [selectedCurrencyObj, setSelectedCurrencyObj] = useState("");
 
+  var mounted = true;
+
 
   const fetchUsersTemplatesData = async (pageLimit = 50, pageNumber = 1) => {
     const userTemplatesViewResponse = await SetupApiUtil.viewTemplates(pageLimit, pageNumber);
@@ -28,9 +30,11 @@ function OutletAdd() {
     }
     else {
       console.log('res -> ', userTemplatesViewResponse);
-      message.success(userTemplatesViewResponse.message, 3);
-      setTemplatesData(userTemplatesViewResponse.templates.data);
-      setLoading(false);
+      if (mounted) {     //imp if unmounted
+        message.success(userTemplatesViewResponse.message, 3);
+        setTemplatesData(userTemplatesViewResponse.templates.data);
+        setLoading(false);
+      }
     }
   }
 
@@ -38,8 +42,12 @@ function OutletAdd() {
   useEffect(() => {
     fetchUsersTemplatesData();
     var currenciesDataArr = [...currencyData];
-    console.log(currenciesDataArr);
+    //console.log(currenciesDataArr);
     setCurrenciesData(currenciesDataArr);
+
+    return () => {
+      mounted = false;
+    }
 
   }, []);
 

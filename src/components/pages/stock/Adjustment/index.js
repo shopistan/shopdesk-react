@@ -12,6 +12,7 @@ const  StockAdjustment = (props) => {
   const [paginationData, setPaginationData] = useState({});
   const [activeStoreId, setActiveStoreId] = useState("");
 
+  var mounted = true;
 
 
   const fetchStockAdjustmentsData = async (pageLimit = 10, pageNumber = 1) => {
@@ -24,16 +25,23 @@ const  StockAdjustment = (props) => {
     }
     else {
       console.log('res -> ', stockAdjustmentsViewResponse);
-      message.success(stockAdjustmentsViewResponse.message, 3);
-      setData(stockAdjustmentsViewResponse.adjustment.data || stockAdjustmentsViewResponse.adjustment);
-      setPaginationData(stockAdjustmentsViewResponse.adjustment.page || {});
-      setLoading(false);
+      if (mounted) {     //imp if unmounted
+        message.success(stockAdjustmentsViewResponse.message, 3);
+        setData(stockAdjustmentsViewResponse.adjustment.data || stockAdjustmentsViewResponse.adjustment);
+        setPaginationData(stockAdjustmentsViewResponse.adjustment.page || {});
+        setLoading(false);
+      }
     }
   }
 
 
   useEffect( () => {
     fetchStockAdjustmentsData();
+    
+    return () => {
+      mounted = false;
+    }
+    
   }, []);
 
 

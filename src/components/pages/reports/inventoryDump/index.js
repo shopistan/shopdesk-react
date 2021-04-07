@@ -11,6 +11,7 @@ const InventoryDump = () => {
   const [inventoryData, setInventoryData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  var mounted = true;
 
 
   const fetchProductsInventoryData = async () => {
@@ -25,12 +26,12 @@ const InventoryDump = () => {
     }
     else {
       console.log('res -> ', productsInventoryResponse);
-      message.success(productsInventoryResponse.message, 3);
-      setInventoryData(productsInventoryResponse.inventory_report);
-      setLoading(false);
-      SetinventoryCount((productsInventoryResponse.inventory_report).length);
-
-
+      if (mounted) {     //imp if unmounted
+        message.success(productsInventoryResponse.message, 3);
+        setInventoryData(productsInventoryResponse.inventory_report);
+        setLoading(false);
+        SetinventoryCount((productsInventoryResponse.inventory_report).length);
+      }
     }
   }
 
@@ -38,6 +39,10 @@ const InventoryDump = () => {
 
   useEffect(() => {
     fetchProductsInventoryData();
+
+    return () => {
+      mounted = false;
+    }
 
   }, []);
 

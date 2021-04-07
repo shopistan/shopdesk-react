@@ -16,6 +16,9 @@ const PurchaseOrder = (props) => {
   const [paginationData, setPaginationData] = useState({});
 
 
+  var mounted = true;
+
+
   const fetchPurchaseOrdersData = async (pageLimit = 10, pageNumber = 1) => {
     const purchaseOrdersViewResponse = await StockApiUtil.viewPurchaseOrders(pageLimit, pageNumber);
     console.log('poViewResponse:', purchaseOrdersViewResponse);
@@ -26,16 +29,23 @@ const PurchaseOrder = (props) => {
     }
     else {
       console.log('res -> ', purchaseOrdersViewResponse);
-      message.success(purchaseOrdersViewResponse.message, 3);
-      setData(purchaseOrdersViewResponse.purchase.data || purchaseOrdersViewResponse.purchase);
-      setPaginationData(purchaseOrdersViewResponse.purchase.page || {});
-      setLoading(false);
+      if (mounted) {     //imp if unmounted
+        message.success(purchaseOrdersViewResponse.message, 3);
+        setData(purchaseOrdersViewResponse.purchase.data || purchaseOrdersViewResponse.purchase);
+        setPaginationData(purchaseOrdersViewResponse.purchase.page || {});
+        setLoading(false);
+      }
     }
   }
 
 
   useEffect(() => {
     fetchPurchaseOrdersData();
+
+    return () => {
+      mounted = false;
+    }
+
   }, []);
 
 
