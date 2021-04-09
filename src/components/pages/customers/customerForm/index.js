@@ -3,7 +3,8 @@ import { Form, Input, Button, Select, message } from 'antd';
 import { useHistory } from 'react-router-dom';
 import {
   getSingleCustomer,
-  updateUserDetails
+  updateUserDetails,
+  addCustomer,
 } from '../../../../utils/api/customer-api-utils';
 import { useEffect } from 'react';
 
@@ -13,7 +14,6 @@ const CustomerForm = (props) => {
   //console.log(props);
   //console.log("hsitory-object",history);
 
-
   const { match = {} } = props;
   const { customer_id = {} } =  match.params;
 
@@ -21,8 +21,6 @@ const CustomerForm = (props) => {
   const [customerDataFields, setCustomerDataFields] = useState([]);
   const [customerData, setCustomerData] = useState({});
   const isEditMode = props.isCustomerEditMode;
-
-  console.log('customer props call is as');
 
 
 
@@ -98,11 +96,32 @@ const CustomerForm = (props) => {
       id: customerData.id
     };
     try {
-      const userDataUpdateResponse = await updateUserDetails(
-        updatedCustomerData
-      );
-      message.success(userDataUpdateResponse.message, 3);
-      goToPage(`/customers/${customer_id}/view`);
+
+      if (isEditMode) {
+        const userDataUpdateResponse = await updateUserDetails(
+          updatedCustomerData
+        );
+        //console.log(userDataUpdateResponse);
+        message.success(userDataUpdateResponse.message, 3);
+        goToPage(`/customers/${customer_id}/view`);
+      }
+      else {
+        const addCustomerData = {
+          name: values.customer_name,
+          email: values.email,
+          phone: values.phone,
+          gender: values.gender,
+          code: values.code,
+          balance: values.balance,
+        };
+
+        const userDataAddResponse = await addCustomer(addCustomerData);
+        //console.log(userDataAddResponse);
+        message.success(userDataAddResponse.message, 3);
+        goToPage('/customers');
+
+      }
+      
     } catch (err) {
       message.err('Unable to update user', 3);
     }

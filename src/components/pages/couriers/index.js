@@ -11,6 +11,7 @@ const Couriers = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [dataSearched, setDataSearched] = useState([]);
   const [paginationData, setPaginationData] = useState({});
 
   const { Option } = Select;
@@ -26,7 +27,7 @@ const Couriers = () => {
       setLoading(true);
       fetchCouriersData(paginationLimit, currentPage);
     } else {
-      const filteredData = data.filter((entry) => {
+      const filteredData = dataSearched.filter((entry) => {
         var courierName = entry.courier_name;
         courierName = courierName.toLowerCase();
         var courierCode = entry.courier_code;
@@ -55,13 +56,34 @@ const Couriers = () => {
     } else {
       console.log("res -> ", couriersViewResponse);
       message.success(couriersViewResponse.message, 3);
-      setData(
-        couriersViewResponse.courier.data || couriersViewResponse.courier
-      );
+      const couriersData = couriersViewResponse.courier.data || couriersViewResponse.courier;
+      /*----------handle data serching response------------*/
+      handledSearchedDataResponse(couriersData);
+      /*-----------handle data serching response-----------*/
+      setData(couriersData);
       setPaginationData(couriersViewResponse.courier.page || {});
       setLoading(false);
     }
   };
+
+
+  
+  function handledSearchedDataResponse(dataResponse) {
+    var newData = [...dataSearched];
+    dataResponse.forEach(item => {
+      var foundObj = newData.find(obj => {
+        return obj.courier_id === item.courier_id;
+      });
+
+      if(!foundObj){
+        newData.push(item);
+      }
+    });
+    //console.log(newData);
+    setDataSearched(newData);
+  }
+
+
 
   useEffect(() => {
     fetchCouriersData();

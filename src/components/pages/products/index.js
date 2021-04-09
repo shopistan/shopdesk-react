@@ -12,6 +12,9 @@ const Products = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  
+
+  var mounted = true;
 
 
   const { Option } = Select;
@@ -47,15 +50,22 @@ const Products = () => {
     }
     else {
       console.log('res -> ', productsViewResponse);
-      message.success(productsViewResponse.message, 3);
-      setData(productsViewResponse.products.data);
-      setPaginationData(productsViewResponse.products.page);
-      setLoading(false);
+      if (mounted) {     //imp if unmounted
+        message.success(productsViewResponse.message, 3);
+        setData(productsViewResponse.products.data);
+        setPaginationData(productsViewResponse.products.page);
+        setLoading(false);
+      }
     }
   }
 
   useEffect( () => {
     fetchProductsData();
+
+    return () => {
+      mounted = false;
+    }
+
   }, []);
 
 

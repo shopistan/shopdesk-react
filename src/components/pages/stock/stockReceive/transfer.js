@@ -28,19 +28,23 @@ const TransferIn = (props) => {
     const [loading, setLoading] = useState(true);
     const [transferData, setTransferData] = useState({});
     const [productsData, setProductsData] = useState([]);
+    const { match = {} } = props;
+    const { transfer_id = {} } =  match !== undefined && match.params;
+
 
 
     useEffect(() => {
-        if (history.location.data === undefined) {
-            history.push({
-                pathname: '/stock-control/inventory-transfers',
-            });
+        if (transfer_id !== undefined) {
+            receiveTransfer(transfer_id);
         }
         else {
-            receiveTransfer(history.location.data.transfer_id);
+            message.error("Transfer Order Id cannot be null", 2);
+            setTimeout(() => {
+                history.goBack();
+            }, 1000);
         }
-
-    }, [history.location.data]);  //imp to render when history prop changes
+        
+    }, []);  //imp to render when history prop changes
 
 
     const receiveTransfer = async (transferId) => {
@@ -59,9 +63,6 @@ const TransferIn = (props) => {
             setLoading(false);
         }
     }
-
-
-    
 
 
     const handleSaveChanges = async (e) => {
