@@ -115,8 +115,8 @@ const SalesHistory = () => {
         message.success(salesHistoryViewResponse.message, 3);
         setSalesHistoryData(salesData);
         setPaginationData(salesHistoryViewResponse.invoices.page || {});
-        /*-------setting continue sales data---------*/
-        handletabChange(currentTab); //imp
+        /*-------setting sales data selection---------*/
+        handletabChangeData(salesData); //imp
         /*-------setting continue sales data---------*/
         setLoading(false);
       }
@@ -125,7 +125,35 @@ const SalesHistory = () => {
 
 
 
+  const handletabChangeData = (salesHistoryDataRecords) => {
+    var filteredData;
+    if (currentTab === salesHistoryEnum.CONTINUE) {
+      console.log("inside");
+      filteredData = salesHistoryDataRecords.filter((sale) => {
+        return sale.invoice_status === salesTypeEnum.PARKED;
+      });
+      console.log(filteredData);
+      setSelectedTabData(filteredData);
+    }
+
+    if (currentTab === salesHistoryEnum.PROCESS) {
+      filteredData = salesHistoryDataRecords.filter((sale) => {
+        return sale.invoice_status === salesTypeEnum.COMPLETED;
+      });
+      setSelectedTabData(filteredData);
+    }
+
+    if (currentTab === salesHistoryEnum.ALL) {
+      setSelectedTabData(salesHistoryDataRecords);
+    }
+
+  };
+
+
+
+
   const handletabChange = (key) => {
+    console.log(key);
     var filteredData;
     if (key === salesHistoryEnum.CONTINUE) {
       filteredData = salesHistoryData.filter((sale) => {

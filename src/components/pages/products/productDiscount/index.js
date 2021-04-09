@@ -14,6 +14,8 @@ const ProductDiscount = () => {
   const [discountedRows, setDiscountedRows] = useState([]);
   const [discountedRowsKeys, setDiscountedRowsKeys] = useState([]);
 
+  var mounted = true;
+
 
   const { Option } = Select;
   const { Search } = Input;
@@ -60,10 +62,12 @@ const ProductDiscount = () => {
     }
     else {
       console.log('res -> ', productsDiscountsViewResponse);
-      message.success(productsDiscountsViewResponse.message, 3);
-      setData(productsDiscountsViewResponse.products.data || productsDiscountsViewResponse.products );
-      //setPaginationData(productsDiscountsViewResponse.products.page || {});
-      setLoading(false);
+      if (mounted) {     //imp if unmounted
+        message.success(productsDiscountsViewResponse.message, 3);
+        setData(productsDiscountsViewResponse.products.data || productsDiscountsViewResponse.products);
+        //setPaginationData(productsDiscountsViewResponse.products.page || {});
+        setLoading(false);
+      }
     }
   }
 
@@ -91,6 +95,11 @@ const ProductDiscount = () => {
 
   useEffect( () => {
     fetchProductsDiscountsData();
+
+    return () => {
+      mounted = false;
+    }
+
   }, []);
 
 

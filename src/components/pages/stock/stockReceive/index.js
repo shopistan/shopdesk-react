@@ -29,19 +29,24 @@ const StockReceive = (props) => {
     const [poData, setPoData] = useState([]);
     const [productsData, setProductsData] = useState([]);
     const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
+    const { match = {} } = props;
+    const { po_id = {} } =  match !== undefined && match.params;
+
+
 
 
     useEffect(() => {
-        if (history.location.data === undefined) {
-            history.push({
-                pathname: '/stock-control/purchase-orders',
-            });
+        if (po_id !== undefined) {
+            receivePurchaseOrders(po_id);
         }
         else {
-            receivePurchaseOrders(history.location.data.purchase_order_id);
+            message.error("Puchase Oder Id cannot be null", 2);
+            setTimeout(() => {
+                history.goBack();
+            }, 1000);
         }
 
-    }, [history.location.data]);  //imp to render when history prop changes
+    }, []);  //imp to render when history prop changes
 
 
     const receivePurchaseOrders = async (purchaseOrderId) => {
@@ -91,7 +96,7 @@ const StockReceive = (props) => {
         receivePurchaseOrderPostData.products = productsData;
         receivePurchaseOrderPostData.total = (productsTotal).toFixed(2);
         receivePurchaseOrderPostData.complete = completeCheck;
-        receivePurchaseOrderPostData.date = moment(new Date()).format("MM/DD/yyyy HH:mm:ss");
+        receivePurchaseOrderPostData.date = moment(new Date()).format("yyyy/MM/DD HH:mm:ss");
         delete receivePurchaseOrderPostData['purchase_order_status'];
 
 

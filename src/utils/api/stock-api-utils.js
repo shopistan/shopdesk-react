@@ -24,15 +24,20 @@ export const viewPurchaseOrders = async (limit, pageNumber) => {
 
 
 export const addReceivePurchaseOrder = async (receivePoData) => {
+    const addReceivedPoFormDataBody = {
+        grn: receivePoData,
+    };
 
-    const addReceivedPoFormDataBody =  $.param({grn: receivePoData});
+    //const addReceivedPoFormDataBody =  $.param({grn: receivePoData});
     const url = UrlConstants.STOCK.ADD_RECEIVE_PO;
     const callType = GenericConstants.API_CALL_TYPE.POST;
+    const headers = { 'Content-Type': 'application/json' };
 
     return await ApiCallUtil.http(
         url, //api url
         callType, //calltype
         addReceivedPoFormDataBody,  //body
+        headers,
     );
 };
 

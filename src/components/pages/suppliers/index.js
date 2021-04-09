@@ -11,6 +11,7 @@ const Suppliers = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [dataSearched, setDataSearched] = useState([]);
   const [paginationData, setPaginationData] = useState({});
   const { Option } = Select;
 
@@ -66,11 +67,33 @@ const Suppliers = () => {
       setLoading(false);
     } else {
       console.log("res -> ", SuppliersViewResponse);
-      setData(SuppliersViewResponse.suppliers.data || SuppliersViewResponse.suppliers);
+      const suppliersData = SuppliersViewResponse.suppliers.data || SuppliersViewResponse.suppliers;
+      /*----------handle data serching response------------*/
+      handledSearchedDataResponse(suppliersData);
+      /*-----------handle data serching response-----------*/
+      setData(suppliersData);
       setPaginationData(SuppliersViewResponse.suppliers.page || {});
       setLoading(false);
     }
   };
+
+
+  function handledSearchedDataResponse(dataResponse) {
+    var newData = [...dataSearched];
+    dataResponse.forEach(item => {
+      var foundObj = newData.find(obj => {
+        return obj.supplier_id === item.supplier_id;
+      });
+
+      if(!foundObj){
+        newData.push(item);
+      }
+    });
+    //console.log(newData);
+    setDataSearched(newData);
+  }
+
+  
 
   useEffect(async () => {
     fetchSuppliersData();

@@ -140,6 +140,28 @@ export const deleteCustomer = async (customerId) => {
 }
 
 
+export const addCustomer = async (newCustomerData) => {
+  const formDataPair = {
+    'customer[name]': newCustomerData.name,
+    'customer[email]': newCustomerData.email,
+    'customer[phone]': newCustomerData.phone,
+    'customer[sex]': newCustomerData.gender,
+    'customer[code]': newCustomerData.code,
+    'customer[balance]': newCustomerData.balance,
+  };
+  const addCustomerFormDataBody = ApiCallUtil.constructFormData(
+    formDataPair
+  );
+  const url = UrlConstants.CUSTOMERS.ADD_CUSTOMER;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+    addCustomerFormDataBody //body
+  );
+};
+
 
 
 

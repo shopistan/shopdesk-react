@@ -14,6 +14,7 @@ const Taxes = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [dataSearched, setDataSearched] = useState([]);
   const [paginationData, setPaginationData] = useState({});
   const { Option } = Select;
 
@@ -49,12 +50,35 @@ const Taxes = () => {
       setLoading(false);
     } else {
       console.log("res -> ", taxesViewResponse);
-      setData(taxesViewResponse.taxes.data || taxesViewResponse.taxes);
+      const taxesData = taxesViewResponse.taxes.data || taxesViewResponse.taxes;
+      /*----------handle data serching response------------*/
+      handledSearchedDataResponse(taxesData);
+      /*-----------handle data serching response-----------*/
+      setData(taxesData);
       message.success(taxesViewResponse.message, 3);
       setPaginationData(taxesViewResponse.taxes.page || {});
       setLoading(false);
     }
   };
+
+
+
+  function handledSearchedDataResponse(dataResponse) {
+    var newData = [...dataSearched];
+    dataResponse.forEach(item => {
+      var foundObj = newData.find(obj => {
+        return obj.tax_id === item.tax_id;
+      });
+
+      if(!foundObj){
+        newData.push(item);
+      }
+    });
+    //console.log(newData);
+    setDataSearched(newData);
+  }
+
+
 
   useEffect(async () => {
     fetchTaxesData();

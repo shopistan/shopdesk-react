@@ -69,7 +69,7 @@ const AppShell = (props) => {
   const menu = (
     <Menu>
       <Menu.Item key='0'>
-        <a>Report Bugs</a>
+        <a href="https://github.com/Shopdesk/Shopdesk-Bugs-and-Issues/issues" target="_BLANK"> Report Bugs</a>
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key='1' onClick={toggleOutlet}>

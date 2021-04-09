@@ -369,26 +369,33 @@ const Routes = () => {
         <PrivateRoute
           exact
           path='/stock-control/purchase-orders/add'
-          component={PurchaseOrder} />
+          component={PurchaseOrder}
+        />
         <PrivateRoute
           exact
           path='/stock-control/stock-adjustments/add'
-          component={StockAdjustment} />
-          <PrivateRoute
-          exact
-          path='/stock-control/return-stock/add'
-          component={ReturnStock} />
-          <PrivateRoute
-          exact
-          path='/stock-control/inventory-transfers/add'
-          component={TransferOut} />
-
-
-        <PrivateRoute exact path='/stock-control/purchase-orders/:id/receive' component={ReceiveStock} />
+          component={StockAdjustment} 
+        />
         <PrivateRoute
           exact
-          path='/stock-control/inventory-transfers/:id/receive'
-          component={ReceiveStockTransfer} />
+          path='/stock-control/return-stock/add'
+          component={ReturnStock}
+        />
+        <PrivateRoute
+          exact
+          path='/stock-control/inventory-transfers/add'
+          component={TransferOut}
+        />
+        <PrivateRoute
+          exact
+          path='/stock-control/purchase-orders/:po_id/receive'
+          component={(props) =>  <ReceiveStock {...props} />}
+        />
+        <PrivateRoute
+          exact
+          path='/stock-control/inventory-transfers/:transfer_id/receive'
+          component={(props) =>  <ReceiveStockTransfer {...props} />}
+        />
         <PrivateRoute exact path='/setup/users' component={Setup} />
         <PrivateRoute exact path='/setup/outlets' component={Setup} />
         <PrivateRoute

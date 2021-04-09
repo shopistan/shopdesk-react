@@ -11,6 +11,7 @@ const Categories = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [dataSearched, setDataSearched] = useState([]);
   const [paginationData, setPaginationData] = useState({});
   const { Option } = Select;
 
@@ -25,7 +26,7 @@ const Categories = () => {
       setLoading(true);
       fetchCategoriesData(paginationLimit, currentPage);
     } else {
-      const filteredData = data.filter((entry) => {
+      const filteredData = dataSearched.filter((entry) => {
         var item_name = entry.category_name;
         item_name = item_name.toLowerCase();
         return item_name.includes(currValue);
@@ -52,11 +53,34 @@ const Categories = () => {
       setLoading(false);
     } else {
       console.log("res -> ", categoriesViewResponse);
-      setData(categoriesViewResponse.categories.data || categoriesViewResponse.categories );
+      const categoriesData = categoriesViewResponse.categories.data || categoriesViewResponse.categories;
+      /*----------handle data serching response------------*/
+      handledSearchedDataResponse(categoriesData);
+      /*-----------handle data serching response-----------*/
+      setData(categoriesData);
       setPaginationData(categoriesViewResponse.categories.page || {});
       setLoading(false);
     }
   };
+
+
+
+  function handledSearchedDataResponse(dataResponse) {
+    var newData = [...dataSearched];
+    dataResponse.forEach(item => {
+      var foundObj = newData.find(obj => {
+        return obj.category_id === item.category_id;
+      });
+
+      if(!foundObj){
+        newData.push(item);
+      }
+    });
+    //console.log(newData);
+    setDataSearched(newData);
+  }
+
+
 
   useEffect(async () => {
     fetchCategoriesData();
