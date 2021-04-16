@@ -210,6 +210,22 @@ export const viewTemplates = async () => {
   );
 };
 
+
+
+export const viewAllTemplates = async () => {
+
+  const url = UrlConstants.SETUP.VIEW_ALL_TEMPLATES;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+  );
+};
+
+
+
+
 export const getTemplate = async (templateId) => {
   const formDataPair = {
     template_id: templateId,

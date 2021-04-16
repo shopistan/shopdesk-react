@@ -69,6 +69,11 @@ import ReturnStock from "./components/pages/stock/order/returnStock";
 import TransferOut from "./components/pages/stock/order/transferInventory";
 import EcommerceOrders from "./components/pages/ecommerce/orders";
 import InventorySync from "./components/pages/ecommerce/inventorySync";
+import OeSaleOrderInvoiceView from "./components/pages/ecommerce/orders/omniSalesOrders/viewOmniSaleOrder";
+
+
+
+
 
 const Routes = () => {
   const history = useHistory();
@@ -457,13 +462,16 @@ const Routes = () => {
           path="/register/invoice/:invoice_id/view"
           component={(props) => <ViewInvoice {...props} />}
         />
-
         <PrivateRoute
           exact
           path="/ecommerce/orders"
           component={EcommerceOrders}
         />
-
+        <PrivateRoute
+          exact
+          path="/ecommerce/orders/:invoice_id/view"
+          component={(props) => <OeSaleOrderInvoiceView {...props} />}
+        />
         <PrivateRoute
           exact
           path="/ecommerce/inventory-sync"

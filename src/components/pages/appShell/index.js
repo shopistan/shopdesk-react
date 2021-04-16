@@ -141,7 +141,9 @@ const AppShell = (props) => {
                     className='user__dropdown'
                     onClick={(e) => e.preventDefault()}
                   >
-                    <span>Hi, user</span> <DownOutlined />
+                    <span>
+                      {readFromLocalStorage && `Hi, ${readFromLocalStorage.user_info.user_name}`}
+                    </span> <DownOutlined />
                   </a>
                 </Dropdown>
                 <Avatar

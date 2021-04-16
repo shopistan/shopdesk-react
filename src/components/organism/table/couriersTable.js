@@ -100,7 +100,7 @@ const CouriersTable = (props) => {
         rowClassName="editable-row"
         className="table-frame"
         pagination={{
-          total: data && data.length,
+          total: props.paginationData && props.paginationData.totalElements,
           showTotal: (total, range) => showTotalItemsBar(total, range),
           defaultPageSize: 10,
           pageSize: parseInt(props.pageLimit),

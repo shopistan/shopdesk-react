@@ -80,6 +80,7 @@ const urls = {
     VIEW_ALL: BASE_URL + '/api/stores/viewAll',
     VIEW_USERS: BASE_URL + '/api/users/viewUsers',
     VIEW_TEMPLATES: BASE_URL + '/api/templates/view',
+    VIEW_ALL_TEMPLATES: BASE_URL + '/api/templates/viewAll',
     ADD_OUTLET: BASE_URL + '/api/stores/add',
     GET_OUTLET: BASE_URL + '/api/stores/get',
     EDIT_OUTLET: BASE_URL + '/api/stores/edit',
@@ -122,6 +123,16 @@ const urls = {
   },
   DASHBOARD:{
     VIEW_DATA: BASE_URL + '/api/reports/dashboard',
+
+  },
+  ECOMMERCE:{
+    GET_ALL_OMNI_SALES: BASE_URL + '/api/omni_engine/all',
+    VIEW_OE_ORDER: BASE_URL + '/api/omni_engine/getOe',
+    CONFIRM_OE_ORDER: BASE_URL + '/api/omni_engine/confirmOe',
+    CANCEL_OE_ORDER: BASE_URL + '/api/omni_engine/cancelOe',
+    GET_ALL_INVENTORY_SYNC: BASE_URL + '/api/omni_engine/GetAllInventorySync',
+    GET_INVENTORY_DUMP: BASE_URL + '/api/omni_engine/inventoryDump',
+    GET_OE_SALE_ORDERS: BASE_URL + '/api/omni_engine/fetchSaleOrders',
 
   }
 

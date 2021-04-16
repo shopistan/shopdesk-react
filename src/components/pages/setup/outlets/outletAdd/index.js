@@ -20,8 +20,8 @@ function OutletAdd() {
   var mounted = true;
 
 
-  const fetchUsersTemplatesData = async (pageLimit = 50, pageNumber = 1) => {
-    const userTemplatesViewResponse = await SetupApiUtil.viewTemplates(pageLimit, pageNumber);
+  const fetchUsersTemplatesData = async () => {
+    const userTemplatesViewResponse = await SetupApiUtil.viewAllTemplates();
     console.log('userTemplatesViewResponse:', userTemplatesViewResponse);
 
     if (userTemplatesViewResponse.hasError) {
@@ -32,7 +32,7 @@ function OutletAdd() {
       console.log('res -> ', userTemplatesViewResponse);
       if (mounted) {     //imp if unmounted
         message.success(userTemplatesViewResponse.message, 3);
-        setTemplatesData(userTemplatesViewResponse.templates.data);
+        setTemplatesData(userTemplatesViewResponse.templates.data || userTemplatesViewResponse.templates);
         setLoading(false);
       }
     }
