@@ -40,8 +40,6 @@ function OutletEdit(props) {
   const { outlet_id = {} } = match !== undefined && match.params;
 
 
-  var templatesPageLimit = Helpers.templatesPageLimit;
-
 
 
   useEffect(() => {
@@ -118,8 +116,8 @@ function OutletEdit(props) {
   }
 
 
-  const fetchUsersTemplatesData = async (pageLimit = 10, pageNumber = 1) => {
-    const userTemplatesViewResponse = await SetupApiUtil.viewTemplates(templatesPageLimit, pageNumber);
+  const fetchUsersTemplatesData = async () => {
+    const userTemplatesViewResponse = await SetupApiUtil.viewAllTemplates();
     console.log('userTemplatesViewResponse:', userTemplatesViewResponse);
 
     if (userTemplatesViewResponse.hasError) {

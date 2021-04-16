@@ -11,6 +11,7 @@ import {
   Input,
   Divider,
   Modal,
+  Pagination,
 }
   from "antd";
 import { PlusCircleOutlined, ProfileOutlined, DownOutlined } from "@ant-design/icons";
@@ -44,6 +45,9 @@ const SalesHistory = () => {
   const [isViewInvoiceModalVisible, setIsViewInvoiceModalVisible] = useState(false);
   const [localCurrentInvoice, setLocalCurrentInvoice] = useState("");
   const [loading, setLoading] = useState(true);
+  const [dataSearched, setDataSearched] = useState([]);
+  const [dataSearchedAccumulate, setDataSearchedAccumulate] = useState([]);
+
 
   var mounted = true;
 
@@ -73,7 +77,7 @@ const SalesHistory = () => {
 
       fetchSalesHistoryData(paginationLimit, currentPage);
     } else {
-      const filteredData = selectedTabData.filter((entry) => {
+      const filteredData = dataSearchedAccumulate.filter((entry) => {
         var invoiceDate = entry.invoice_datetime;
         invoiceDate = invoiceDate.toLowerCase();
         var invoiceShowId = entry.invoice_show_id;
@@ -118,6 +122,9 @@ const SalesHistory = () => {
         /*-------setting sales data selection---------*/
         handletabChangeData(salesData); //imp
         /*-------setting continue sales data---------*/
+         /*----------handle data serching response------------*/
+         handledSearchedDataResponse(salesData);
+         /*-----------handle data serching response-----------*/
         setLoading(false);
       }
     }
@@ -125,14 +132,54 @@ const SalesHistory = () => {
 
 
 
+  function handledSearchedDataResponse(dataResponse) {
+    var newData = [...dataSearched];
+    dataResponse.forEach(item => {
+      var foundObj = newData.find(obj => {
+        return obj.invoice_id === item.invoice_id;
+      });
+
+      if (!foundObj) {
+        newData.push(item);
+      }
+    });
+    
+    setDataSearched(newData);
+    handleAccumulateSearchedData(currentTab, newData); //imp
+  }
+
+
+
+  const handleAccumulateSearchedData = (currentTabKey, searchedDataRecordsAccumulate) => {
+    let filteredData;
+    if (currentTabKey === salesHistoryEnum.CONTINUE) {
+      filteredData = searchedDataRecordsAccumulate.filter((sale) => {
+        return sale.invoice_status === salesTypeEnum.PARKED;
+      });
+      setDataSearchedAccumulate(filteredData);
+    }
+
+    if (currentTabKey === salesHistoryEnum.PROCESS) {
+      filteredData = searchedDataRecordsAccumulate.filter((sale) => {
+        return sale.invoice_status === salesTypeEnum.COMPLETED;
+      });
+      setDataSearchedAccumulate(filteredData);
+    }
+
+    if (currentTabKey === salesHistoryEnum.ALL) {
+      setDataSearchedAccumulate(searchedDataRecordsAccumulate);
+    }
+
+  };
+
+
+
   const handletabChangeData = (salesHistoryDataRecords) => {
     var filteredData;
     if (currentTab === salesHistoryEnum.CONTINUE) {
-      console.log("inside");
       filteredData = salesHistoryDataRecords.filter((sale) => {
         return sale.invoice_status === salesTypeEnum.PARKED;
       });
-      console.log(filteredData);
       setSelectedTabData(filteredData);
     }
 
@@ -153,7 +200,6 @@ const SalesHistory = () => {
 
 
   const handletabChange = (key) => {
-    console.log(key);
     var filteredData;
     if (key === salesHistoryEnum.CONTINUE) {
       filteredData = salesHistoryData.filter((sale) => {
@@ -174,6 +220,7 @@ const SalesHistory = () => {
     }
 
     setCurrentTab(key);
+    handleAccumulateSearchedData(key, dataSearched);  //imp
 
   };
 
@@ -266,11 +313,18 @@ const SalesHistory = () => {
     }
   }
 
+
+
   function handlePageChange(currentPg) {
     setCurrentPage(currentPg);
     setLoading(true);
     fetchSalesHistoryData(paginationLimit, currentPg);
   }
+
+
+  const showTotalItemsBar = (total, range) => {
+    return `showed ${selectedTabData.length} from ${range[0]}-${range[1]} of ${total} items`
+  };
 
 
 
@@ -290,7 +344,7 @@ const SalesHistory = () => {
   );
 
   return (
-    <div className='page categories'>
+    <div className='page sales-history'>
       <div className='page__header'>
         <h1>Sale History</h1>
 
@@ -328,13 +382,29 @@ const SalesHistory = () => {
 
           <div className="action-row__element">
             <Search
-              placeholder="search category"
+              placeholder="search sales history"
               allowClear
               size="middle"
               onChange={onSearch}
             />
           </div>
         </div>
+
+        <div className="sales-history-pagination">
+          <Pagination
+            total={paginationData && paginationData.totalElements}
+            showTotal={(total, range) => showTotalItemsBar(total, range)}
+            defaultPageSize={20}
+            current={currentPage}
+            pageSize={parseInt(paginationLimit)}
+            showSizeChanger={false}
+            position="topRight"
+            onChange={(page, pageSize) => handlePageChange(page, pageSize)}
+
+          />
+        </div>
+
+
         <Divider />
 
         <Tabs activeKey={currentTab} onChange={handletabChange}>
@@ -347,7 +417,7 @@ const SalesHistory = () => {
                 pageLimit={paginationLimit}
                 paginationData={paginationData}
                 tableDataLoading={loading}
-                onClickPageChanger={handlePageChange}
+                //onClickPageChanger={handlePageChange}
                 onInvoiceSelection={handleInvoiceSelection}
                 tableType={salesHistoryEnum.CONTINUE} />
             </div>
@@ -362,7 +432,6 @@ const SalesHistory = () => {
                 tableDataLoading={loading}
                 pageLimit={paginationLimit}
                 paginationData={paginationData}
-                onClickPageChanger={handlePageChange}
                 onInvoiceSelection={handleInvoiceSelection}
                 tableType={salesHistoryEnum.PROCESS} />
             </div>
@@ -377,7 +446,6 @@ const SalesHistory = () => {
                 pageLimit={paginationLimit}
                 paginationData={paginationData}
                 tableDataLoading={loading}
-                onClickPageChanger={handlePageChange}
                 onInvoiceSelection={handleInvoiceSelection}
                 tableType={salesHistoryEnum.ALL} />
             </div>

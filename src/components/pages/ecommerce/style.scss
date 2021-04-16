@@ -7,4 +7,72 @@
       margin-right: 2rem;
     }
   }
+
+  .omni-sales-table{
+    height: 100vh;
+
+  }
 }
+
+.omni-sales-orders{
+
+  .search {
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      margin-right: 2rem;
+    }
+  }
+
+  .omni-sales-pagination{
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+  }
+
+
+}
+
+.omni-sales-orders-view{
+
+  .sale-order-item-content{
+    margin-bottom: 1rem;
+    color: #999;
+  }
+
+  .sale-order-item-content-font{
+    font-weight: 700;
+  }
+
+  .sale-order-details-heading{
+    margin-bottom: 2rem;
+    background: #f3f3f3;
+    padding: 10px;
+    border-radius: 4px;
+  }
+
+  .sale-order-products-heading{
+    background: #f3f3f3;
+    padding: 10px;
+    border-radius: 4px;
+  }
+
+
+  .omni-sale-row-heading{
+    margin-bottom: 2rem;
+    font-size: 1.4rem;
+  }
+
+}
+
+@media print {
+  .ant-layout-sider-children,
+  .header,
+  .page__header__buttons,
+  .back-btn {
+      display: none;
+  }
+}
+
+
+

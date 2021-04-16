@@ -40,8 +40,10 @@ const SideMenu = () => {
     reports: "reports",
     setup: "setup",
     stock: "stock-control",
+    ecommerce: "ecommerce",
   };
   var adminUser = false;
+  var storeEcommerce = false;
 
 
   var readFromLocalStorage = getDataFromLocalStorage("user");
@@ -58,6 +60,9 @@ const SideMenu = () => {
       checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
     ) {
       authenticateDashboard = true;
+      if(readFromLocalStorage.auth.store_ecommerce && readFromLocalStorage.auth.store_ecommerce === "true" ){
+        storeEcommerce = true;
+      }
     } else {
       authenticateDashboard = false;
     }
@@ -168,6 +173,18 @@ const SideMenu = () => {
             })
           }
         }
+        else if (e.key === "saleOrders" || e.key === "InventorySync") {
+          if (e.key === "saleOrders") {
+            history.push({
+              pathname: '/ecommerce/orders',
+            })
+          }
+          if (e.key === "InventorySync") {
+            history.push({
+              pathname: '/ecommerce/inventory-sync',
+            })
+          }
+        }
       }}
     >
       {readFromLocalStorage && (
@@ -215,10 +232,11 @@ const SideMenu = () => {
             <Menu.Item key="inventoryTransfers">Inventory Transfers</Menu.Item>
             <Menu.Item key="stockAdjustments">Stock Adjustment</Menu.Item>
           </SubMenu>}
+          {((userRouteScopes.includes(appRouteScopes.ecommerce) || adminUser) && storeEcommerce ) &&
           <SubMenu key="ecommerce" icon={<ApartmentOutlined />} title="Ecommerce">
-            <Menu.Item key="13">Orders</Menu.Item>
-            <Menu.Item key="14">Inventory Sync</Menu.Item>
-          </SubMenu>
+            <Menu.Item key="saleOrders">Orders</Menu.Item>
+            <Menu.Item key="InventorySync">Inventory Sync</Menu.Item>
+          </SubMenu>}
           {(userRouteScopes.includes(appRouteScopes.reports) || adminUser) &&
           <SubMenu key="reports" icon={<BarChartOutlined />} title="Reports">
             <Menu.Item key="salesSummary">Sales Summary</Menu.Item>

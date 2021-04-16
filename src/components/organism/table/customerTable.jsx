@@ -48,28 +48,22 @@ const CustomersTable = (props) => {
     {
       title: 'Name',
       dataIndex: 'customer_name',
-      width: '50%',
-      responsive: ['sm']
     },
     {
       title: 'Phone',
       dataIndex: 'customer_phone',
-      responsive: ['sm']
     },
     {
       title: 'Email',
       dataIndex: 'customer_email',
-      responsive: ['sm']
     },
     {
       title: 'Balance',
       dataIndex: 'balance',
-      responsive: ['sm']
     },
     {
       title: 'operation',
       dataIndex: 'operation',
-      responsive: ['sm'],
       render: (_, record) => {
         return (
           <div className='action-btns'>
@@ -107,6 +101,7 @@ const CustomersTable = (props) => {
         id={props.tableId} //imp to pass table id here
         rowClassName='editable-row'
         className='table-frame'
+        rowKey="customer_id"
         pagination={{
           total: data && data.length,
           showTotal: (total, range) => showTotalItemsBar(total, range),

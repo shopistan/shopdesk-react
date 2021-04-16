@@ -31,14 +31,14 @@ const SellHistoryProductsTable = (props) => {
     }, [props.tableData, props.tableDataLoading, props.paginationData]);  /* imp passing props to re-render */
 
 
-    const showTotalItemsBar = (total, range) => {
+    /*const showTotalItemsBar = (total, range) => {
         return `${range[0]}-${range[1]} of ${total} items`
     };
 
     const handlePageChange = (page, pageSize) => {
         setcurrentPageNumber(page)
         props.onClickPageChanger(page);
-    };
+    };*/
 
 
     var columns = null;
@@ -155,7 +155,8 @@ const SellHistoryProductsTable = (props) => {
                 dataSource={data}
                 loading={props.tableDataLoading}
                 rowKey="invoice_id"
-                pagination={{
+                pagination={false}
+                /*pagination={{
                     total: props.paginationData && props.paginationData.totalElements,
                     showTotal: (total, range) => showTotalItemsBar(total, range),
                     defaultPageSize: 20,
@@ -163,7 +164,7 @@ const SellHistoryProductsTable = (props) => {
                     showSizeChanger: false,
                     current: currentPageNumber,
                     onChange: (page, pageSize) => handlePageChange(page, pageSize),
-                }}
+                }}*/
 
             />
         </Form>
