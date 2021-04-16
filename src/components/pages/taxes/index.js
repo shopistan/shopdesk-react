@@ -25,7 +25,7 @@ const Taxes = () => {
       setLoading(true);
       fetchTaxesData(paginationLimit, currentPage);
     } else {
-      const filteredData = data.filter((entry) => {
+      const filteredData = dataSearched.filter((entry) => {
         var taxName = entry.tax_name;
         taxName = taxName.toLowerCase();
         var taxValue = entry.tax_value;

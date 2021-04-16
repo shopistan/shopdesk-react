@@ -26,7 +26,7 @@ const Suppliers = () => {
       setLoading(true);
       fetchSuppliersData(paginationLimit, currentPage);
     } else {
-      const filteredData = data.filter((entry) => {
+      const filteredData = dataSearched.filter((entry) => {
         var supplierName = entry.supplier_name;
         supplierName = supplierName.toLowerCase();
         var supplierContact = entry.supplier_contact_name;
