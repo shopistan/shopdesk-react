@@ -13,6 +13,8 @@ const Customers = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [paginationData, setPaginationData] = useState({});
+
 
   const history = useHistory();
 
@@ -32,7 +34,7 @@ const Customers = () => {
       console.log("res -> ", customersViewResponse);
       message.success(customersViewResponse.message, 3);
       setData(customersViewResponse.Customer.data);
-
+      setPaginationData(customersViewResponse.Customer.page || {});
       setLoading(false);
     }
   };
@@ -147,6 +149,7 @@ const Customers = () => {
         <div className="table">
           <CustomerTable
             pageLimit={paginationLimit}
+            paginationData={paginationData}
             tableData={data}
             tableDataLoading={loading}
             onClickPageChanger={handlePageChange}
