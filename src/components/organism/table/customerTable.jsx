@@ -32,7 +32,8 @@ const CustomersTable = (props) => {
   }, [
     props.tableData,
     props.tableDataLoading,
-    props.currentPageIndex
+    props.currentPageIndex,
+    props.paginationData,
   ]); /* imp passing props to re-render */
 
   // customer_name: "Khizer Younas"
@@ -103,7 +104,7 @@ const CustomersTable = (props) => {
         className='table-frame'
         rowKey="customer_id"
         pagination={{
-          total: data && data.length,
+          total: props.paginationData && props.paginationData.totalElements,
           showTotal: (total, range) => showTotalItemsBar(total, range),
           defaultPageSize: 10,
           pageSize: parseInt(props.pageLimit),

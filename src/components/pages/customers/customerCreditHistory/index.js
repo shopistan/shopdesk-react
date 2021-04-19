@@ -75,7 +75,7 @@ const CustomerCreditHistory = (props) => {
         <VerticalTimeline>
           {creditsHistory.map((singleCreditHistory) => {
             const totalBalance = +singleCreditHistory.balance;
-            const invoiceActualId = singleCreditHistory.invoice_id
+            const invoiceActualId = singleCreditHistory.invoice_id;
             const invoiceId = singleCreditHistory.invoice_show_id
               ? singleCreditHistory.invoice_show_id
               : '';
