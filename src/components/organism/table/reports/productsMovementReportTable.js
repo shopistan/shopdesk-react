@@ -74,7 +74,7 @@ const ProductsMovementReportTable = (props) => {
                         </thead>
                         <tbody>
                             <tr>
-                                <td colspan="3" style={{ backgroundColor: "#eef9fb" }}><b>ORDERED</b></td>
+                                <td colSpan="3" style={{ backgroundColor: "#eef9fb" }}><b>ORDERED</b></td>
                             </tr>
 
                             {data.ordered.map(order => {
@@ -89,7 +89,7 @@ const ProductsMovementReportTable = (props) => {
                             }
 
                             <tr>
-                                <td colspan="3" style={{ backgroundColor: "#eef9fb" }}><b>RECIEVED</b></td>
+                                <td colSpan="3" style={{ backgroundColor: "#eef9fb" }}><b>RECIEVED</b></td>
                             </tr>
 
                             {data.recieved.map(rec => {
@@ -104,7 +104,7 @@ const ProductsMovementReportTable = (props) => {
                             }
 
                             <tr>
-                                <td colspan="3" style={{ backgroundColor: "#eef9fb" }}><b>SOLD</b></td>
+                                <td colSpan="3" style={{ backgroundColor: "#eef9fb" }}><b>SOLD</b></td>
                             </tr>
 
                             {data.sold.map(s => {

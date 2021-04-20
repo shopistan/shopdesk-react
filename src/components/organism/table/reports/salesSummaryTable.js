@@ -332,7 +332,6 @@ const SalesSummaryTable = (props) => {
       ...col,
       onCell: (record) => ({
         record,
-
         dataindex: col.dataIndex,
         title: col.title,
       }),
@@ -359,6 +358,7 @@ const SalesSummaryTable = (props) => {
 
       }}
       loading={props.tableDataLoading}
+      rowKey="invoice_no"
       
     />
   );

@@ -10,7 +10,12 @@ const ProductsInventoryTable = (props) => {
     console.log(range);
     return `${range[0]}-${range[1]} of ${total} items`
   };
-  
+
+
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
 
   useEffect(() => {
     setData(props.tableData);
@@ -22,52 +27,54 @@ const ProductsInventoryTable = (props) => {
 
 
 
-    columns = [
-      {
-        title: "SKU",
-        dataIndex: "sku",
+  columns = [
+    {
+      title: "SKU",
+      dataIndex: "sku",
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+    },
+    {
+      title: "Variant 1",
+      dataIndex: "variant1",
+    },
+    {
+      title: "Variant 2",
+      dataIndex: "variant2",
+    },
+    {
+      title: "Quantity",
+      dataIndex: "quantity",
+    },
+    {
+      title: "Stock Value",
+      dataIndex: "stock_value",
+      render: (_, record) => {
+        let stockValue = parseFloat(record.stock_value).toFixed(2);
+        return (
+          <span> {numberWithCommas(stockValue)} </span>
+        );
       },
-      {
-        title: "Name",
-        dataIndex: "name",
+    },
+    {
+      title: "Item Value",
+      dataIndex: "item_value",
+      render: (_, record) => {
+        let itemValue = parseFloat(record.item_value).toFixed(2);
+        return (
+          <span> {numberWithCommas(itemValue)} </span>
+        );
       },
-      {
-        title: "Variant 1",
-        dataIndex: "quantity",
-      },
-      {
-        title: "Variant 2",
-        dataIndex: "variant2",
-      },
-      {
-        title: "Quantity",
-        dataIndex: "variant2",
-      },
-      {
-        title: "Stock Value",
-        dataIndex: "stock_value",
-        render: (_, record) => {
-            return (
-              <span> {parseFloat(record.stock_value).toFixed(2)} </span>
-            );
-          },
-      },
-      {
-        title: "Item Value",
-        dataIndex: "item_value",
-        render: (_, record) => {
-            return (
-              <span> {parseFloat(record.item_value).toFixed(2)} </span>
-            );
-          },
-      },
-      
-      
-  
-    ];
-  
+    },
 
-  
+
+
+  ];
+
+
+
 
 
 
@@ -80,7 +87,6 @@ const ProductsInventoryTable = (props) => {
       ...col,
       onCell: (record) => ({
         record,
-
         dataindex: col.dataIndex,
         title: col.title,
       }),
@@ -107,7 +113,7 @@ const ProductsInventoryTable = (props) => {
 
       }}
       loading={props.tableDataLoading}
-      
+
     />
   );
 };

@@ -1,8 +1,8 @@
 
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "./sellHistory.scss";
-import { Table, Input, Form, InputNumber, Row, Col, Typography } from "antd";
-import { DeleteOutlined, HistoryOutlined, RollbackOutlined } from "@ant-design/icons";
+import { Table, Form } from "antd";
+import { HistoryOutlined, RollbackOutlined } from "@ant-design/icons";
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 
@@ -139,7 +139,7 @@ const SellHistoryProductsTable = (props) => {
             ...col,
             onCell: (record) => ({
                 record,
-                dataIndex: col.dataIndex,
+                dataindex: col.dataIndex,
                 title: col.title,
                 inputType: col.dataIndex === 'qty' ? 'number' : 'text',
             }),

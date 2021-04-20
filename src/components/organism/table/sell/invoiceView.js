@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect, useContext, useRef } from "react";
-import { Table, Input, Form, InputNumber, Row, Col } from "antd";
+import React, { useState, useEffect } from "react";
+import { Table, Form } from "antd";
 //import "./style.scss";
 
 
@@ -88,7 +88,7 @@ const InvoiceView = (props) => {
             ...col,
             onCell: (record) => ({
                 record,
-                dataIndex: col.dataIndex,
+                dataindex: col.dataIndex,
                 title: col.title,
             }),
         };
