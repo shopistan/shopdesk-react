@@ -12,7 +12,6 @@ const StockTable = (props) => {
 
 
     const showActionDropDown = (record) => {
-        console.log(record);
 
         return (
             <Dropdown overlay={() => actionMenu(record)} trigger={["click"]}>
@@ -273,7 +272,6 @@ const StockTable = (props) => {
             ...col,
             onCell: (record) => ({
                 record,
-
                 dataindex: col.dataIndex,
                 title: col.title,
             }),

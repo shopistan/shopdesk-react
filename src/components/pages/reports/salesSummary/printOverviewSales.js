@@ -49,7 +49,7 @@ const PrintOverviewSales = (props) => {
             </center>
             <hr />
 
-            <table class="print-sales-table sales-summary-invoice" style={{ width: "100%" }}>
+            <table className="print-sales-table sales-summary-invoice" style={{ width: "100%" }}>
                 <tbody>
                     <tr>
                         <td>Cash</td>
@@ -71,7 +71,7 @@ const PrintOverviewSales = (props) => {
                 </tbody>
             </table>
             <hr />
-            <table class="print-sales-table sales-summary-invoice" style={{ width: "100%" }}>
+            <table className="print-sales-table sales-summary-invoice" style={{ width: "100%" }}>
                 <tbody>
                     <tr>
                         <td>Total</td>

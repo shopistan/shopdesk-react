@@ -233,7 +233,7 @@ const CustomerForm = (props) => {
                     rules={[
                       {
                         required: false,
-                        message: 'Please input valid tax ID'
+                        message: 'Please input Balance'
                       }
                     ]}
                   >
@@ -249,7 +249,7 @@ const CustomerForm = (props) => {
                   rules={[
                     {
                       required: true,
-                      message: 'Please input valid email!'
+                      message: 'Please input Code!'
                     }
                   ]}
                 >

@@ -223,6 +223,13 @@ const Routes = () => {
     <div>
       <Switch>
         <PrivateRoute exact path="/dashboard" component={Dashboard} />
+        <Route
+          exact
+          path="/"
+          render={() => (
+              <Redirect to="/dashboard"/>
+          )}
+        ></Route>
         <PrivateRoute exact path="/categories" component={Categories} />
         <PrivateRoute exact path="/suppliers" component={Suppliers} />
         <PrivateRoute

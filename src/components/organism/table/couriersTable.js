@@ -84,7 +84,6 @@ const CouriersTable = (props) => {
       ...col,
       onCell: (record) => ({
         record,
-
         dataindex: col.dataIndex,
         title: col.title,
       }),

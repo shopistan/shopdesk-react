@@ -219,7 +219,6 @@ const ProductsViewNestedTable = (props) => {
             ...col,
             onCell: (record) => ({
                 record,
-
                 dataindex: col.dataIndex,
                 title: col.title,
             }),
@@ -236,6 +235,7 @@ const ProductsViewNestedTable = (props) => {
             dataSource={data}
             pagination={false}
             loading={loading}
+            rowKey="product_id"
         />
 
     );
