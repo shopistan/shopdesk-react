@@ -52,7 +52,7 @@ const TransferInventory = () => {
 
   useEffect(() => {
     fetchRegisteredProductsData();
-    fetchOutletsData();
+    //fetchOutletsData();
     /*-----setting template data to fields value------*/
     form.setFieldsValue({
       order_reference_name: `Transfer - ${moment(new Date()).format("yyyy/MM/DD HH:mm:ss")}`,
@@ -71,6 +71,7 @@ const TransferInventory = () => {
           checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
         ) {
           setCurrentStoreId(readFromLocalStorage.auth.current_store);
+          fetchOutletsData(readFromLocalStorage.auth.current_store);  //imp to call here
         }
       }
       /*-----------set user store id-------------*/
@@ -149,7 +150,7 @@ const TransferInventory = () => {
     }
   }
 
-  const fetchOutletsData = async () => {
+  const fetchOutletsData = async (activeStoreId) => {
     const outletsViewResponse = await SetupApiUtil.viewAllOutlets();
     console.log('outletsViewResponse:', outletsViewResponse);
 
@@ -160,7 +161,11 @@ const TransferInventory = () => {
       console.log('res -> ', outletsViewResponse);
       if (mounted) {     //imp if unmounted
         message.success(outletsViewResponse.message, 3);
-        setOutletsData(outletsViewResponse.outlets.data || outletsViewResponse.outlets);
+        let outletsData = outletsViewResponse.outlets.data || outletsViewResponse.outlets;
+        const filteredOutletsData = outletsData.filter((outlet) => {
+          return outlet.store_id !== activeStoreId;
+        });
+        setOutletsData(filteredOutletsData);
       }
     }
   }

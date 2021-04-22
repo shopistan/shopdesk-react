@@ -76,6 +76,8 @@ const TransferInventory = (props) => {
 
     if ( closeTransferResponse.hasError) {
       console.log('Cant close Purchase Order -> ',  closeTransferResponse.errorMessage);
+      message.error(closeTransferResponse.errorMessage, 3);
+      setIsForceCloseModalVisible(false);
     }
     else {
       console.log('res -> ',  closeTransferResponse);

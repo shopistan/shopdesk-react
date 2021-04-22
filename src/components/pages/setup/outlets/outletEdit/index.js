@@ -8,9 +8,12 @@ import * as SetupApiUtil from '../../../../../utils/api/setup-api-utils';
 import currencyData from "../currencyData.json";
 import * as Helpers from "../../../../../utils/helpers/scripts";
 import Constants from '../../../../../utils/constants/constants';
+import UrlConstants from '../../../../../utils/constants/url-configs';
+import * as ApiCallUtil from '../../../../../utils/api/generic-api-utils';
 import {
   getDataFromLocalStorage,
 } from "../../../../../utils/local-storage/local-store-utils";
+import axios from 'axios';
 
 
 
@@ -35,7 +38,9 @@ function OutletEdit(props) {
   const [userLocalStorageData, setUserLocalStorageData] = useState("");
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [webHookUrlName, setWebHookUrlName] = useState("");
-  const [generatedSecretKey, setGeneratedSecretKey] = useState("secret");
+  const [generatedSecretKey, setGeneratedSecretKey] = useState('●●●●●●●●●●');
+  const [foundStoreObjRandomKey, setFoundStoreObjRandomKey] = useState(null);
+  const [outletOmniSettingsData, setOutletOmniSettingsData] = useState(null);
   const { match = {} } = props;
   const { outlet_id = {} } = match !== undefined && match.params;
 
@@ -101,14 +106,21 @@ function OutletEdit(props) {
         code: selectedStore.currency_code,
         name: selectedStore.currency_name, symbol: selectedStore.currency_symbol
       });
+
+      setFoundStoreObjRandomKey(selectedStore.store_random);
+      let omniSettingsData = {};
+      omniSettingsData.location= selectedStore.store_location_id || ''; 
+      omniSettingsData.brand = selectedStore.store_brand_id || ''; 
+      setOutletOmniSettingsData(omniSettingsData);
+
       /*-----setting template data to fields value------*/
       form.setFieldsValue({
         outlet: selectedStore.store_name,
         currency: selectedStore.currency_code,
         address: selectedStore.store_location,
         template: selectedStore.template_id,
-        location: selectedStore.store_location_id,
-        brand: selectedStore.store_brand_id,
+        location: selectedStore.store_location_id || '',
+        brand: selectedStore.store_brand_id || '',
       });
       /*-----setting template data to fields value------*/
 
@@ -133,33 +145,67 @@ function OutletEdit(props) {
   }
 
 
-  /*const requestUserLoginForNewApiKey = async (values) => {
+  const requestUserLoginForNewApiKey = async (values) => {
     let refreshToken = userLocalStorageData.refresh_token;
     let never_expire = true;
-    const hide = message.loading('Generating Key in progress..', 0);
+    //const hide = message.loading('Generating Key in progress..', 0);
     const loginResponse = await  SetupApiUtil.userLoginForNewApiKey(refreshToken, never_expire);
     if (loginResponse.hasError) {
       const errorMessage = loginResponse.errorMessage;
       console.log('Cant login -> ', errorMessage);
-      setTimeout(hide, 1500);
+      message.error(errorMessage, 3);
+      //setTimeout(hide, 1500);
     } else {
-      const loggedInUserDetails = loginResponse.data;
+      const loggedInUserDetails = loginResponse;
       console.log("Success:", loggedInUserDetails);
-      onSelectOutletForNewApiKey();
-      
+      onSelectOutletForNewApiKey(loggedInUserDetails);
+
     }
 
-  };*/
+  };
 
 
 
-  const onSelectOutletForNewApiKey = async () => {
-    const editStoreId = outlet_id;   //imp vv
-    var foundStoreObj = userLocalStorageData.auth.storeInfo.find(obj => {
-      return obj.store_id === editStoreId
-    });
+  const onSelectOutletForNewApiKey = async (loggedInUserDetails) => {
+    let apiAuthToken = loggedInUserDetails.auth_token;
 
-    if (foundStoreObj) {
+    if (foundStoreObjRandomKey) {
+      const headers = {
+        'Authorization': apiAuthToken,
+      }
+      const formDataPair = {
+        store_random: foundStoreObjRandomKey,
+        type:  Constants.X_API_KEY,
+      };
+      const selectOutletFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+      const hide = message.loading('Generating Key in progress..', 0);
+      await axios.post(UrlConstants.OULETS.SELECT_OUTLET, selectOutletFormDataBody, {
+        headers: headers
+      })
+        .then((res) => {
+          console.log('Select Outlet Response -> ', res);
+          let userSelectOutletResponse = res.data;
+          if (userSelectOutletResponse.hasError) {
+            console.log('Cant Select Outlet -> ', userSelectOutletResponse.errorMessage);
+            message.error(userSelectOutletResponse.errorMessage, 3);
+            setTimeout(hide, 1500);
+          }
+          else {
+            console.log('res -> ', userSelectOutletResponse);
+            setTimeout(hide, 1500);
+            setGeneratedSecretKey(userSelectOutletResponse.api_key);
+            message.success("Secret Key Successfully Generated", 3);
+
+          }
+
+        })
+        .catch((error) => {
+          console.log("AXIOS ERROR: ", error);
+          message.error(error, 3);
+          setTimeout(hide, 1500);
+        })
+
+      /*
       const hide = message.loading('Generating Key in progress..', 0);
       const userSelectOutletResponse = await SetupApiUtil.selectOutletForNewApiKey(foundStoreObj.store_random);
       console.log('userSelectOutletResponse:', userSelectOutletResponse)
@@ -173,8 +219,10 @@ function OutletEdit(props) {
         setGeneratedSecretKey(userSelectOutletResponse.api_key);
         message.success("Secret Key Successfully Generated");
 
-      }
+      } */
+
     }
+
     else { console.log("store not found"); }
 
   }
@@ -245,20 +293,47 @@ function OutletEdit(props) {
     postEditOutletData();
   };
 
-  const handleOmniForm = () => {
-    postEditOutletData(true);
+
+  const handleOmniForm = async () => {
+    var formValues = form.getFieldsValue();
+    console.log("changed", formValues);
+
+    let editOeKeyPostData = {};
+    editOeKeyPostData.brand = formValues.brand; 
+    editOeKeyPostData.location = formValues.location;
+    
+    const hide = message.loading('Saving Changes in progress..', 0);
+    const addOeKeyDataResponse = await SetupApiUtil.addOeKey(editOeKeyPostData);
+    console.log('editOeKeyDataResponse:', addOeKeyDataResponse);
+
+    if (addOeKeyDataResponse.hasError) {
+      console.log('Cant Add Oe Keys Data -> ', addOeKeyDataResponse.errorMessage);
+      setTimeout(hide, 1500);
+    }
+    else {
+      console.log('res -> ', addOeKeyDataResponse);
+      message.success(addOeKeyDataResponse.message, 3);
+      setTimeout(hide, 1000);
+      setTimeout(() => {
+        history.push({
+          pathname: '/outlets',
+        });
+      }, 2000);
+    }
+
   };
 
 
-  const postEditOutletData = async (onmiFormCheck = false) => {
+
+  const postEditOutletData = async () => {
     var formValues = form.getFieldsValue();
     console.log("changed", formValues);
 
 
     var editOutletPostData = {};
     editOutletPostData.store_name = formValues.outlet;
-    if (onmiFormCheck) { editOutletPostData.store_brand_id = formValues.brand; }
-    if (onmiFormCheck) { editOutletPostData.store_location_id = formValues.location; }
+    if (outletOmniSettingsData) { editOutletPostData.store_brand_id = outletOmniSettingsData.brand; }
+    if (outletOmniSettingsData) { editOutletPostData.store_location_id = outletOmniSettingsData.location; }
     editOutletPostData.currency = selectedCurrencyObj;
     editOutletPostData.template_id = formValues.template;
     editOutletPostData.store_random = selectedStoreObj.store_random;
@@ -516,14 +591,15 @@ function OutletEdit(props) {
                     addonAfter={copySecrectButton}
                     value={generatedSecretKey}
                     disabled
-                    type="password"
+                    //type="password"
                   />
 
                   <Button
                     type='primary'
                     icon={<AppstoreAddOutlined />}
                     className='custom-btn custom-btn--primary'
-                    onClick={onSelectOutletForNewApiKey}
+                    onClick={requestUserLoginForNewApiKey}
+
                   >
                     Generate Secret
                   </Button>

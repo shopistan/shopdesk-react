@@ -128,7 +128,7 @@ export const addReceiveTransfersStatus = async (addReceiveTransferStatusData) =>
     const addReceiveTransferStatusFormDataBody = ApiCallUtil.constructFormData(
         addReceiveTransferStatusData
     );
-    const url = UrlConstants.STOCK.RECEIVE_TRANSFER_STATUS;
+    const url = UrlConstants.STOCK.CLOSE_TRANSFER_STATUS;
     const callType = GenericConstants.API_CALL_TYPE.POST;
 
     return await ApiCallUtil.http(
@@ -144,7 +144,7 @@ export const closeTransferInventoryOrder = async (closeTransferInventoryId) => {
     };
 
     const closeTransferInventoryFormDataBody = ApiCallUtil.constructFormData(formDataPair);
-    const url = UrlConstants.STOCK.CLOSE_TRANSFER_INVENTORY;
+    const url = UrlConstants.STOCK.CLOSE_TRANSFER_STATUS;
     const callType = GenericConstants.API_CALL_TYPE.POST;
 
     return await ApiCallUtil.http(

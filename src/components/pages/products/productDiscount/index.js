@@ -152,7 +152,7 @@ const ProductDiscount = () => {
 
 
   const handleSelectedRows = (selectedRowKeys, selectedRows) => {
-    //console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
     setDiscountedRows(selectedRows);
     setDiscountedRowsKeys(selectedRowKeys);
 

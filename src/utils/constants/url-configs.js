@@ -96,6 +96,9 @@ const urls = {
       ADD: BASE_URL + '/api/stores/addWebHook',
       GET: BASE_URL + '/api/stores/getWebHooks',
       DELETE: BASE_URL + '/api/stores/deleteWebHook',
+    },
+    OMNI: {
+      ADD_OE_KEY: BASE_URL + '/api/omni_engine/addOeKey',
     }
   },
   STOCK: {
@@ -110,9 +113,8 @@ const urls = {
     RETURN_STOCK: BASE_URL + '/api/stock_control/addReturn',
     TRANSFER_OUT: BASE_URL + '/api/transfers/add',
     CLOSE_PURCHASE_ORDER:  BASE_URL + '/api/stock_control/closePo',
-    CLOSE_TRANSFER_INVENTORY: BASE_URL + '/api/transfers/status',
+    CLOSE_TRANSFER_STATUS: BASE_URL + '/api/transfers/status',
     RECEIVE_TRANSFER_IN:  BASE_URL + '/api/transfers/getTransfer',
-    RECEIVE_TRANSFER_STATUS: BASE_URL + '/api/transfers/status',
 
   },
   SALES: {  

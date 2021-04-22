@@ -5,14 +5,20 @@ import * as ApiCallUtil from './generic-api-utils';
 import $ from 'jquery';
 
 
-export const viewOutlets = async () => {
+export const viewOutlets = async (limit, PageNumber) => {
+  const formDataPair = {
+    limit: limit,
+    page: PageNumber,
+};
 
+  const viewOutletsFormDataBody = ApiCallUtil.constructFormData(formDataPair);
   const url = UrlConstants.SETUP.VIEW;
   const callType = GenericConstants.API_CALL_TYPE.POST;
 
   return await ApiCallUtil.http(
     url, //api url
     callType, //calltype
+    viewOutletsFormDataBody,  //body
   );
 };
 
@@ -121,14 +127,20 @@ export const selectOutletForNewApiKey = async (storeRandomId) => {
 };
 
 
-export const viewUsers = async () => {
+export const viewUsers = async (limit, PageNumber) => {
+  const formDataPair = {
+    limit: limit,
+    page: PageNumber,
+};
 
+  const viewUsersFormDataBody = ApiCallUtil.constructFormData(formDataPair);
   const url = UrlConstants.SETUP.VIEW_USERS;
   const callType = GenericConstants.API_CALL_TYPE.POST;
 
   return await ApiCallUtil.http(
     url, //api url
     callType, //calltype
+    viewUsersFormDataBody,  //body
   );
 };
 
@@ -199,14 +211,20 @@ export const getUsername = async () => {
 };
 
 
-export const viewTemplates = async () => {
+export const viewTemplates = async (limit, PageNumber) => {
+  const formDataPair = {
+    limit: limit,
+    page: PageNumber,
+};
 
+  const viewTemplatesFormDataBody = ApiCallUtil.constructFormData(formDataPair);
   const url = UrlConstants.SETUP.VIEW_TEMPLATES;
   const callType = GenericConstants.API_CALL_TYPE.POST;
 
   return await ApiCallUtil.http(
     url, //api url
     callType, //calltype
+    viewTemplatesFormDataBody,  //body
   );
 };
 
@@ -339,6 +357,24 @@ export const deleteWebHook = async (webHookId) => {
   return await ApiCallUtil.http(
     url, //api url
     callType, //calltype
+  );
+};
+
+
+export const addOeKey= async (omniSettingsData) => {
+  const formDataPair = {
+    'keys[brand]': omniSettingsData.brand,
+    'keys[location]': omniSettingsData.location
+  };
+
+  const addOeKeyFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+  const url = UrlConstants.SETUP.OMNI.ADD_OE_KEY;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+    addOeKeyFormDataBody, //body
   );
 };
 
