@@ -19,6 +19,8 @@ const Categories = () => {
 
   const { Search } = Input;
 
+  var mounted = true;
+
   const onSearch = async (e) => {
     var currValue = e.target.value;
     currValue = currValue.toLowerCase();
@@ -53,13 +55,15 @@ const Categories = () => {
       setLoading(false);
     } else {
       console.log("res -> ", categoriesViewResponse);
-      const categoriesData = categoriesViewResponse.categories.data || categoriesViewResponse.categories;
-      /*----------handle data serching response------------*/
-      handledSearchedDataResponse(categoriesData);
-      /*-----------handle data serching response-----------*/
-      setData(categoriesData);
-      setPaginationData(categoriesViewResponse.categories.page || {});
-      setLoading(false);
+      if (mounted) {     //imp if unmounted
+        const categoriesData = categoriesViewResponse.categories.data || categoriesViewResponse.categories;
+        /*----------handle data serching response------------*/
+        handledSearchedDataResponse(categoriesData);
+        /*-----------handle data serching response-----------*/
+        setData(categoriesData);
+        setPaginationData(categoriesViewResponse.categories.page || {});
+        setLoading(false);
+      }
     }
   };
 
@@ -84,6 +88,9 @@ const Categories = () => {
 
   useEffect(async () => {
     fetchCategoriesData();
+    return () => {
+      mounted = false;
+    }
   }, []);
 
   function handleChange(value) {
@@ -140,7 +147,7 @@ const Categories = () => {
 
           <div className="action-row__element">
             <Search
-              placeholder="search category"
+              placeholder="search categories"
               allowClear
               //enterButton='Search'
               size="large"

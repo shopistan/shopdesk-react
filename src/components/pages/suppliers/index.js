@@ -19,6 +19,8 @@ const Suppliers = () => {
 
   const { Search } = Input;
 
+  var mounted = true;
+
   const onSearch = async (e) => {
     var currValue = e.target.value;
     currValue = currValue.toLowerCase();
@@ -67,13 +69,15 @@ const Suppliers = () => {
       setLoading(false);
     } else {
       console.log("res -> ", SuppliersViewResponse);
-      const suppliersData = SuppliersViewResponse.suppliers.data || SuppliersViewResponse.suppliers;
-      /*----------handle data serching response------------*/
-      handledSearchedDataResponse(suppliersData);
-      /*-----------handle data serching response-----------*/
-      setData(suppliersData);
-      setPaginationData(SuppliersViewResponse.suppliers.page || {});
-      setLoading(false);
+      if (mounted) {     //imp if unmounted
+        const suppliersData = SuppliersViewResponse.suppliers.data || SuppliersViewResponse.suppliers;
+        /*----------handle data serching response------------*/
+        handledSearchedDataResponse(suppliersData);
+        /*-----------handle data serching response-----------*/
+        setData(suppliersData);
+        setPaginationData(SuppliersViewResponse.suppliers.page || {});
+        setLoading(false);
+      }
     }
   };
 
@@ -97,6 +101,9 @@ const Suppliers = () => {
 
   useEffect(async () => {
     fetchSuppliersData();
+    return () => {
+      mounted = false;
+    }
   }, []);
 
   function handleChange(value) {
@@ -154,7 +161,7 @@ const Suppliers = () => {
 
           <div className="action-row__element">
             <Search
-              placeholder="search supplier"
+              placeholder="search suppliers"
               allowClear
               //enterButton='Search'
               size="large"

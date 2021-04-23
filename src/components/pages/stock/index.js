@@ -21,9 +21,9 @@ function Stock() {
       setCurrentTab(history.location.activeKey);
     }
     else{
-      console.log(window.location.pathname);
+      //console.log(window.location.pathname);
       var path = (window.location.pathname).split("/");
-      console.log(path);
+      //console.log(path);
       setCurrentTab(path[2]);
     }
 
@@ -78,7 +78,8 @@ function Stock() {
         <h1>Stock Control</h1>
 
         <div className="page__header__buttons">
-          <Dropdown overlay={OptionsDropdown} trigger={["click"]}>
+          <Dropdown overlay={OptionsDropdown}
+           placement="bottomCenter" trigger={["click"]}>
             <Button
               type="Default"
               icon={<DownOutlined />}

@@ -82,7 +82,7 @@ const AdjustmentStock = () => {
 
 
   const handleSelect = (value, option) => {
-    console.log(option.children);
+    //console.log(option.children);
     setSelectedSearchValue(option.children);
     setSelectedProductId(value);  //passes productId
   };

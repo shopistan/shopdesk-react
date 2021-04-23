@@ -129,7 +129,7 @@ const Routes = () => {
   };
 
   const authRenderWithLayout = (Component, props) => {
-    console.log("props-in-sigin", props);
+    //console.log("props-in-sigin", props);
     var readFromLocalStorage = getDataFromLocalStorage("user");
     readFromLocalStorage = readFromLocalStorage.data
       ? readFromLocalStorage.data
@@ -184,7 +184,7 @@ const Routes = () => {
     }
 
     if (checkAuthTokenExpiration(authExpirationTokenDate)) {
-      message.info("Logging Out Redirecting....", 5);
+      message.info("Logging Out Redirecting....", 3);
       return <Redirect to="/sign-in" />;
     } else {
       if (userRouteScopes.includes("*")) {

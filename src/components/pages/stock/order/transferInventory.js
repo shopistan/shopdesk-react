@@ -24,7 +24,6 @@ import {
   message,
   Row,
   Col,
-  Switch,
   Divider,
   InputNumber,
 } from "antd";
@@ -105,7 +104,7 @@ const TransferInventory = () => {
 
 
   const handleSelect = (value, option) => {
-    console.log(option.children);
+    //console.log(option.children);
     setSelectedSearchValue(option.children);
     setSelectedProductId(value);  //passes productId
   };
@@ -242,7 +241,7 @@ const TransferInventory = () => {
 
     var transferInventoryPostData = {};
     var clonedProductsPostData = [];
-    console.log("vvimp", productsTableData);
+    //console.log("vvimp", productsTableData);
     productsTableData.forEach((item, index) => {
       clonedProductsPostData.push({ qty: item.qty, selected: item });
     });
@@ -359,13 +358,13 @@ const TransferInventory = () => {
                         },
                       ]}
                     >
-                      <Select>
+                      <Select placeholder="Please Select Outlet">
                         {
                           outlets.map((obj, index) => {
                             return (
-                              <option key={obj.store_id} value={obj.store_id}>
+                              <Option key={obj.store_id} value={obj.store_id}>
                                 {obj.store_name}
-                              </option>
+                              </Option>
                             )
                           })
                         }

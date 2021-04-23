@@ -9,7 +9,6 @@ const CustomersTable = (props) => {
   const history = useHistory();
 
   const handleEdit = (record) => {
-    console.log(record);
     history.push({
       pathname: `/customers/${record.customer_id}/view`,
       data: record // your data array of objects
@@ -17,7 +16,6 @@ const CustomersTable = (props) => {
   };
 
   const showTotalItemsBar = (total, range) => {
-    console.log(range);
     return `${range[0]}-${range[1]} of ${total} items`;
   };
 

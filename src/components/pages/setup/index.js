@@ -19,7 +19,7 @@ const Setup = () => {
       setCurrentTab(history.location.activeKey);
     }
     else {
-      console.log(window.location.pathname);
+      //console.log(window.location.pathname);
       var path = (window.location.pathname).split("/");
       setCurrentTab(path[2]);
     }
@@ -63,7 +63,8 @@ const Setup = () => {
       <div className="page__header">
         <h1>Setup</h1>
         <div className='page__header__buttons'>
-          <Dropdown overlay={SetupMenu} trigger={["click"]}>
+          <Dropdown overlay={SetupMenu} placement="bottomCenter"
+            trigger={["click"]}>
             <Button
               type='Default'
               icon={<DownOutlined />}

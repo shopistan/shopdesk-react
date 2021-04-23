@@ -53,9 +53,7 @@ const SideMenu = () => {
   var authenticateDashboard = false;
   if (readFromLocalStorage) {
     userRouteScopes = readFromLocalStorage.scopes || [];
-    console.log(
-      checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
-    );
+    //console.log(checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication);
     if (
       checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
     ) {

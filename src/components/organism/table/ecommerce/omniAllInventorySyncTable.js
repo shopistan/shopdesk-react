@@ -23,7 +23,6 @@ const OmniAllInventorySyncTable = (props) => {
 
 
     const showTotalItemsBar = (total, range) => {
-        console.log(range);
         return `${range[0]}-${range[1]} of ${total} items`;
     };
 

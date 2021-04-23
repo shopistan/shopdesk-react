@@ -20,6 +20,8 @@ const Couriers = () => {
 
   const { Search } = Input;
 
+  var mounted = true;
+
   const onSearch = async (e) => {
     var currValue = e.target.value;
     currValue = currValue.toLowerCase();
@@ -55,14 +57,16 @@ const Couriers = () => {
       setLoading(false);
     } else {
       console.log("res -> ", couriersViewResponse);
-      message.success(couriersViewResponse.message, 3);
-      const couriersData = couriersViewResponse.courier.data || couriersViewResponse.courier;
-      /*----------handle data serching response------------*/
-      handledSearchedDataResponse(couriersData);
-      /*-----------handle data serching response-----------*/
-      setData(couriersData);
-      setPaginationData(couriersViewResponse.courier.page || {});
-      setLoading(false);
+      if (mounted) {     //imp if unmounted
+        message.success(couriersViewResponse.message, 3);
+        const couriersData = couriersViewResponse.courier.data || couriersViewResponse.courier;
+        /*----------handle data serching response------------*/
+        handledSearchedDataResponse(couriersData);
+        /*-----------handle data serching response-----------*/
+        setData(couriersData);
+        setPaginationData(couriersViewResponse.courier.page || {});
+        setLoading(false);
+      }
     }
   };
 
@@ -87,6 +91,9 @@ const Couriers = () => {
 
   useEffect(() => {
     fetchCouriersData();
+    return () => {
+      mounted = false;
+    }
   }, []);
 
   function handleChange(value) {
@@ -143,7 +150,7 @@ const Couriers = () => {
 
           <div className="action-row__element">
             <Search
-              placeholder="search courier"
+              placeholder="search couriers"
               allowClear
               //enterButton='Search'
               size="large"

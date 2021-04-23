@@ -17,7 +17,7 @@ export default class Joi_sd {
             for(let i in passedSchema) {
                 if(this.schema.includes(i)) {
                     passedCount++;
-                    console.log(i);
+                    //console.log(i);
                 }
             }
             if(schemaCount > passedCount) {

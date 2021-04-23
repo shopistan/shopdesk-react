@@ -118,7 +118,8 @@ const Products = () => {
         <h1>Products</h1>
 
         <div className='page__header__buttons'>
-          <Dropdown overlay={PrductsMenu} trigger={["click"]}>
+          <Dropdown overlay={PrductsMenu} placement="bottomCenter"
+            trigger={["click"]}>
             <Button
               type='Default'
               icon={<DownOutlined />}

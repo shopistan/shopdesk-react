@@ -13,7 +13,6 @@ import {
 
 const CustomerPay = (props) => {
   const { Option } = Select;
-  console.log(props);
 
   const { match = {} } = props;
   const { customer_id = {} } = match.params;
@@ -55,11 +54,11 @@ const CustomerPay = (props) => {
   };
 
   function handleChange(value) {
-    console.log(`selected ${value}`);
+    //console.log(`selected ${value}`);
   }
 
   const onNewBalanceSubmitted = async (values) => {
-    console.log("onNewBalanceSubmitted: ", values);
+    //console.log("onNewBalanceSubmitted: ", values);
     const paymentInfo = {
       type: values.payment_type,
       amount: values.payment_amount,
