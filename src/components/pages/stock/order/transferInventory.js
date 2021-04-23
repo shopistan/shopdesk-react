@@ -24,7 +24,6 @@ import {
   message,
   Row,
   Col,
-  Switch,
   Divider,
   InputNumber,
 } from "antd";
@@ -52,7 +51,7 @@ const TransferInventory = () => {
 
   useEffect(() => {
     fetchRegisteredProductsData();
-    fetchOutletsData();
+    //fetchOutletsData();
     /*-----setting template data to fields value------*/
     form.setFieldsValue({
       order_reference_name: `Transfer - ${moment(new Date()).format("yyyy/MM/DD HH:mm:ss")}`,
@@ -71,6 +70,7 @@ const TransferInventory = () => {
           checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
         ) {
           setCurrentStoreId(readFromLocalStorage.auth.current_store);
+          fetchOutletsData(readFromLocalStorage.auth.current_store);  //imp to call here
         }
       }
       /*-----------set user store id-------------*/
@@ -104,7 +104,7 @@ const TransferInventory = () => {
 
 
   const handleSelect = (value, option) => {
-    console.log(option.children);
+    //console.log(option.children);
     setSelectedSearchValue(option.children);
     setSelectedProductId(value);  //passes productId
   };
@@ -149,7 +149,7 @@ const TransferInventory = () => {
     }
   }
 
-  const fetchOutletsData = async () => {
+  const fetchOutletsData = async (activeStoreId) => {
     const outletsViewResponse = await SetupApiUtil.viewAllOutlets();
     console.log('outletsViewResponse:', outletsViewResponse);
 
@@ -160,7 +160,11 @@ const TransferInventory = () => {
       console.log('res -> ', outletsViewResponse);
       if (mounted) {     //imp if unmounted
         message.success(outletsViewResponse.message, 3);
-        setOutletsData(outletsViewResponse.outlets.data || outletsViewResponse.outlets);
+        let outletsData = outletsViewResponse.outlets.data || outletsViewResponse.outlets;
+        const filteredOutletsData = outletsData.filter((outlet) => {
+          return outlet.store_id !== activeStoreId;
+        });
+        setOutletsData(filteredOutletsData);
       }
     }
   }
@@ -237,7 +241,7 @@ const TransferInventory = () => {
 
     var transferInventoryPostData = {};
     var clonedProductsPostData = [];
-    console.log("vvimp", productsTableData);
+    //console.log("vvimp", productsTableData);
     productsTableData.forEach((item, index) => {
       clonedProductsPostData.push({ qty: item.qty, selected: item });
     });
@@ -354,13 +358,13 @@ const TransferInventory = () => {
                         },
                       ]}
                     >
-                      <Select>
+                      <Select placeholder="Please Select Outlet">
                         {
                           outlets.map((obj, index) => {
                             return (
-                              <option key={obj.store_id} value={obj.store_id}>
+                              <Option key={obj.store_id} value={obj.store_id}>
                                 {obj.store_name}
-                              </option>
+                              </Option>
                             )
                           })
                         }

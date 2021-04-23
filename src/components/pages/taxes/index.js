@@ -18,6 +18,8 @@ const Taxes = () => {
   const [paginationData, setPaginationData] = useState({});
   const { Option } = Select;
 
+  var mounted = true;
+
   const onSearch = async (e) => {
     var currValue = e.target.value;
     currValue = currValue.toLowerCase();
@@ -50,14 +52,16 @@ const Taxes = () => {
       setLoading(false);
     } else {
       console.log("res -> ", taxesViewResponse);
-      const taxesData = taxesViewResponse.taxes.data || taxesViewResponse.taxes;
-      /*----------handle data serching response------------*/
-      handledSearchedDataResponse(taxesData);
-      /*-----------handle data serching response-----------*/
-      setData(taxesData);
-      message.success(taxesViewResponse.message, 3);
-      setPaginationData(taxesViewResponse.taxes.page || {});
-      setLoading(false);
+      if (mounted) {     //imp if unmounted
+        const taxesData = taxesViewResponse.taxes.data || taxesViewResponse.taxes;
+        /*----------handle data serching response------------*/
+        handledSearchedDataResponse(taxesData);
+        /*-----------handle data serching response-----------*/
+        setData(taxesData);
+        message.success(taxesViewResponse.message, 3);
+        setPaginationData(taxesViewResponse.taxes.page || {});
+        setLoading(false);
+      }
     }
   };
 
@@ -82,6 +86,9 @@ const Taxes = () => {
 
   useEffect(async () => {
     fetchTaxesData();
+    return () => {
+      mounted = false;
+    }
   }, []);
 
   function handleChange(value) {
@@ -138,7 +145,7 @@ const Taxes = () => {
 
           <div className="action-row__element">
             <Search
-              placeholder="search category"
+              placeholder="search taxes"
               allowClear
               size="large"
               onChange={onSearch}

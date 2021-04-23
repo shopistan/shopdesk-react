@@ -14,7 +14,6 @@ import { getSingleCustomer } from "../../../../utils/api/customer-api-utils";
 import { useEffect } from "react";
 
 const CustomerProfile = (props) => {
-  console.log(props);
   const { match = {} } = props;
   const { customer_id = {} } = match.params;
   const [customerData, setCustomerData] = useState({});

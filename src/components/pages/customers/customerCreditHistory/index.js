@@ -32,7 +32,7 @@ const CustomerCreditHistory = (props) => {
       customerId
     );
     if (customerCreditHistoryResponse.hasError) {
-      message.success(customerCreditHistoryResponse.message, 3);
+      message.warning(customerCreditHistoryResponse.errorMessage, 3);
       return popPage();
     }
 

@@ -296,14 +296,14 @@ const ProductAdd = () => {
 
   const handleVariants1TagsKeyDown = (event) => {
     if (event.key === "Enter") {
-      console.log("do validate");
+      //console.log("do validate");
       var tags1 = [...variant1Tags];
       if (!tags1.includes(variantTagvalue)) {
         tags1.push(variantTagvalue);
       }
       setVariant1Tags(tags1); //outside if must
     } else {
-      console.log("not enter");
+      //console.log("not enter");
     }
   };
 
@@ -314,8 +314,8 @@ const ProductAdd = () => {
 
   const handleSaleChange = (value) => {
     /*--getting variants combinations--*/
-    console.log("inside");
-    console.log(value);
+    //console.log("inside");
+    //console.log(value);
     setLoading(true);
     var variantsCombinations = ProductsVariantsCombination.calculateVaraintsCombinations(
       variant1Tags,

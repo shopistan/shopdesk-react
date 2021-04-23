@@ -17,7 +17,6 @@ const OmniSalesOrdersTable = (props) => {
 
 
     const viewSaleOrder = (record) => {
-        console.log(record);
         history.push({
             pathname: `/ecommerce/orders/${record.invoice_id}/view`,
         });
@@ -42,7 +41,7 @@ const OmniSalesOrdersTable = (props) => {
         },
         getCheckboxProps: (record) => {
             const rowIndexCheck = record.invoice_status === "4" ? true : false;
-            console.log(rowIndexCheck);
+            //console.log(rowIndexCheck);
             return {
                 disabled: rowIndexCheck   //imp  disable if completed
             };
@@ -59,8 +58,8 @@ const OmniSalesOrdersTable = (props) => {
     columns = [
         {
             title: "Order ID",
-            dataIndex: "invoice_reference_id",
-            //width: 70,
+            //dataIndex: "invoice_reference_id",
+            //width: "30%",
             render: (_, record) => {
                 return (
 
@@ -81,7 +80,7 @@ const OmniSalesOrdersTable = (props) => {
         },
         {
             title: "Status",
-            dataIndex: "invoice_status",
+            //dataIndex: "invoice_status",
             //width: "50%",
             render: (_, record) => {
                 return (
@@ -105,10 +104,10 @@ const OmniSalesOrdersTable = (props) => {
         },
         {
             title: "Dated",
-            dataIndex: "invoice_datetime",
+            //dataIndex: "invoice_datetime",
             //width: "20%",
             render: (_, record) => {
-                return moment(record.invoice_datetime).format("DD MMM, yyyy hh:mm A");
+                return moment(record.invoice_datetime).format("DD MMM, yyyy hh:mm A")
             },
         },
         {
@@ -122,7 +121,7 @@ const OmniSalesOrdersTable = (props) => {
         },
         {
             title: "Shipping Cost",
-            dataIndex: "invoice_shipping_price",
+            //dataIndex: "invoice_shipping_price",
             render: (_, record) => {
                 return (
                     <span>
@@ -133,7 +132,7 @@ const OmniSalesOrdersTable = (props) => {
         },
         {
             title: "Order Total",
-            dataIndex: "sale_total_currency",
+            //dataIndex: "sale_total_currency",
             render: (_, record) => {
                 return (
                     <span>
@@ -144,7 +143,7 @@ const OmniSalesOrdersTable = (props) => {
         },
         {
             title: "Order Total (PKRs)",
-            dataIndex: "sale_total_pkr",
+            //dataIndex: "sale_total_pkr",
             render: (_, record) => {
                 return (
                     <span>
@@ -155,11 +154,11 @@ const OmniSalesOrdersTable = (props) => {
         },
         {
             title: "Discount",
-            dataIndex: "invoice_discount",
+            //dataIndex: "invoice_discount",
             render: (_, record) => {
                 return (
                     <span>
-                        { currency +parseFloat(record.invoice_discount).toFixed(2)}
+                        { currency + parseFloat(record.invoice_discount).toFixed(2)}
                     </span>
                 );
             },

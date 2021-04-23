@@ -18,6 +18,8 @@ const Customers = () => {
 
   const history = useHistory();
 
+  var mounted = true;
+
   const fetchCustomersData = async (pageLimit = 10, pageNumber = 1) => {
     const customersViewResponse = await CustomersApiUtil.viewCustomers(
       pageNumber
@@ -32,10 +34,12 @@ const Customers = () => {
       setLoading(false);
     } else {
       console.log("res -> ", customersViewResponse);
-      message.success(customersViewResponse.message, 3);
-      setData(customersViewResponse.Customer.data);
-      setPaginationData(customersViewResponse.Customer.page || {});
-      setLoading(false);
+      if (mounted) {     //imp if unmounted
+        message.success(customersViewResponse.message, 3);
+        setData(customersViewResponse.Customer.data);
+        setPaginationData(customersViewResponse.Customer.page || {});
+        setLoading(false);
+      }
     }
   };
 
@@ -47,6 +51,9 @@ const Customers = () => {
 
   useEffect(() => {
     fetchCustomersData();
+    return () => {
+      mounted = false;
+    }
   }, []);
 
 

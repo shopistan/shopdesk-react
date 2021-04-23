@@ -105,9 +105,11 @@ const SalesSummary = () => {
   };
 
   const handleRangePicker = (values) => {
-    let startDate = moment(values[0]).format(dateFormat);
-    let endDate = moment(values[1]).format(dateFormat);
-    setselectedDates([startDate, endDate]);
+    if (values) {
+      let startDate = moment(values[0]).format(dateFormat);
+      let endDate = moment(values[1]).format(dateFormat);
+      setselectedDates([startDate, endDate]);
+    }
   };
 
   function download_csv(csv, filename) {

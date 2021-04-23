@@ -98,7 +98,7 @@ const PurchaseOrder = () => {
   const handleSelect = (value, option) => {
     //let productId = value.split('-');
     //console.log(value);
-    console.log(option.children);
+    //console.log(option.children);
     setSelectedSearchValue(option.children);  //searchName
     setSelectedProductId(value);  //passes productId
   };
@@ -340,7 +340,7 @@ const PurchaseOrder = () => {
     var addPurchaseOrderPostData = {};
     //var clonedProducts = JSON.parse(JSON.stringify(productsTableData));
     var clonedProductsPostData = [];
-    console.log("vvimp", productsTableData);
+    //console.log("vvimp", productsTableData);
     productsTableData.forEach((item, index) => {
       clonedProductsPostData.push({ qty: item.qty, selected: item });
     });
@@ -502,9 +502,9 @@ const PurchaseOrder = () => {
                         {
                           suppliers.map((obj, index) => {
                             return (
-                              <option key={obj.supplier_id} value={obj.supplier_id}>
+                              <Option key={obj.supplier_id} value={obj.supplier_id}>
                                 {obj.supplier_name}
-                              </option>
+                              </Option>
                             )
                           })
                         }

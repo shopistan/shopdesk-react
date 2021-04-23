@@ -68,6 +68,8 @@ const PurchaseOrder = (props) => {
 
     if (closePurchaseOrderResponse.hasError) {
       console.log('Cant close Purchase Order -> ', closePurchaseOrderResponse.errorMessage);
+      message.error(closePurchaseOrderResponse.errorMessage, 3);
+      setIsForceCloseModalVisible(false);
     }
     else {
       console.log('res -> ', closePurchaseOrderResponse);

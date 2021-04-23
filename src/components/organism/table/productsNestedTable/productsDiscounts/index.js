@@ -10,21 +10,21 @@ import { Table, message, Button, Input, Form, InputNumber, Typography, Popconfir
 
 const EditableCell = ({
     record,
-    dataIndex,
+    dataindex,
     title,
-    inputType,
+    inputtype,
     editing,
     children,
     ...restProps
 }) => {
-    const inputNode = inputType === 'number' ? <InputNumber className='u-width-100' /> : <Input />;
+    const inputNode = inputtype === 'number' ? <InputNumber className='u-width-100' /> : <Input />;
 
 
     return (
         <td {...restProps}>
             {editing ? (
                 <Form.Item
-                    name={dataIndex}
+                    name={dataindex}
                     style={{ margin: 0 }}
                     /*rules={[
                         {
@@ -229,10 +229,10 @@ const ProductsDiscountsTable = (props) => {
             ...col,
             onCell: (record) => ({
                 record,
-                dataIndex: col.dataIndex,
+                dataindex: col.dataIndex,
                 title: col.title,
                 //handleSave: handleSave,
-                inputType: col.dataIndex === 'discounted_price' ? 'number' : 'text',
+                inputtype: col.dataIndex === 'discounted_price' ? 'number' : 'text',
                 editing: isEditing(record),
             }),
         };

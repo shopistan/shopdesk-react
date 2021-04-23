@@ -140,7 +140,7 @@ function EcommerceOrders() {
       filteredData = omniSalesDataRecords.filter((sale) => {
         return sale.invoice_status === omniSalesOrdersEnum.SALE;
       });
-      console.log(filteredData);
+      //console.log(filteredData);
       setSelectedTabData(filteredData);
     }
 
@@ -152,7 +152,6 @@ function EcommerceOrders() {
     }
 
     if (currentTab === omniSalesTabsEnum.ALL) {
-      console.log("inside");
       setSelectedTabData(omniSalesDataRecords);
     }
 
@@ -161,7 +160,7 @@ function EcommerceOrders() {
 
 
   const handletabChange = (key) => {
-    console.log(key);
+    //console.log(key);
     var filteredData;
     if (key === omniSalesTabsEnum.SALE) {
       filteredData = omniSalesOrdersData.filter((sale) => {

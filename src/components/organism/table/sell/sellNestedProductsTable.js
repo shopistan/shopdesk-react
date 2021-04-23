@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useContext, useRef } from "react";
 //import "./style.scss";
-import { Table, Input, Form, InputNumber, Row, Col, Typography } from "antd";
+import { Table, Input, Form, InputNumber, Row, Col } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useHistory } from 'react-router-dom';
 
@@ -26,10 +26,10 @@ const EditableRow = ({ index, ...props }) => {
 
 const EditableCell = ({
     record,
-    dataIndex,
+    dataindex,
     title,
     handleSave,
-    inputType,
+    inputtype,
     editable,
     children,
     ...restProps
@@ -49,7 +49,7 @@ const EditableCell = ({
 
     const toggleEdit = () => {
         setEditing(!editing);
-        form.setFieldsValue({ [dataIndex]: record[dataIndex] });
+        form.setFieldsValue({ [dataindex]: record[dataindex] });
     };
 
 
@@ -65,7 +65,7 @@ const EditableCell = ({
     };
 
 
-    const inputNode = inputType === 'number' ?
+    const inputNode = inputtype === 'number' ?
         <InputNumber ref={inputRef} onPressEnter={save} onBlur={save} />
         : <Input ref={inputRef} onPressEnter={save} onBlur={save} />;
 
@@ -76,7 +76,7 @@ const EditableCell = ({
         childNode = editing ? (
             <Form.Item
                 style={{ margin: 0 }}
-                name={dataIndex}
+                name={dataindex}
             >
                 {inputNode}
 
@@ -287,10 +287,10 @@ const SellNestedProductsTable = (props) => {
             ...col,
             onCell: (record) => ({
                 record,
-                dataIndex: col.dataIndex,
+                dataindex: col.dataIndex,
                 title: col.title,
                 handleSave: handleSave,
-                inputType: col.dataIndex === 'qty' ? 'number' : 'text',
+                inputtype: col.dataIndex === 'qty' ? 'number' : 'text',
                 editable: col.editable,
             }),
         };

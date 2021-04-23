@@ -96,6 +96,7 @@ function UserAdd() {
 
     if (addUserResponse.hasError) {
       console.log('Cant Add User -> ', addUserResponse.errorMessage);
+      message.warning(addUserResponse.errorMessage, 3);
       setTimeout(hide, 1500);
     }
     else {

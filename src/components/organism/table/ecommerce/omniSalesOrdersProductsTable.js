@@ -21,10 +21,9 @@ const OmniSalesOrdersProductsTable = (props) => {
     }, [props.tableData, props.tableDataLoading, props.pageLimit]);  /* imp passing props to re-render */
 
 
-    const showTotalItemsBar = (total, range) => {
-        console.log(range);
+    /*const showTotalItemsBar = (total, range) => {
         return `${range[0]}-${range[1]} of ${total} items`;
-      };
+    };*/
 
 
 

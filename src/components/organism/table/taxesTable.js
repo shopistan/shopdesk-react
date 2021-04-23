@@ -9,7 +9,6 @@ const TaxesTable = (props) => {
   const history = useHistory();
 
   const handleDelete = (record) => {
-    console.log(record);
     history.push({
       pathname: `/taxes/${record.tax_id}/delete`,
       data: record, // your data array of objects
@@ -17,7 +16,6 @@ const TaxesTable = (props) => {
   };
 
   const edit = (record) => {
-    console.log(record);
     history.push({
       pathname: `/taxes/${record.tax_id}/edit`,
       data: record, // your data array of objects
@@ -25,7 +23,6 @@ const TaxesTable = (props) => {
   };
 
   const showTotalItemsBar = (total, range) => {
-    console.log(range);
     return `${range[0]}-${range[1]} of ${total} items`;
   };
 
