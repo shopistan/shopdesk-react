@@ -25,7 +25,7 @@ import {
 import * as ProductsApiUtil from '../../../utils/api/products-api-utils';
 import * as TaxexApiUtil from '../../../utils/api/tax-api-utils';
 import * as CategoriesApiUtil from '../../../utils/api/categories-api-utils';
-import UrlConstants from '../../../utils/constants/url-configs';
+//import UrlConstants from '../../../utils/constants/url-configs';
 
 
 const { TextArea } = Input;
@@ -94,7 +94,7 @@ const EditProduct = (props) => {
             /*-----setting products data to fields value------*/
             var pageLimit = 50;
             var pageNumber = 1;
-            const [categoriesRes, taxesRes] = await Promise.all([CategoriesApiUtil.viewCategories(pageLimit, pageNumber),
+            const [categoriesRes, taxesRes] = await Promise.all([CategoriesApiUtil.viewAllCategories(),
             TaxexApiUtil.viewAllTaxes()]);
 
             /*  categories response  */

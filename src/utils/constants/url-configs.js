@@ -19,6 +19,7 @@ const urls = {
   },
   CATEGORIES: {
     VIEW: BASE_URL + '/api/categories/view',
+    VIEW_ALL: BASE_URL + '/api/categories/viewAll',
     ADD_CATEGORY: BASE_URL + '/api/categories/add',
     EDIT_CATEGORY: BASE_URL + '/api/categories/edit',
     DELETE_CATEGORY: BASE_URL + '/api/categories/delete',

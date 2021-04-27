@@ -98,7 +98,7 @@ const ProductAdd = () => {
     var pageLimit = 50;
     var pageNumber = 1;
     const [categoriesRes, taxesRes] = await Promise.all([
-      CategoriesApiUtil.viewCategories(pageLimit, pageNumber),
+      CategoriesApiUtil.viewAllCategories(),
       TaxexApiUtil.viewAllTaxes(),
     ]);
 
