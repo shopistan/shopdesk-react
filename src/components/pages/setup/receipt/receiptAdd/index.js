@@ -17,6 +17,8 @@ function ReceiptAdd() {
   const [productImagePreviewSource, setproductImagePreviewSource] = useState("");
   const [isImageUpload, setIsImageUpload] = useState(false);
   const [fileList, setFileList] = useState([]);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
 
 
   useEffect(() => {
@@ -26,7 +28,7 @@ function ReceiptAdd() {
 
   const onFinish = async (values) => {
     var formValues = form.getFieldsValue();
-    console.log("changed", formValues);
+    //console.log("changed", formValues);
 
     /*if (!productImagePreviewSource) {
       message.error("Please select template Logo", 4);
@@ -41,12 +43,16 @@ function ReceiptAdd() {
     addTemplatePostData.footer = formValues.template_footer;
 
 
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     const hide = message.loading('Saving Changes in progress..', 0);
     const addTemplateResponse = await SetupApiUtil.addTemplate(addTemplatePostData);
     console.log('addTemplateResponse:', addTemplateResponse);
 
     if (addTemplateResponse.hasError) {
       console.log('Cant Add Template -> ', addTemplateResponse.errorMessage);
+      message.error(addTemplateResponse.errorMessage, 3);
+      setButtonDisabled(false);
       setTimeout(hide, 1500);
     }
     else {
@@ -241,7 +247,10 @@ function ReceiptAdd() {
                 Cancel
               </Button>
 
-              <Button type="primary" htmlType="submit">
+              <Button type="primary"
+                htmlType="submit"
+                disabled={buttonDisabled}
+              >
                 Confirm
               </Button>
             </div>

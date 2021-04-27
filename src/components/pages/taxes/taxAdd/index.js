@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Input, Button, InputNumber, message } from "antd";
 import { useHistory } from "react-router-dom";
 import * as TaxApiUtil from "../../../../utils/api/tax-api-utils";
 
 const TaxAdd = () => {
   const history = useHistory();
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
 
   const onFinish = async (values) => {
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     console.log("Success:", values);
     const TaxAddResponse = await TaxApiUtil.addTax(
       values.tax_name,
@@ -16,7 +20,8 @@ const TaxAdd = () => {
     console.log("TaxAddResponse:", TaxAddResponse);
     if (TaxAddResponse.hasError) {
       console.log("Cant add new Tax-> ", TaxAddResponse.errorMessage);
-      message.error("Tax Cannot Added ", 3);
+      message.error(TaxAddResponse.errorMessage, 3);
+      setButtonDisabled(false);
     } else {
       console.log("res -> ", TaxAddResponse);
       message.success(TaxAddResponse.message, 3);
@@ -95,6 +100,7 @@ const TaxAdd = () => {
                     type="primary"
                     htmlType="submit"
                     className="custom-btn custom-btn--primary"
+                    disabled={buttonDisabled}
                   >
                     Add
                   </Button>

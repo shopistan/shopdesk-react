@@ -62,6 +62,8 @@ const ProductAdd = () => {
   const [isImageUpload, setIsImageUpload] = useState(false);
   const [fileList, setFileList] = useState([]);
   const [inclusiveTax, setInclusiveTax] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
 
   const { getFieldDecorator } = form;
 
@@ -97,7 +99,7 @@ const ProductAdd = () => {
     var pageNumber = 1;
     const [categoriesRes, taxesRes] = await Promise.all([
       CategoriesApiUtil.viewCategories(pageLimit, pageNumber),
-      TaxexApiUtil.viewTaxes(pageLimit, pageNumber),
+      TaxexApiUtil.viewAllTaxes(),
     ]);
 
     /*  categories response  */
@@ -203,7 +205,8 @@ const ProductAdd = () => {
 
     //console.log("final-post-data", addProductData);
 
-
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     const hide = message.loading('Saving changes in progress..', 0);
     const AddProductResponse = await ProductsApiUtil.addProduct(addProductData);
     console.log("AddProductResponse :", AddProductResponse);
@@ -212,7 +215,8 @@ const ProductAdd = () => {
         "product Added UnSuccesfully -> ",
         AddProductResponse.errorMessage
       );
-      message.error("cant add product", 3);
+      message.error(AddProductResponse.errorMessage, 3);
+      setButtonDisabled(false);
       setTimeout(hide, 1000);
     } else {
       console.log("res -> ", AddProductResponse);
@@ -445,6 +449,7 @@ const ProductAdd = () => {
                 type="primary"
                 className="product-btn-edit"
                 htmlType="submit"
+                disabled={buttonDisabled}
               >
                 Add Product
               </Button>

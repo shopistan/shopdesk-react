@@ -22,7 +22,7 @@ const ProductUpload = () => {
   const [fileList, setFileList] = useState([]);
 
 
-  const onFinishFailed = (errorInfo: any) => {
+  const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 

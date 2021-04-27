@@ -7,6 +7,7 @@ const EditCategory = (props) => {
     const history = useHistory();
     const [categoryDataFields, setCategoryDataFields] = useState([]);
     const [selectedCategoryName, setSelectedCategoryName] = useState("");
+    const [buttonDisabled, setButtonDisabled] = useState(false);
     const [loading, setLoading] = useState(true);
     const { match = {} } = props;
     const { cat_id = {} } = match !== undefined && match.params;
@@ -52,17 +53,20 @@ const EditCategory = (props) => {
 
 
     const onFinish = async (values) => {
+        if (buttonDisabled === false) {
+            setButtonDisabled(true);} 
         const hide = message.loading('Saving Changes in progress..', 0);
         const categoryEditResponse = await CategoriesApiUtil.editCategory(cat_id, values.categoryName);
         console.log('categoryEditResponse:', categoryEditResponse);
         if (categoryEditResponse.hasError) {
             console.log('Cant Edit a Category -> ', categoryEditResponse.errorMessage);
-            message.error('Category Cant Edit ', 3);
+            message.error(categoryEditResponse.errorMessage, 3);
+            setButtonDisabled(false);
             setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', categoryEditResponse);
-            message.success('Category Editing Succesfull ', 3);
+            message.success(categoryEditResponse.message, 3);
             setTimeout(hide, 1500);
             setTimeout(() => {
                 history.push({
@@ -117,7 +121,8 @@ const EditCategory = (props) => {
 
                                 <div className='form__col form__col--button'>
                                     <Form.Item className='u-width-100'>
-                                        <Button type='primary' htmlType='submit'>
+                                        <Button type='primary' htmlType='submit'
+                                            disabled={buttonDisabled}>
                                             Edit
                                     </Button>
                                     </Form.Item>

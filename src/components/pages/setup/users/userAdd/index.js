@@ -14,6 +14,8 @@ function UserAdd() {
   const [loading, setLoading] = useState(true);
   const [userBrandName, setUserBrandName] = useState("");
   const [selectedOutlets, setSelectedOutlets] = useState([]);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
 
   var mounted = true;
 
@@ -70,7 +72,7 @@ function UserAdd() {
 
   const onFinish = async (values) => {
     var formValues = form.getFieldsValue();
-    console.log("changed", formValues);
+    //console.log("changed", formValues);
 
     if (formValues.password !== formValues.re_password) {
       message.error("Passwords does not match", 4);
@@ -90,13 +92,17 @@ function UserAdd() {
     addUserPostData.role = formValues.role;
     addUserPostData.outlets = selectedOutlets;
 
+    
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     const hide = message.loading('Saving Changes in progress..', 0);
     const addUserResponse = await SetupApiUtil.addUser(addUserPostData);
     console.log('addUserResponse:', addUserResponse);
 
     if (addUserResponse.hasError) {
       console.log('Cant Add User -> ', addUserResponse.errorMessage);
-      message.warning(addUserResponse.errorMessage, 3);
+      message.error(addUserResponse.errorMessage, 3);
+      setButtonDisabled(false);
       setTimeout(hide, 1500);
     }
     else {
@@ -302,7 +308,10 @@ function UserAdd() {
                 Cancel
               </Button>
 
-              <Button type="primary" htmlType="submit">
+              <Button type="primary"
+                htmlType="submit"
+                disabled={buttonDisabled}
+              >
                 Confirm
               </Button>
             </div>

@@ -8,6 +8,7 @@ const EditSupplier = (props) => {
   const [supplierDataFields, setSupplierDataFields] = useState([]);
   const [SupplierData, setSupplierData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
   const { match = {} } = props;
   const { supplier_id = {} } = match !== undefined && match.params;
 
@@ -67,6 +68,8 @@ const EditSupplier = (props) => {
 
 
   const onFinish = async (values) => {
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     const hide = message.loading('Saving Changes in progress..', 0);
     const supplierEditResponse = await SuppliersApiUtil.editSupplier(
       SupplierData.supplier_id,
@@ -80,11 +83,12 @@ const EditSupplier = (props) => {
     console.log("supplierEditResponse:", supplierEditResponse);
     if (supplierEditResponse.hasError) {
       console.log("Cant Edit Supplier -> ", supplierEditResponse.errorMessage);
-      message.error("Cant Edit Supplier", 3);
+      message.error(supplierEditResponse.errorMessage, 3);
+      setButtonDisabled(false);
       setTimeout(hide, 1500);
     } else {
       console.log("res -> ", supplierEditResponse);
-      message.success("Supplier Editing Succesfull ", 3);
+      message.success(supplierEditResponse.message, 3);
       setTimeout(hide, 1500);
       setTimeout(() => {
         history.push({
@@ -205,6 +209,7 @@ const EditSupplier = (props) => {
                     type="primary"
                     htmlType="submit"
                     className="custom-btn custom-btn--primary"
+                    disabled={buttonDisabled}
                   >
                     Edit
                   </Button>

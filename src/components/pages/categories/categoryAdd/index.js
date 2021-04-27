@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Input, Button, message } from "antd";
 import { useHistory } from "react-router-dom";
 import * as CategoriesApiUtil from "../../../../utils/api/categories-api-utils";
@@ -6,8 +6,13 @@ import BackButton from "../../../atoms/backButton";
 
 const CategoryAdd = () => {
   const history = useHistory();
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
+
 
   const onFinish = async (values) => {
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     console.log("Success:", values);
     const categoryAddResponse = await CategoriesApiUtil.addCategory(
       values.category_name
@@ -18,10 +23,11 @@ const CategoryAdd = () => {
         "Cant add new Category -> ",
         categoryAddResponse.errorMessage
       );
-      message.error("Category Cannot Added ", 3);
+      message.error(categoryAddResponse.errorMessage, 3);
+      setButtonDisabled(false);
     } else {
       console.log("res -> ", categoryAddResponse);
-      message.success("Category Succesfull Added ", 3);
+      message.success(categoryAddResponse.message, 3);
       setTimeout(() => {
         history.push({
           pathname: "/categories",
@@ -76,6 +82,7 @@ const CategoryAdd = () => {
                     type="primary"
                     htmlType="submit"
                     className="custom-btn custom-btn--primary"
+                    disabled={buttonDisabled}
                   >
                     Add
                   </Button>

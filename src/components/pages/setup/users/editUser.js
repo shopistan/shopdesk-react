@@ -29,10 +29,9 @@ function EditUser(props) {
     const [userData, setUserData] = useState({});
     const [loading, setLoading] = useState(true);
     const [passwordChangeSwitch, setPasswordChangeSwitch] = useState(false);
+    const [buttonDisabled, setButtonDisabled] = useState(false);
     const { match = {} } = props;
     const { user_id = {} } = match !== undefined && match.params;
-
-    var outletsPageLimit = Helpers.outletsPageLimit;
 
 
 
@@ -118,7 +117,7 @@ function EditUser(props) {
 
     const onFinish = async (values) => {
         var formValues = form.getFieldsValue();
-        console.log("changed", formValues);
+        //console.log("changed", formValues);
 
         if (formValues.password !== formValues.re_password) {
             message.error("Passwords does not match", 4);
@@ -143,17 +142,21 @@ function EditUser(props) {
         editUserPostData.outlets = selectedOutlets;
 
 
+        if (buttonDisabled === false) {
+            setButtonDisabled(true);}
         const hide = message.loading('Saving Changes in progress..', 0);
-        const EditUserResponse = await SetupApiUtil.editUser(editUserPostData);
-        console.log('addUserResponse:', EditUserResponse);
+        const editUserResponse = await SetupApiUtil.editUser(editUserPostData);
+        console.log('addUserResponse:', editUserResponse);
 
-        if (EditUserResponse.hasError) {
-            console.log('Cant Edit User -> ', EditUserResponse.errorMessage);
+        if (editUserResponse.hasError) {
+            console.log('Cant Edit User -> ', editUserResponse.errorMessage);
+            message.error(editUserResponse.errorMessage, 3);
+            setButtonDisabled(false);
             setTimeout(hide, 1500);
         }
         else {
-            console.log('res -> ', EditUserResponse);
-            message.success(EditUserResponse.message, 3);
+            console.log('res -> ', editUserResponse);
+            message.success(editUserResponse.message, 3);
             setTimeout(hide, 1000);
             setTimeout(() => {
                 history.push({
@@ -375,7 +378,10 @@ function EditUser(props) {
                                 Cancel
                             </Button>
 
-                            <Button type="primary" htmlType="submit">
+                            <Button type="primary"
+                                htmlType="submit"
+                                disabled={buttonDisabled}
+                            >
                                 Confirm
                             </Button>
                         </div>

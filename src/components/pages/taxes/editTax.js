@@ -8,6 +8,7 @@ const EditTax = (props) => {
   const [taxDataFields, setTaxDataFields] = useState([]);
   const [selectedTaxData, setSelectedTaxData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
   const { match = {} } = props;
   const { tax_id = {} } = match !== undefined && match.params;
   
@@ -55,6 +56,8 @@ const EditTax = (props) => {
 
 
   const onFinish = async (values) => {
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     const hide = message.loading('Saving Changes in progress..', 0);
     const taxEditResponse = await TaxApiUtil.editTax(
       selectedTaxData.tax_id,
@@ -65,7 +68,8 @@ const EditTax = (props) => {
     console.log("taxEditResponse:", taxEditResponse);
     if (taxEditResponse.hasError) {
       console.log("Cant Edit Tax -> ", taxEditResponse.errorMessage);
-      message.error("Cant Edit Tax", 3);
+      message.error(taxEditResponse.errorMessage, 3);
+      setButtonDisabled(false);
       setTimeout(hide, 1500);
     } else {
       console.log("res -> ", taxEditResponse);
@@ -141,6 +145,7 @@ const EditTax = (props) => {
                       type="primary"
                       htmlType="submit"
                       className="custom-btn custom-btn--primary"
+                      disabled={buttonDisabled}
                     >
                       Edit
                   </Button>

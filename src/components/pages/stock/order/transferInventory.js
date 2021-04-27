@@ -44,6 +44,7 @@ const TransferInventory = () => {
   const [selectedProductId, setSelectedProductId] = useState("");
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
   const [currentStoreId, setCurrentStoreId] = useState("");
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
 
   var mounted = true;
@@ -262,6 +263,8 @@ const TransferInventory = () => {
 
     //console.log("vvimp-final", transferInventoryPostData);
 
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.transferInventory(transferInventoryPostData);
     console.log('TransferOutResponse:', res);
@@ -269,6 +272,7 @@ const TransferInventory = () => {
     if (res.hasError) {
       console.log('Cant Transfer Inventory Stock  -> ', res.errorMessage);
       message.error(res.errorMessage, 3);
+      setButtonDisabled(false);
       setTimeout(hide, 1500);
     }
     else {
@@ -443,7 +447,9 @@ const TransferInventory = () => {
                   <Button
                     type='primary'
                     className='custom-btn custom-btn--primary'
-                    htmlType="submit">
+                    htmlType="submit"
+                    disabled={buttonDisabled}
+                  >
                     Save</Button>
                 </div>
 

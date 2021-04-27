@@ -53,6 +53,8 @@ const PurchaseOrder = () => {
   const [selectedProductId, setSelectedProductId] = useState("");
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
   const [orderDueDate, setOrderDueDate] = useState("");
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  
 
   var mounted = true;
 
@@ -330,7 +332,7 @@ const PurchaseOrder = () => {
 
   const handleSaveChanges = async (e) => {
     var formValues = form.getFieldsValue();
-    console.log("changed", formValues);
+    //console.log("changed", formValues);
 
     if (productsTableData.length === 0) {
       message.error("No Products Added", 4);
@@ -357,6 +359,8 @@ const PurchaseOrder = () => {
 
     //console.log("vvimp-final", clonedProductsPostData);
 
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.addPurchaseOrder(addPurchaseOrderPostData);
     console.log('AddPoResponse:', res);
@@ -364,6 +368,7 @@ const PurchaseOrder = () => {
     if (res.hasError) {
       console.log('Cant Add Purchase Order -> ', res.errorMessage);
       message.error(res.errorMessage, 3);
+      setButtonDisabled(false);
       setTimeout(hide, 1500);
     }
     else {
@@ -658,6 +663,7 @@ const PurchaseOrder = () => {
                     type='primary'
                     className='custom-btn custom-btn--primary'
                     htmlType="submit"
+                    disabled={buttonDisabled}
                   >
                     Save
                 </Button>

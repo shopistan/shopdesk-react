@@ -67,6 +67,19 @@ export const viewTaxes = async (limit, PageNumber) => {
   );
 };
 
+
+export const viewAllTaxes = async () => {
+  const url = UrlConstants.TAX.VIEW_ALL;
+  const callType = GenericConstants.API_CALL_TYPE.POST;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+  );
+};
+
+
+
 export const getTax = async (taxId) => {
   const formDataPair = {
       tax_id: taxId

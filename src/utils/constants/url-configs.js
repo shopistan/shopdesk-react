@@ -11,6 +11,7 @@ const urls = {
   },
   TAX: {
     VIEW: BASE_URL + '/api/taxes/view',
+    VIEW_ALL: BASE_URL + '/api/taxes/viewAll',
     ADD_TAX: BASE_URL + '/api/taxes/add',
     DELETE_TAX: BASE_URL + '/api/taxes/delete',
     EDIT_TAX: BASE_URL + '/api/taxes/edit',

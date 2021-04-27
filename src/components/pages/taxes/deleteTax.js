@@ -9,6 +9,7 @@ const DeleteTax = (props) => {
     const history = useHistory();
     const [selectedTaxData, setSelectedTaxData] = useState({});
     const [loading, setLoading] = useState(true);
+    const [buttonDisabled, setButtonDisabled] = useState(false);
     const { match = {} } = props;
     const { tax_id = {} } = match !== undefined && match.params;
     
@@ -45,6 +46,8 @@ const DeleteTax = (props) => {
 
 
     const handleConfirm = async () => {
+        if (buttonDisabled === false) {
+            setButtonDisabled(true);}
         const hide = message.loading('Saving Changes in progress..', 0);
         const taxDeleteResponse = await TaxApiUtil.deleteTax(selectedTaxData.tax_id);
         console.log('taxDeleteResponse:', taxDeleteResponse);
@@ -52,7 +55,8 @@ const DeleteTax = (props) => {
 
         if (taxDeleteResponse.hasError) {
             console.log('Cant delete Tax -> ', taxDeleteResponse.errorMessage);
-            message.error('Tax deletion UnSuccesfull ', 3);
+            message.error(taxDeleteResponse.errorMessage, 3);
+            setButtonDisabled(false);
         }
         else {
             console.log('res -> ', taxDeleteResponse);
@@ -96,6 +100,7 @@ const DeleteTax = (props) => {
                         <br />
                         <div className='form__row--footer'>
                             <Button type='primary' danger
+                                disabled={buttonDisabled}
                                 onClick={() => handleConfirm()}>
                                 Confirm
                         </Button>

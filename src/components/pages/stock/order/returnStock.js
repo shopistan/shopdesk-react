@@ -38,6 +38,7 @@ const ReturnStock = () => {
   const [selectedSearchValue, setSelectedSearchValue] = useState("");
   const [selectedProductId, setSelectedProductId] = useState("");
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
   var mounted = true;
 
@@ -240,6 +241,8 @@ const ReturnStock = () => {
 
     //console.log("vvimp-final", returnStockPostData);
 
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.returnStock(returnStockPostData);
     console.log('ReturnStockResponse:', res);
@@ -247,6 +250,7 @@ const ReturnStock = () => {
     if (res.hasError) {
       console.log('Cant Return Stock  -> ', res.errorMessage);
       message.error(res.errorMessage, 3);
+      setButtonDisabled(false);
       setTimeout(hide, 1500);
     }
     else {
@@ -441,6 +445,7 @@ const ReturnStock = () => {
                     type='primary'
                     className='custom-btn custom-btn--primary'
                     htmlType="submit"
+                    disabled={buttonDisabled}
                   >
                     Save
                 </Button>

@@ -11,6 +11,7 @@ const Users = () => {
   const [data, setData] = useState([]);
   const [paginationData, setPaginationData] = useState({});
 
+  var mounted = true;
 
 
   const fetchUsersData = async (pageLimit = 10, pageNumber = 1) => {
@@ -23,16 +24,23 @@ const Users = () => {
     }
     else {
       console.log('res -> ', usersViewResponse);
-      message.success(usersViewResponse.message, 3);
-      setData(usersViewResponse.Users.data || usersViewResponse.Users);
-      setPaginationData(usersViewResponse.Users.page || {});
-      setLoading(false);
+      if (mounted) {    //imp if unmounted
+        message.success(usersViewResponse.message, 3);
+        setData(usersViewResponse.Users.data || usersViewResponse.Users);
+        setPaginationData(usersViewResponse.Users.page || {});
+        setLoading(false);
+      }
     }
   }
 
 
   useEffect( () => {
     fetchUsersData();
+    
+    return () => {
+      mounted = false;
+    }
+
   }, []);
 
 
