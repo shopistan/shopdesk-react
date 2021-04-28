@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: _APP_NAME
+  name: _APP_NAME
+  namespace: _NAMESPACE
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: _APP_NAME
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: _APP_NAME
+    spec:
+      containers:
+      - image: _AWS_ACCOUNT_ID.dkr.ecr._AWS_DEFAULT_REGION.amazonaws.com/_IMAGE_REPO:IMAGE_TAG
+        command: ["dumb-init", "-cv", "--", "bash", "-c", "ng build --target production --env=_NODE_ENV --aot --build-optimizer && npm run postbuild && node server.js"]
+        imagePullPolicy: Always
+        name: _APP_NAME
+        ports:
+        - containerPort: _APP_PORT
+          protocol: TCP
+        # env:
+        # - name: NODE_ENV
+        #   value: _NODE_ENV
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: _APP_NAME
+  name: _APP_NAME
+  namespace: _NAMESPACE
+spec:
+  ports:
+  - port: _APP_PORT
+    protocol: TCP
+    targetPort: _APP_PORT
+    name: _PROTOCOL_HTTP
+  selector:
+    app: _APP_NAME
+  type: ClusterIP
+
+---
+
