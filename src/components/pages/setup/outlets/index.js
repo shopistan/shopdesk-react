@@ -11,6 +11,8 @@ const Outlets = () => {
   const [data, setData] = useState([]);
   const [paginationData, setPaginationData] = useState({});
 
+  var mounted = true;
+
 
   const fetchOutletsData = async (pageLimit = 10, pageNumber = 1) => {
     const outletsViewResponse = await SetupApiUtil.viewOutlets(pageLimit, pageNumber);
@@ -22,15 +24,22 @@ const Outlets = () => {
     }
     else {
       console.log('res -> ', outletsViewResponse);
-      message.success(outletsViewResponse.message, 3);
-      setData(outletsViewResponse.outlets.data || outletsViewResponse.outlets );
-      setPaginationData(outletsViewResponse.outlets.page || {} );
-      setLoading(false);
+      if (mounted) {     //imp if unmounted
+        message.success(outletsViewResponse.message, 3);
+        setData(outletsViewResponse.outlets.data || outletsViewResponse.outlets);
+        setPaginationData(outletsViewResponse.outlets.page || {});
+        setLoading(false);
+      }
     }
   }
 
   useEffect( () => {
     fetchOutletsData();
+    
+    return () => {
+      mounted = false;
+    }
+
   }, []);
 
 

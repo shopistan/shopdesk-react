@@ -7,6 +7,7 @@ const EditCourier = (props) => {
     const history = useHistory();
     const [courierDataFields, setCourierDataFields] = useState([]);
     const [selectedCourierData, setSelectedCourierData] = useState({});
+    const [buttonDisabled, setButtonDisabled] = useState(false);
     const [loading, setLoading] = useState(true);
     const { match = {} } = props;
     const { courier_id = {} } = match !== undefined && match.params;
@@ -56,6 +57,8 @@ const EditCourier = (props) => {
 
 
     const onFinish = async (values) => {
+        if (buttonDisabled === false) {
+            setButtonDisabled(true);}
         const hide = message.loading('Saving Changes in progress..', 0);
         const courierEditResponse = await CouriersApiUtil.editCourier(courier_id,
             values.courier_name, values.courier_code);
@@ -63,12 +66,13 @@ const EditCourier = (props) => {
         console.log('courierEditResponse:', courierEditResponse);
         if (courierEditResponse.hasError) {
             console.log('Cant Edit Courier -> ', courierEditResponse.errorMessage);
-            message.error('Courier Cant Edit ', 3);
+            message.error(courierEditResponse.errorMessage, 3);
+            setButtonDisabled(false);
             setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', courierEditResponse);
-            message.success('Courier Editing Succesfull ', 3);
+            message.success(courierEditResponse.message, 3);
             setTimeout(hide, 1500);
             setTimeout(() => {
                 history.push({
@@ -142,7 +146,7 @@ const EditCourier = (props) => {
                         </div>
 
                         <div className='form__row--footer'>
-                            <Button type='primary' htmlType='submit'>
+                            <Button type='primary' htmlType='submit' disabled={buttonDisabled}>
                                 Edit
                             </Button>
                             <Button

@@ -10,6 +10,7 @@ const DeleteProduct = (props) => {
     const history = useHistory();
     const [productData, setproductData] = useState({});
     const [loading, setLoading] = useState(true);
+    const [buttonDisabled, setButtonDisabled] = useState(false);
     const { match = {} } = props;
     const { product_id = {} } = match !== undefined && match.params;
 
@@ -45,6 +46,8 @@ const DeleteProduct = (props) => {
     
 
     const handleConfirm = async () => {
+        if (buttonDisabled === false) {
+            setButtonDisabled(true);}
         const hide = message.loading('Saving changes in progress..', 0);
         const productDeleteResponse = await ProductsApiUtil.deleteProduct(productData.product_id);
         console.log('productDeleteResponse:', productDeleteResponse);
@@ -52,6 +55,7 @@ const DeleteProduct = (props) => {
         if (productDeleteResponse.hasError) {
             console.log('Cant delete a product -> ', productDeleteResponse.errorMessage);
             message.error(productDeleteResponse.errorMessage, 3);
+            setButtonDisabled(false);
             setTimeout(hide, 1500);
         }
         else {
@@ -112,6 +116,7 @@ const DeleteProduct = (props) => {
                     <br />
                     <div className='form__row--footer'>
                         <Button type='primary' danger
+                            disabled={buttonDisabled}
                             onClick={() => handleConfirm()}>
                             Confirm
                         </Button>

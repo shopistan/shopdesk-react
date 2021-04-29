@@ -1,6 +1,7 @@
 
-const BASE_URL = 'https://shopdeskdev.shopdev.co';
-const IMAGE_UPLOADS_URL = 'https://storage.googleapis.com/shopdesk-artifacts';
+const {REACT_APP_API_BASE_URL, REACT_APP_IMAGE_UPLOADS_URL} = process.env;
+const BASE_URL = REACT_APP_API_BASE_URL || 'https://shopdeskdev.shopdev.co';
+const IMAGE_UPLOADS_URL = REACT_APP_IMAGE_UPLOADS_URL || 'https://storage.googleapis.com/shopdesk-artifacts';
 
 const urls = {
   BASE_URL,
@@ -11,6 +12,7 @@ const urls = {
   },
   TAX: {
     VIEW: BASE_URL + '/api/taxes/view',
+    VIEW_ALL: BASE_URL + '/api/taxes/viewAll',
     ADD_TAX: BASE_URL + '/api/taxes/add',
     DELETE_TAX: BASE_URL + '/api/taxes/delete',
     EDIT_TAX: BASE_URL + '/api/taxes/edit',
@@ -18,6 +20,7 @@ const urls = {
   },
   CATEGORIES: {
     VIEW: BASE_URL + '/api/categories/view',
+    VIEW_ALL: BASE_URL + '/api/categories/viewAll',
     ADD_CATEGORY: BASE_URL + '/api/categories/add',
     EDIT_CATEGORY: BASE_URL + '/api/categories/edit',
     DELETE_CATEGORY: BASE_URL + '/api/categories/delete',

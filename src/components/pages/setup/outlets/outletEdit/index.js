@@ -41,6 +41,7 @@ function OutletEdit(props) {
   const [generatedSecretKey, setGeneratedSecretKey] = useState('●●●●●●●●●●');
   const [foundStoreObjRandomKey, setFoundStoreObjRandomKey] = useState(null);
   const [outletOmniSettingsData, setOutletOmniSettingsData] = useState(null);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
   const { match = {} } = props;
   const { outlet_id = {} } = match !== undefined && match.params;
 
@@ -296,18 +297,23 @@ function OutletEdit(props) {
 
   const handleOmniForm = async () => {
     var formValues = form.getFieldsValue();
-    console.log("changed", formValues);
+    //console.log("changed", formValues);
 
     let editOeKeyPostData = {};
     editOeKeyPostData.brand = formValues.brand; 
     editOeKeyPostData.location = formValues.location;
+
     
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     const hide = message.loading('Saving Changes in progress..', 0);
     const addOeKeyDataResponse = await SetupApiUtil.addOeKey(editOeKeyPostData);
     console.log('editOeKeyDataResponse:', addOeKeyDataResponse);
 
     if (addOeKeyDataResponse.hasError) {
       console.log('Cant Add Oe Keys Data -> ', addOeKeyDataResponse.errorMessage);
+      message.error(addOeKeyDataResponse.errorMessage, 3);
+      setButtonDisabled(false);
       setTimeout(hide, 1500);
     }
     else {
@@ -327,7 +333,7 @@ function OutletEdit(props) {
 
   const postEditOutletData = async () => {
     var formValues = form.getFieldsValue();
-    console.log("changed", formValues);
+    //console.log("changed", formValues);
 
 
     var editOutletPostData = {};
@@ -340,12 +346,17 @@ function OutletEdit(props) {
     editOutletPostData.store_location = formValues.address;
     editOutletPostData.store_id = selectedStoreObj.store_id;
 
+
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     const hide = message.loading('Saving Changes in progress..', 0);
     const editOutletResponse = await SetupApiUtil.editOutlet(editOutletPostData);
     console.log('editOutletResponse:', editOutletResponse);
 
     if (editOutletResponse.hasError) {
       console.log('Cant Edit Template -> ', editOutletResponse.errorMessage);
+      message.error(editOutletResponse.errorMessage, 3);
+      setButtonDisabled(false);
       setTimeout(hide, 1500);
     }
     else {
@@ -568,6 +579,7 @@ function OutletEdit(props) {
                   type='primary'
                   htmlType='submit'
                   className='custom-btn custom-btn--primary'
+                  disabled={buttonDisabled}
                 >
                   Confirm
                 </Button>
@@ -688,6 +700,7 @@ function OutletEdit(props) {
                 type='primary'
                 onClick={handleOmniForm}
                 className='custom-btn custom-btn--primary'
+                disabled={buttonDisabled}
               >
                 Confirm
               </Button>
@@ -697,7 +710,7 @@ function OutletEdit(props) {
         </div>
         {/*end page content*/}
 
-        <Modal title="Basic Modal" visible={isModalVisible} onOk={confirmAddWebHook}
+        <Modal title="Add WebHook" visible={isModalVisible} onOk={confirmAddWebHook}
           onCancel={handleCancelModal}>
           <label> Enter a url for webhook</label>
           <div className='form__row'>

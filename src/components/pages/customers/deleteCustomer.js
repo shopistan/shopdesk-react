@@ -10,6 +10,7 @@ const { Text } = Typography;
 
 const DeleteCustomer = (props) => {
     const history = useHistory();
+    const [buttonDisabled, setButtonDisabled] = useState(false);
     const { match = {} } = props;
     const { customer_id = {} } = match.params;
     var customerId = customer_id;
@@ -27,6 +28,8 @@ const DeleteCustomer = (props) => {
 
 
     const handleDeleteCustomer = async () => {
+        if (buttonDisabled === false) {
+            setButtonDisabled(true);}
         const hide = message.loading('Saving Changes in progress..', 0);
         const customerDeleteResponse = await deleteCustomer(customerId);
         console.log('customerDeleteResponse:', customerDeleteResponse);
@@ -34,6 +37,7 @@ const DeleteCustomer = (props) => {
         if (customerDeleteResponse.hasError) {
             console.log('Cant delete Customer -> ', customerDeleteResponse.errorMessage);
             message.error( customerDeleteResponse.errorMessage, 3);
+            setButtonDisabled(false);
             setTimeout(hide, 1000);
         }
         else {
@@ -103,6 +107,7 @@ const DeleteCustomer = (props) => {
                     <br />
                     <div className='form__row--footer'>
                         <Button type='primary' danger
+                            disabled={buttonDisabled}
                             onClick={() => handleDeleteCustomer()}>
                             Confirm
                         </Button>

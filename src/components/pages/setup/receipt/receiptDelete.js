@@ -16,6 +16,7 @@ const ReceiptDelete = (props) => {
     const history = useHistory();
     const [templateData, setTemplateData] = useState({});
     const [loading, setLoading] = useState(true);
+    const [buttonDisabled, setButtonDisabled] = useState(false);
     const { match = {} } = props;
     const { template_id = {} } = match !== undefined && match.params;
 
@@ -59,16 +60,22 @@ const ReceiptDelete = (props) => {
 
 
     const handleConfirm = async () => {
+        if (buttonDisabled === false) {
+            setButtonDisabled(true);}
+        const hide = message.loading('Saving Changes in progress..', 0);
         const receiptDeleteResponse = await SetupApiUtil.deleteTemplate(templateData.template_id);
         console.log('receiptDeleteResponse:', receiptDeleteResponse);
 
         if (receiptDeleteResponse.hasError) {
             console.log('Cant delete Receipt -> ', receiptDeleteResponse.errorMessage);
             message.error(receiptDeleteResponse.errorMessage, 3);
+            setButtonDisabled(false);
+            setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', receiptDeleteResponse);
             message.success('Receipt deletion Succesfull ', 3);
+            setTimeout(hide, 1500);
             setTimeout(() => {
                 history.push({
                     pathname: '/setup/receipts-templates',
@@ -116,6 +123,7 @@ const ReceiptDelete = (props) => {
                     <br />
                     <div className='form__row--footer'>
                         <Button type='primary' danger
+                            disabled={buttonDisabled}
                             onClick={() => handleConfirm()}>
                             Confirm
                         </Button>

@@ -16,6 +16,8 @@ function OutletAdd() {
   const [templatesData, setTemplatesData] = useState([]);
   const [currenciesData, setCurrenciesData] = useState([]);
   const [selectedCurrencyObj, setSelectedCurrencyObj] = useState("");
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
 
   var mounted = true;
 
@@ -63,13 +65,18 @@ function OutletAdd() {
     addOutletPostData.name = formValues.outlet;
     addOutletPostData.businessAddress = formValues.address;
     addOutletPostData.template_id = formValues.template;
+    
 
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     const hide = message.loading('Saving Changes in progress..', 0);
     const addOutletResponse = await SetupApiUtil.addOutlet(addOutletPostData);
     console.log('addOutletResponse:', addOutletResponse);
 
     if (addOutletResponse.hasError) {
       console.log('Cant Add outlet -> ', addOutletResponse.errorMessage);
+      message.error(addOutletResponse.errorMessage, 3);
+      setButtonDisabled(false);
       setTimeout(hide, 1500);
     }
     else {
@@ -230,7 +237,7 @@ function OutletAdd() {
                 Cancel
               </Button>
 
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" disabled={buttonDisabled}>
                 Confirm
               </Button>
             </div>

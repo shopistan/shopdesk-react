@@ -9,6 +9,7 @@ const DeleteCategory = (props) => {
     const history = useHistory();
     const [selectedCategoryName, setSelectedCategoryName] = useState("");
     const [loading, setLoading] = useState(true);
+    const [buttonDisabled, setButtonDisabled] = useState(false);
     const { match = {} } = props;
     const { cat_id = {} } = match !== undefined && match.params;
 
@@ -45,18 +46,21 @@ const DeleteCategory = (props) => {
     
 
     const handleConfirm = async () => {
+        if (buttonDisabled === false) {
+            setButtonDisabled(true);}
         const hide = message.loading('Saving Changes in progress..', 0);
         const categoryDeleteResponse = await CategoriesApiUtil.deleteCategory(cat_id);
         console.log('categoryDeleteResponse:', categoryDeleteResponse);
 
         if (categoryDeleteResponse.hasError) {
             console.log('Cant delete a Category -> ', categoryDeleteResponse.errorMessage);
-            message.error('Category deletion UnSuccesfull ', 3);
+            message.error(categoryDeleteResponse.errorMessage, 3);
+            setButtonDisabled(false);
             setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', categoryDeleteResponse);
-            message.success('Category deletion Succesfull ', 3);
+            message.success(categoryDeleteResponse.message, 3);
             setTimeout(hide, 1500);
             setTimeout(() => {
                 history.push({
@@ -98,6 +102,7 @@ const DeleteCategory = (props) => {
                     <br />
                     <div className='form__row--footer'>
                         <Button type='primary' danger
+                            disabled={buttonDisabled}
                             onClick={() => handleConfirm()}>
                             Confirm
                         </Button>

@@ -25,7 +25,7 @@ import {
 import * as ProductsApiUtil from '../../../utils/api/products-api-utils';
 import * as TaxexApiUtil from '../../../utils/api/tax-api-utils';
 import * as CategoriesApiUtil from '../../../utils/api/categories-api-utils';
-import UrlConstants from '../../../utils/constants/url-configs';
+//import UrlConstants from '../../../utils/constants/url-configs';
 
 
 const { TextArea } = Input;
@@ -42,6 +42,7 @@ const EditProduct = (props) => {
     const [isImageUpload, setIsImageUpload] = useState(false);
     const [fileList, setFileList] = useState([]);
     const [inclusiveTax, setInclusiveTax] = useState(false);
+    const [buttonDisabled, setButtonDisabled] = useState(false);
     const { match = {} } = props;
     const { product_id = {} } = match !== undefined && match.params;
 
@@ -93,8 +94,8 @@ const EditProduct = (props) => {
             /*-----setting products data to fields value------*/
             var pageLimit = 50;
             var pageNumber = 1;
-            const [categoriesRes, taxesRes] = await Promise.all([CategoriesApiUtil.viewCategories(pageLimit, pageNumber),
-            TaxexApiUtil.viewTaxes(pageLimit, pageNumber)]);
+            const [categoriesRes, taxesRes] = await Promise.all([CategoriesApiUtil.viewAllCategories(),
+            TaxexApiUtil.viewAllTaxes()]);
 
             /*  categories response  */
             if (categoriesRes.hasError) {
@@ -188,13 +189,16 @@ const EditProduct = (props) => {
         productDataDeepClone.attributes = formValues.product_attributes ? formValues.product_attributes : "0";
         delete productDataDeepClone['status'];  //imp to delete
 
-
+        
+        if (buttonDisabled === false) {
+            setButtonDisabled(true);}
         const hide = message.loading('Saving changes in progress..', 0);
         const EditProductResponse = await ProductsApiUtil.editProduct(productDataDeepClone);
         console.log('getProductsResponse:', EditProductResponse);
         if (EditProductResponse.hasError) {
             console.log('product Editing UnSuccesfully -> ', EditProductResponse.errorMessage);
             message.error(EditProductResponse.errorMessage, 3);
+            setButtonDisabled(false);
             setTimeout(hide, 1000);
         }
         else {
@@ -282,7 +286,10 @@ const EditProduct = (props) => {
                         >
 
                             <div className='form__row--footer'>
-                                <Button type='primary' className='product-btn-edit' htmlType='submit' >
+                                <Button type='primary'
+                                    className='product-btn-edit'
+                                    htmlType='submit'
+                                    disabled={buttonDisabled} >
                                     Edit Product
                                 </Button>
                             </div>

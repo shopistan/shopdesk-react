@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Input, Button, message } from "antd";
 import { useHistory } from "react-router-dom";
 import * as SuppliersApiUtil from "../../../../utils/api/suppliers-api-utils";
 
 const SupplierAdd = () => {
   const history = useHistory();
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
 
   const onFinish = async (values) => {
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     console.log("Success:", values);
     const supplierAddResponse = await SuppliersApiUtil.addSupplier(
       values.supplier_name,
@@ -19,13 +23,14 @@ const SupplierAdd = () => {
     console.log("supplierAddResponse:", supplierAddResponse);
     if (supplierAddResponse.hasError) {
       console.log(
-        "Cant add new Category -> ",
+        "Cant add new Supplier -> ",
         supplierAddResponse.errorMessage
       );
-      message.error("Supplier Cannot Added ", 3);
+      message.error(supplierAddResponse.errorMessage, 3);
+      setButtonDisabled(false);
     } else {
       console.log("res -> ", supplierAddResponse);
-      message.success("supplier Succesfull Added ", 3);
+      message.success(supplierAddResponse.message, 3);
       setTimeout(() => {
         history.push({
           pathname: "/suppliers",
@@ -142,6 +147,7 @@ const SupplierAdd = () => {
                     type="primary"
                     htmlType="submit"
                     className="custom-btn custom-btn--primary"
+                    disabled={buttonDisabled}
                   >
                     Add
                   </Button>
