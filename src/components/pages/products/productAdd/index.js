@@ -65,10 +65,18 @@ const ProductAdd = () => {
   const [buttonDisabled, setButtonDisabled] = useState(false);
 
 
+  var mounted = true;
+
+
   const { getFieldDecorator } = form;
 
   useEffect(() => {
     fetchProductData();
+
+    return () => {
+      mounted = false;
+    }
+
   }, []);
 
   const fetchProductData = async (values) => {
@@ -95,8 +103,8 @@ const ProductAdd = () => {
     /*-----------set user store */
 
     /*-----setting products data to fields value------*/
-    var pageLimit = 50;
-    var pageNumber = 1;
+    //var pageLimit = 50;
+    //var pageNumber = 1;
     const [categoriesRes, taxesRes] = await Promise.all([
       CategoriesApiUtil.viewAllCategories(),
       TaxexApiUtil.viewAllTaxes(),
@@ -110,7 +118,9 @@ const ProductAdd = () => {
       );
     } else {
       console.log("res -> ", categoriesRes);
-      setCategories(categoriesRes.categories.data || categoriesRes.categories);
+      if (mounted) {     //imp if unmounted
+        setCategories(categoriesRes.categories.data || categoriesRes.categories);
+      }
     }
     /*  categories response  */
 
@@ -119,12 +129,18 @@ const ProductAdd = () => {
       console.log("gettaxesRes RESPONSE FAILED -> ", taxesRes.errorMessage);
     } else {
       console.log("res -> ", taxesRes);
-      setTaxes(taxesRes.taxes.data || taxesRes.taxes);
-      //form.setFieldsValue({ tax: foundObj.tax_id }); //ok correct  for option select value
+      if (mounted) {     //imp if unmounted
+        setTaxes(taxesRes.taxes.data || taxesRes.taxes);
+        //form.setFieldsValue({ tax: foundObj.tax_id }); //ok correct  for option select value
+      }
     }
 
     /*  taxes response  */
-    setLoading(false);
+
+    if (mounted) {     //imp if unmounted
+      setLoading(false);
+    }
+
   };
 
   var randomString = function (len, bits) {
@@ -207,7 +223,7 @@ const ProductAdd = () => {
 
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
-    const hide = message.loading('Saving changes in progress..', 0);
+    const hide = message.loading('Adding a Product Is In Progress..', 0);
     const AddProductResponse = await ProductsApiUtil.addProduct(addProductData);
     console.log("AddProductResponse :", AddProductResponse);
     if (AddProductResponse.hasError) {
@@ -220,14 +236,18 @@ const ProductAdd = () => {
       setTimeout(hide, 1000);
     } else {
       console.log("res -> ", AddProductResponse);
-      message.success(AddProductResponse.message, 3);
       setTimeout(hide, 1000);
-      setTimeout(() => {
-        history.push({
-          pathname: "/products",
-        });
-      }, 2000);
+      if (mounted) {     //imp if unmounted
+        message.success(AddProductResponse.message, 3);
+        setTimeout(() => {
+          history.push({
+            pathname: "/products",
+          });
+        }, 2000);
+      }
+
     }
+    
   };
 
   /*function removeHTML(str) {

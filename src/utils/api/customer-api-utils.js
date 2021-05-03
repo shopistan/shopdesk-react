@@ -1,6 +1,8 @@
 import UrlConstants from '../constants/url-configs';
 import GenericConstants from '../constants/constants';
 import * as ApiCallUtil from './generic-api-utils';
+import axios from 'axios';
+
 
 export const viewCustomers = async (page = 1, all = false) => {
   const formDataPair = {
@@ -160,6 +162,30 @@ export const addCustomer = async (newCustomerData) => {
     callType, //calltype
     addCustomerFormDataBody //body
   );
+};
+
+
+export const exportCustomers = async (customerId) => {
+  
+  const url = UrlConstants.CUSTOMERS.EXPORT+`/${customerId}`;
+  const headers = {
+    'Authorization': ApiCallUtil.getUserAuthToken(),
+  };
+
+  return await axios.get(url, {
+    headers: headers
+  })
+    .then( async (res) => {
+      console.log('Customers Export Data Response -> ', res);
+      return { hasError: false, message: "Customers Exported", data: res.data };
+
+    })
+    .catch((error) => {
+      console.log("AXIOS ERROR: ", error);
+      return { hasError: true, errorMessage: error };
+      
+    })
+
 };
 
 

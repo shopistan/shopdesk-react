@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 
-import { Button, Select, Input, message } from "antd";
+import { Button, message } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
-
 import CustomerTable from "../../organism/table/customerTable";
 import { useHistory } from "react-router-dom";
-
 import * as CustomersApiUtil from "../../../utils/api/customer-api-utils";
+import Constants from '../../../utils/constants/constants';
+import {
+  getDataFromLocalStorage,
+} from "../../../utils/local-storage/local-store-utils";
+
+
 
 const Customers = () => {
   const [paginationLimit, setPaginationLimit] = useState(10);
@@ -14,6 +18,8 @@ const Customers = () => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [paginationData, setPaginationData] = useState({});
+  const [userLocalStorageData, setUserLocalStorageData] = useState("");
+
 
 
   const history = useHistory();
@@ -51,6 +57,11 @@ const Customers = () => {
 
   useEffect(() => {
     fetchCustomersData();
+    /*--------------set user local data-------------------------------*/
+    let readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+    readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
+    setUserLocalStorageData(readFromLocalStorage.auth || null);
+    /*--------------set user local data-------------------------------*/
     return () => {
       mounted = false;
     }
@@ -95,7 +106,7 @@ const Customers = () => {
     for (var i = 0; i < rows.length; i++) {
       var row = [], cols = rows[i].querySelectorAll("td, th");
 
-      for (var j = 0; j < cols.length-1; j++)
+      for (var j = 0; j < cols.length - 1; j++)
         row.push(cols[j].innerText);
 
       csv.push(row.join(","));
@@ -117,6 +128,49 @@ const Customers = () => {
     else { message.error("No Customer Data Found", 3) }
 
   }
+
+
+
+  const ExportToCsv = async (e) => {
+
+    if (data.length > 0) {
+      const hide = message.loading('Exporting Customers Is In Progress..', 0);
+      const customersExportResponse = await CustomersApiUtil.exportCustomers(userLocalStorageData.userId || null);
+      console.log("customers export response:", customersExportResponse);
+
+      if (customersExportResponse.hasError) {
+        console.log(
+          "Cant Export customers -> ",
+          customersExportResponse.errorMessage
+        );
+        setTimeout(hide, 1500);
+      } else {
+        console.log("res -> ", customersExportResponse.data);
+        setTimeout(hide, 1500);
+        /*---------------csv download--------------------------------*/
+        if (mounted) {     //imp if unmounted
+          // CSV FILE
+          let csvFile = new Blob([customersExportResponse.data], { type: "text/csv" });
+          let url = window.URL.createObjectURL(csvFile);
+          let a = document.createElement('a');
+          a.href = url;
+          a.download = "customers_" + new Date().toUTCString() + ".csv";
+          document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+          a.click();
+          a.remove();  //afterwards we remove the element again
+          /*---------------csv download--------------------------------*/
+          message.success(customersExportResponse.message, 3);
+        }
+
+      }
+
+    }
+    else { message.error("No Customer Data Found", 3) }
+
+  }
+
+
+
 
 
 
@@ -144,8 +198,7 @@ const Customers = () => {
           </Button>*/}
 
           <Button type="primary" className="custom-btn custom-btn--primary"
-            onClick={DownloadToCsv}
-
+            onClick={ExportToCsv}
           >
             Export CSV
           </Button>

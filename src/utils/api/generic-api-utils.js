@@ -47,7 +47,7 @@ export const http = async (
         ...axiosCallResponse.data
       };
     }
-    console.log('axios call response: ', axiosCallResponse.data);
+    //console.log('axios call response: ', axiosCallResponse.data);
 
     let isUserAuthenticated = true;
     const errorMessageResponse =

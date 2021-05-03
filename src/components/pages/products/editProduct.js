@@ -46,6 +46,9 @@ const EditProduct = (props) => {
     const { match = {} } = props;
     const { product_id = {} } = match !== undefined && match.params;
 
+    var mounted = true;
+
+
     const { getFieldDecorator } = form;
 
 
@@ -56,6 +59,10 @@ const EditProduct = (props) => {
             setTimeout(() => {
                 history.goBack();
             }, 1000);
+        }
+
+        return () => {
+            mounted = false;
         }
 
     }, []);
@@ -92,8 +99,8 @@ const EditProduct = (props) => {
             setproductImagePreviewSource(productsData.product_image);  //imp to set image src here
 
             /*-----setting products data to fields value------*/
-            var pageLimit = 50;
-            var pageNumber = 1;
+            //var pageLimit = 50;
+            //var pageNumber = 1;
             const [categoriesRes, taxesRes] = await Promise.all([CategoriesApiUtil.viewAllCategories(),
             TaxexApiUtil.viewAllTaxes()]);
 
@@ -203,13 +210,15 @@ const EditProduct = (props) => {
         }
         else {
             console.log('res -> ', EditProductResponse);
-            message.success(EditProductResponse.message, 3);
             setTimeout(hide, 1000);
-            setTimeout(() => {
-                history.push({
-                    pathname: '/products',
-                });
-            }, 2000);
+            if (mounted) {     //imp if unmounted
+                message.success(EditProductResponse.message, 3);
+                setTimeout(() => {
+                    history.push({
+                        pathname: '/products',
+                    });
+                }, 2000);
+            }
 
         }
 

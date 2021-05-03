@@ -54,6 +54,7 @@ const urls = {
     CREDIT_HISTORY: BASE_URL + '/api/customers/credit',
     SEARCH: BASE_URL + '/api/customers/search',
     DELETE: BASE_URL + '/api/customers/delete',
+    EXPORT: BASE_URL + '/api/customers/export_customers',
   },
   PRODUCTS: {
     VIEW: BASE_URL + '/api/products/view',
