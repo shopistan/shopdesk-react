@@ -21,18 +21,19 @@ const Products = () => {
   const { Search } = Input;
   const history = useHistory();
 
-  const onSearch = async (e) => {
+  const onSearch = async (value) => {
 
-    var searchValue = e.target.value;
+    var searchValue = value;
     var pageNumber = 1;
     const productsSearchResponse = await ProductsApiUtil.searchProducts(paginationLimit, pageNumber, searchValue);
     console.log('productsSearchResponse:', productsSearchResponse);
     if (productsSearchResponse.hasError) {
       console.log('Cant Search Products -> ', productsSearchResponse.errorMessage);
+      message.warning(productsSearchResponse.errorMessage, 2);
     }
     else {
       console.log('res -> ', productsSearchResponse);
-      message.success(productsSearchResponse.message, 3);
+      message.success(productsSearchResponse.message, 2);
       setData(productsSearchResponse.products.data);
       setPaginationData(productsSearchResponse.products.page);
     }
@@ -151,9 +152,9 @@ const Products = () => {
             <Search
               placeholder='search product'
               allowClear
-              //enterButton='Search'
+              enterButton='Search'
               size='large'
-              onChange={onSearch}
+              onSearch={onSearch}
             />
           </div>
         </div>

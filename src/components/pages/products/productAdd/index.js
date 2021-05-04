@@ -543,7 +543,7 @@ const ProductAdd = () => {
                       },
                     ]}
                   >
-                    <Select onChange={handleTaxChange}>
+                    <Select onChange={handleTaxChange} placeholder="Select Tax">
                       {taxes.map((obj, index) => {
                         return (
                           <Option key={obj.tax_id} value={obj.tax_id}>
@@ -566,7 +566,7 @@ const ProductAdd = () => {
                       },
                     ]}
                   >
-                    <Select>
+                    <Select placeholder="Select Category">
                       {categories.map((obj, index) => {
                         return (
                           <Option key={obj.category_id} value={obj.category_id}>
