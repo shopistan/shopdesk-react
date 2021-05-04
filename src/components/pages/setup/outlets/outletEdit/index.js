@@ -58,7 +58,7 @@ function OutletEdit(props) {
       getUserStoreData(outlet_id);
       fetchUsersTemplatesData();
       /*--------------set user local data-------------------------------*/
-      var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+      let readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
       readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
       setUserLocalStorageData(readFromLocalStorage);
       /*--------------set user local data-------------------------------*/
