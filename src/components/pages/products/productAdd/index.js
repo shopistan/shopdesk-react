@@ -13,10 +13,10 @@ import {
   Space,
   Switch,
   Checkbox,
+  Spin,
 } from "antd";
 
 import {
-  PlusCircleOutlined,
   UploadOutlined,
   MinusCircleOutlined,
   PlusOutlined,
@@ -30,7 +30,6 @@ import {
 import * as ProductsApiUtil from "../../../../utils/api/products-api-utils";
 import * as TaxexApiUtil from "../../../../utils/api/tax-api-utils";
 import * as CategoriesApiUtil from "../../../../utils/api/categories-api-utils";
-import UrlConstants from "../../../../utils/constants/url-configs";
 import * as Helpers from "../../../../utils/helpers/scripts";
 import Constants from "../../../../utils/constants/constants";
 import * as ProductsVariantsCombination from "./calculateProductsVariantsCombination";
@@ -39,6 +38,8 @@ import ProductsVariantsTable from "../../../organism/table/productsNestedTable/p
 
 const { TextArea } = Input;
 const { Option } = Select;
+
+const pageLimit = 10;
 
 const ProductAdd = () => {
   const history = useHistory();
@@ -63,12 +64,16 @@ const ProductAdd = () => {
   const [fileList, setFileList] = useState([]);
   const [inclusiveTax, setInclusiveTax] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [taxesPaginationData, setTaxesPaginationData] = useState({});
+  const [categoriesPaginationData, setCategoriesPaginationData] = useState({});
+  const [isBusy, setIsBusy] = useState(false);
+  const [scrollLoading, setScrollLoading] = useState(false);
+  const [categoriesScrollLoading, setCategoriesScrollLoading] = useState(false);
 
 
   var mounted = true;
 
 
-  const { getFieldDecorator } = form;
 
   useEffect(() => {
     fetchProductData();
@@ -103,11 +108,10 @@ const ProductAdd = () => {
     /*-----------set user store */
 
     /*-----setting products data to fields value------*/
-    //var pageLimit = 50;
-    //var pageNumber = 1;
+    let pageNumber = 1;
     const [categoriesRes, taxesRes] = await Promise.all([
-      CategoriesApiUtil.viewAllCategories(),
-      TaxexApiUtil.viewAllTaxes(),
+      CategoriesApiUtil.viewCategories(pageLimit, pageNumber),
+      TaxexApiUtil.viewTaxes(pageLimit, pageNumber),
     ]);
 
     /*  categories response  */
@@ -120,6 +124,7 @@ const ProductAdd = () => {
       console.log("res -> ", categoriesRes);
       if (mounted) {     //imp if unmounted
         setCategories(categoriesRes.categories.data || categoriesRes.categories);
+        setCategoriesPaginationData(categoriesRes.categories.page || {});
       }
     }
     /*  categories response  */
@@ -132,6 +137,7 @@ const ProductAdd = () => {
       if (mounted) {     //imp if unmounted
         setTaxes(taxesRes.taxes.data || taxesRes.taxes);
         //form.setFieldsValue({ tax: foundObj.tax_id }); //ok correct  for option select value
+        setTaxesPaginationData(taxesRes.taxes.page || {});
       }
     }
 
@@ -383,6 +389,85 @@ const ProductAdd = () => {
     /*--getting variants combinations--*/
   };
 
+
+
+
+  const handleScroll = async (e) => {
+    //console.log("inside-scroll", e);
+    var height = e.target.clientHeight;
+    //console.log(height);
+    //console.log(e.target.clientHeight);
+    height = height * 0.5;
+    //console.log(e.target.scrollTop);
+    //console.log(e.target.scrollHeight);
+    const targetHeight = e.target.scrollHeight - e.target.scrollTop;
+    const clientHeight = e.target.clientHeight + height;
+    //console.log("target-height", targetHeight);
+
+    if(targetHeight < clientHeight  && !isBusy){
+      let pN  = Math.ceil(taxes.length / pageLimit) + 1;
+
+      if (pN <= taxesPaginationData.totalPages) {
+        setIsBusy(true);
+        setScrollLoading(true);
+        const taxesRes = await TaxexApiUtil.viewTaxes(pageLimit, pN);
+        if (taxesRes.hasError) {
+          console.log("gettaxesRes RESPONSE FAILED -> ", taxesRes.errorMessage);
+        } else {
+          console.log("res -> ", taxesRes);
+          if (mounted) {     //imp if unmounted
+            let taxesData = taxesRes.taxes.data || taxesRes.taxes;
+            var newData = [...taxes];
+            newData.push(...taxesData);
+            setTaxes(newData);
+            setIsBusy(false);
+            setScrollLoading(false);
+          }
+        }
+
+      } /*----------------End Of Inner If------------------------*/
+
+    } /*----------------End Of Outer If------------------------*/
+
+  }
+
+  
+
+  const handleCategoriesScroll = async (e) => {
+    let height = e.target.clientHeight;
+    height = height * 0.5;
+    let targetHeight = e.target.scrollHeight - e.target.scrollTop;
+    let clientHeight = e.target.clientHeight + height;
+
+    if(targetHeight < clientHeight  && !isBusy){
+      let pN  = Math.ceil(categories.length / pageLimit) + 1;
+      
+      if (pN <= categoriesPaginationData.totalPages) {
+        setIsBusy(true);   //imp
+        setCategoriesScrollLoading(true);   //imp
+        const categoriesRes = await CategoriesApiUtil.viewCategories(pageLimit, pN);
+        if (categoriesRes.hasError) {
+          console.log("getCategoriesRes RESPONSE FAILED -> ", categoriesRes.errorMessage);
+        } else {
+          console.log("res -> ", categoriesRes);
+          if (mounted) {     //imp if unmounted
+            let categoriesData = categoriesRes.categories.data|| categoriesRes.categories;
+            var newData = [...categories];
+            newData.push(...categoriesData);
+            setCategories(newData);
+            setIsBusy(false);
+            setCategoriesScrollLoading(false);
+          }
+        }
+
+      } /*----------------End Of Inner If------------------------*/
+
+    } /*----------------End Of Outer If------------------------*/
+
+  }
+
+
+
   const handleVariantsSelectTags = (value) => {
     var formValues = form.getFieldsValue();
 
@@ -451,7 +536,11 @@ const ProductAdd = () => {
       <div className="page__header">
         <h1>New Product</h1>
       </div>
+      <div className="loading-container">
+        {loading && <Spin tip="Products Loading..." size="large" ></Spin>}
+      </div>
 
+      {!loading &&
       <div className="page__content">
         <div className="page__form">
           <Form
@@ -543,7 +632,11 @@ const ProductAdd = () => {
                       },
                     ]}
                   >
-                    <Select onChange={handleTaxChange} placeholder="Select Tax">
+                    <Select onChange={handleTaxChange}
+                      placeholder="Select Tax"
+                      onPopupScroll={handleScroll}
+                      loading={scrollLoading}
+                    >
                       {taxes.map((obj, index) => {
                         return (
                           <Option key={obj.tax_id} value={obj.tax_id}>
@@ -566,7 +659,10 @@ const ProductAdd = () => {
                       },
                     ]}
                   >
-                    <Select placeholder="Select Category">
+                    <Select placeholder="Select Category"
+                      onPopupScroll={handleCategoriesScroll}
+                      loading={categoriesScrollLoading}
+                    >
                       {categories.map((obj, index) => {
                         return (
                           <Option key={obj.category_id} value={obj.category_id}>
@@ -947,7 +1043,7 @@ const ProductAdd = () => {
             {/* Form Section */}
           </Form>
         </div>
-      </div>
+      </div>}
     </div>
   );
 };

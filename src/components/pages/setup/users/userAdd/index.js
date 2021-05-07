@@ -52,7 +52,7 @@ function UserAdd() {
     else {
       console.log('res -> ', getUsernameResponse);
       if (mounted) {     //imp if unmounted
-        setUserBrandName(getUsernameResponse.username);
+        setUserBrandName("@"+getUsernameResponse.username);
         setLoading(false);
       }
     }

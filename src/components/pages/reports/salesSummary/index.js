@@ -30,7 +30,8 @@ const SalesSummary = () => {
   const [salesMops, setSalesMops] = useState(mops);
 
   const fetchSalesSumaryData = async () => {
-    let ecommerce = user.auth.store_ecommerce;
+    //let ecommerce = user.auth.store_ecommerce; //prev version
+    let ecommerce = false;
     let startDate = selectedDates[0];
     let endDate = selectedDates[1];
 
