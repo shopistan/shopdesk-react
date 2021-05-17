@@ -146,7 +146,7 @@ function OutletEdit(props) {
   }
 
 
-  const requestUserLoginForNewApiKey = async (values) => {
+  const requestUserLoginForNewApiKey = async () => {
     let refreshToken = userLocalStorageData.refresh_token;
     let never_expire = true;
     //const hide = message.loading('Generating Key in progress..', 0);

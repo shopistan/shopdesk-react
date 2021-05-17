@@ -37,17 +37,17 @@ const CategorySalesSummaryTable = (props) => {
 
                 <tbody >
                     {
-                        data.map(item => {
+                        data.map((item, index) => {
 
                             return (
                                 <>
-                                    <tr>
+                                    <tr key={index}>
                                         <td colSpan="8" style={{ backgroundColor: "#eef9fb" }}><strong>{item.categoryName}</strong></td>
                                     </tr>
 
-                                    {item.sales.map(salesObj => {
+                                    {item.sales.map((salesObj, index) => {
                                         return (
-                                            <tr key={salesObj.product_id}>
+                                            <tr key={index}>
 
                                                 <td>{salesObj.product_sku}</td>
                                                 <td>{salesObj.product_name}</td>

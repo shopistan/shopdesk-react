@@ -12,6 +12,8 @@ const EditSupplier = (props) => {
   const { match = {} } = props;
   const { supplier_id = {} } = match !== undefined && match.params;
 
+  var mounted = true;
+
   
 
   useEffect(() => {
@@ -21,6 +23,10 @@ const EditSupplier = (props) => {
       setTimeout(() => {
         history.goBack();
       }, 1000);
+    }
+
+    return () => {
+      mounted = false;
     }
 
   }, []);
@@ -34,35 +40,40 @@ const EditSupplier = (props) => {
       setLoading(false);
     }
     else {
-      message.success(getSupplierResponse.message, 2);
-      const supplierData = getSupplierResponse.supplier[0];  //vvimp
-      setSupplierData(supplierData);
-      const fieldsForAntForm = [
-        {
-          name: ['supplier_name'],
-          value: supplierData.supplier_name
-        },
-        {
-          name: ['contact_person'],
-          value: supplierData.supplier_contact_name
-        },
-        {
-          name: ['phone'],
-          value: supplierData.supplier_contact_phone
-        },
-        {
-          name: ['email'],
-          value: supplierData.supplier_contact_email
-        },
-        {
-          name: ['tax'],
-          value: supplierData.supplier_tax_number
-        },
-      ];
+      console.log("res -> ", getSupplierResponse.message);
+      if (mounted) {     //imp if unmounted
+        message.success(getSupplierResponse.message, 2);
+        const supplierData = getSupplierResponse.supplier[0];  //vvimp
+        setSupplierData(supplierData);
+        const fieldsForAntForm = [
+          {
+            name: ['supplier_name'],
+            value: supplierData.supplier_name
+          },
+          {
+            name: ['contact_person'],
+            value: supplierData.supplier_contact_name
+          },
+          {
+            name: ['phone'],
+            value: supplierData.supplier_contact_phone
+          },
+          {
+            name: ['email'],
+            value: supplierData.supplier_contact_email
+          },
+          {
+            name: ['tax'],
+            value: supplierData.supplier_tax_number
+          },
+        ];
 
-      setSupplierDataFields(fieldsForAntForm); 
-      setLoading(false);
+        setSupplierDataFields(fieldsForAntForm);
+        setLoading(false);
+      }
+
     }
+
   }
 
 
@@ -87,14 +98,16 @@ const EditSupplier = (props) => {
       setButtonDisabled(false);
       setTimeout(hide, 1500);
     } else {
-      console.log("res -> ", supplierEditResponse);
-      message.success(supplierEditResponse.message, 3);
-      setTimeout(hide, 1500);
-      setTimeout(() => {
-        history.push({
-          pathname: "/suppliers",
-        });
-      }, 2000);
+      console.log("res -> ", supplierEditResponse.message);
+      if (mounted) {     //imp if unmounted
+        message.success(supplierEditResponse.message, 3);
+        setTimeout(hide, 1500);
+        setTimeout(() => {
+          history.push({
+            pathname: "/suppliers",
+          });
+        }, 2000);
+      }
     }
   };
 

@@ -11,8 +11,9 @@ const Couriers = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-  const [dataSearched, setDataSearched] = useState([]);
   const [paginationData, setPaginationData] = useState({});
+  const [searchedData, setSearchedData] = useState(null);
+  const [currentPageSearched, setCurrentPageSearched] = useState(1);
 
   const { Option } = Select;
 
@@ -22,28 +23,49 @@ const Couriers = () => {
 
   var mounted = true;
 
+
+
   const onSearch = async (e) => {
-    var currValue = e.target.value;
-    currValue = currValue.toLowerCase();
-    if (currValue === "") {
+    let searchValue = e.target.value;;
+    if(searchValue === ""){ // if empty value
+      setSearchedData(null);
       setLoading(true);
       fetchCouriersData(paginationLimit, currentPage);
-    } else {
-      const filteredData = dataSearched.filter((entry) => {
-        var courierName = entry.courier_name;
-        courierName = courierName.toLowerCase();
-        var courierCode = entry.courier_code;
-        courierCode = courierCode.toLowerCase();
-        return (
-          courierName.includes(currValue) || courierCode.includes(currValue)
-        );
-      });
-      setData(filteredData);
-      paginationData.totalElements = filteredData.length;
-      setPaginationData(paginationData);
-      setPaginationLimit(paginationLimit);
+      return;
     }
-  };
+
+    setSearchedData(searchValue);
+    setLoading(true);
+    setCurrentPageSearched(1);
+    fetchSearchCouriers(paginationLimit, 1, searchValue);
+   
+  }
+
+
+  const fetchSearchCouriers = async (pageLimit = 20, pageNumber = 1, searchValue) => {
+    const couriersSearchResponse = await CouriersApiUtil.searchCouriers(
+      pageLimit,
+      pageNumber,
+      searchValue
+    );
+    console.log('couriersSearchResponse:', couriersSearchResponse);
+    if (couriersSearchResponse.hasError) {
+      console.log('Cant Search Couriers -> ', couriersSearchResponse.errorMessage);
+      message.error(couriersSearchResponse.errorMessage, 2);
+      setLoading(false);
+    }
+    else {
+      console.log('res -> ', couriersSearchResponse.message);
+      if (mounted) {     //imp if unmounted
+        setData(couriersSearchResponse.courier.data);
+        setPaginationData(couriersSearchResponse.courier.page);
+        setLoading(false);
+      }
+    }
+    
+  }
+
+
 
   const fetchCouriersData = async (pageLimit = 10, pageNumber = 1) => {
     const couriersViewResponse = await CouriersApiUtil.viewCouriers(
@@ -60,32 +82,12 @@ const Couriers = () => {
       if (mounted) {     //imp if unmounted
         message.success(couriersViewResponse.message, 3);
         const couriersData = couriersViewResponse.courier.data || couriersViewResponse.courier;
-        /*----------handle data serching response------------*/
-        handledSearchedDataResponse(couriersData);
-        /*-----------handle data serching response-----------*/
         setData(couriersData);
         setPaginationData(couriersViewResponse.courier.page || {});
         setLoading(false);
       }
     }
   };
-
-
-  
-  function handledSearchedDataResponse(dataResponse) {
-    var newData = [...dataSearched];
-    dataResponse.forEach(item => {
-      var foundObj = newData.find(obj => {
-        return obj.courier_id === item.courier_id;
-      });
-
-      if(!foundObj){
-        newData.push(item);
-      }
-    });
-    //console.log(newData);
-    setDataSearched(newData);
-  }
 
 
 
@@ -96,21 +98,44 @@ const Couriers = () => {
     }
   }, []);
 
+
+
   function handleChange(value) {
     setPaginationLimit(value);
     setLoading(true);
-    if (currentPage > Math.ceil(paginationData.totalElements / value)) {
-      fetchCouriersData(value, 1);
-    } else {
-      fetchCouriersData(value, currentPage);
+    if(searchedData){   //imp is search data exists
+      if (currentPageSearched > Math.ceil(paginationData.totalElements / value)) {
+        fetchSearchCouriers(value, 1, searchedData);
+      } else {
+        fetchSearchCouriers(value, currentPageSearched, searchedData);
+      }
+    }  /*------end of outer if---------*/
+    else {
+      if (currentPage > Math.ceil(paginationData.totalElements / value)) {
+        fetchCouriersData(value, 1);
+      } else {
+        fetchCouriersData(value, currentPage);
+      }  /*------end of outer else---------*/
     }
+
   }
+
 
   function handlePageChange(currentPg) {
     setCurrentPage(currentPg);
     setLoading(true);
     fetchCouriersData(paginationLimit, currentPg);
   }
+  
+
+  function handleSearchedDataPageChange(currentPg) {
+    console.log("sechedpage");
+    setCurrentPageSearched(currentPg);
+    setLoading(true);
+    fetchSearchCouriers(paginationLimit, currentPg, searchedData);
+  }
+
+
 
   const handleAddCourier = () => {
     history.push({
@@ -165,7 +190,8 @@ const Couriers = () => {
             pageLimit={paginationLimit}
             tableData={data}
             tableDataLoading={loading}
-            onClickPageChanger={handlePageChange}
+            onClickPageChanger={searchedData ? handleSearchedDataPageChange : handlePageChange}
+            currentPageIndex={searchedData ? currentPageSearched : currentPage}
             paginationData={paginationData}
           />
         </div>

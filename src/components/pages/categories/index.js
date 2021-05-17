@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Button, Select, Input } from "antd";
+import { Button, Select, Input, message } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import EditableTable from "../../organism/table";
 import { useHistory } from "react-router-dom";
@@ -11,8 +11,9 @@ const Categories = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-  const [dataSearched, setDataSearched] = useState([]);
   const [paginationData, setPaginationData] = useState({});
+  const [searchedData, setSearchedData] = useState(null);
+  const [currentPageSearched, setCurrentPageSearched] = useState(1);
   const { Option } = Select;
 
   const history = useHistory();
@@ -21,24 +22,46 @@ const Categories = () => {
 
   var mounted = true;
 
+
   const onSearch = async (e) => {
-    var currValue = e.target.value;
-    currValue = currValue.toLowerCase();
-    if (currValue === "") {
+    let searchValue = e.target.value;;
+    if(searchValue === ""){    // if empty value
+      setSearchedData(null);
       setLoading(true);
       fetchCategoriesData(paginationLimit, currentPage);
-    } else {
-      const filteredData = dataSearched.filter((entry) => {
-        var item_name = entry.category_name;
-        item_name = item_name.toLowerCase();
-        return item_name.includes(currValue);
-      });
-      setData(filteredData);
-      paginationData.totalElements = filteredData.length;
-      setPaginationData(paginationData);
-      setPaginationLimit(paginationLimit);
+      return;
     }
-  };
+
+    setSearchedData(searchValue);
+    setLoading(true);
+    setCurrentPageSearched(1);    //imp
+    fetchSearchCategories(paginationLimit, 1, searchValue);
+  }
+
+
+  const fetchSearchCategories = async (pageLimit = 20, pageNumber = 1, searchValue) => {
+    const categoriesSearchResponse = await CategoriesApiUtil.searchCategories(
+      pageLimit,
+      pageNumber,
+      searchValue
+    );
+    console.log('categoriesSearchResponse:', categoriesSearchResponse);
+    if (categoriesSearchResponse.hasError) {
+      console.log('Cant Search Categories -> ', categoriesSearchResponse.errorMessage);
+      message.warning(categoriesSearchResponse.errorMessage, 2);
+      setLoading(false);
+    }
+    else {
+      console.log('res -> ', categoriesSearchResponse.message);
+      //message.success(categoriesSearchResponse.message, 2);
+      setData(categoriesSearchResponse.categories.data);
+      setPaginationData(categoriesSearchResponse.categories.page);
+      setLoading(false);
+    }
+
+  }
+
+
 
   const fetchCategoriesData = async (pageLimit = 10, pageNumber = 1) => {
     const categoriesViewResponse = await CategoriesApiUtil.viewCategories(
@@ -57,32 +80,12 @@ const Categories = () => {
       console.log("res -> ", categoriesViewResponse);
       if (mounted) {     //imp if unmounted
         const categoriesData = categoriesViewResponse.categories.data || categoriesViewResponse.categories;
-        /*----------handle data serching response------------*/
-        handledSearchedDataResponse(categoriesData);
-        /*-----------handle data serching response-----------*/
         setData(categoriesData);
         setPaginationData(categoriesViewResponse.categories.page || {});
         setLoading(false);
       }
     }
   };
-
-
-
-  function handledSearchedDataResponse(dataResponse) {
-    var newData = [...dataSearched];
-    dataResponse.forEach(item => {
-      var foundObj = newData.find(obj => {
-        return obj.category_id === item.category_id;
-      });
-
-      if(!foundObj){
-        newData.push(item);
-      }
-    });
-    //console.log(newData);
-    setDataSearched(newData);
-  }
 
 
 
@@ -93,14 +96,26 @@ const Categories = () => {
     }
   }, []);
 
+
+
   function handleChange(value) {
     setPaginationLimit(value);
     setLoading(true);
-    if (currentPage > Math.ceil(paginationData.totalElements / value)) {
-      fetchCategoriesData(value, 1);
-    } else {
-      fetchCategoriesData(value, currentPage);
+    if(searchedData){
+      if (currentPageSearched > Math.ceil(paginationData.totalElements / value)) {
+        fetchSearchCategories(value, 1, searchedData);
+      } else {
+        fetchSearchCategories(value, currentPageSearched, searchedData);
+      }
+    }  /*------end of outer if---------*/
+    else {
+      if (currentPage > Math.ceil(paginationData.totalElements / value)) {
+        fetchCategoriesData(value, 1);
+      } else {
+        fetchCategoriesData(value, currentPage);
+      }  /*------end of outer else---------*/
     }
+
   }
 
   function handlePageChange(currentPg) {
@@ -108,6 +123,14 @@ const Categories = () => {
     setLoading(true);
     fetchCategoriesData(paginationLimit, currentPg);
   }
+
+
+  function handleSearchedDataPageChange(currentPg) {
+    setCurrentPageSearched(currentPg);
+    setLoading(true);
+    fetchSearchCategories(paginationLimit, currentPg, searchedData);
+  }
+
 
   const handleAddCategory = () => {
     history.push({
@@ -157,6 +180,7 @@ const Categories = () => {
           </div>
         </div>
 
+
         {/* Table */}
         <div className="table">
           <EditableTable
@@ -164,10 +188,13 @@ const Categories = () => {
             tableData={data}
             paginationData={paginationData}
             tableDataLoading={loading}
-            onClickPageChanger={handlePageChange}
+            onClickPageChanger={searchedData ? handleSearchedDataPageChange : handlePageChange}
+            currentPageIndex={searchedData ? currentPageSearched : currentPage}
           />
         </div>
         {/* Table */}
+
+
       </div>
     </div>
   );

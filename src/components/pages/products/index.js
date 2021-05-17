@@ -12,33 +12,56 @@ const Products = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [searchedData, setSearchedData] = useState(null);
+  const [currentPageSearched, setCurrentPageSearched] = useState(1);
   
 
   var mounted = true;
-
 
   const { Option } = Select;
   const { Search } = Input;
   const history = useHistory();
 
-  const onSearch = async (value) => {
 
-    var searchValue = value;
-    var pageNumber = 1;
-    const productsSearchResponse = await ProductsApiUtil.searchProducts(paginationLimit, pageNumber, searchValue);
+
+  const onSearch = async (value) => {
+    let searchValue = value;
+    if(searchValue === ""){
+      setSearchedData(null);
+      setLoading(true);
+      fetchProductsData();   // imp
+      return;
+    }
+
+    setSearchedData(searchValue);
+    setLoading(true);
+    fetchSearchProducts(paginationLimit, 1, searchValue);
+  }
+
+
+  const fetchSearchProducts = async (pageLimit = 20, pageNumber = 1, searchValue) => {
+    const productsSearchResponse = await ProductsApiUtil.searchProducts(
+      pageLimit,
+      pageNumber,
+      searchValue
+    );
     console.log('productsSearchResponse:', productsSearchResponse);
     if (productsSearchResponse.hasError) {
       console.log('Cant Search Products -> ', productsSearchResponse.errorMessage);
       message.warning(productsSearchResponse.errorMessage, 2);
+      setLoading(false);
     }
     else {
       console.log('res -> ', productsSearchResponse);
       message.success(productsSearchResponse.message, 2);
       setData(productsSearchResponse.products.data);
       setPaginationData(productsSearchResponse.products.page);
+      setLoading(false);
     }
 
   }
+
+
 
   const fetchProductsData = async (pageLimit = 20, pageNumber = 1) => {
 
@@ -60,6 +83,7 @@ const Products = () => {
     }
   }
 
+
   useEffect( () => {
     fetchProductsData();
 
@@ -74,19 +98,38 @@ const Products = () => {
     setPaginationLimit(value);
     //setCurrentPage(1);
     setLoading(true);
-    if (currentPage > Math.ceil(paginationData.totalElements / value)) {
-      fetchProductsData(value, 1);
-    }
+    if(searchedData){
+      if (currentPageSearched > Math.ceil(paginationData.totalElements / value)) {
+        fetchSearchProducts(value, 1, searchedData);
+      }
+      else {
+        fetchSearchProducts(value, currentPageSearched, searchedData);
+      }
+    }  /*------end of outer if---------*/
     else {
-      fetchProductsData(value, currentPage);
-    }
+      if (currentPage > Math.ceil(paginationData.totalElements / value)) {
+        fetchProductsData(value, 1);
+      }
+      else {
+        fetchProductsData(value, currentPage);
+      }
+    }  /*------end of outer else---------*/
 
   }
+
 
   function handlePageChange(currentPg) {
     setCurrentPage(currentPg);
     setLoading(true);
     fetchProductsData(paginationLimit, currentPg);
+  }
+
+
+  function handleSearchedDataPageChange(currentPg) {
+    console.log("sechedpage");
+    setCurrentPageSearched(currentPg);
+    setLoading(true);
+    fetchSearchProducts(paginationLimit, currentPg, searchedData);
   }
 
  
@@ -110,6 +153,9 @@ const Products = () => {
       </Menu.Item>
     </Menu>
   );
+
+
+  console.log("search-vlue", searchedData);
 
 
 
@@ -159,12 +205,23 @@ const Products = () => {
           </div>
         </div>
 
-        {/* Table */}
+        {searchedData &&
         <div className='table'>
           <EdiTableProducts pageLimit={paginationLimit} tableData={data} tableDataLoading={loading}
-            paginationData={paginationData} onClickPageChanger={handlePageChange} />
-        </div>
-        {/* Table */}
+            paginationData={paginationData}
+            onClickPageChanger={handleSearchedDataPageChange}
+          />
+        </div>}
+
+        {!searchedData &&
+        <div className='table'>
+          <EdiTableProducts pageLimit={paginationLimit} tableData={data} tableDataLoading={loading}
+            paginationData={paginationData}
+            onClickPageChanger={handlePageChange}
+          />
+        </div>}
+
+
       </div>
     </div>
   );

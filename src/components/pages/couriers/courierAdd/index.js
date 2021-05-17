@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Button, message } from "antd";
 import { useHistory } from "react-router-dom";
 import * as CouriersApiUtil from "../../../../utils/api/couriers-api-utils";
@@ -6,6 +6,8 @@ import * as CouriersApiUtil from "../../../../utils/api/couriers-api-utils";
 const CourierAdd = () => {
   const history = useHistory();
   const [buttonDisabled, setButtonDisabled] = useState(false);
+
+  var mounted = true;
 
 
   const onFinish = async (values) => {
@@ -26,14 +28,24 @@ const CourierAdd = () => {
       setButtonDisabled(false);
     } else {
       console.log("res -> ", courierAddResponse);
-      message.success(courierAddResponse.message, 3);
-      setTimeout(() => {
-        history.push({
-          pathname: "/couriers",
-        });
-      }, 2000);
+      if (mounted) {     //imp if unmounted
+        message.success(courierAddResponse.message, 3);
+        setTimeout(() => {
+          history.push({
+            pathname: "/couriers",
+          });
+        }, 2000);
+      }
     }
   };
+
+
+  useEffect(() => {
+    return () => {
+      mounted = false;
+    }
+  }, []);
+
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);

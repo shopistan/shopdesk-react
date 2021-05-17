@@ -80,6 +80,19 @@ export const viewAllTaxes = async () => {
 
 
 
+export const searchTaxes = async (limit, PageNumber, searchvalue) => {
+
+  const url = UrlConstants.TAX.SEARCH + `?name=${searchvalue}&limit=${limit}&page=${PageNumber}`;
+  const callType = GenericConstants.API_CALL_TYPE.GET;
+
+  return await ApiCallUtil.http(
+      url, //api url
+      callType, //calltype
+  );
+};
+
+
+
 export const getTax = async (taxId) => {
   const formDataPair = {
       tax_id: taxId

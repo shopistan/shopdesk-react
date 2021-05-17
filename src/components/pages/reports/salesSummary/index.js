@@ -238,7 +238,7 @@ const SalesSummary = () => {
                 </Col>
                 <Col xs={24} sm={24} md={12}>
                   <Card className='card-container'>
-                    <div class='card-shade'>
+                    <div className='card-shade'>
                       <h4>Credit Card</h4>
                       <h2 className='card-pull-right'>
                         {salesMops.credit.toFixed(2)}

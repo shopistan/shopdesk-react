@@ -36,6 +36,20 @@ export const getCourier = async (courierId) => {
 };
 
 
+
+export const searchCouriers = async (limit, PageNumber, searchvalue) => {
+
+    const url = UrlConstants.COURIERS.SEARCH + `?name=${searchvalue}&limit=${limit}&page=${PageNumber}`;
+    const callType = GenericConstants.API_CALL_TYPE.GET;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+    );
+};
+
+
+
 export const viewCouriers = async (limit, PageNumber) => {
     const formDataPair = {
         limit: limit,
@@ -78,6 +92,7 @@ export const deleteCourier = async (courierId) => {
         deleteCourierFormDataBody //body
     );
 };
+
 
 export const editCourier = async (courierId, courierName, courierCode) => {
     const formDataPair = {

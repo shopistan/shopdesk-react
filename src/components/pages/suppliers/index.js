@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Button, Select, Input } from "antd";
+import { Button, Select, Input, message } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import EditableSupplier from "../../organism/table/suppliersTable";
 import * as SuppliersApiUtil from "../../../utils/api/suppliers-api-utils";
@@ -11,8 +11,9 @@ const Suppliers = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-  const [dataSearched, setDataSearched] = useState([]);
   const [paginationData, setPaginationData] = useState({});
+  const [searchedData, setSearchedData] = useState(null);
+  const [currentPageSearched, setCurrentPageSearched] = useState(1);
   const { Option } = Select;
 
   const history = useHistory();
@@ -21,83 +22,74 @@ const Suppliers = () => {
 
   var mounted = true;
 
+
+
   const onSearch = async (e) => {
-    var currValue = e.target.value;
-    currValue = currValue.toLowerCase();
-    if (currValue === "") {
+    let searchValue = e.target.value;;
+    if(searchValue === ""){ // if empty value
+      setSearchedData(null);
       setLoading(true);
       fetchSuppliersData(paginationLimit, currentPage);
-    } else {
-      const filteredData = dataSearched.filter((entry) => {
-        var supplierName = entry.supplier_name;
-        supplierName = supplierName.toLowerCase();
-        var supplierContact = entry.supplier_contact_name;
-        supplierContact = supplierContact.toLowerCase();
-        var supplierEmail = entry.supplier_contact_email;
-        supplierEmail = supplierEmail.toLowerCase();
-        var supplierPhone = entry.supplier_contact_phone;
-        supplierPhone = supplierPhone.toLowerCase();
-        var supplierTax = entry.supplier_tax_number;
-        supplierTax = supplierTax.toLowerCase();
-        return (
-          supplierName.includes(currValue) ||
-          supplierEmail.includes(currValue) ||
-          supplierContact.includes(currValue) ||
-          supplierPhone.includes(currValue)
-        );
-      });
-
-      setData(filteredData);
-      paginationData.totalElements = filteredData.length;
-      setPaginationData(paginationData);
-      setPaginationLimit(paginationLimit);
+      return;
     }
-  };
+
+    setSearchedData(searchValue);
+    setLoading(true);
+    setCurrentPageSearched(1);  //imp to set page number here
+    fetchSearchSuppliers(paginationLimit, 1, searchValue);
+  }
+
+
+  const fetchSearchSuppliers = async (pageLimit = 20, pageNumber = 1, searchValue) => {
+    const suppliersSearchResponse = await SuppliersApiUtil.searchSuppliers(
+      pageLimit,
+      pageNumber,
+      searchValue
+    );
+    console.log('suppliersSearchResponse:', suppliersSearchResponse);
+    if (suppliersSearchResponse.hasError) {
+      console.log('Cant Search Suppliers -> ', suppliersSearchResponse.errorMessage);
+      message.error(suppliersSearchResponse.errorMessage, 2);
+      setLoading(false);
+    }
+    else {
+      console.log('res -> ', suppliersSearchResponse.message);
+      if (mounted) {     //imp if unmounted
+        setData(suppliersSearchResponse.suppliers.data);
+        setPaginationData(suppliersSearchResponse.suppliers.page);
+        setLoading(false);
+      }
+    }
+    
+  }
+
 
   const fetchSuppliersData = async (pageLimit = 10, pageNumber = 1) => {
-    const SuppliersViewResponse = await SuppliersApiUtil.viewSuppliers(
+    const suppliersViewResponse = await SuppliersApiUtil.viewSuppliers(
       pageLimit,
       pageNumber
     );
-    console.log("SuppliersViewResponse:", SuppliersViewResponse);
+    console.log("SuppliersViewResponse:", suppliersViewResponse);
 
-    if (SuppliersViewResponse.hasError) {
+    if (suppliersViewResponse.hasError) {
       console.log(
         "Cant fetch suppliers -> ",
-        SuppliersViewResponse.errorMessage
+        suppliersViewResponse.errorMessage
       );
+      message.error(suppliersViewResponse.errorMessage, 3);
       setLoading(false);
     } else {
-      console.log("res -> ", SuppliersViewResponse);
+      console.log("res -> ", suppliersViewResponse);
       if (mounted) {     //imp if unmounted
-        const suppliersData = SuppliersViewResponse.suppliers.data || SuppliersViewResponse.suppliers;
-        /*----------handle data serching response------------*/
-        handledSearchedDataResponse(suppliersData);
-        /*-----------handle data serching response-----------*/
+        const suppliersData = suppliersViewResponse.suppliers.data || suppliersViewResponse.suppliers;
         setData(suppliersData);
-        setPaginationData(SuppliersViewResponse.suppliers.page || {});
+        message.success(suppliersViewResponse.message, 3);
+        setPaginationData(suppliersViewResponse.suppliers.page || {});
         setLoading(false);
       }
     }
   };
 
-
-  function handledSearchedDataResponse(dataResponse) {
-    var newData = [...dataSearched];
-    dataResponse.forEach(item => {
-      var foundObj = newData.find(obj => {
-        return obj.supplier_id === item.supplier_id;
-      });
-
-      if(!foundObj){
-        newData.push(item);
-      }
-    });
-    //console.log(newData);
-    setDataSearched(newData);
-  }
-
-  
 
   useEffect(async () => {
     fetchSuppliersData();
@@ -106,15 +98,26 @@ const Suppliers = () => {
     }
   }, []);
 
+
+
   function handleChange(value) {
     setPaginationLimit(value);
-    //setCurrentPage(1);
     setLoading(true);
-    if (currentPage > Math.ceil(paginationData.totalElements / value)) {
-      fetchSuppliersData(value, 1);
-    } else {
-      fetchSuppliersData(value, currentPage);
+    if(searchedData){   //imp is search data exists
+      if (currentPageSearched > Math.ceil(paginationData.totalElements / value)) {
+        fetchSearchSuppliers(value, 1, searchedData);
+      } else {
+        fetchSearchSuppliers(value, currentPageSearched, searchedData);
+      }
+    }  /*------end of outer if---------*/
+    else {
+      if (currentPage > Math.ceil(paginationData.totalElements / value)) {
+        fetchSuppliersData(value, 1);
+      } else {
+        fetchSuppliersData(value, currentPage);
+      }  /*------end of outer else---------*/
     }
+
   }
 
   function handlePageChange(currentPg) {
@@ -122,6 +125,15 @@ const Suppliers = () => {
     setLoading(true);
     fetchSuppliersData(paginationLimit, currentPg);
   }
+
+
+  function handleSearchedDataPageChange(currentPg) {
+    setCurrentPageSearched(currentPg);
+    setLoading(true);
+    fetchSearchSuppliers(paginationLimit, currentPg, searchedData);
+  }
+
+
 
   const handleAddSupplier = () => {
     history.push({
@@ -177,7 +189,8 @@ const Suppliers = () => {
             tableData={data}
             paginationData={paginationData}
             tableDataLoading={loading}
-            onClickPageChanger={handlePageChange}
+            onClickPageChanger={searchedData ? handleSearchedDataPageChange : handlePageChange}
+            currentPageIndex={searchedData ? currentPageSearched : currentPage}
           />
         </div>
         {/* Table */}

@@ -35,9 +35,7 @@ const ProductDiscount = () => {
         var productSku = entry.product_sku;
         productSku = productSku.toLowerCase();
         var discountedPrice = entry.discounted_price;
-        discountedPrice = discountedPrice.toLowerCase();
         var salePrice = entry.product_sale_price;
-        salePrice = salePrice.toLowerCase();
       
         return (
           productName.includes(currValue) ||
