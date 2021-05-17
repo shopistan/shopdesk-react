@@ -4,8 +4,9 @@ import * as ApiCallUtil from './generic-api-utils';
 import axios from 'axios';
 
 
-export const viewCustomers = async (page = 1, all = false) => {
+export const viewCustomers = async (limit, page = 1, all = false) => {
   const formDataPair = {
+    limit,
     page,
     all
   };
@@ -37,6 +38,21 @@ export const getSingleCustomer = async (customerId) => {
     singleCustomerFormDataBody //body
   );
 };
+
+
+
+export const searchCustomers = async (limit, PageNumber, searchvalue) => {
+
+  const url = UrlConstants.CUSTOMERS.SEARCH + `?name=${searchvalue}&limit=${limit}&page=${PageNumber}`;
+  const callType = GenericConstants.API_CALL_TYPE.GET;
+
+  return await ApiCallUtil.http(
+      url, //api url
+      callType, //calltype
+  );
+};
+
+
 
 export const updateUserDetails = async (newCustomerData) => {
   const formDataPair = {
@@ -163,6 +179,19 @@ export const addCustomer = async (newCustomerData) => {
     addCustomerFormDataBody //body
   );
 };
+
+
+export const getUserId = async () => {
+    
+  const url = UrlConstants.CUSTOMERS.GET_USER;
+  const callType = GenericConstants.API_CALL_TYPE.GET;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+  );
+};
+
 
 
 export const exportCustomers = async (customerId) => {

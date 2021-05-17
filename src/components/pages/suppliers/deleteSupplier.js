@@ -13,6 +13,8 @@ const DeleteSupplier = (props) => {
     const { match = {} } = props;
     const { supplier_id = {} } = match !== undefined && match.params;
 
+    var mounted = true;
+
     
 
     useEffect(() => {
@@ -22,6 +24,10 @@ const DeleteSupplier = (props) => {
             setTimeout(() => {
                 history.goBack();
             }, 1000);
+        }
+
+        return () => {
+            mounted = false;
         }
 
     }, []);
@@ -35,10 +41,13 @@ const DeleteSupplier = (props) => {
             setLoading(false);
         }
         else {
-            message.success(getSupplierResponse.message, 2);
-            const supplierData = getSupplierResponse.supplier[0];  //vvimp
-            setSupplierData(supplierData);
-            setLoading(false);
+            console.log("res -> ", getSupplierResponse.message);
+            if (mounted) {     //imp if unmounted
+                message.success(getSupplierResponse.message, 2);
+                const supplierData = getSupplierResponse.supplier[0];  //vvimp
+                setSupplierData(supplierData);
+                setLoading(false);
+            }
         }
     }
 
@@ -56,14 +65,16 @@ const DeleteSupplier = (props) => {
             setTimeout(hide, 1500);
         }
         else {
-            console.log('res -> ', supplierDeleteResponse);
-            message.success(supplierDeleteResponse.message, 3);
-            setTimeout(hide, 1500);
-            setTimeout(() => {
-                history.push({
-                    pathname: '/suppliers',
-                });
-            }, 2000);
+            console.log('res -> ', supplierDeleteResponse.message);
+            if (mounted) {     //imp if unmounted
+                message.success(supplierDeleteResponse.message, 3);
+                setTimeout(hide, 1500);
+                setTimeout(() => {
+                    history.push({
+                        pathname: '/suppliers',
+                    });
+                }, 2000);
+            }
         }
     };
 

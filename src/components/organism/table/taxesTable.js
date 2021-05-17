@@ -39,10 +39,15 @@ const TaxesTable = (props) => {
     ) {
       setcurrentPageNumber(1);
     }
+    else{
+      setcurrentPageNumber(props.currentPageIndex);
+    }
+
   }, [
     props.tableData,
     props.tableDataLoading,
     props.paginationData,
+    props.currentPageIndex,
   ]); /* imp passing props to re-render */
 
   const columns = [
@@ -98,7 +103,7 @@ const TaxesTable = (props) => {
       pagination={{
         total: props.paginationData && props.paginationData.totalElements,
         showTotal: (total, range) => showTotalItemsBar(total, range),
-        defaultPageSize: 10,
+        defaultPageSize: 20,
         pageSize: parseInt(props.pageLimit),
         showSizeChanger: false,
         current: currentPageNumber,

@@ -12,6 +12,7 @@ const urls = {
   },
   TAX: {
     VIEW: BASE_URL + '/api/taxes/view',
+    SEARCH: BASE_URL + '/api/taxes/search',
     VIEW_ALL: BASE_URL + '/api/taxes/viewAll',
     ADD_TAX: BASE_URL + '/api/taxes/add',
     DELETE_TAX: BASE_URL + '/api/taxes/delete',
@@ -20,6 +21,7 @@ const urls = {
   },
   CATEGORIES: {
     VIEW: BASE_URL + '/api/categories/view',
+    SEARCH: BASE_URL + '/api/categories/search',
     VIEW_ALL: BASE_URL + '/api/categories/viewAll',
     ADD_CATEGORY: BASE_URL + '/api/categories/add',
     EDIT_CATEGORY: BASE_URL + '/api/categories/edit',
@@ -28,6 +30,7 @@ const urls = {
   },
   SUPPLIERS: {
     VIEW: BASE_URL + '/api/suppliers/view',
+    SEARCH: BASE_URL + '/api/suppliers/search',
     ADD_SUPPLIER: BASE_URL + '/api/suppliers/add',
     EDIT_SUPPLIER: BASE_URL + '/api/suppliers/edit',
     DELETE_SUPPLIER: BASE_URL + '/api/suppliers/delete',
@@ -39,6 +42,7 @@ const urls = {
   },
   COURIERS: {
     VIEW: BASE_URL + '/api/couriers/view',
+    SEARCH: BASE_URL + '/api/couriers/search',
     VIEW_ALL: BASE_URL + '/api/couriers/viewAll',
     ADD_COURIER: BASE_URL + '/api/couriers/add',
     EDIT_COURIER: BASE_URL + '/api/couriers/edit',
@@ -55,6 +59,7 @@ const urls = {
     SEARCH: BASE_URL + '/api/customers/search',
     DELETE: BASE_URL + '/api/customers/delete',
     EXPORT: BASE_URL + '/api/customers/export_customers',
+    GET_USER: BASE_URL + '/api/customers/get_user_id',
   },
   PRODUCTS: {
     VIEW: BASE_URL + '/api/products/view',
@@ -77,6 +82,8 @@ const urls = {
     SALES_SUMMARY: BASE_URL + '/api/reports/saleSummary',
     CATEGORY_SALES_SUMMARY: BASE_URL + '/api/reports/categoryWiseReport',
     INVENTORY_DUMP: BASE_URL + '/api/reports/inventoryReport',
+    EXPORT_INVENTORY_DUMP: BASE_URL + '/api/reports/inventoryReportCsv',
+    GET_STORE: BASE_URL + '/api/reports/get_store_id',
 
   },
   SETUP: {

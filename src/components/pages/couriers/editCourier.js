@@ -12,6 +12,8 @@ const EditCourier = (props) => {
     const { match = {} } = props;
     const { courier_id = {} } = match !== undefined && match.params;
 
+    var mounted = true;
+
 
 
     useEffect(() => {
@@ -21,6 +23,10 @@ const EditCourier = (props) => {
             setTimeout(() => {
                 history.goBack();
             }, 1000);
+        }
+
+        return () => {
+            mounted = false;
         }
 
     }, []);
@@ -36,21 +42,23 @@ const EditCourier = (props) => {
         }
         else {
             message.success(getCourierResponse.message, 2);
-            const courierData = getCourierResponse.courier[0];  //vvimp
-            setSelectedCourierData(courierData);
-            const fieldsForAntForm = [
-              {
-                name: ['courier_name'],
-                value: courierData.courier_name
-              },
-              {
-                name: ['courier_code'],
-                value: courierData.courier_code
-              },
-            ];
-            
-            setCourierDataFields(fieldsForAntForm); 
-            setLoading(false);
+            if (mounted) {     //imp if unmounted
+                const courierData = getCourierResponse.courier[0];  //vvimp
+                setSelectedCourierData(courierData);
+                const fieldsForAntForm = [
+                    {
+                        name: ['courier_name'],
+                        value: courierData.courier_name
+                    },
+                    {
+                        name: ['courier_code'],
+                        value: courierData.courier_code
+                    },
+                ];
+
+                setCourierDataFields(fieldsForAntForm);
+                setLoading(false);
+            }
             
         }
     }
@@ -72,13 +80,15 @@ const EditCourier = (props) => {
         }
         else {
             console.log('res -> ', courierEditResponse);
-            message.success(courierEditResponse.message, 3);
-            setTimeout(hide, 1500);
-            setTimeout(() => {
-                history.push({
-                    pathname: '/couriers',
-                });
-            }, 2000);
+            if (mounted) {     //imp if unmounted
+                message.success(courierEditResponse.message, 3);
+                setTimeout(hide, 1500);
+                setTimeout(() => {
+                    history.push({
+                        pathname: '/couriers',
+                    });
+                }, 2000);
+            }
         }
     };
 

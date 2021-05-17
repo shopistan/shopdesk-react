@@ -5,11 +5,19 @@ import { Button, message, Divider } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
 import ProductsInventoryTable from "../../../organism/table/reports/productsInventoryTable";
 import * as ReportsApiUtil from '../../../../utils/api/reports-api-utils';
+import Constants from '../../../../utils/constants/constants';
+import {
+  getDataFromLocalStorage,
+} from "../../../../utils/local-storage/local-store-utils";
+
+
 
 const InventoryDump = () => {
   const [inventoryCount, SetinventoryCount] = useState("");
   const [inventoryData, setInventoryData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [userLocalStorageData, setUserLocalStorageData] = useState("");
+
 
   var mounted = true;
 
@@ -39,6 +47,11 @@ const InventoryDump = () => {
 
   useEffect(() => {
     fetchProductsInventoryData();
+    /*--------------set user local data-------------------------------*/
+    let readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+    readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
+    setUserLocalStorageData(readFromLocalStorage.auth || null);
+    /*--------------set user local data-------------------------------*/
 
     return () => {
       mounted = false;
@@ -48,7 +61,7 @@ const InventoryDump = () => {
 
 
 
-  function download_csv(csv, filename) {
+  /*function download_csv(csv, filename) {
     var csvFile;
     var downloadLink;
 
@@ -70,12 +83,12 @@ const InventoryDump = () => {
     // Add the link to your DOM
     document.body.appendChild(downloadLink);
 
-    // Lanzamos
+    
     downloadLink.click();
-  }
+  }*/
 
 
-  function export_table_to_csv(html, filename) {
+  /*function export_table_to_csv(html, filename) {
     var csv = [];
     //imp selection below
     var rows = document.querySelectorAll("div#products_inventory_data_table tr");
@@ -91,10 +104,10 @@ const InventoryDump = () => {
 
     // Download CSV
     download_csv(csv.join("\n"), filename);
-  }
+  }*/
 
 
-  const DownloadToCsv = (e) => {
+  /*const DownloadToCsv = (e) => {
 
     if (inventoryData.length > 0) {
       var html = document.getElementById('products_inventory_data_table').innerHTML;
@@ -103,6 +116,63 @@ const InventoryDump = () => {
 
     }
     else { message.error("No Sales Data Found", 3) }
+
+  }*/
+
+
+
+  const ExportToCsv = async (e) => {
+
+    if (inventoryData.length > 0) {
+      const hide = message.loading('Inventory Dump Is In Progress..', 0);
+      const getStoreResponse = await ReportsApiUtil.getStoreId();
+      if (getStoreResponse.hasError) {
+        const errorMessage = getStoreResponse.errorMessage;
+        console.log('Cant get Store Id -> ', errorMessage);
+        message.error(errorMessage, 3);
+        setTimeout(hide, 1500);
+      } else {
+        console.log("Success:", getStoreResponse.message);
+        downloadInventoryDump(hide, getStoreResponse.store_id || null);
+      }
+    }
+    else { message.error("No Inventory Data Found", 3) }
+
+  }
+
+
+
+  const downloadInventoryDump = async (hide, currentStoreId) => {
+    console.log("currentStoreId", currentStoreId);
+    const inventoryDumpExportResponse = await ReportsApiUtil.exportInventory(currentStoreId);
+    console.log("Inventory Dump export response:", inventoryDumpExportResponse);
+
+    if (inventoryDumpExportResponse.hasError) {
+      console.log(
+        "Cant Export Inventory -> ",
+        inventoryDumpExportResponse.errorMessage
+      );
+      message.error(inventoryDumpExportResponse.errorMessage, 3);
+      setTimeout(hide, 1500);
+    } else {
+      console.log("res -> ", inventoryDumpExportResponse.data);
+      setTimeout(hide, 1500);
+      /*---------------csv download--------------------------------*/
+      if (mounted) {     //imp if unmounted
+        // CSV FILE
+        let csvFile = new Blob([inventoryDumpExportResponse.data], { type: "text/csv" });
+        let url = window.URL.createObjectURL(csvFile);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = "inventory_dump_" + new Date().toUTCString() + ".csv";
+        document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+        a.click();
+        a.remove();  //afterwards we remove the element again
+        /*---------------csv download--------------------------------*/
+        message.success(inventoryDumpExportResponse.message, 3);
+      }
+
+    }
 
   }
 
@@ -115,7 +185,7 @@ const InventoryDump = () => {
 
         <Button type='primary'
           icon={<DownloadOutlined />}
-          onClick={DownloadToCsv}
+          onClick={ExportToCsv}
         >
           Download
         </Button>

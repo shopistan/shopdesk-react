@@ -26,7 +26,16 @@ const CustomersTable = (props) => {
 
   useEffect(() => {
     setData(props.tableData);
-    setcurrentPageNumber(props.currentPageIndex);
+    if (
+      props.paginationData &&
+      currentPageNumber > Math.ceil(props.paginationData.totalPages)
+    ) {
+      setcurrentPageNumber(1);
+    }
+    else{
+      setcurrentPageNumber(props.currentPageIndex);
+    }
+
   }, [
     props.tableData,
     props.tableDataLoading,
@@ -103,7 +112,7 @@ const CustomersTable = (props) => {
         pagination={{
           total: props.paginationData && props.paginationData.totalElements,
           showTotal: (total, range) => showTotalItemsBar(total, range),
-          defaultPageSize: 10,
+          defaultPageSize: 20,
           pageSize: parseInt(props.pageLimit),
           showSizeChanger: false,
           current: currentPageNumber,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Button, message } from "antd";
 import { useHistory } from "react-router-dom";
 import * as SuppliersApiUtil from "../../../../utils/api/suppliers-api-utils";
@@ -7,11 +7,14 @@ const SupplierAdd = () => {
   const history = useHistory();
   const [buttonDisabled, setButtonDisabled] = useState(false);
 
+  var mounted = true;
+
 
   const onFinish = async (values) => {
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
     console.log("Success:", values);
+    const hide = message.loading('Saving Changes in progress..', 0);
     const supplierAddResponse = await SuppliersApiUtil.addSupplier(
       values.supplier_name,
       values.contact_person,
@@ -28,16 +31,28 @@ const SupplierAdd = () => {
       );
       message.error(supplierAddResponse.errorMessage, 3);
       setButtonDisabled(false);
+      setTimeout(hide, 1500);
     } else {
-      console.log("res -> ", supplierAddResponse);
-      message.success(supplierAddResponse.message, 3);
-      setTimeout(() => {
-        history.push({
-          pathname: "/suppliers",
-        });
-      }, 2000);
+      console.log("res -> ", supplierAddResponse.message);
+      if (mounted) {     //imp if unmounted
+        message.success(supplierAddResponse.message, 3);
+        setTimeout(hide, 1500);
+        setTimeout(() => {
+          history.push({
+            pathname: "/suppliers",
+          });
+        }, 2000);
+      }
     }
   };
+
+
+  useEffect(() => {
+    return () => {
+      mounted = false;
+    }
+  }, []);
+
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);

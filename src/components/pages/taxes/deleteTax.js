@@ -12,7 +12,9 @@ const DeleteTax = (props) => {
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const { match = {} } = props;
     const { tax_id = {} } = match !== undefined && match.params;
-    
+
+    var mounted = true;
+
 
 
     useEffect(async () => {
@@ -24,6 +26,10 @@ const DeleteTax = (props) => {
             }, 1000);
         }
 
+        return () => {
+            mounted = false;
+        }
+
     }, []);
 
 
@@ -32,14 +38,17 @@ const DeleteTax = (props) => {
         console.log('gettaxResponse:', gettaxResponse);
         if (gettaxResponse.hasError) {
             console.log('getTax Cant Fetched -> ', gettaxResponse.errorMessage);
+            message.error(gettaxResponse.errorMessage, 2);
             setLoading(false);
         }
         else {
-            console.log('res -> ', gettaxResponse);
-            message.success(gettaxResponse.message, 2);
-            const taxData = gettaxResponse.tax[0];  //vvimp
-            setSelectedTaxData(taxData);
-            setLoading(false);
+            console.log('res -> ', gettaxResponse.message);
+            if (mounted) {     //imp if unmounted
+                message.success(gettaxResponse.message, 2);
+                const taxData = gettaxResponse.tax[0];  //vvimp
+                setSelectedTaxData(taxData);
+                setLoading(false);
+            }
 
         }
     }
@@ -47,7 +56,8 @@ const DeleteTax = (props) => {
 
     const handleConfirm = async () => {
         if (buttonDisabled === false) {
-            setButtonDisabled(true);}
+            setButtonDisabled(true);
+        }
         const hide = message.loading('Saving Changes in progress..', 0);
         const taxDeleteResponse = await TaxApiUtil.deleteTax(selectedTaxData.tax_id);
         console.log('taxDeleteResponse:', taxDeleteResponse);
@@ -59,14 +69,16 @@ const DeleteTax = (props) => {
             setButtonDisabled(false);
         }
         else {
-            console.log('res -> ', taxDeleteResponse);
-            message.success(taxDeleteResponse.message, 3);
-            setTimeout(hide, 1500);
-            setTimeout(() => {
-                history.push({
-                    pathname: '/taxes',
-                });
-            }, 2000);
+            console.log('res -> ', taxDeleteResponse.message);
+            if (mounted) {     //imp if unmounted
+                message.success(taxDeleteResponse.message, 3);
+                setTimeout(hide, 1500);
+                setTimeout(() => {
+                    history.push({
+                        pathname: '/taxes',
+                    });
+                }, 2000);
+            }
         }
     };
 

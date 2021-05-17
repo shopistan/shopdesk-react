@@ -77,9 +77,9 @@ const ProductsMovementReportTable = (props) => {
                                 <td colSpan="3" style={{ backgroundColor: "#eef9fb" }}><b>ORDERED</b></td>
                             </tr>
 
-                            {data.ordered.map(order => {
+                            {data.ordered.map((order, index) => {
                                 return (
-                                    <tr >
+                                    <tr key={index}>
                                         <td>{moment(order.order_date).format("MM-DD-yyyy")}</td>
                                         <td>{order.quantity}</td>
                                         <td>{order.supp_name}</td>
@@ -92,9 +92,9 @@ const ProductsMovementReportTable = (props) => {
                                 <td colSpan="3" style={{ backgroundColor: "#eef9fb" }}><b>RECIEVED</b></td>
                             </tr>
 
-                            {data.recieved.map(rec => {
+                            {data.recieved.map((rec, index) => {
                                 return (
-                                    <tr >
+                                    <tr key={index}>
                                         <td>{moment(rec.recieve_date).format("MM-DD-yyyy")}</td>
                                         <td>{rec.quantity}</td>
                                         <td></td>
@@ -107,9 +107,9 @@ const ProductsMovementReportTable = (props) => {
                                 <td colSpan="3" style={{ backgroundColor: "#eef9fb" }}><b>SOLD</b></td>
                             </tr>
 
-                            {data.sold.map(s => {
+                            {data.sold.map((s, index) => {
                                 return (
-                                    <tr >
+                                    <tr key={index}>
                                         <td>{moment(s.sold_date).format("MM-DD-yyyy")}</td>
                                         <td>{s.quantity}</td>
                                         <td></td>

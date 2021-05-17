@@ -13,15 +13,20 @@ const DeleteCategory = (props) => {
     const { match = {} } = props;
     const { cat_id = {} } = match !== undefined && match.params;
 
+    var mounted = true;
 
-    
-    useEffect( () => {
+
+    useEffect(() => {
         if (cat_id !== undefined) { getCategory(cat_id); }
         else {
             message.error("Category Id cannot be null", 2);
             setTimeout(() => {
                 history.goBack();
             }, 1000);
+        }
+
+        return () => {
+            mounted = false;
         }
 
     }, []);
@@ -36,10 +41,12 @@ const DeleteCategory = (props) => {
         }
         else {
             console.log('res -> ', getCategoryResponse);
-            message.success(getCategoryResponse.message, 2);
-            const categoryName = getCategoryResponse.category_name[0].category_name;  //vvimp
-            setSelectedCategoryName(categoryName);
-            setLoading(false);
+            if (mounted) {     //imp if unmounted
+                message.success(getCategoryResponse.message, 2);
+                const categoryName = getCategoryResponse.category_name[0].category_name;  //vvimp
+                setSelectedCategoryName(categoryName);
+                setLoading(false);
+            }
 
         }
     }
@@ -60,13 +67,15 @@ const DeleteCategory = (props) => {
         }
         else {
             console.log('res -> ', categoryDeleteResponse);
-            message.success(categoryDeleteResponse.message, 3);
-            setTimeout(hide, 1500);
-            setTimeout(() => {
-                history.push({
-                  pathname: '/categories',
-              });
-            }, 2000);
+            if (mounted) {     //imp if unmounted
+                message.success(categoryDeleteResponse.message, 3);
+                setTimeout(hide, 1500);
+                setTimeout(() => {
+                    history.push({
+                        pathname: '/categories',
+                    });
+                }, 2000);
+            }
         }
     };
 

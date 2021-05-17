@@ -36,10 +36,15 @@ const EditableTable = (props) => {
     if (currentPageNumber > Math.ceil(props.paginationData.totalPages)) {
       setcurrentPageNumber(1);
     }
+    else{
+      setcurrentPageNumber(props.currentPageIndex);
+    }
+
   }, [
     props.tableData,
     props.tableDataLoading,
     props.paginationData,
+    props.currentPageIndex,
   ]); /* imp passing props to re-render */
 
   const columns = [

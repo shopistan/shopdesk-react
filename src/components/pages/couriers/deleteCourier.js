@@ -13,6 +13,7 @@ const DeleteCourier  = (props) => {
     const { match = {} } = props;
     const { courier_id = {} } = match !== undefined && match.params;
 
+    var mounted = true;
 
 
     useEffect(() => {
@@ -22,6 +23,10 @@ const DeleteCourier  = (props) => {
             setTimeout(() => {
                 history.goBack();
             }, 1000);
+        }
+
+        return () => {
+            mounted = false;
         }
         
     }, []);
@@ -36,9 +41,11 @@ const DeleteCourier  = (props) => {
         }
         else {
             message.success(getCourierResponse.message, 2);
-            const courierData = getCourierResponse.courier[0];  //vvimp
-            setSelectedCourierData(courierData); 
-            setLoading(false);
+            if (mounted) {     //imp if unmounted
+                const courierData = getCourierResponse.courier[0];  //vvimp
+                setSelectedCourierData(courierData);
+                setLoading(false);
+            }
         }
     }
 
@@ -59,13 +66,15 @@ const DeleteCourier  = (props) => {
         }
         else {
             console.log('res -> ', courierDeleteResponse);
-            message.success(courierDeleteResponse.message, 3);
-            setTimeout(hide, 1500);
-            setTimeout(() => {
-                history.push({
-                  pathname: '/couriers',
-              });
-            }, 2000);
+            if (mounted) {     //imp if unmounted
+                message.success(courierDeleteResponse.message, 3);
+                setTimeout(hide, 1500);
+                setTimeout(() => {
+                    history.push({
+                        pathname: '/couriers',
+                    });
+                }, 2000);
+            }
         }
     };
 

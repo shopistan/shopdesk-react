@@ -12,6 +12,8 @@ const EditCategory = (props) => {
     const { match = {} } = props;
     const { cat_id = {} } = match !== undefined && match.params;
 
+    var mounted = true;
+
     
 
     useEffect(() => {
@@ -22,6 +24,10 @@ const EditCategory = (props) => {
             setTimeout(() => {
                 history.goBack();
             }, 1000);
+        }
+
+        return () => {
+            mounted = false;
         }
 
     }, []);
@@ -36,17 +42,19 @@ const EditCategory = (props) => {
         }
         else {
             console.log('res -> ', getCategoryResponse);
-            message.success(getCategoryResponse.message, 2);
-            const categoryName = getCategoryResponse.category_name[0].category_name;  //vvimp
-            setSelectedCategoryName(categoryName);
-            const fieldsForAntForm = [
-                {
-                    name: ['categoryName'],
-                    value: categoryName
-                },
-            ];
-            setCategoryDataFields(fieldsForAntForm);
-            setLoading(false);
+            if (mounted) {     //imp if unmounted
+                message.success(getCategoryResponse.message, 2);
+                const categoryName = getCategoryResponse.category_name[0].category_name;  //vvimp
+                setSelectedCategoryName(categoryName);
+                const fieldsForAntForm = [
+                    {
+                        name: ['categoryName'],
+                        value: categoryName
+                    },
+                ];
+                setCategoryDataFields(fieldsForAntForm);
+                setLoading(false);
+            }
 
         }
     }
@@ -66,13 +74,15 @@ const EditCategory = (props) => {
         }
         else {
             console.log('res -> ', categoryEditResponse);
-            message.success(categoryEditResponse.message, 3);
-            setTimeout(hide, 1500);
-            setTimeout(() => {
-                history.push({
-                    pathname: '/categories',
-                });
-            }, 2000);
+            if (mounted) {     //imp if unmounted
+                message.success(categoryEditResponse.message, 3);
+                setTimeout(hide, 1500);
+                setTimeout(() => {
+                    history.push({
+                        pathname: '/categories',
+                    });
+                }, 2000);
+            }
         }
     };
 
