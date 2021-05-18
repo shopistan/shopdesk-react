@@ -79,7 +79,7 @@ const ProductsMovementReportTable = (props) => {
 
                             {data.ordered.map((order, index) => {
                                 return (
-                                    <tr key={index}>
+                                    <tr>
                                         <td>{moment(order.order_date).format("MM-DD-yyyy")}</td>
                                         <td>{order.quantity}</td>
                                         <td>{order.supp_name}</td>
@@ -94,7 +94,7 @@ const ProductsMovementReportTable = (props) => {
 
                             {data.recieved.map((rec, index) => {
                                 return (
-                                    <tr key={index}>
+                                    <tr>
                                         <td>{moment(rec.recieve_date).format("MM-DD-yyyy")}</td>
                                         <td>{rec.quantity}</td>
                                         <td></td>
@@ -109,7 +109,7 @@ const ProductsMovementReportTable = (props) => {
 
                             {data.sold.map((s, index) => {
                                 return (
-                                    <tr key={index}>
+                                    <tr>
                                         <td>{moment(s.sold_date).format("MM-DD-yyyy")}</td>
                                         <td>{s.quantity}</td>
                                         <td></td>

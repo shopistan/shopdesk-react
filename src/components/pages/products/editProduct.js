@@ -49,9 +49,6 @@ const EditProduct = (props) => {
     var mounted = true;
 
 
-    const { getFieldDecorator } = form;
-
-
     useEffect( () => {
         if (product_id !== undefined) { fetchProductData(product_id); }
         else {
@@ -156,7 +153,7 @@ const EditProduct = (props) => {
                 }
 
                 setTaxes(taxesData);
-                form.setFieldsValue({ tax: foundObj.tax_id }); //ok correct  for option select value
+                form.setFieldsValue({ tax: productsData.tax_id }); //ok correct  for option select value
 
             }
 
