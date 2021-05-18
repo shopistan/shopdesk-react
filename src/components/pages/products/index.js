@@ -155,9 +155,6 @@ const Products = () => {
   );
 
 
-  console.log("search-vlue", searchedData);
-
-
 
   return (
     <div className='page categories'>

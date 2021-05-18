@@ -67,11 +67,14 @@ const ProductsDiscountsTable = (props) => {
         //console.log("save-key", key);
         try {
             const row = await form.validateFields();
+            //console.log("selected-row-data", row);    //only changed field of obj returned
             const newData = [...data];
             const index = newData.findIndex(item => key === item.product_id);
 
             if (index > -1) {
                 const item = newData[index];
+                let selectedItem = { ...item, ...row }; //imp to update the obj with new value
+                //console.log("changed-row-item", selectedItem); 
                 newData.splice(index, 1, {
                     ...item,
                     ...row,
@@ -79,7 +82,7 @@ const ProductsDiscountsTable = (props) => {
 
                 //setData(newData); //previous code imp one
                 setEditingKey('');
-                props.onSaveProductsSpecialPrice(newData);
+                props.onSaveProductsSpecialPrice(newData, selectedItem);  //imp 
 
             }
         } catch (errInfo) {

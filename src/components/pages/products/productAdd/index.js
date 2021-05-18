@@ -39,7 +39,7 @@ import ProductsVariantsTable from "../../../organism/table/productsNestedTable/p
 const { TextArea } = Input;
 const { Option } = Select;
 
-const pageLimit = 10;
+const pageLimit = 20;
 
 const ProductAdd = () => {
   const history = useHistory();
@@ -392,7 +392,7 @@ const ProductAdd = () => {
 
 
 
-  const handleScroll = async (e) => {
+  const handleScroll = async (e) => { 
     //console.log("inside-scroll", e);
     var height = e.target.clientHeight;
     //console.log(height);
