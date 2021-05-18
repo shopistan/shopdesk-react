@@ -154,7 +154,7 @@ const PurchaseOrder = () => {
 
 
   const fetchSuppliersData = async (pageLimit = 10, pageNumber = 1) => {
-    
+
     const SuppliersViewResponse = await SuppliersApiUtil.viewSuppliers(pageLimit, pageNumber);
     console.log("SuppliersViewResponse:", SuppliersViewResponse);
 
@@ -452,8 +452,8 @@ const PurchaseOrder = () => {
 
 
 
-  const handleSuppliersScroll = async (e) => { 
-    console.log("inside-scroll", e);
+  const handleSuppliersScroll = async (e) => {
+    //console.log("inside-scroll", e);
     var height = e.target.clientHeight;
     //console.log(height);
     //console.log(e.target.clientHeight);
@@ -464,13 +464,13 @@ const PurchaseOrder = () => {
     const clientHeight = e.target.clientHeight + height;
     //console.log("target-height", targetHeight);
 
-    if(targetHeight < clientHeight  && !isBusy){
-      let pN  = Math.ceil(suppliers.length / pageLimit) + 1;
+    if (targetHeight < clientHeight && !isBusy) {
+      let pN = Math.ceil(suppliers.length / pageLimit) + 1;
 
       if (pN <= suppliersPaginationData.totalPages) {
         setIsBusy(true);
         setSuppliersScrollLoading(true);
-        const suppliersRes = await  SuppliersApiUtil.viewSuppliers(pageLimit, pN);
+        const suppliersRes = await SuppliersApiUtil.viewSuppliers(pageLimit, pN);
         if (suppliersRes.hasError) {
           console.log("suppliersRes RESPONSE FAILED -> ", suppliersRes.errorMessage);
         } else {
@@ -554,8 +554,8 @@ const PurchaseOrder = () => {
                       ]}
                     >
                       <Select placeholder="Select Supplier"
-                          onPopupScroll={handleSuppliersScroll}
-                          loading={suppliersScrollLoading}
+                        onPopupScroll={handleSuppliersScroll}
+                        loading={suppliersScrollLoading}
                       >
                         {
                           suppliers.map((obj, index) => {

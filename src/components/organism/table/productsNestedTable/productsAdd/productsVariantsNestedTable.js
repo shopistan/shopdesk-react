@@ -161,13 +161,13 @@ const ProductsVariantsNestedTable = (props) => {
         },
         {
             title: "Tax",
-            dataIndex: "tax_id",
+            dataIndex: "tax",
             editable: true,
             width: "40%",
             render: (_, record) => {
                 return (
                     <div >
-                        <Select className='select-w-100' value={record.tax_id}>
+                        <Select className='select-w-100' value={record.tax}>
                             {
                                 props.taxes.map((obj, index) => {
                                     return (
@@ -211,7 +211,7 @@ const ProductsVariantsNestedTable = (props) => {
                 dataIndex: col.dataIndex,
                 title: col.title,
                 handleSave: handleSave,
-                inputType: col.dataIndex === 'qty' ? 'number' : col.dataIndex === 'tax_id' ? 'select' : 'text',
+                inputType: col.dataIndex === 'qty' ? 'number' : col.dataIndex === 'tax' ? 'select' : 'text',
                 editable: col.editable,
                 taxesData: props.taxes,
             }),

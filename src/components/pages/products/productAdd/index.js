@@ -64,10 +64,10 @@ const ProductAdd = () => {
   const [fileList, setFileList] = useState([]);
   const [inclusiveTax, setInclusiveTax] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(false);
-  const [taxesPaginationData, setTaxesPaginationData] = useState({});
+  //const [taxesPaginationData, setTaxesPaginationData] = useState({});
   const [categoriesPaginationData, setCategoriesPaginationData] = useState({});
   const [isBusy, setIsBusy] = useState(false);
-  const [scrollLoading, setScrollLoading] = useState(false);
+  //const [scrollLoading, setScrollLoading] = useState(false);
   const [categoriesScrollLoading, setCategoriesScrollLoading] = useState(false);
 
 
@@ -111,7 +111,7 @@ const ProductAdd = () => {
     let pageNumber = 1;
     const [categoriesRes, taxesRes] = await Promise.all([
       CategoriesApiUtil.viewCategories(pageLimit, pageNumber),
-      TaxexApiUtil.viewTaxes(pageLimit, pageNumber),
+      TaxexApiUtil.viewAllTaxes(),
     ]);
 
     /*  categories response  */
@@ -137,7 +137,7 @@ const ProductAdd = () => {
       if (mounted) {     //imp if unmounted
         setTaxes(taxesRes.taxes.data || taxesRes.taxes);
         //form.setFieldsValue({ tax: foundObj.tax_id }); //ok correct  for option select value
-        setTaxesPaginationData(taxesRes.taxes.page || {});
+        //setTaxesPaginationData(taxesRes.taxes.page || {});
       }
     }
 
@@ -392,7 +392,7 @@ const ProductAdd = () => {
 
 
 
-  const handleScroll = async (e) => { 
+  /*const handleScroll = async (e) => {
     //console.log("inside-scroll", e);
     var height = e.target.clientHeight;
     //console.log(height);
@@ -404,8 +404,8 @@ const ProductAdd = () => {
     const clientHeight = e.target.clientHeight + height;
     //console.log("target-height", targetHeight);
 
-    if(targetHeight < clientHeight  && !isBusy){
-      let pN  = Math.ceil(taxes.length / pageLimit) + 1;
+    if (targetHeight < clientHeight && !isBusy) {
+      let pN = Math.ceil(taxes.length / pageLimit) + 1;
 
       if (pN <= taxesPaginationData.totalPages) {
         setIsBusy(true);
@@ -425,11 +425,11 @@ const ProductAdd = () => {
           }
         }
 
-      } /*----------------End Of Inner If------------------------*/
+      }
 
-    } /*----------------End Of Outer If------------------------*/
+    }
 
-  }
+  }*/
 
   
 
@@ -439,9 +439,9 @@ const ProductAdd = () => {
     let targetHeight = e.target.scrollHeight - e.target.scrollTop;
     let clientHeight = e.target.clientHeight + height;
 
-    if(targetHeight < clientHeight  && !isBusy){
-      let pN  = Math.ceil(categories.length / pageLimit) + 1;
-      
+    if (targetHeight < clientHeight && !isBusy) {
+      let pN = Math.ceil(categories.length / pageLimit) + 1;
+
       if (pN <= categoriesPaginationData.totalPages) {
         setIsBusy(true);   //imp
         setCategoriesScrollLoading(true);   //imp
@@ -451,7 +451,7 @@ const ProductAdd = () => {
         } else {
           console.log("res -> ", categoriesRes);
           if (mounted) {     //imp if unmounted
-            let categoriesData = categoriesRes.categories.data|| categoriesRes.categories;
+            let categoriesData = categoriesRes.categories.data || categoriesRes.categories;
             var newData = [...categories];
             newData.push(...categoriesData);
             setCategories(newData);
@@ -634,8 +634,6 @@ const ProductAdd = () => {
                   >
                     <Select onChange={handleTaxChange}
                       placeholder="Select Tax"
-                      onPopupScroll={handleScroll}
-                      loading={scrollLoading}
                     >
                       {taxes.map((obj, index) => {
                         return (

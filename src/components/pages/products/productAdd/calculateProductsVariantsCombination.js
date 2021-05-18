@@ -25,7 +25,7 @@ export const calculateVaraintsCombinations = (variant1Tags, variant2Tags, formVa
             var singleVariantOutletOpenQtyObjRow = [];
 
             userStores.forEach((storeObj, indx) => {
-                singleVariantOutletObjRow.push({ store_id: storeObj.store_id, qty: 0, tax_id: formValues.tax || "" });
+                singleVariantOutletObjRow.push({ store_id: storeObj.store_id, qty: 0, tax: formValues.tax || "" });
                 singleVariantOutletOpenQtyObjRow.push({ store_id: storeObj.store_id, qty: formValues[`${storeObj.store_name}`] || 0 });
 
             })
@@ -59,7 +59,7 @@ export const calculateVaraintsCombinations = (variant1Tags, variant2Tags, formVa
                 var singleVariantOutletOpenQtyObjRow = [];
 
                 userStores.forEach((storeObj, indx) => {
-                    singleVariantOutletObjRow.push({ store_id: storeObj.store_id, qty: 0, tax_id: formValues.tax || "" });
+                    singleVariantOutletObjRow.push({ store_id: storeObj.store_id, qty: 0, tax: formValues.tax || "" });
                     singleVariantOutletOpenQtyObjRow.push({ store_id: storeObj.store_id, qty: formValues[`${storeObj.store_name}`] || 0 });
 
                 })
@@ -88,7 +88,7 @@ export const calculateVaraintsCombinations = (variant1Tags, variant2Tags, formVa
                     var singleVariantOutletOpenQtyObjRow = [];
 
                     userStores.forEach((storeObj, indx) => {
-                        singleVariantOutletObjRow.push({ store_id: storeObj.store_id, qty: 0, tax_id: formValues.tax || "" });
+                        singleVariantOutletObjRow.push({ store_id: storeObj.store_id, qty: 0, tax: formValues.tax || "" });
                         singleVariantOutletOpenQtyObjRow.push({ store_id: storeObj.store_id, qty: formValues[`${storeObj.store_name}`] || 0 });
 
                     })
