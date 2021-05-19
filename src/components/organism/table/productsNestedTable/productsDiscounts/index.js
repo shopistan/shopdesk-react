@@ -115,7 +115,7 @@ const ProductsDiscountsTable = (props) => {
 
     const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+          //console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
           props.onSelectedTableRows(selectedRowKeys, selectedRows);
         },
        
