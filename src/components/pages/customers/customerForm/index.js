@@ -228,7 +228,8 @@ const CustomerForm = (props) => {
                   rules={[
                     {
                       required: true,
-                      message: 'Please input valid email!'
+                      message: 'Please input valid email!',
+                      type: "email",
                     }
                   ]}
                 >
