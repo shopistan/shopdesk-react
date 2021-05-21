@@ -45,6 +45,7 @@ const EditProduct = (props) => {
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const { match = {} } = props;
     const { product_id = {} } = match !== undefined && match.params;
+    
 
     var mounted = true;
 
@@ -229,15 +230,18 @@ const EditProduct = (props) => {
 
     const handleUpload = async () => {
         //console.log(fileList[0]);   //imp
+        const hide = message.loading('Image Uploading Is In Progress...', 0);
         const ImageUploadResponse = await ProductsApiUtil.imageUpload(fileList[0]);
         console.log('ImageUploadResponse:', ImageUploadResponse);
         if (ImageUploadResponse.hasError) {
             console.log('Product Image Cant Upload -> ', ImageUploadResponse.errorMessage);
             message.error('Product  Image Cant Upload', 3);
+            setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', ImageUploadResponse);
             message.success(ImageUploadResponse.message, 3);
+            setTimeout(hide, 1500);
             setFileList([]);
             setproductImagePreviewSource(ImageUploadResponse.upload_data);
             setIsImageUpload(true);
@@ -362,7 +366,17 @@ const EditProduct = (props) => {
                                                 },
                                             ]}
                                         >
-                                            <Select>
+                                            <Select
+                                                showSearch    //vimpp to seach
+                                                placeholder="Select Tax"
+                                                optionFilterProp="children"
+                                                filterOption={(input, option) =>
+                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                                }
+                                                filterSort={(optionA, optionB) =>
+                                                optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                                                }
+                                            >
                                                 {
                                                     taxes.map((obj, index) => {
                                                         return (
@@ -387,7 +401,18 @@ const EditProduct = (props) => {
                                                 },
                                             ]}
                                         >
-                                            <Select>
+                                            <Select
+                                                showSearch    //vimpp to seach
+                                                placeholder="Select Category"
+                                                optionFilterProp="children"
+                                                filterOption={(input, option) =>
+                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                                }
+                                                filterSort={(optionA, optionB) =>
+                                                optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                                                }
+                                            
+                                            >
                                                 {
                                                     categories.map((obj, index) => {
                                                         return (

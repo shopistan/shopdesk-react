@@ -71,7 +71,7 @@ const Taxes = () => {
 
     if (taxesViewResponse.hasError) {
       console.log("Cant fetch taxes -> ", taxesViewResponse.errorMessage);
-      message.error(taxesViewResponse.errorMessage, 3);
+      //message.error(taxesViewResponse.errorMessage, 3);
       setLoading(false);
     } else {
       console.log("res -> ", taxesViewResponse);

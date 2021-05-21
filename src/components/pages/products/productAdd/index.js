@@ -33,13 +33,15 @@ import * as CategoriesApiUtil from "../../../../utils/api/categories-api-utils";
 import * as Helpers from "../../../../utils/helpers/scripts";
 import Constants from "../../../../utils/constants/constants";
 import * as ProductsVariantsCombination from "./calculateProductsVariantsCombination";
-
 import ProductsVariantsTable from "../../../organism/table/productsNestedTable/productsAdd";
+
+
+
 
 const { TextArea } = Input;
 const { Option } = Select;
 
-const pageLimit = 20;
+//const pageLimit = 20;
 
 const ProductAdd = () => {
   const history = useHistory();
@@ -52,7 +54,7 @@ const ProductAdd = () => {
     productVariantsCombinations,
     setproductVariantsCombinations,
   ] = useState([]);
-  const [inventoryTrackingCheck, setInventoryTrackingCheck] = useState(false);
+  const [inventoryTrackingCheck, setInventoryTrackingCheck] = useState(true);
   const [variantsCheck, setVariantsCheck] = useState(false);
   const [categories, setCategories] = useState([]);
   const [taxes, setTaxes] = useState([]);
@@ -65,10 +67,12 @@ const ProductAdd = () => {
   const [inclusiveTax, setInclusiveTax] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(false);
   //const [taxesPaginationData, setTaxesPaginationData] = useState({});
-  const [categoriesPaginationData, setCategoriesPaginationData] = useState({});
-  const [isBusy, setIsBusy] = useState(false);
+  //const [categoriesPaginationData, setCategoriesPaginationData] = useState({});
+  //const [isBusy, setIsBusy] = useState(false);
   //const [scrollLoading, setScrollLoading] = useState(false);
-  const [categoriesScrollLoading, setCategoriesScrollLoading] = useState(false);
+  //const [categoriesScrollLoading, setCategoriesScrollLoading] = useState(false);
+  const [storeInventoryQty, setStoreInventoryQty] = useState({});
+
 
 
   var mounted = true;
@@ -110,7 +114,7 @@ const ProductAdd = () => {
     /*-----setting products data to fields value------*/
     let pageNumber = 1;
     const [categoriesRes, taxesRes] = await Promise.all([
-      CategoriesApiUtil.viewCategories(pageLimit, pageNumber),
+      CategoriesApiUtil.viewAllCategories(),
       TaxexApiUtil.viewAllTaxes(),
     ]);
 
@@ -124,7 +128,7 @@ const ProductAdd = () => {
       console.log("res -> ", categoriesRes);
       if (mounted) {     //imp if unmounted
         setCategories(categoriesRes.categories.data || categoriesRes.categories);
-        setCategoriesPaginationData(categoriesRes.categories.page || {});
+        //setCategoriesPaginationData(categoriesRes.categories.page || {});
       }
     }
     /*  categories response  */
@@ -193,6 +197,8 @@ const ProductAdd = () => {
       });
     });
 
+    //console.log("userstores", userStores);
+
 
     if (variant1Tags.length > 0 && !Helpers.var_check(formValues.product_variant1_name )) {
       productVar1Name = "Variant 1";}
@@ -225,7 +231,9 @@ const ProductAdd = () => {
     addProductData.attributes =
       JSON.stringify(formValues.product_attributes) || [];
 
+
     //console.log("final-post-data", addProductData);
+
 
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
@@ -262,8 +270,10 @@ const ProductAdd = () => {
     return tmp.textContent || tmp.innerText || "";
   }*/
 
+
   const handleUpload = async () => {
     //console.log(fileList[0]);   //imp
+    const hide = message.loading('Image Uploading Is In Progress...', 0);
     const ImageUploadResponse = await ProductsApiUtil.imageUpload(fileList[0]);
     console.log("ImageUploadResponse:", ImageUploadResponse);
     if (ImageUploadResponse.hasError) {
@@ -272,9 +282,11 @@ const ProductAdd = () => {
         ImageUploadResponse.errorMessage
       );
       message.error("Product  Image Cant Upload", 3);
+      setTimeout(hide, 1500);
     } else {
       console.log("res -> ", ImageUploadResponse);
       message.success(ImageUploadResponse.message, 3);
+      setTimeout(hide, 1500);
       setFileList([]);
       setproductImagePreviewSource(ImageUploadResponse.upload_data);
       setIsImageUpload(true);
@@ -307,35 +319,100 @@ const ProductAdd = () => {
       setInventoryTrackingCheck(false);
     }
     setVariantsCheck(checked);
+    setInventoryTrackingCheck(true);   //new one
   };
 
+
+  const handleInventoryQtyChange = (value) => {
+
+    var formValues = form.getFieldsValue();
+    //console.log(formValues);
+    let storeInventory = {...storeInventoryQty};
+    userStores.forEach((storeObj, indx) => {
+      storeInventory[storeObj.store_id] = formValues[storeObj.store_name];
+    });
+
+    //console.log("updateqtyobj", storeInventory);
+    setStoreInventoryQty(storeInventory);
+
+  };
+
+
   const handleProductVariantsTagChangeSearch = (value) => {
-    //console.log(`selected ${value}`);
+    console.log(`selected ${value}`);
     setVariantTagvalue(value);
   };
 
   const handleVariants2TagsKeyDown = (event) => {
+    //console.log("keydown");
+
     if (event.key === "Enter") {
+     
+      var tags2 = [...variant2Tags];
+      if (variantTagvalue && !tags2.includes(variantTagvalue)) {
+        tags2.push(variantTagvalue);
+
+        setVariant2Tags(tags2); //outside if must
+        setVariantTagvalue("");  //new one
+        handleVariantsSelectTags(variant1Tags, tags2);  // new one
+
+      }
+
+    }
+  };
+
+
+  const handleVariants1TagsKeyDown = (event) => {
+    //console.log("keydown");
+
+    if (event.key === "Enter") {
+
+      var tags1 = [...variant1Tags];
+      if (variantTagvalue && !tags1.includes(variantTagvalue)) {
+        tags1.push(variantTagvalue);
+
+        setVariant1Tags(tags1); //outside if must
+        setVariantTagvalue("");  //new one
+        handleVariantsSelectTags(tags1, variant2Tags);  // new one
+
+      }
+
+    } else {
+      //console.log("not enter");
+    }
+  };
+
+
+  const handleVariants1TagsOnBlur = (event) => {
+    
+    if (variantTagvalue) {
+      var tags1 = [...variant1Tags];
+      if (!tags1.includes(variantTagvalue)) {
+        tags1.push(variantTagvalue);
+      }
+
+      setVariant1Tags(tags1); //outside if must
+      handleVariantsSelectTags(tags1, variant2Tags);  // new one
+
+    }
+    
+  };
+
+
+  const handleVariants2TagsOnBlur = (event) => {
+
+    if (variantTagvalue) {
       var tags2 = [...variant2Tags];
       if (!tags2.includes(variantTagvalue)) {
         tags2.push(variantTagvalue);
       }
       setVariant2Tags(tags2); //outside if must
+      handleVariantsSelectTags(variant1Tags, tags2);  // new one
+
     }
+    
   };
 
-  const handleVariants1TagsKeyDown = (event) => {
-    if (event.key === "Enter") {
-      //console.log("do validate");
-      var tags1 = [...variant1Tags];
-      if (!tags1.includes(variantTagvalue)) {
-        tags1.push(variantTagvalue);
-      }
-      setVariant1Tags(tags1); //outside if must
-    } else {
-      //console.log("not enter");
-    }
-  };
 
   const handleSaveUpdatedVariantsData = (updatedVariantsProducts) => {
     //console.log('changed-actual-impp-main', updatedVariantsProducts);
@@ -351,7 +428,8 @@ const ProductAdd = () => {
       variant1Tags,
       variant2Tags,
       form.getFieldsValue(),
-      userStores
+      userStores,
+      storeInventoryQty,
     );
 
     setproductVariantsCombinations(variantsCombinations);
@@ -366,7 +444,8 @@ const ProductAdd = () => {
       variant1Tags,
       variant2Tags,
       form.getFieldsValue(),
-      userStores
+      userStores,
+      storeInventoryQty,
     );
 
     setproductVariantsCombinations(variantsCombinations);
@@ -381,7 +460,8 @@ const ProductAdd = () => {
       variant1Tags,
       variant2Tags,
       form.getFieldsValue(),
-      userStores
+      userStores,
+      storeInventoryQty,
     );
 
     setproductVariantsCombinations(variantsCombinations);
@@ -433,7 +513,7 @@ const ProductAdd = () => {
 
   
 
-  const handleCategoriesScroll = async (e) => {
+  /*const handleCategoriesScroll = async (e) => {
     let height = e.target.clientHeight;
     height = height * 0.5;
     let targetHeight = e.target.scrollHeight - e.target.scrollTop;
@@ -460,24 +540,24 @@ const ProductAdd = () => {
           }
         }
 
-      } /*----------------End Of Inner If------------------------*/
+      } 
 
-    } /*----------------End Of Outer If------------------------*/
+    } 
 
-  }
+  } */
 
 
 
-  const handleVariantsSelectTags = (value) => {
+  const handleVariantsSelectTags = (tags1Arr, tags2Arr) => {
     var formValues = form.getFieldsValue();
-
     /*--getting variants combinations--*/
     setLoading(true);
     var variantsCombinations = ProductsVariantsCombination.calculateVaraintsCombinations(
-      variant1Tags,
-      variant2Tags,
+      tags1Arr,
+      tags2Arr,
       formValues,
-      userStores
+      userStores,
+      storeInventoryQty,
     );
 
     setproductVariantsCombinations(variantsCombinations);
@@ -485,10 +565,10 @@ const ProductAdd = () => {
     /*--getting variants combinations--*/
   };
 
-  const handleVariants1DeSelectTags = (value) => {
+  const handleVariants1DeSelectTags = (value, e) => {
     var tags1 = [...variant1Tags];
     const index = tags1.findIndex((item) => value === item);
-    if (index > -1) {
+    if (index > -1 ) {
       tags1.splice(index, 1);
       setVariant1Tags(tags1);
 
@@ -498,7 +578,8 @@ const ProductAdd = () => {
         tags1,
         tags1.length > 0 ? variant2Tags : [],
         form.getFieldsValue(),
-        userStores
+        userStores,
+        storeInventoryQty,
       );
 
       setproductVariantsCombinations(variantsCombinations);
@@ -507,7 +588,7 @@ const ProductAdd = () => {
     }
   };
 
-  const handleVariants2DeSelectTags = (value) => {
+  const handleVariants2DeSelectTags = (value, e) => {
     var tags2 = [...variant2Tags];
     const index = tags2.findIndex((item) => value === item);
     if (index > -1) {
@@ -520,7 +601,8 @@ const ProductAdd = () => {
         variant1Tags,
         tags2,
         form.getFieldsValue(),
-        userStores
+        userStores,
+        storeInventoryQty,
       );
 
       setproductVariantsCombinations(variantsCombinations);
@@ -551,7 +633,7 @@ const ProductAdd = () => {
               remember: true,
             }}
             onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
+            //onFinishFailed={onFinishFailed}
           >
             <div className="form__row--footer">
               <Button
@@ -611,7 +693,7 @@ const ProductAdd = () => {
                       required: true,
                       message: "Please input category name",
                     },
-                  ]}*/
+                    ]}*/
                   >
                     <TextArea rows={6} />
                   </Form.Item>
@@ -633,7 +715,15 @@ const ProductAdd = () => {
                     ]}
                   >
                     <Select onChange={handleTaxChange}
+                      showSearch    //vimpp to seach
                       placeholder="Select Tax"
+                      optionFilterProp="children"
+                      filterOption={(input, option) =>
+                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                      }
+                      filterSort={(optionA, optionB) =>
+                        optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                      }
                     >
                       {taxes.map((obj, index) => {
                         return (
@@ -658,8 +748,14 @@ const ProductAdd = () => {
                     ]}
                   >
                     <Select placeholder="Select Category"
-                      onPopupScroll={handleCategoriesScroll}
-                      loading={categoriesScrollLoading}
+                      showSearch    //vimpp to seach
+                      optionFilterProp="children"
+                      filterOption={(input, option) =>
+                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                      }
+                      filterSort={(optionA, optionB) =>
+                        optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                      }
                     >
                       {categories.map((obj, index) => {
                         return (
@@ -680,12 +776,12 @@ const ProductAdd = () => {
                   <Form.Item
                     label="Purchase Price"
                     name="purchase_price"
-                    rules={[
+                    /*rules={[
                       {
-                        required: true,
-                        message: "Required",
+                        //required: true,
+                        //message: "Required",
                       },
-                    ]}
+                    ]}*/
                   >
                     <InputNumber
                       min={0}
@@ -864,7 +960,7 @@ const ProductAdd = () => {
                   <Switch
                     checkedChildren={<CheckOutlined />}
                     unCheckedChildren={<CloseOutlined />}
-                    //defaultChecked
+                    defaultChecked
                     onChange={handleTrackingSwitch}
                   />
                 </div>
@@ -888,15 +984,17 @@ const ProductAdd = () => {
                 !variantsCheck && (
                   <div className="inventory-tracking">
                     {userStores.map((store, index) => {
+                      console.log(store.store_name);
                       return (
-                        <div className="inventory-tracking__field">
+                        <div  key={store.store_id} className="inventory-tracking__field">
                           <Form.Item
                             label={store.store_name}
-                            name={`${store.store_name}`}
+                            name={store.store_name}
                           >
                             <InputNumber
                               //defaultValue={0}
                               className="u-width-100"
+                              onChange={handleInventoryQtyChange}
                             />
                           </Form.Item>
                         </div>
@@ -961,14 +1059,17 @@ const ProductAdd = () => {
                         name="product_variant1_values"
                       >
                         <Select
-                          mode="multiple"
+                          mode="tags"
                           //allowClear
                           style={{ width: "100%" }}
                           placeholder="Add a tag"
                           onSearch={handleProductVariantsTagChangeSearch}
-                          onSelect={handleVariantsSelectTags}
+                          //onSelect={handleVariantsSelectTags}  //not using now
                           onKeyDown={handleVariants1TagsKeyDown}
-                          onDeselect={handleVariants1DeSelectTags}
+                          onDeselect={(value, e) => handleVariants1DeSelectTags(value, e)}
+                          dropdownStyle	={{display: "none"}}   //imp
+                          onBlur={handleVariants1TagsOnBlur}
+                          
                         >
                           {variant1Tags.length > 0 &&
                             variant1Tags.map((obj, index) => {
@@ -997,15 +1098,17 @@ const ProductAdd = () => {
                     <div className="form__col">
                       <Form.Item label="Value" name="product_variant2_values">
                         <Select
-                          mode="multiple"
+                          mode="tags"
                           //allowClear
                           style={{ width: "100%" }}
                           placeholder="Add a tag"
                           onSearch={handleProductVariantsTagChangeSearch}
                           onKeyDown={handleVariants2TagsKeyDown}
-                          onDeselect={handleVariants2DeSelectTags}
-                          onSelect={handleVariantsSelectTags}
+                          onDeselect={(value, e) => handleVariants2DeSelectTags(value, e)}
+                          dropdownStyle	={{display: "none"}}   //imp
+                          onBlur={handleVariants2TagsOnBlur}
                           disabled={variant1Tags.length > 0 ? false : true}
+                          
                         >
                           {variant2Tags.length > 0 &&
                             variant2Tags.map((obj, index) => {
@@ -1039,6 +1142,18 @@ const ProductAdd = () => {
               )}
             </div>
             {/* Form Section */}
+
+            <div className="form__row--footer">
+              <Button
+                type="primary"
+                className="product-btn-edit"
+                htmlType="submit"
+                disabled={buttonDisabled}
+              >
+                Add Product
+              </Button>
+            </div>
+
           </Form>
         </div>
       </div>}
