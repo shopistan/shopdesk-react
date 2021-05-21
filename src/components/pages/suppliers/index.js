@@ -76,7 +76,7 @@ const Suppliers = () => {
         "Cant fetch suppliers -> ",
         suppliersViewResponse.errorMessage
       );
-      message.error(suppliersViewResponse.errorMessage, 3);
+      //message.error(suppliersViewResponse.errorMessage, 3);   //imp not to show on Ui
       setLoading(false);
     } else {
       console.log("res -> ", suppliersViewResponse);

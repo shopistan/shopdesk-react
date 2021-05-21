@@ -61,6 +61,7 @@ const EditableCell = ({
     ) : (
       <Input ref={inputRef} onPressEnter={save} onBlur={save} />
     );
+    
 
   let childNode = children;
 
@@ -74,7 +75,7 @@ const EditableCell = ({
                         required: true,
                         message: `${title} is required.`,
                     },
-                ]} */
+        ]} */
       >
         {inputNode}
       </Form.Item>
@@ -172,6 +173,8 @@ const ProductsVariantsTable = (props) => {
 
   useEffect(() => {
     setData(props.tableData);
+    //console.log("parent", props.tableData);
+
   }, [
     props.tableData,
     props.tableDataLoading,
@@ -208,34 +211,9 @@ const ProductsVariantsTable = (props) => {
     },
     {
       title: "SKU",
-      //dataIndex: "sku",
+      dataIndex: "sku",   //imp to be edited
       //width: "30%",
-      editable: true,
-      render: (_, record) => {
-        return (
-          <div>
-            {
-              <span>
-                {record.var1_text && record.var2_text ? (
-                  <small>
-                    {record.sku +
-                      "-" +
-                      record.var1_text +
-                      "- " +
-                      record.var2_text}
-                  </small>
-                ) : record.var1_text ? (
-                  <small>
-                    {record.sku + "-" + record.var1_text + "-" + "Default"}
-                  </small>
-                ) : (
-                  ""
-                )}
-              </span>
-            }
-          </div>
-        );
-      },
+      editable: true,    //imp
     },
     {
       title: "Purchase Price",

@@ -145,12 +145,12 @@ const SupplierAdd = () => {
                 <Form.Item
                   label="Tax ID"
                   name="tax"
-                  rules={[
+                  /*rules={[
                     {
-                      required: true,
-                      message: "Please input valid tax ID",
+                      //required: true,
+                      //message: "Please input valid tax ID",
                     },
-                  ]}
+                  ]}*/
                 >
                   <Input />
                 </Form.Item>

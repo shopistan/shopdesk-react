@@ -37,6 +37,12 @@
   transition: all 0.3s;
 }
 
+
+.logo-dropdown-item:hover{
+  color: $color-logo-dropdown-item !important;
+}
+
+
 // Header
 .header {
   display: flex;

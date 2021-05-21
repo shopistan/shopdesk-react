@@ -48,7 +48,7 @@ const Categories = () => {
     console.log('categoriesSearchResponse:', categoriesSearchResponse);
     if (categoriesSearchResponse.hasError) {
       console.log('Cant Search Categories -> ', categoriesSearchResponse.errorMessage);
-      message.warning(categoriesSearchResponse.errorMessage, 2);
+      //message.error(categoriesSearchResponse.errorMessage, 2);     //imp not to show on Ui
       setLoading(false);
     }
     else {

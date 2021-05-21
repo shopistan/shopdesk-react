@@ -1,9 +1,11 @@
 
-export const calculateVaraintsCombinations = (variant1Tags, variant2Tags, formValues, userStores) => {
+export const calculateVaraintsCombinations = (variant1Tags, variant2Tags, formValues, userStores, storeInventoryQty) => {
 
     //console.log("changed", formValues);
     //console.log("varaintsvales1", variant1Tags);
     //console.log("varaintsvales2", variant2Tags);
+    //console.log("userstores", storeInventoryQty);
+
 
     var productsVariantsCombinations = [];
     var singleVariantObjectRow = {};
@@ -17,7 +19,9 @@ export const calculateVaraintsCombinations = (variant1Tags, variant2Tags, formVa
             singleVariantObjectRow.variant_row_id = index.toString();
             singleVariantObjectRow.var1_text = "";
             singleVariantObjectRow.var2_text = itemObj2;
-            singleVariantObjectRow.sku = formValues.sku || "";
+            //singleVariantObjectRow.sku = formValues.sku || "";   //imp prev
+            let variantSku = "";
+            singleVariantObjectRow.sku =  variantSku;
             singleVariantObjectRow.sale = formValues.sale_price || 0;
             singleVariantObjectRow.purchase = formValues.purchase_price || 0;
             ///////////outletInfo////////
@@ -25,8 +29,8 @@ export const calculateVaraintsCombinations = (variant1Tags, variant2Tags, formVa
             var singleVariantOutletOpenQtyObjRow = [];
 
             userStores.forEach((storeObj, indx) => {
-                singleVariantOutletObjRow.push({ store_id: storeObj.store_id, qty: 0, tax: formValues.tax || "" });
-                singleVariantOutletOpenQtyObjRow.push({ store_id: storeObj.store_id, qty: formValues[`${storeObj.store_name}`] || 0 });
+                singleVariantOutletObjRow.push({ store_id: storeObj.store_id, qty: 0, tax_id: formValues.tax || "" });
+                singleVariantOutletOpenQtyObjRow.push({ store_id: storeObj.store_id, qty: storeInventoryQty[`${storeObj.store_id}`] || 0 });
 
             })
             ///////////outletInfo////////
@@ -51,7 +55,10 @@ export const calculateVaraintsCombinations = (variant1Tags, variant2Tags, formVa
                 singleVariantObjectRow.variant_row_id = index.toString();
                 singleVariantObjectRow.var1_text = itemObj1;
                 singleVariantObjectRow.var2_text = "";
-                singleVariantObjectRow.sku = formValues.sku || "";
+                //singleVariantObjectRow.sku = formValues.sku || "";  //imp prev
+                let prodSku = formValues.sku || "";
+                let variantSku = prodSku + "-" + itemObj1 + "-" + "Default";
+                singleVariantObjectRow.sku =  variantSku;
                 singleVariantObjectRow.sale = formValues.sale_price || 0;
                 singleVariantObjectRow.purchase = formValues.purchase_price || 0;
                 ///////////outletInfo////////
@@ -59,8 +66,8 @@ export const calculateVaraintsCombinations = (variant1Tags, variant2Tags, formVa
                 var singleVariantOutletOpenQtyObjRow = [];
 
                 userStores.forEach((storeObj, indx) => {
-                    singleVariantOutletObjRow.push({ store_id: storeObj.store_id, qty: 0, tax: formValues.tax || "" });
-                    singleVariantOutletOpenQtyObjRow.push({ store_id: storeObj.store_id, qty: formValues[`${storeObj.store_name}`] || 0 });
+                    singleVariantOutletObjRow.push({ store_id: storeObj.store_id, qty: 0, tax_id: formValues.tax || "" });
+                    singleVariantOutletOpenQtyObjRow.push({ store_id: storeObj.store_id, qty: storeInventoryQty[`${storeObj.store_id}`] || 0 });
 
                 })
                 ///////////outletInfo////////
@@ -80,7 +87,10 @@ export const calculateVaraintsCombinations = (variant1Tags, variant2Tags, formVa
                     singleVariantObjectRow.variant_row_id = (combineVariantsLength++).toString();
                     singleVariantObjectRow.var1_text = itemObj1;
                     singleVariantObjectRow.var2_text = itemObj2;
-                    singleVariantObjectRow.sku = formValues.sku || "";
+                    //singleVariantObjectRow.sku = formValues.sku || "";    //imp prev
+                    let prodSku = formValues.sku || "";
+                    let variantSku = prodSku + "-" + itemObj1 + "-" + itemObj2;
+                    singleVariantObjectRow.sku =  variantSku;
                     singleVariantObjectRow.sale = formValues.sale_price || 0;
                     singleVariantObjectRow.purchase = formValues.purchase_price || 0;
                     ///////////outletInfo////////
@@ -88,8 +98,8 @@ export const calculateVaraintsCombinations = (variant1Tags, variant2Tags, formVa
                     var singleVariantOutletOpenQtyObjRow = [];
 
                     userStores.forEach((storeObj, indx) => {
-                        singleVariantOutletObjRow.push({ store_id: storeObj.store_id, qty: 0, tax: formValues.tax || "" });
-                        singleVariantOutletOpenQtyObjRow.push({ store_id: storeObj.store_id, qty: formValues[`${storeObj.store_name}`] || 0 });
+                        singleVariantOutletObjRow.push({ store_id: storeObj.store_id, qty: 0, tax_id: formValues.tax || "" });
+                        singleVariantOutletOpenQtyObjRow.push({ store_id: storeObj.store_id, qty: storeInventoryQty[`${storeObj.store_id}`] || 0 });
 
                     })
                     ///////////outletInfo////////
