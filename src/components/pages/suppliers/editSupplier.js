@@ -68,7 +68,7 @@ const EditSupplier = (props) => {
           },
           {
             name: ['tax'],
-            value: supplierData.supplier_tax_number
+            value: supplierData.supplier_tax_number || " "
           },
         ];
 
@@ -223,7 +223,7 @@ const EditSupplier = (props) => {
                   name="tax"
                   rules={[
                     {
-                      required: true,
+                      required: false,
                       message: "Please input valid tax ID",
                     },
                   ]}
@@ -240,7 +240,7 @@ const EditSupplier = (props) => {
                     className="custom-btn custom-btn--primary"
                     disabled={buttonDisabled}
                   >
-                    Edit
+                    Save
                   </Button>
                 </Form.Item>
               </div>

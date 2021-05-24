@@ -72,7 +72,7 @@ const CustomerForm = (props) => {
       },
       {
         name: ['code'],
-        value: mappedCustomerResponse.code
+        value: mappedCustomerResponse.code || " "
       },
       {
         name: ['phone'],
@@ -337,7 +337,7 @@ const CustomerForm = (props) => {
               </Button>
 
               <Button type='primary' htmlType='submit' disabled={buttonDisabled}>
-                Confirm
+                Save
               </Button>
             </div>
           </Form>
