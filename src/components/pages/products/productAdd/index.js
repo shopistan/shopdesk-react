@@ -114,6 +114,7 @@ const ProductAdd = () => {
     /*-----------set user store */
 
     /*-----setting products data to fields value------*/
+    document.getElementById('app-loader-container').style.display = "block";
     let pageNumber = 1;
     const [categoriesRes, taxesRes] = await Promise.all([
       CategoriesApiUtil.viewAllCategories(),
@@ -126,6 +127,7 @@ const ProductAdd = () => {
         "getcategoriesRes RESPONSE FAILED -> ",
         categoriesRes.errorMessage
       );
+      document.getElementById('app-loader-container').style.display = "none";
     } else {
       console.log("res -> ", categoriesRes);
       if (mounted) {     //imp if unmounted
@@ -138,6 +140,7 @@ const ProductAdd = () => {
     /*  taxes response  */
     if (taxesRes.hasError) {
       console.log("gettaxesRes RESPONSE FAILED -> ", taxesRes.errorMessage);
+      document.getElementById('app-loader-container').style.display = "block";
     } else {
       console.log("res -> ", taxesRes);
       if (mounted) {     //imp if unmounted
@@ -151,6 +154,7 @@ const ProductAdd = () => {
 
     if (mounted) {     //imp if unmounted
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
 
   };
@@ -234,11 +238,13 @@ const ProductAdd = () => {
       JSON.stringify(formValues.product_attributes) || [];
 
 
-    console.log("final-post-data", addProductData);
+    //console.log("final-post-data", addProductData);
 
 
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
+
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Adding a Product Is In Progress..', 0);
     const AddProductResponse = await ProductsApiUtil.addProduct(addProductData);
     console.log("AddProductResponse :", AddProductResponse);
@@ -249,12 +255,14 @@ const ProductAdd = () => {
       );
       message.error(AddProductResponse.errorMessage, 3);
       setButtonDisabled(false);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1000);
     } else {
       console.log("res -> ", AddProductResponse);
       setTimeout(hide, 1000);
       if (mounted) {     //imp if unmounted
         message.success(AddProductResponse.message, 3);
+        document.getElementById('app-loader-container').style.display = "none";
         setTimeout(() => {
           history.push({
             pathname: "/products",
@@ -275,6 +283,7 @@ const ProductAdd = () => {
 
   const handleUpload = async () => {
     //console.log(fileList[0]);   //imp
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Image Uploading Is In Progress...', 0);
     const ImageUploadResponse = await ProductsApiUtil.imageUpload(fileList[0]);
     console.log("ImageUploadResponse:", ImageUploadResponse);
@@ -284,10 +293,12 @@ const ProductAdd = () => {
         ImageUploadResponse.errorMessage
       );
       message.error("Product  Image Cant Upload", 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1500);
     } else {
       console.log("res -> ", ImageUploadResponse);
       message.success(ImageUploadResponse.message, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1500);
       setFileList([]);
       setproductImagePreviewSource(ImageUploadResponse.upload_data);
@@ -650,9 +661,7 @@ const ProductAdd = () => {
           icon={<ArrowLeftOutlined />}
           onClick={handleCancel} />New Product</h1>
       </div>
-      <div className="loading-container">
-        {loading && <Spin tip="Products Loading..." size="large" ></Spin>}
-      </div>
+      
 
       {!loading &&
       <div className="page__content">

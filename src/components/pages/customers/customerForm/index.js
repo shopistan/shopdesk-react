@@ -143,12 +143,14 @@ const CustomerForm = (props) => {
           code: values.code,
           balance: values.balance,
         };
+        document.getElementById('app-loader-container').style.display = "block";
         const hide = message.loading('Saving Changes in progress..', 0);
         const userDataAddResponse = await addCustomer(addCustomerData);
         //console.log(userDataAddResponse);
         if (userDataAddResponse.hasError) {
           console.log('Cant Edit Customer -> ', userDataAddResponse.errorMessage);
           message.error(userDataAddResponse.errorMessage, 3);
+          document.getElementById('app-loader-container').style.display = "none";
           setButtonDisabled(false);
           setTimeout(hide, 1000);
         }
@@ -156,6 +158,7 @@ const CustomerForm = (props) => {
           setTimeout(hide, 1000);
           console.log('res -> ', userDataAddResponse);
           message.success(userDataAddResponse.message, 3);
+          document.getElementById('app-loader-container').style.display = "none";
           setTimeout(() => {
             history.push({
               pathname: '/customers',
@@ -317,7 +320,7 @@ const CustomerForm = (props) => {
                   name='code'
                   rules={[
                     {
-                      required: true,
+                      required: false,
                       message: 'Please input Code!'
                     }
                   ]}
