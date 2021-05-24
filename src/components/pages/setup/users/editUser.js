@@ -75,12 +75,14 @@ function EditUser(props) {
 
 
     const fetchUserData = async (userId) => {
+        document.getElementById('app-loader-container').style.display = "block";
         const getUserResponse = await SetupApiUtil.getUser(userId);
         console.log('getUserResponse :', getUserResponse);
 
         if (getUserResponse.hasError) {
             console.log('Cant fetch Outlets Data -> ', getUserResponse.errorMessage);
             setLoading(false);
+            document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             console.log('res -> ', getUserResponse);
@@ -102,6 +104,7 @@ function EditUser(props) {
             });
             /*-----setting template data to fields value------*/
             setLoading(false);
+            document.getElementById('app-loader-container').style.display = "none";
 
         }
     }
@@ -144,6 +147,8 @@ function EditUser(props) {
 
         if (buttonDisabled === false) {
             setButtonDisabled(true);}
+        
+        document.getElementById('app-loader-container').style.display = "block";
         const hide = message.loading('Saving Changes in progress..', 0);
         const editUserResponse = await SetupApiUtil.editUser(editUserPostData);
         console.log('addUserResponse:', editUserResponse);
@@ -151,12 +156,14 @@ function EditUser(props) {
         if (editUserResponse.hasError) {
             console.log('Cant Edit User -> ', editUserResponse.errorMessage);
             message.error(editUserResponse.errorMessage, 3);
+            document.getElementById('app-loader-container').style.display = "none";
             setButtonDisabled(false);
             setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', editUserResponse);
             message.success(editUserResponse.message, 3);
+            document.getElementById('app-loader-container').style.display = "none";
             setTimeout(hide, 1000);
             setTimeout(() => {
                 history.push({
@@ -206,9 +213,7 @@ function EditUser(props) {
 
     return (
         <div className="page dashboard">
-            <div style={{ textAlign: "center" }}>
-                {loading && <Spin size="large" tip="Loading..." />}
-            </div>
+            
             <div className="page__header">
                 <h1><Button type="primary" shape="circle" className="back-btn"
                     style={{ marginRight: "2rem" }}

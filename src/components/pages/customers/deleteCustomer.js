@@ -5,6 +5,8 @@ import {
     getSingleCustomer,
     deleteCustomer,
   } from '../../../utils/api/customer-api-utils';
+import { ArrowLeftOutlined } from "@ant-design/icons";
+
 
 const { Text } = Typography;
 
@@ -18,10 +20,16 @@ const DeleteCustomer = (props) => {
     const [customerData, setCustomerData] = useState({});
     const [loading, setLoading] = useState(true);
 
+    var mounted = true;
+
 
 
     useEffect(async () => {
         fetchSingleCustomerData(customerId);
+
+        return () => {
+            mounted = false;
+          }
 
     }, []);
 
@@ -30,6 +38,8 @@ const DeleteCustomer = (props) => {
     const handleDeleteCustomer = async () => {
         if (buttonDisabled === false) {
             setButtonDisabled(true);}
+        
+        document.getElementById('app-loader-container').style.display = "block";
         const hide = message.loading('Saving Changes in progress..', 0);
         const customerDeleteResponse = await deleteCustomer(customerId);
         console.log('customerDeleteResponse:', customerDeleteResponse);
@@ -38,28 +48,33 @@ const DeleteCustomer = (props) => {
             console.log('Cant delete Customer -> ', customerDeleteResponse.errorMessage);
             message.error( customerDeleteResponse.errorMessage, 3);
             setButtonDisabled(false);
+            document.getElementById('app-loader-container').style.display = "none";
             setTimeout(hide, 1000);
         }
         else {
             setTimeout(hide, 1000);
             console.log('res -> ', customerDeleteResponse);
-            message.success(customerDeleteResponse.message, 3);
-            setTimeout(() => {
-                history.push({
-                    pathname: '/customers',
-                });
-            }, 1500);
+            if (mounted) {     //imp if unmounted
+                message.success(customerDeleteResponse.message, 3);
+                document.getElementById('app-loader-container').style.display = "none";
+                setTimeout(() => {
+                    history.push({
+                        pathname: '/customers',
+                    });
+                }, 1500);
+            }
         }
     };
 
 
     const fetchSingleCustomerData = async (customerId) => {
-       
+        document.getElementById('app-loader-container').style.display = "block";
         const singleCustomerDataResponse = await getSingleCustomer(customerId);
     
         if (singleCustomerDataResponse.hasError) {
             setLoading(false);
-          return  history.goBack();
+            document.getElementById('app-loader-container').style.display = "none";
+            return history.goBack();
         }
 
         const customerData = singleCustomerDataResponse.customer;
@@ -75,6 +90,7 @@ const DeleteCustomer = (props) => {
     
         setCustomerData(mappedCustomerResponse);
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
 
       };
 
@@ -88,11 +104,11 @@ const DeleteCustomer = (props) => {
 
     return (
         <div className='page categoryDel'>
-            <div style={{ textAlign: "center" }}>
-                {loading && <Spin size="large" tip="Loading..." />}
-            </div>
+
             <div className='page__header'>
-                <h1 className='page__title'>Delete customer</h1>
+                <h1 className='page__title'><Button type="primary" shape="circle" className="back-btn"
+                    icon={<ArrowLeftOutlined />}
+                    onClick={handleCancel} />Delete customer</h1>
             </div>
 
 

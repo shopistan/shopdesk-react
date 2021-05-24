@@ -41,9 +41,8 @@ const ReturnStock = () => {
   const [selectedProductId, setSelectedProductId] = useState("");
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
   const [buttonDisabled, setButtonDisabled] = useState(false);
-  const [suppliersPaginationData, setSuppliersPaginationData] = useState({});
-  const [isBusy, setIsBusy] = useState(false);
-  const [suppliersScrollLoading, setSuppliersScrollLoading] = useState(false);
+  //const [suppliersPaginationData, setSuppliersPaginationData] = useState({});
+  
 
 
 
@@ -100,6 +99,7 @@ const ReturnStock = () => {
 
 
   const fetchRegisteredProductsData = async () => {
+    document.getElementById('app-loader-container').style.display = "block";
     const productsDiscountsViewResponse = await ProductsApiUtil.getFullRegisteredProducts();
     console.log(' productsDiscountsViewResponse:', productsDiscountsViewResponse);
 
@@ -107,6 +107,7 @@ const ReturnStock = () => {
       console.log('Cant fetch registered products Data -> ', productsDiscountsViewResponse.errorMessage);
       message.error(productsDiscountsViewResponse.errorMessage, 3);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', productsDiscountsViewResponse);
@@ -133,6 +134,7 @@ const ReturnStock = () => {
 
         /*-------for filtering products--------*/
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
 
     }
@@ -142,7 +144,7 @@ const ReturnStock = () => {
 
   const fetchSuppliersData = async (pageLimit = 10, pageNumber = 1) => {
 
-    const SuppliersViewResponse = await SuppliersApiUtil.viewSuppliers(pageLimit, pageNumber);
+    const SuppliersViewResponse = await SuppliersApiUtil.viewAllSuppliers();
     console.log("SuppliersViewResponse:", SuppliersViewResponse);
 
     if (SuppliersViewResponse.hasError) {
@@ -154,7 +156,7 @@ const ReturnStock = () => {
       console.log("res -> ", SuppliersViewResponse);
       if (mounted) {     //imp if unmounted
         setSuppliersData(SuppliersViewResponse.suppliers.data || SuppliersViewResponse.suppliers);
-        setSuppliersPaginationData(SuppliersViewResponse.suppliers.page || {});
+        //setSuppliersPaginationData(SuppliersViewResponse.suppliers.page || {});
       }
     }
   };
@@ -252,6 +254,8 @@ const ReturnStock = () => {
 
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
+
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.returnStock(returnStockPostData);
     console.log('ReturnStockResponse:', res);
@@ -259,12 +263,14 @@ const ReturnStock = () => {
     if (res.hasError) {
       console.log('Cant Return Stock  -> ', res.errorMessage);
       message.error(res.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setButtonDisabled(false);
       setTimeout(hide, 1500);
     }
     else {
       console.log('res -> ', res);
       message.success(res.message, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1000);
       setTimeout(() => {
         history.push({
@@ -291,7 +297,7 @@ const ReturnStock = () => {
 
 
 
-  const handleSuppliersScroll = async (e) => {
+  /*const handleSuppliersScroll = async (e) => {
     //console.log("inside-scroll", e);
     var height = e.target.clientHeight;
     //console.log(height);
@@ -324,11 +330,11 @@ const ReturnStock = () => {
           }
         }
 
-      } /*----------------End Of Inner If------------------------*/
+      } 
 
-    } /*----------------End Of Outer If------------------------*/
+    } 
 
-  }
+  }*/   
 
 
 
@@ -339,9 +345,7 @@ const ReturnStock = () => {
       <div className="page__header">
         <h1>New Return Stock</h1>
       </div>
-      <div style={{ textAlign: "center" }}>
-        {loading && <Spin size="large" tip="Loading..." />}
-      </div>
+      
 
 
       {!loading &&
@@ -392,10 +396,17 @@ const ReturnStock = () => {
                         },
                       ]}
                     >
-                      <Select placeholder="Select Supplier"
-                        onPopupScroll={handleSuppliersScroll}
-                        loading={suppliersScrollLoading}
-                      >
+
+                    <Select placeholder="Select Supplier"
+                      showSearch    //vimpp to seach
+                      optionFilterProp="children"
+                      filterOption={(input, option) =>
+                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                      }
+                      filterSort={(optionA, optionB) =>
+                        optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                      }
+                    >
                         {
                           suppliers.map((obj, index) => {
                             return (

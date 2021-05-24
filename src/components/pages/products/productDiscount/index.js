@@ -52,6 +52,7 @@ const ProductDiscount = () => {
 
 
   const fetchProductsDiscountsData = async (pageLimit = 20, pageNumber = 1) => {
+    document.getElementById('app-loader-container').style.display = "block";
     const productsDiscountsViewResponse = await ProductsApiUtil.getFullRegisteredProducts();
     console.log(' productsDiscountsViewResponse:', productsDiscountsViewResponse);
 
@@ -59,6 +60,7 @@ const ProductDiscount = () => {
       console.log('Cant fetch products Discounts Data -> ', productsDiscountsViewResponse.errorMessage);
       message.error('Cant fetch products Discounts Data ', 3);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', productsDiscountsViewResponse);
@@ -67,6 +69,7 @@ const ProductDiscount = () => {
         setData(productsDiscountsViewResponse.products.data || productsDiscountsViewResponse.products);
         //setPaginationData(productsDiscountsViewResponse.products.page || {});
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   }
@@ -74,6 +77,7 @@ const ProductDiscount = () => {
 
   const saveProductsDiscountedData = async (ProductDiscountedData) => {
     //console.log(ProductDiscountedData);
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Saving changes in progress..', 0);
     const saveproductsDiscountedDataResponse = await ProductsApiUtil.saveProductsDiscountedData(ProductDiscountedData);
     console.log('saveproductsDiscountedDataResponse:', saveproductsDiscountedDataResponse);
@@ -83,12 +87,17 @@ const ProductDiscount = () => {
       message.error(saveproductsDiscountedDataResponse.errorMessage, 3);
       setTimeout(hide, 1000);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', saveproductsDiscountedDataResponse);
-      message.success(saveproductsDiscountedDataResponse.message, 3);
-      setTimeout(hide, 1000);
-      setLoading(false);
+      if (mounted) {     //imp if unmounted
+        message.success(saveproductsDiscountedDataResponse.message, 3);
+        setTimeout(hide, 1000);
+        setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
+      }
+      
     }
   }
 

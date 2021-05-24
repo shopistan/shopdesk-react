@@ -100,6 +100,7 @@ const SalesHistory = () => {
 
 
   const fetchSalesHistoryData = async (pageLimit = 20, pageNumber = 1) => {
+    document.getElementById('app-loader-container').style.display = "block";
     const salesHistoryViewResponse = await SalesApiUtil.getSalesHistory(
       pageLimit,
       pageNumber,
@@ -111,6 +112,7 @@ const SalesHistory = () => {
       console.log('Cant fetch registered products Data -> ', salesHistoryViewResponse.errorMessage);
       message.error(salesHistoryViewResponse.errorMessage, 3);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', salesHistoryViewResponse);
@@ -126,6 +128,7 @@ const SalesHistory = () => {
          handledSearchedDataResponse(salesData);
          /*-----------handle data serching response-----------*/
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   }

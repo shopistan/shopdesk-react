@@ -92,6 +92,7 @@ const AdjustmentStock = () => {
 
 
   const fetchRegisteredProductsData = async () => {
+    document.getElementById('app-loader-container').style.display = "block";
     const productsDiscountsViewResponse = await ProductsApiUtil.getFullRegisteredProducts();
     console.log(' productsDiscountsViewResponse:', productsDiscountsViewResponse);
 
@@ -99,6 +100,7 @@ const AdjustmentStock = () => {
       console.log('Cant fetch registered products Data -> ', productsDiscountsViewResponse.errorMessage);
       message.error(productsDiscountsViewResponse.errorMessage, 3);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', productsDiscountsViewResponse);
@@ -125,6 +127,7 @@ const AdjustmentStock = () => {
 
         /*-------for filtering products--------*/
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
 
     }
@@ -322,6 +325,8 @@ const AdjustmentStock = () => {
 
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
+
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.addStockAdjustment(addStockAdjustmentPostData);
     console.log('AddAdjustmentResponse:', res);
@@ -329,12 +334,14 @@ const AdjustmentStock = () => {
     if (res.hasError) {
       console.log('Cant Add Stock Adjustment -> ', res.errorMessage);
       message.error(res.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setButtonDisabled(false);
       setTimeout(hide, 1500);
     }
     else {
       console.log('res -> ', res);
       message.success(res.message, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1000);
       setTimeout(() => {
         history.push({
@@ -350,6 +357,7 @@ const AdjustmentStock = () => {
 
   const handleDownloadPoForm = async () => {
 
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Downloading in progress..', 0);
     const downloadPoResponse = await StockApiUtil.downloadPoForm();
     console.log("downloadPoResponse:", downloadPoResponse);
@@ -359,11 +367,13 @@ const AdjustmentStock = () => {
         "Cant Download PO Form -> ",
         downloadPoResponse.errorMessage
       );
+      document.getElementById('app-loader-container').style.display = "none";
 
       setTimeout(hide, 1500);
 
     } else {
       console.log("res -> ", downloadPoResponse);
+      document.getElementById('app-loader-container').style.display = "none";
       var csv = "SKU,Quantity\n";
       var arr = downloadPoResponse.product;
       arr.forEach(function (row) {
@@ -406,9 +416,7 @@ const AdjustmentStock = () => {
       <div className="page__header">
         <h1>New Stock Adjustment</h1>
       </div>
-      <div style={{ textAlign: "center" }}>
-        {loading && <Spin size="large" tip="Loading..." />}
-      </div>
+      
 
 
       {!loading &&
@@ -480,7 +488,7 @@ const AdjustmentStock = () => {
                           style={{ width: "100%" }}
                           id="download_csv"
                           onClick={handleDownloadPoForm}>
-                          Download SKU CSV
+                          {/*Download SKU CSV*/} Download sample File
                     </Button>
                       </Form.Item>
                     </div>

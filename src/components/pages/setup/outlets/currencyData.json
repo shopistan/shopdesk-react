@@ -10,11 +10,6 @@
         "symbol": "CA$"
     },
     {
-        "code": "EUR",
-        "name": "Euro",
-        "symbol": "€"
-    },
-    {
         "code": "AED",
         "name": "United Arab Emirates Dirham",
         "symbol": "AED"
@@ -563,16 +558,6 @@
         "code": "VND",
         "name": "Vietnamese Dong",
         "symbol": "₫"
-    },
-    {
-        "code": "XAF",
-        "name": "CFA Franc BEAC",
-        "symbol": "FCFA"
-    },
-    {
-        "code": "XOF",
-        "name": "CFA Franc BCEAO",
-        "symbol": "CFA"
     },
     {
         "code": "YER",

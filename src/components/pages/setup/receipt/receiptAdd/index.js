@@ -45,6 +45,8 @@ function ReceiptAdd() {
 
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
+
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Saving Changes in progress..', 0);
     const addTemplateResponse = await SetupApiUtil.addTemplate(addTemplatePostData);
     console.log('addTemplateResponse:', addTemplateResponse);
@@ -53,11 +55,13 @@ function ReceiptAdd() {
       console.log('Cant Add Template -> ', addTemplateResponse.errorMessage);
       message.error(addTemplateResponse.errorMessage, 3);
       setButtonDisabled(false);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1500);
     }
     else {
       console.log('res -> ', addTemplateResponse);
       message.success(addTemplateResponse.message, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1000);
       setTimeout(() => {
         history.push({

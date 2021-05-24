@@ -3,6 +3,8 @@ import "./productsStyleMain.scss";
 import { Button, Typography, message, Spin } from 'antd';
 import { useHistory } from 'react-router-dom';
 import * as ProductsApiUtil from '../../../utils/api/products-api-utils';
+import { ArrowLeftOutlined } from "@ant-design/icons";
+
 
 const { Text } = Typography;
 
@@ -29,18 +31,20 @@ const DeleteProduct = (props) => {
 
 
     const fetchProductData = async (productId) => {
-
+        document.getElementById('app-loader-container').style.display = "block";
         const getProductsResponse = await ProductsApiUtil.getProduct(productId);
         console.log('getProductsResponse:', getProductsResponse);
         if (getProductsResponse.hasError) {
             console.log('Product Cant Fetched -> ', getProductsResponse.errorMessage);
             message.error(getProductsResponse.message, 3);
+            document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             console.log('res -> ', getProductsResponse);
             message.success('product fetched Succesfully ', 3);
             setproductData(getProductsResponse.product);
             setLoading(false);
+            document.getElementById('app-loader-container').style.display = "none";
         }
     }
     
@@ -48,6 +52,8 @@ const DeleteProduct = (props) => {
     const handleConfirm = async () => {
         if (buttonDisabled === false) {
             setButtonDisabled(true);}
+
+        document.getElementById('app-loader-container').style.display = "block";
         const hide = message.loading('Saving changes in progress..', 0);
         const productDeleteResponse = await ProductsApiUtil.deleteProduct(productData.product_id);
         console.log('productDeleteResponse:', productDeleteResponse);
@@ -56,11 +62,13 @@ const DeleteProduct = (props) => {
             console.log('Cant delete a product -> ', productDeleteResponse.errorMessage);
             message.error(productDeleteResponse.errorMessage, 3);
             setButtonDisabled(false);
+            document.getElementById('app-loader-container').style.display = "none";
             setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', productDeleteResponse);
             message.success(productDeleteResponse.message, 3);
+            document.getElementById('app-loader-container').style.display = "none";
             setTimeout(hide, 1500);
             setTimeout(() => {
                 history.push({
@@ -81,15 +89,13 @@ const DeleteProduct = (props) => {
     return (
         <div className='page categoryDel'>
             <div className='page__header'>
-                <h1 className='page__title'>Delete products</h1>
+                <h1 className='page__title'><Button type="primary" shape="circle" className="back-btn"
+                    icon={<ArrowLeftOutlined />}
+                    onClick={handleCancel} />Delete products</h1>
             </div>
 
-            <div className="loading-container">
-                {loading && <Spin tip="Products Loading..." size="large" ></Spin>}
-            </div>
 
             {!loading &&
-
             <div className='page__content'>
                 <div className='page__form'>
 

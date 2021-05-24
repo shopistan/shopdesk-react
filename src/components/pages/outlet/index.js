@@ -19,6 +19,8 @@ const Outlet = () => {
   const [activeOutlet, setActiveOutlet] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  var mounted = true;
+
 
   useEffect(async () => {
     var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
@@ -35,6 +37,11 @@ const Outlet = () => {
       }
     }
 
+
+    return () => {
+      mounted = false;
+    }
+
   }, []);
 
 
@@ -46,39 +53,44 @@ const Outlet = () => {
     setLoading(true);
 
     if (foundStoreObj) {
+      document.getElementById('app-loader-container').style.display = "block";
       const userSelectOutletResponse = await OutletsApiUtil.selectOutlet(foundStoreObj.store_random);
       console.log('userSelectOutletResponse:', userSelectOutletResponse)
       if (userSelectOutletResponse.hasError) {
         console.log('Cant Select Outlet -> ', userSelectOutletResponse.errorMessage);
         message.error('Store Change UnSuccesfull ', 3);
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
       else {
         console.log('res -> ', userSelectOutletResponse);
-        userSelectOutletResponse.refresh_token = loginCacheData.refresh_token; 
-        userSelectOutletResponse.user_info = loginCacheData.user_info; 
-        clearLocalUserData();
-        saveDataIntoLocalStorage("user", userSelectOutletResponse);
-        setLoading(false);
-        message.success('Store Change Succesfull ', 3);
-        setTimeout(() => {
-          history.push({
-            pathname: '/dashboard',
-        });
-        }, 2000);
+        if (mounted) {     //imp if unmounted
+          userSelectOutletResponse.refresh_token = loginCacheData.refresh_token;
+          userSelectOutletResponse.user_info = loginCacheData.user_info;
+          clearLocalUserData();
+          saveDataIntoLocalStorage("user", userSelectOutletResponse);
+          setLoading(false);
+          document.getElementById('app-loader-container').style.display = "none";
+          message.success('Store Change Succesfull ', 3);
+          setTimeout(() => {
+            history.push({
+              pathname: '/dashboard',
+            });
+          }, 2000);
+        }
+
       }
+
     }
     else { console.log("store not found"); setLoading(false); }
 
-  }
+  } 
 
 
 
   return (
     <div className='page outlet'>
-      <div className="loading-container">
-        {loading && <Spin size="large" />}
-      </div>
+      
       <div className='page__header'>
         <h1>Select an Outlet</h1>
       </div>

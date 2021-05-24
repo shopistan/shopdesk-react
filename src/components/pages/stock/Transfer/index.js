@@ -6,6 +6,7 @@ import Constants from '../../../../utils/constants/constants';
 import {
   getDataFromLocalStorage,
 } from "../../../../utils/local-storage/local-store-utils";
+import { extendWith } from "lodash";
 
 const { Text } = Typography;
 
@@ -24,20 +25,33 @@ const TransferInventory = (props) => {
 
 
   const fetchInventoryTransfersData = async (pageLimit = 10, pageNumber = 1) => {
+    
+    document.getElementById('app-loader-container').style.display = "block";
     const inventoryTransfersViewResponse = await StockApiUtil.viewInventoryTransfers(pageLimit, pageNumber);
     console.log('inventoryTransfersViewResponse:', inventoryTransfersViewResponse);
 
     if (inventoryTransfersViewResponse.hasError) {
       console.log('Cant fetch inventory Transfers Data -> ', inventoryTransfersViewResponse.errorMessage);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', inventoryTransfersViewResponse);
+      let inventoryTransfersData =  inventoryTransfersViewResponse.transfer.data || inventoryTransfersViewResponse.transfer;
       if (mounted) {     //imp if unmounted
         message.success(inventoryTransfersViewResponse.message, 3);
-        setData(inventoryTransfersViewResponse.transfer.data || inventoryTransfersViewResponse.transfer);
+        for (let i in inventoryTransfersData) {
+          if (
+            inventoryTransfersData[i].transfer_status === "1"
+          ) {
+            message.success("Some Of The Inventory Transfers Are pending", 3);
+            break;
+          }
+        }
+        setData(inventoryTransfersData);
         setPaginationData(inventoryTransfersViewResponse.transfer.page || {});
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   }

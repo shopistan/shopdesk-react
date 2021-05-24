@@ -113,6 +113,7 @@ const TransferInventory = () => {
 
 
   const fetchRegisteredProductsData = async () => {
+    document.getElementById('app-loader-container').style.display = "block";
     const productsDiscountsViewResponse = await ProductsApiUtil.getFullRegisteredProducts();
     console.log(' productsDiscountsViewResponse:', productsDiscountsViewResponse);
 
@@ -120,6 +121,7 @@ const TransferInventory = () => {
       console.log('Cant fetch registered products Data -> ', productsDiscountsViewResponse.errorMessage);
       message.error(productsDiscountsViewResponse.errorMessage, 3);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', productsDiscountsViewResponse);
@@ -146,6 +148,7 @@ const TransferInventory = () => {
 
         /*-------for filtering products--------*/
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   }
@@ -265,6 +268,8 @@ const TransferInventory = () => {
 
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
+     
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.transferInventory(transferInventoryPostData);
     console.log('TransferOutResponse:', res);
@@ -272,19 +277,21 @@ const TransferInventory = () => {
     if (res.hasError) {
       console.log('Cant Transfer Inventory Stock  -> ', res.errorMessage);
       message.error(res.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setButtonDisabled(false);
-      setTimeout(hide, 1500);
+      setTimeout(hide, 500);
     }
     else {
       console.log('res -> ', res);
       message.success(res.message, 3);
-      setTimeout(hide, 1000);
+      document.getElementById('app-loader-container').style.display = "none";
+      setTimeout(hide, 500);
       setTimeout(() => {
         history.push({
           pathname: '/stock-control/inventory-transfers',
           activeKey: 'inventory-transfers'
         });
-      }, 2000);
+      }, 1000);
     }
 
   }
@@ -308,9 +315,6 @@ const TransferInventory = () => {
     <div className="page stock-add">
       <div className="page__header">
         <h1>Transfer Out</h1>
-      </div>
-      <div style={{ textAlign: "center" }}>
-        {loading && <Spin size="large" tip="Loading..." />}
       </div>
 
 

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Form, Input, Button, message } from "antd";
 import { useHistory } from "react-router-dom";
 import * as CouriersApiUtil from "../../../../utils/api/couriers-api-utils";
+import { ArrowLeftOutlined } from "@ant-design/icons";
+
 
 const CourierAdd = () => {
   const history = useHistory();
@@ -14,6 +16,7 @@ const CourierAdd = () => {
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
     console.log("Success:", values);
+    document.getElementById('app-loader-container').style.display = "block";
     const courierAddResponse = await CouriersApiUtil.addCourier(
       values.courier_name,
       values.courier_code
@@ -26,10 +29,12 @@ const CourierAdd = () => {
       );
       message.error(courierAddResponse.errorMessage, 3);
       setButtonDisabled(false);
+      document.getElementById('app-loader-container').style.display = "none";
     } else {
       console.log("res -> ", courierAddResponse);
       if (mounted) {     //imp if unmounted
         message.success(courierAddResponse.message, 3);
+        document.getElementById('app-loader-container').style.display = "none";
         setTimeout(() => {
           history.push({
             pathname: "/couriers",
@@ -51,10 +56,20 @@ const CourierAdd = () => {
     console.log("Failed:", errorInfo);
   };
 
+
+  const handleCancel = () => {
+    history.push({
+      pathname: '/couriers',
+    });
+  };
+
+
   return (
     <div className="page dashboard">
       <div className="page__header">
-        <h1>New Couriers</h1>
+        <h1><Button type="primary" shape="circle" className="back-btn"
+          icon={<ArrowLeftOutlined />}
+          onClick={handleCancel} />New Couriers</h1>
       </div>
 
       <div className="page__content">

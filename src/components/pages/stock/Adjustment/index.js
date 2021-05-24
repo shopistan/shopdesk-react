@@ -16,12 +16,14 @@ const  StockAdjustment = (props) => {
 
 
   const fetchStockAdjustmentsData = async (pageLimit = 10, pageNumber = 1) => {
+    document.getElementById('app-loader-container').style.display = "block";
     const stockAdjustmentsViewResponse = await StockApiUtil.viewStockAdjustments(pageLimit, pageNumber);
     console.log('stockAdjustmentsViewResponse:', stockAdjustmentsViewResponse);
 
     if (stockAdjustmentsViewResponse.hasError) {
       console.log('Cant fetch stock adjustments Data -> ', stockAdjustmentsViewResponse.errorMessage);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', stockAdjustmentsViewResponse);
@@ -30,6 +32,7 @@ const  StockAdjustment = (props) => {
         setData(stockAdjustmentsViewResponse.adjustment.data || stockAdjustmentsViewResponse.adjustment);
         setPaginationData(stockAdjustmentsViewResponse.adjustment.page || {});
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   }

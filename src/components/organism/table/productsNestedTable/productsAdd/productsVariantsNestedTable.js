@@ -202,6 +202,15 @@ const ProductsVariantsNestedTable = (props) => {
                             className='select-w-100'
                             value={selectedInputTaxVal[selectInputRowId]}
                             onChange={(value) => onChangeSelectTax(value, selectInputRowId)}
+                            //placeholder="Select Tax"
+                            showSearch    //vimpp to seach
+                            optionFilterProp="children"
+                            filterOption={(input, option) =>
+                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            }
+                            filterSort={(optionA, optionB) =>
+                                optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                            }
                         >
                             {
                                 props.taxes.map((obj, index) => {

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Form, Input, Button, message, Spin } from "antd";
 import * as SuppliersApiUtil from "../../../utils/api/suppliers-api-utils";
 import { useHistory } from "react-router-dom";
+import { ArrowLeftOutlined } from "@ant-design/icons";
+
 
 const EditSupplier = (props) => {
   const history = useHistory();
@@ -33,11 +35,13 @@ const EditSupplier = (props) => {
 
 
   const getSupplier = async (supplierId) => {
+    document.getElementById('app-loader-container').style.display = "block";
     const getSupplierResponse = await SuppliersApiUtil.getSupplier(supplierId);
     console.log('getSupplierResponse:', getSupplierResponse);
     if (getSupplierResponse.hasError) {
       console.log('Supplier Cant Fetched -> ', getSupplierResponse.errorMessage);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log("res -> ", getSupplierResponse.message);
@@ -64,12 +68,13 @@ const EditSupplier = (props) => {
           },
           {
             name: ['tax'],
-            value: supplierData.supplier_tax_number
+            value: supplierData.supplier_tax_number || " "
           },
         ];
 
         setSupplierDataFields(fieldsForAntForm);
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
 
     }
@@ -81,6 +86,8 @@ const EditSupplier = (props) => {
   const onFinish = async (values) => {
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
+    
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Saving Changes in progress..', 0);
     const supplierEditResponse = await SuppliersApiUtil.editSupplier(
       SupplierData.supplier_id,
@@ -95,12 +102,14 @@ const EditSupplier = (props) => {
     if (supplierEditResponse.hasError) {
       console.log("Cant Edit Supplier -> ", supplierEditResponse.errorMessage);
       message.error(supplierEditResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setButtonDisabled(false);
       setTimeout(hide, 1500);
     } else {
       console.log("res -> ", supplierEditResponse.message);
       if (mounted) {     //imp if unmounted
         message.success(supplierEditResponse.message, 3);
+        document.getElementById('app-loader-container').style.display = "none";
         setTimeout(hide, 1500);
         setTimeout(() => {
           history.push({
@@ -115,13 +124,20 @@ const EditSupplier = (props) => {
     console.log("Failed:", errorInfo);
   };
 
+
+  const handleCancel = () => {
+    history.push({
+      pathname: '/suppliers',
+    });
+  }
+  
+
   return (
     <div className="page categoryAdd">
       <div className="page__header">
-        <h1 className="page__title">Edit Supplier</h1>
-      </div>
-      <div style={{ textAlign: "center" }}>
-        {loading && <Spin size="large" tip="Loading..." />}
+        <h1 className="page__title"><Button type="primary" shape="circle" className="back-btn"
+          icon={<ArrowLeftOutlined />}
+          onClick={handleCancel} />Edit Supplier</h1>
       </div>
 
 
@@ -207,7 +223,7 @@ const EditSupplier = (props) => {
                   name="tax"
                   rules={[
                     {
-                      required: true,
+                      required: false,
                       message: "Please input valid tax ID",
                     },
                   ]}
@@ -224,7 +240,7 @@ const EditSupplier = (props) => {
                     className="custom-btn custom-btn--primary"
                     disabled={buttonDisabled}
                   >
-                    Edit
+                    Save
                   </Button>
                 </Form.Item>
               </div>

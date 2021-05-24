@@ -130,8 +130,10 @@ const AppShell = (props) => {
               </div>
 
               <h2 className='heading'>
-                {storeObj ? storeObj.store_name : "N/A - "}
+                {storeObj ? storeObj.store_name : "N/A"}
               </h2>
+              <small> - <a className='switch-outlet-heading' onClick={toggleOutlet} > Switch outlet</a></small>
+
             </div>
 
             <div className='header__right'>

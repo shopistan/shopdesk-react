@@ -42,7 +42,8 @@ const Dashboard = () => {
   }, []);
 
   const fetchDashboardData = async (e) => {
-    const hide = message.loading("Getting Product Data..", 0);
+    document.getElementById('app-loader-container').style.display = "block";
+    const hide = message.loading("Getting dashboard Data..", 0);
     const fetchDashboardDataviewResponse = await DasboardApiUtil.getDashboardData();
     console.log(
       "fetchDashboardDataviewResponse:",
@@ -54,10 +55,12 @@ const Dashboard = () => {
         fetchDashboardDataviewResponse.errorMessage
       );
       message.error(fetchDashboardDataviewResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setLoading(false);
       setTimeout(hide, 1000);
     } else {
       console.log("res -> ", fetchDashboardDataviewResponse);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1000);
       setLoading(false);
       message.success(fetchDashboardDataviewResponse.message, 3);

@@ -45,12 +45,14 @@ function ReceiptEdit(props) {
 
 
   const getTemplateData = async (templateId) => {
+    document.getElementById('app-loader-container').style.display = "block";
     const getTepmlateResponse = await SetupApiUtil.getTemplate(templateId);
     console.log('getTepmlateResponse:', getTepmlateResponse);
 
     if (getTepmlateResponse.hasError) {
       console.log('Cant get template Data -> ', getTepmlateResponse.errorMessage);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', getTepmlateResponse);
@@ -67,6 +69,7 @@ function ReceiptEdit(props) {
 
       /*-----setting template data to fields value------*/
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
 
     }
   }
@@ -89,6 +92,8 @@ function ReceiptEdit(props) {
 
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
+
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Saving Changes in progress..', 0);
     const editTemplateResponse = await SetupApiUtil.editTemplate(editTemplatePostData);
     console.log('editTemplateResponse:', editTemplateResponse);
@@ -97,11 +102,13 @@ function ReceiptEdit(props) {
       console.log('Cant Edit Template -> ', editTemplateResponse.errorMessage);
       message.error(editTemplateResponse.errorMessage, 3);
       setButtonDisabled(false);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1500);
     }
     else {
       console.log('res -> ', editTemplateResponse);
       message.success(editTemplateResponse.message, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1000);
       setTimeout(() => {
         history.push({
@@ -116,11 +123,14 @@ function ReceiptEdit(props) {
 
   const handleUpload = async () => {
     //console.log(fileList[0]);   //imp
+    document.getElementById('app-loader-container').style.display = "block";
+    const hide = message.loading('Saving Changes in progress..', 0);
     const ImageUploadResponse = await ProductsApiUtil.imageUpload(fileList[0]);
     console.log('ImageUploadResponse:', ImageUploadResponse);
     if (ImageUploadResponse.hasError) {
       console.log('Product Image Cant Upload -> ', ImageUploadResponse.errorMessage);
       message.error('Product  Image Cant Upload', 3);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', ImageUploadResponse);
@@ -129,6 +139,7 @@ function ReceiptEdit(props) {
       setTemplateLastImg(productImagePreviewSource);
       setproductImagePreviewSource(ImageUploadResponse.upload_data);
       setIsImageUpload(true);
+      document.getElementById('app-loader-container').style.display = "none";
     }
 
   };
@@ -175,9 +186,7 @@ function ReceiptEdit(props) {
 
   return (
     <div className="page dashboard">
-      <div style={{ textAlign: "center" }}>
-        {loading && <Spin size="large" />}
-      </div>
+      
       <div className="page__header">
         <h1><Button type="primary" shape="circle" className="back-btn"
           icon={<ArrowLeftOutlined />}
