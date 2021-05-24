@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useContext, useRef } from "react";
 import "./style.scss";
-import { Table, Input, Form, InputNumber, Row, Col, Typography } from "antd";
+import { Table, Input, Form, InputNumber, Row, Col, Tooltip, } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useHistory } from 'react-router-dom';
 
@@ -227,7 +227,10 @@ const StockNestedProductsTable = (props) => {
             render: (_, record) => {
                 return (
                     <div>
-                        <InputNumber value={record.qty || 0} />
+                        <Tooltip title={props.tableType ==='order_adjustment' && "Adjusted quantity"}>
+                            <InputNumber value={record.qty || 0} />
+                        </Tooltip>
+                        
                     </div>
                 );
             }

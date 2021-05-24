@@ -22,6 +22,7 @@ import {
   PlusOutlined,
   CloseOutlined,
   CheckOutlined,
+  ArrowLeftOutlined,
 } from "@ant-design/icons";
 import {
   getDataFromLocalStorage,
@@ -34,6 +35,7 @@ import * as Helpers from "../../../../utils/helpers/scripts";
 import Constants from "../../../../utils/constants/constants";
 import * as ProductsVariantsCombination from "./calculateProductsVariantsCombination";
 import ProductsVariantsTable from "../../../organism/table/productsNestedTable/productsAdd";
+
 
 
 
@@ -178,8 +180,8 @@ const ProductAdd = () => {
     var productVar1Name = formValues.product_variant1_name;
     var productVar2Name = formValues.product_variant2_name;
 
-    //var productVariantsDataDeepClone = JSON.parse(JSON.stringify(productVariantsCombinations)); //imp to make adeep copy
-    var productVariantsDataDeepClone = [...productVariantsCombinations]; //imp to make adeep copy
+    var productVariantsDataDeepClone = JSON.parse(JSON.stringify(productVariantsCombinations)); //imp to make adeep copy
+    //var productVariantsDataDeepClone = [...productVariantsCombinations]; //imp to make adeep copy
     //console.log("deepclone", productVariantsDataDeepClone);
 
     if (productVariantsDataDeepClone.length > 0) {
@@ -232,7 +234,7 @@ const ProductAdd = () => {
       JSON.stringify(formValues.product_attributes) || [];
 
 
-    //console.log("final-post-data", addProductData);
+    console.log("final-post-data", addProductData);
 
 
     if (buttonDisabled === false) {
@@ -419,7 +421,17 @@ const ProductAdd = () => {
     setproductVariantsCombinations(updatedVariantsProducts);
   };
 
-  const handleSaleChange = (value) => {
+
+  const handleSaleChange = (e) => {
+    /*let SalePrice = e.target.value;
+    const re = /^[0-9\b]+$/;
+    //console.log(re.test(e.target.value));
+    if (!SalePrice=== '' || !re.test(SalePrice)) {  //if contains alphabets in string
+      form.setFieldsValue({
+        sale_price: SalePrice.replace(/[^\d.-]/g, '')
+      });
+    } */
+
     /*--getting variants combinations--*/
     //console.log("inside");
     //console.log(value);
@@ -437,7 +449,17 @@ const ProductAdd = () => {
     /*--getting variants combinations--*/
   };
 
-  const handlePurchaseChange = (value) => {
+
+  const handlePurchaseChange = (e) => {
+    /*let PurchasePrice = e.target.value;
+    const re = /^[0-9\b]+$/;
+    //console.log(re.test(e.target.value));
+    if (!PurchasePrice=== '' || !re.test(PurchasePrice)) {  //if contains alphabets in string
+      form.setFieldsValue({
+        purchase_price: PurchasePrice.replace(/[^\d.-]/g, '')
+      });
+    }*/
+    
     /*--getting variants combinations--*/
     setLoading(true);
     var variantsCombinations = ProductsVariantsCombination.calculateVaraintsCombinations(
@@ -452,6 +474,8 @@ const ProductAdd = () => {
     setLoading(false);
     /*--getting variants combinations--*/
   };
+
+
 
   const handleTaxChange = (value) => {
     /*--getting variants combinations--*/
@@ -611,12 +635,20 @@ const ProductAdd = () => {
     }
   };
 
+  const handleCancel = () => {
+    history.push({
+      pathname: '/products',
+    });
+  };
+
   var ProductImageSrc = `${productImagePreviewSource}`; //imp to set image source
 
   return (
     <div className="page dashboard">
       <div className="page__header">
-        <h1>New Product</h1>
+        <h1><Button type="primary" shape="circle" className="back-btn"
+          icon={<ArrowLeftOutlined />}
+          onClick={handleCancel} />New Product</h1>
       </div>
       <div className="loading-container">
         {loading && <Spin tip="Products Loading..." size="large" ></Spin>}
@@ -975,6 +1007,12 @@ const ProductAdd = () => {
                     manage your store using inventory orders, transfers and
                     rolling inventory counts.
                   </p>
+                </div>
+              </div>
+
+              <div className="form__row opening-qty-margin">
+                <div className="form__col">
+                  <h3> Opening Quantity </h3>
                 </div>
               </div>
 

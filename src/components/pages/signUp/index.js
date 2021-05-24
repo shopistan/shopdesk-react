@@ -28,7 +28,8 @@ const SignUp = () => {
       return;
     }
 
-    const hide = message.loading('User Signing...', 0);
+    document.getElementById('app-loader-container').style.display = "block";
+    const hide = message.loading('Creating User...', 0);
 
     const signUpResponse = await signUp(
       values.fullName,
@@ -44,11 +45,13 @@ const SignUp = () => {
       const errorMessage = signUpResponse.errorMessage;
       console.log("Cant SignUP -> ", errorMessage);
       message.error(errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1500);
     } else {
       const signedUpUserDetails = signUpResponse;
       saveDataIntoLocalStorage();
       message.success("SignUp Succesfull ", 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1500);
       console.log("res -> ", signedUpUserDetails);
       setTimeout(() => {

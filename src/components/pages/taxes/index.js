@@ -66,6 +66,7 @@ const Taxes = () => {
 
 
   const fetchTaxesData = async (pageLimit = 10, pageNumber = 1) => {
+    document.getElementById('app-loader-container').style.display = "block";
     const taxesViewResponse = await TaxApiUtil.viewTaxes(pageLimit, pageNumber);
     console.log("taxesViewResponse:", taxesViewResponse);
 
@@ -73,6 +74,7 @@ const Taxes = () => {
       console.log("Cant fetch taxes -> ", taxesViewResponse.errorMessage);
       //message.error(taxesViewResponse.errorMessage, 3);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     } else {
       console.log("res -> ", taxesViewResponse);
       if (mounted) {     //imp if unmounted
@@ -81,6 +83,7 @@ const Taxes = () => {
         message.success(taxesViewResponse.message, 3);
         setPaginationData(taxesViewResponse.taxes.page || {});
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   };

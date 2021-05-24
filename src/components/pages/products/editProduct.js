@@ -20,6 +20,7 @@ import {
     UploadOutlined,
     MinusCircleOutlined,
     PlusOutlined,
+    ArrowLeftOutlined,
 } from "@ant-design/icons";
 
 import * as ProductsApiUtil from '../../../utils/api/products-api-utils';
@@ -45,7 +46,7 @@ const EditProduct = (props) => {
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const { match = {} } = props;
     const { product_id = {} } = match !== undefined && match.params;
-    
+
 
     var mounted = true;
 
@@ -67,12 +68,13 @@ const EditProduct = (props) => {
 
 
     const fetchProductData = async (productId) => {
-
+        document.getElementById('app-loader-container').style.display = "block";
         const getProductsResponse = await ProductsApiUtil.getProduct(productId);
         console.log('getProductsResponse:', getProductsResponse);
         if (getProductsResponse.hasError) {
             console.log('Product Cant Fetched -> ', getProductsResponse.errorMessage);
             message.error('Product Cant Fetched', 3);
+            document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             console.log('res -> ', getProductsResponse);
@@ -80,13 +82,15 @@ const EditProduct = (props) => {
             var productsData = getProductsResponse.product;
             setproductData(productsData);
 
+            //delete productsData['product_purchase_price'];
+
             /*-----setting products data to fields value------*/
             form.setFieldsValue({
                 sku: productsData.product_sku,
                 product_name: productsData.product_name,
                 product_description: removeHTML(productsData.product_description),
                 sale_price: productsData.product_sale_price,
-                purchase_price: productsData.product_purchase_price,
+                purchase_price: productsData.product_purchase_price || 'N/A',
                 product_variant1_key: productsData.product_variant1_name,
                 product_variant1_value: productsData.product_variant1_value,
                 product_variant2_key: productsData.product_variant2_name,
@@ -160,6 +164,7 @@ const EditProduct = (props) => {
 
             /*  taxes response  */
             setLoading(false);
+            document.getElementById('app-loader-container').style.display = "none";
 
         }
     };
@@ -197,6 +202,8 @@ const EditProduct = (props) => {
         
         if (buttonDisabled === false) {
             setButtonDisabled(true);}
+
+        document.getElementById('app-loader-container').style.display = "block";
         const hide = message.loading('Saving changes in progress..', 0);
         const EditProductResponse = await ProductsApiUtil.editProduct(productDataDeepClone);
         console.log('getProductsResponse:', EditProductResponse);
@@ -204,11 +211,13 @@ const EditProduct = (props) => {
             console.log('product Editing UnSuccesfully -> ', EditProductResponse.errorMessage);
             message.error(EditProductResponse.errorMessage, 3);
             setButtonDisabled(false);
+            document.getElementById('app-loader-container').style.display = "none";
             setTimeout(hide, 1000);
         }
         else {
             console.log('res -> ', EditProductResponse);
             setTimeout(hide, 1000);
+            document.getElementById('app-loader-container').style.display = "none";
             if (mounted) {     //imp if unmounted
                 message.success(EditProductResponse.message, 3);
                 setTimeout(() => {
@@ -269,6 +278,13 @@ const EditProduct = (props) => {
     };
 
 
+    const handleCancel = () => {
+        history.push({
+            pathname: '/products',
+        });
+    };
+
+
     var ProductImageSrc = `${productImagePreviewSource}`;  //imp to set image source
 
 
@@ -276,12 +292,11 @@ const EditProduct = (props) => {
 
         <div className='page dashboard'>
             <div className='page__header'>
-                <h1>Edit Products</h1>
+                <h1><Button type="primary" shape="circle" className="back-btn"
+                    icon={<ArrowLeftOutlined />}
+                    onClick={handleCancel} />Edit Products</h1>
             </div>
 
-            <div className="loading-container">
-                {loading && <Spin tip="Products Loading..." size="large" ></Spin>}
-            </div>
 
             {!loading &&
                 <div className='page__content'>

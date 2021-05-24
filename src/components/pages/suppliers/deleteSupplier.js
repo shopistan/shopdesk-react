@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Button, Typography, message, Spin } from 'antd';
 import { useHistory } from 'react-router-dom';
 import * as SuppliersApiUtil from '../../../utils/api/suppliers-api-utils';
+import { ArrowLeftOutlined } from "@ant-design/icons";
+
 
 const { Text } = Typography;
 
@@ -34,11 +36,13 @@ const DeleteSupplier = (props) => {
 
 
     const getSupplier = async (supplierId) => {
+        document.getElementById('app-loader-container').style.display = "block";
         const getSupplierResponse = await SuppliersApiUtil.getSupplier(supplierId);
         console.log('getSupplierResponse:', getSupplierResponse);
         if (getSupplierResponse.hasError) {
             console.log('Supplier Cant Fetched -> ', getSupplierResponse.errorMessage);
             setLoading(false);
+            document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             console.log("res -> ", getSupplierResponse.message);
@@ -47,6 +51,7 @@ const DeleteSupplier = (props) => {
                 const supplierData = getSupplierResponse.supplier[0];  //vvimp
                 setSupplierData(supplierData);
                 setLoading(false);
+                document.getElementById('app-loader-container').style.display = "none";
             }
         }
     }
@@ -54,6 +59,8 @@ const DeleteSupplier = (props) => {
     const handleConfirm = async () => {
         if (buttonDisabled === false) {
             setButtonDisabled(true);}
+
+        document.getElementById('app-loader-container').style.display = "block";
         const hide = message.loading('Saving Changes in progress..', 0);
         const supplierDeleteResponse = await SuppliersApiUtil.deleteSupplier(SupplierData.supplier_id);
         console.log('supplierDeleteResponse:', supplierDeleteResponse);
@@ -61,6 +68,7 @@ const DeleteSupplier = (props) => {
         if (supplierDeleteResponse.hasError) {
             console.log('Cant delete a Category -> ', supplierDeleteResponse.errorMessage);
             message.error(supplierDeleteResponse.errorMessage, 3);
+            document.getElementById('app-loader-container').style.display = "none";
             setButtonDisabled(false);
             setTimeout(hide, 1500);
         }
@@ -68,6 +76,7 @@ const DeleteSupplier = (props) => {
             console.log('res -> ', supplierDeleteResponse.message);
             if (mounted) {     //imp if unmounted
                 message.success(supplierDeleteResponse.message, 3);
+                document.getElementById('app-loader-container').style.display = "none";
                 setTimeout(hide, 1500);
                 setTimeout(() => {
                     history.push({
@@ -88,12 +97,10 @@ const DeleteSupplier = (props) => {
     return (
         <div className='page categoryDel'>
             <div className='page__header'>
-                <h1 className='page__title'>Delete Supplier</h1>
+                <h1 className='page__title'><Button type="primary" shape="circle" className="back-btn"
+                    icon={<ArrowLeftOutlined />}
+                    onClick={handleCancel} />Delete Supplier</h1>
             </div>
-            <div style={{ textAlign: "center" }}>
-                {loading && <Spin size="large" tip="Loading..." />}
-            </div>
-
 
             {!loading &&
                 <div className='page__content'>

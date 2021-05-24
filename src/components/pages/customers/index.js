@@ -72,6 +72,7 @@ const Customers = () => {
 
 
   const fetchCustomersData = async (pageLimit = 20, pageNumber = 1) => {
+    document.getElementById('app-loader-container').style.display = "block";
     const customersViewResponse = await CustomersApiUtil.viewCustomers(
       pageLimit,
       pageNumber
@@ -84,6 +85,7 @@ const Customers = () => {
         customersViewResponse.errorMessage
       );
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     } else {
       console.log("res -> ", customersViewResponse);
       if (mounted) {     //imp if unmounted
@@ -91,6 +93,7 @@ const Customers = () => {
         setData(customersViewResponse.Customer.data || customersViewResponse.Customer);
         setPaginationData(customersViewResponse.Customer.page || {});
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   };
@@ -148,6 +151,7 @@ const Customers = () => {
 
   const ExportToCsv = async (e) => {
     if (data.length > 0) {
+      document.getElementById('app-loader-container').style.display = "block";
       const hide = message.loading('Exporting Customers Is In Progress..', 0);
       const getuserResponse = await CustomersApiUtil.getUserId();
       console.log("customers export response:", getuserResponse);
@@ -155,6 +159,7 @@ const Customers = () => {
         const errorMessage = getuserResponse.errorMessage;
         console.log('Cant get User Id -> ', errorMessage);
         message.error(errorMessage, 3);
+        document.getElementById('app-loader-container').style.display = "none";
         setTimeout(hide, 1500);
       } else {
         console.log("Success:", getuserResponse.message);
@@ -178,9 +183,11 @@ const Customers = () => {
         "Cant Export customers -> ",
         customersExportResponse.errorMessage
       );
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1500);
     } else {
       console.log("res -> ", customersExportResponse.data);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1500);
       /*---------------csv download--------------------------------*/
       if (mounted) {     //imp if unmounted

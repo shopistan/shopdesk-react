@@ -65,12 +65,14 @@ const Products = () => {
 
   const fetchProductsData = async (pageLimit = 20, pageNumber = 1) => {
 
+    document.getElementById('app-loader-container').style.display = "block";
     const productsViewResponse = await ProductsApiUtil.viewProducts(pageLimit, pageNumber);
     console.log('productsViewResponse:', productsViewResponse);
 
     if (productsViewResponse.hasError) {
       console.log('Cant fetch products -> ', productsViewResponse.errorMessage);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', productsViewResponse);
@@ -79,6 +81,7 @@ const Products = () => {
         setData(productsViewResponse.products.data);
         setPaginationData(productsViewResponse.products.page);
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   }

@@ -23,12 +23,14 @@ function OutletAdd() {
 
 
   const fetchUsersTemplatesData = async () => {
+    document.getElementById('app-loader-container').style.display = "block";
     const userTemplatesViewResponse = await SetupApiUtil.viewAllTemplates();
     console.log('userTemplatesViewResponse:', userTemplatesViewResponse);
 
     if (userTemplatesViewResponse.hasError) {
       console.log('Cant fetch Users templates Data -> ', userTemplatesViewResponse.errorMessage);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', userTemplatesViewResponse);
@@ -36,6 +38,7 @@ function OutletAdd() {
         message.success(userTemplatesViewResponse.message, 3);
         setTemplatesData(userTemplatesViewResponse.templates.data || userTemplatesViewResponse.templates);
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   }
@@ -69,6 +72,8 @@ function OutletAdd() {
 
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
+
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Saving Changes in progress..', 0);
     const addOutletResponse = await SetupApiUtil.addOutlet(addOutletPostData);
     console.log('addOutletResponse:', addOutletResponse);
@@ -77,12 +82,14 @@ function OutletAdd() {
       console.log('Cant Add outlet -> ', addOutletResponse.errorMessage);
       message.error(addOutletResponse.errorMessage, 3);
       setButtonDisabled(false);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1500);
     }
     else {
       console.log('res -> ', addOutletResponse);
       message.success(addOutletResponse.message, 3);
       setTimeout(hide, 1000);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(() => {
         history.push({
           pathname: '/setup/outlets',
@@ -121,9 +128,7 @@ function OutletAdd() {
 
   return (
     <div className="page dashboard">
-      <div style={{ textAlign: "center" }}>
-        {loading && <Spin size="large" tip="Loading..." />}
-      </div>
+      
       <div className="page__header">
         <h1><Button type="primary" shape="circle" className="back-btn"
           icon={<ArrowLeftOutlined />}
@@ -171,7 +176,21 @@ function OutletAdd() {
                     },
                   ]}
                 >
-                  <Select onChange={handleCurrencyChange}>
+
+                  <Select onChange={handleCurrencyChange}
+                    placeholder="Select Currency"
+                    showSearch    //vimpp to seach
+                    optionFilterProp="children"
+                    filterOption={(input, option) => {
+                      //console.log(option);
+                      return (
+                        option.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0)
+                    }}
+                    filterSort={(optionA, optionB) =>
+                      optionA.children[1].toLowerCase().localeCompare(optionB.children[1].toLowerCase())
+                    }
+                  
+                  >
                     {
                       currenciesData.map((obj, index) => {
                         return (
@@ -202,7 +221,20 @@ function OutletAdd() {
                     },
                   ]}
                 >
-                  <Select>
+
+                  <Select
+                    placeholder="Select Template"
+                    showSearch    //vimpp to seach
+                    optionFilterProp="children"
+                    filterOption={(input, option) => {
+                      console.log(option);
+                      return (
+                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0)
+                    }}
+                    filterSort={(optionA, optionB) =>
+                      optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                    }
+                  >
                     {
                       templatesData.map((obj, index) => {
                         return (

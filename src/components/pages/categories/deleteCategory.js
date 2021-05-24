@@ -2,6 +2,8 @@ import React, {  useEffect, useState } from 'react';
 import { Button, Typography, message, Spin } from 'antd';
 import { useHistory } from 'react-router-dom';
 import * as CategoriesApiUtil from '../../../utils/api/categories-api-utils';
+import { ArrowLeftOutlined } from "@ant-design/icons";
+
 
 const { Text } = Typography;
 
@@ -33,11 +35,13 @@ const DeleteCategory = (props) => {
 
     
     const getCategory = async (categoryId) => {
+        document.getElementById('app-loader-container').style.display = "block";
         const getCategoryResponse = await CategoriesApiUtil.getCategory(categoryId);
         console.log('getCategoryResponse:', getCategoryResponse);
         if (getCategoryResponse.hasError) {
             console.log('getCategory Cant Fetched -> ', getCategoryResponse.errorMessage);
             setLoading(false);
+            document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             console.log('res -> ', getCategoryResponse);
@@ -46,6 +50,7 @@ const DeleteCategory = (props) => {
                 const categoryName = getCategoryResponse.category_name[0].category_name;  //vvimp
                 setSelectedCategoryName(categoryName);
                 setLoading(false);
+                document.getElementById('app-loader-container').style.display = "none";
             }
 
         }
@@ -55,6 +60,8 @@ const DeleteCategory = (props) => {
     const handleConfirm = async () => {
         if (buttonDisabled === false) {
             setButtonDisabled(true);}
+
+        document.getElementById('app-loader-container').style.display = "block";
         const hide = message.loading('Saving Changes in progress..', 0);
         const categoryDeleteResponse = await CategoriesApiUtil.deleteCategory(cat_id);
         console.log('categoryDeleteResponse:', categoryDeleteResponse);
@@ -64,12 +71,14 @@ const DeleteCategory = (props) => {
             message.error(categoryDeleteResponse.errorMessage, 3);
             setButtonDisabled(false);
             setTimeout(hide, 1500);
+            document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             console.log('res -> ', categoryDeleteResponse);
             if (mounted) {     //imp if unmounted
                 message.success(categoryDeleteResponse.message, 3);
                 setTimeout(hide, 1500);
+                document.getElementById('app-loader-container').style.display = "none";
                 setTimeout(() => {
                     history.push({
                         pathname: '/categories',
@@ -91,10 +100,9 @@ const DeleteCategory = (props) => {
     return (
         <div className='page categoryDel'>
             <div className='page__header'>
-                <h1 className='page__title'>Delete Categories</h1>
-            </div>
-            <div style={{ textAlign: "center" }}>
-                {loading && <Spin size="large" tip="Loading..." />}
+                <h1 className='page__title'><Button type="primary" shape="circle" className="back-btn"
+                    icon={<ArrowLeftOutlined />}
+                    onClick={handleCancel} />Delete Categories</h1>
             </div>
 
             {!loading &&

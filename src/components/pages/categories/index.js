@@ -64,6 +64,8 @@ const Categories = () => {
 
 
   const fetchCategoriesData = async (pageLimit = 10, pageNumber = 1) => {
+   
+    document.getElementById('app-loader-container').style.display = "block";
     const categoriesViewResponse = await CategoriesApiUtil.viewCategories(
       pageLimit,
       pageNumber
@@ -83,6 +85,8 @@ const Categories = () => {
         setData(categoriesData);
         setPaginationData(categoriesViewResponse.categories.page || {});
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
+
       }
     }
   };

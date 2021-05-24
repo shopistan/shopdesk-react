@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, message, Spin } from 'antd';
 import { useHistory } from 'react-router-dom';
 import * as CategoriesApiUtil from '../../../utils/api/categories-api-utils';
+import { ArrowLeftOutlined } from "@ant-design/icons";
+
 
 const EditCategory = (props) => {
     const history = useHistory();
@@ -34,6 +36,7 @@ const EditCategory = (props) => {
 
 
     const getCategory = async (categoryId) => {
+        document.getElementById('app-loader-container').style.display = "block";
         const getCategoryResponse = await CategoriesApiUtil.getCategory(categoryId);
         console.log('getCategoryResponse:', getCategoryResponse);
         if (getCategoryResponse.hasError) {
@@ -54,6 +57,7 @@ const EditCategory = (props) => {
                 ];
                 setCategoryDataFields(fieldsForAntForm);
                 setLoading(false);
+                document.getElementById('app-loader-container').style.display = "none";
             }
 
         }
@@ -63,6 +67,8 @@ const EditCategory = (props) => {
     const onFinish = async (values) => {
         if (buttonDisabled === false) {
             setButtonDisabled(true);} 
+
+        document.getElementById('app-loader-container').style.display = "block";
         const hide = message.loading('Saving Changes in progress..', 0);
         const categoryEditResponse = await CategoriesApiUtil.editCategory(cat_id, values.categoryName);
         console.log('categoryEditResponse:', categoryEditResponse);
@@ -71,12 +77,14 @@ const EditCategory = (props) => {
             message.error(categoryEditResponse.errorMessage, 3);
             setButtonDisabled(false);
             setTimeout(hide, 1500);
+            document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             console.log('res -> ', categoryEditResponse);
             if (mounted) {     //imp if unmounted
                 message.success(categoryEditResponse.message, 3);
                 setTimeout(hide, 1500);
+                document.getElementById('app-loader-container').style.display = "none";
                 setTimeout(() => {
                     history.push({
                         pathname: '/categories',
@@ -92,14 +100,20 @@ const EditCategory = (props) => {
     };
 
 
+    const handleCancel = () => {
+        history.push({
+          pathname: '/categories',
+        });
+    }
+
+
 
     return (
         <div className='page categoryAdd'>
             <div className='page__header'>
-                <h1 className='page__title'>Edit Categories</h1>
-            </div>
-            <div style={{ textAlign: "center" }}>
-                {loading && <Spin size="large" tip="Loading..." />}
+                <h1 className='page__title'><Button type="primary" shape="circle" className="back-btn"
+                    icon={<ArrowLeftOutlined />}
+                    onClick={handleCancel} />Edit Categories</h1>
             </div>
 
             {!loading &&
@@ -133,7 +147,7 @@ const EditCategory = (props) => {
                                     <Form.Item className='u-width-100'>
                                         <Button type='primary' htmlType='submit'
                                             disabled={buttonDisabled}>
-                                            Edit
+                                            Save
                                     </Button>
                                     </Form.Item>
                                 </div>

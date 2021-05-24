@@ -33,6 +33,8 @@ const StockReceive = (props) => {
     const { match = {} } = props;
     const { po_id = {} } =  match !== undefined && match.params;
 
+    var mounted = true;
+
 
 
 
@@ -47,27 +49,37 @@ const StockReceive = (props) => {
             }, 1000);
         }
 
+        return () => {
+            mounted = false;
+        }
+
     }, []);  //imp to render when history prop changes
 
 
     const receivePurchaseOrders = async (purchaseOrderId) => {
+        document.getElementById('app-loader-container').style.display = "block";
         const receivePurchaseOrdersResponse = await StockApiUtil.receivePurchaseOrder(purchaseOrderId);
         console.log('receivePurchaseOrdersResponse:', receivePurchaseOrdersResponse);
 
         if (receivePurchaseOrdersResponse.hasError) {
             console.log('Cant fetch Purchase Order Data -> ', receivePurchaseOrdersResponse.errorMessage);
             setLoading(false);
+            document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             console.log('res -> ', receivePurchaseOrdersResponse);
-            message.success(receivePurchaseOrdersResponse.message, 3);
-            setPoData(receivePurchaseOrdersResponse.purchase_order_info);
-            var receiveProducts = [...receivePurchaseOrdersResponse.products];
-            receiveProducts.forEach((item,) => {
-                item.qty = 0;
-            })
-            setProductsData(receiveProducts);
-            setLoading(false);
+            if (mounted) {     //imp if unmounted
+                message.success(receivePurchaseOrdersResponse.message, 3);
+                setPoData(receivePurchaseOrdersResponse.purchase_order_info);
+                var receiveProducts = [...receivePurchaseOrdersResponse.products];
+                receiveProducts.forEach((item,) => {
+                    item.qty = 0;
+                })
+                setProductsData(receiveProducts);
+                setLoading(false);
+                document.getElementById('app-loader-container').style.display = "none";
+            }
+            
         }
     }
 
@@ -103,6 +115,8 @@ const StockReceive = (props) => {
 
         if (buttonDisabled === false) {
             setButtonDisabled(true);}
+        
+        document.getElementById('app-loader-container').style.display = "block";
         const hide = message.loading('Saving Changes in progress..', 0);
         const res = await StockApiUtil.addReceivePurchaseOrder(receivePurchaseOrderPostData);
         console.log('AddreceivePoResponse:', res);
@@ -110,19 +124,24 @@ const StockReceive = (props) => {
         if (res.hasError) {
             console.log('Cant Add Receive Po -> ', res.errorMessage);
             message.error(res.errorMessage, 3);
+            document.getElementById('app-loader-container').style.display = "none";
             setButtonDisabled(false);
             setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', res);
-            message.success(res.message, 3);
-            setTimeout(hide, 1000);
-            setTimeout(() => {
-                history.push({
-                    pathname: '/stock-control/purchase-orders',
-                    activeKey: 'purchase-orders'
-                });
-            }, 2000);
+            if (mounted) {     //imp if unmounted
+                message.success(res.message, 3);
+                document.getElementById('app-loader-container').style.display = "none";
+                setTimeout(hide, 1000);
+                setTimeout(() => {
+                    history.push({
+                        pathname: '/stock-control/purchase-orders',
+                        activeKey: 'purchase-orders'
+                    });
+                }, 2000);
+            }
+
         }
 
 
@@ -140,9 +159,7 @@ const StockReceive = (props) => {
 
     return (
         <div className="page stock-add">
-            <div style={{ textAlign: "center" }}>
-                {loading && <Spin size="large" tip="Loading..." />}
-            </div>
+            
             <div className="page__header">
                 <h1>Receive  Purchase Order</h1>
             </div>

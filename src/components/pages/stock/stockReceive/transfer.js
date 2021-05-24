@@ -33,6 +33,9 @@ const TransferIn = (props) => {
     const { transfer_id = {} } =  match !== undefined && match.params;
 
 
+    var mounted = true;
+
+
 
     useEffect(() => {
         if (transfer_id !== undefined) {
@@ -44,24 +47,35 @@ const TransferIn = (props) => {
                 history.goBack();
             }, 1000);
         }
+
+
+        return () => {
+            mounted = false;
+        }
+
         
     }, []);  //imp to render when history prop changes
 
 
     const receiveTransfer = async (transferId) => {
+        document.getElementById('app-loader-container').style.display = "block";
         const receivetransferResponse = await StockApiUtil.receiveTransfer(transferId);
         console.log('receivetransferResponse:', receivetransferResponse);
 
         if (receivetransferResponse.hasError) {
             console.log('Cant receive transfers Data -> ', receivetransferResponse.errorMessage);
             setLoading(false);
+            document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             console.log('res -> ', receivetransferResponse);
-            message.success(receivetransferResponse.message, 3);
-            setTransferData(receivetransferResponse.transfer);            
-            setProductsData(receivetransferResponse.products);
-            setLoading(false);
+            if (mounted) {     //imp if unmounted
+                message.success(receivetransferResponse.message, 3);
+                setTransferData(receivetransferResponse.transfer);
+                setProductsData(receivetransferResponse.products);
+                setLoading(false);
+                document.getElementById('app-loader-container').style.display = "none";
+            }
         }
     }
 
@@ -76,6 +90,8 @@ const TransferIn = (props) => {
 
         if (buttonDisabled === false) {
             setButtonDisabled(true);}
+
+        document.getElementById('app-loader-container').style.display = "block";
         const hide = message.loading('Saving Changes in progress..', 0);
         const res = await StockApiUtil.addReceiveTransfersStatus(receiveTransferPostData);
         console.log('receiveTransfersStatusResponse:', res);
@@ -83,19 +99,23 @@ const TransferIn = (props) => {
         if (res.hasError) {
             console.log('Cant add Receive transfers status -> ', res.errorMessage);
             message.error(res.errorMessage, 3);
+            document.getElementById('app-loader-container').style.display = "none";
             setButtonDisabled(false);
             setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', res);
-            message.success(res.message, 3);
-            setTimeout(hide, 1000);
-            setTimeout(() => {
-                history.push({
-                    pathname: '/stock-control/inventory-transfers',
-                    activeKey: 'inventory-transfers'
-                });
-            }, 2000);
+            if (mounted) {     //imp if unmounted
+                message.success(res.message, 3);
+                setTimeout(hide, 1000);
+                setTimeout(() => {
+                    history.push({
+                        pathname: '/stock-control/inventory-transfers',
+                        activeKey: 'inventory-transfers'
+                    });
+                }, 2000);
+            }
+
         }
 
 
@@ -113,9 +133,7 @@ const TransferIn = (props) => {
 
     return (
         <div className="page stock-add">
-            <div style={{ textAlign: "center" }}>
-                {loading && <Spin size="large" tip="Loading..." />}
-            </div>
+            
             <div className="page__header">
                 <h1>Transfer In</h1>
             </div>

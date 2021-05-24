@@ -74,6 +74,7 @@ function Sell() {
   useEffect(() => {
     if (history.location.selected_invoice_data !== undefined) {
       var selectedViewedInvoice = history.location.selected_invoice_data;
+      console.log("invoice-imp", selectedViewedInvoice );
       var tmpInvoice = createNewInvoice();
       var rt = false;
       if (selectedViewedInvoice.status_invoice == 0) {
@@ -121,6 +122,7 @@ function Sell() {
   };
 
   const fetchRegisteredProductsData = async () => {
+    document.getElementById('app-loader-container').style.display = "block";
     const productsDiscountsViewResponse = await ProductsApiUtil.getFullRegisteredProducts();
     console.log(
       " productsDiscountsViewResponse:",
@@ -134,6 +136,7 @@ function Sell() {
       );
       message.error(productsDiscountsViewResponse.errorMessage, 3);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     } else {
       console.log("res -> ", productsDiscountsViewResponse);
 
@@ -168,6 +171,8 @@ function Sell() {
         //setRegistereProductsData(productsDiscountsViewResponse.products);
 
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
+
       }
 
     }
@@ -310,7 +315,7 @@ function Sell() {
 
   const handlePaidChange = (value) => {
     var inputValue = parseFloat(value);
-    var costFormValues = costForm.getFieldsValue();
+    //var costFormValues = costForm.getFieldsValue();
     //console.log(costFormValues);
     let paidAmount;
     if (Helpers.var_check(inputValue) && !isNaN(inputValue)) {
@@ -436,14 +441,18 @@ function Sell() {
       currentInvoice = readFromLocalStorage;
     }*/
 
-    var clonedInvoiceData = { ...saleInvoiceData }; //impp here
-    console.log(clonedInvoiceData);
 
-    clonedInvoiceData.status = status; //imp
-    updateCart(clonedInvoiceData); // impppp
+    //var clonedInvoiceData = saleInvoiceData ; //impp here
+    //var clonedInvoiceData1 = JSON.parse(JSON.stringify(saleInvoiceData)); //imp to make adeep copy
+    //console.log(clonedInvoiceData);
+
+    saleInvoiceData.status = status; //imp
+    console.log(saleInvoiceData);
+    //updateCart(clonedInvoiceData); // impppp  prev but no need here
+
 
     if (Helpers.var_check(localInvoiceQueue.data)) {
-      localInvoiceQueue.data.push(saleInvoiceData); //imp
+      localInvoiceQueue.data.push(saleInvoiceData); //imp  prev
       console.log("invoice-queue-insert");
       saveDataIntoLocalStorage(
         Constants.SELL_INVOICE_QUEUE_KEY,
@@ -489,7 +498,9 @@ function Sell() {
       ? readFromLocalStorage.data
       : null;
 
-    var currentInvoice;
+    //console.log("local-inoice-data-before", readFromLocalStorage);
+
+    let currentInvoice = {};
     var localInvoiceQueue = getSellInvoiceDataFromLocalStorage(
       Constants.SELL_INVOICE_QUEUE_KEY
     );
@@ -507,9 +518,19 @@ function Sell() {
       }
     }
 
+
     if (readFromLocalStorage) {
-      currentInvoice = readFromLocalStorage;
+      //currentInvoice = readFromLocalStorage;   //imp prev version
+      /*-------------------------new version-------------------------*/
+      for (var key in readFromLocalStorage) {
+        if (readFromLocalStorage.hasOwnProperty(key)) {
+          //console.log(key + "-" + readFromLocalStorage[key]);
+          currentInvoice[key] = readFromLocalStorage[key];
+        }
+      }
+      /*-------------------------new version-------------------------*/
       updateCart(currentInvoice);
+
     } else {
       currentInvoice = createNewInvoice();
       //console.log("see1", currentInvoice);
@@ -582,6 +603,7 @@ function Sell() {
             }
           }
           if (index != -1) {
+            console.log("imp-sync-queue-inserted-val", localInvoiceQueue[index]);
             localInvoiceQueue.splice(index, 1);
             saveDataIntoLocalStorage(Constants.SELL_INVOICE_QUEUE_KEY, localInvoiceQueue);
             console.log(index);
@@ -600,7 +622,7 @@ function Sell() {
       if (clearSync === false) {
         setTimeout(sync, 3000);
       }
-      console.log("-- syncing --");
+      //console.log("-- syncing --");
     }
 
   }
@@ -661,7 +683,16 @@ function Sell() {
     //console.log(costFormValues);
 
     //var clonedInvoiceData = JSON.parse(JSON.stringify(invoiceData));
-    var clonedInvoiceData = { ...invoiceData };
+    //var clonedInvoiceData = { ...invoiceData };   //imp prev version
+    let clonedInvoiceData = {};
+    /*-------------------new version----------------*/
+    for (var key in invoiceData) {
+      if (invoiceData.hasOwnProperty(key)) {
+          //console.log(key + "-" + invoiceData[key]);
+          clonedInvoiceData[key] = invoiceData[key];
+      }
+   }
+    /*-------------------new version---------------*/
 
     for (var key in invoiceData) {
       delete invoiceData[key];
@@ -709,13 +740,23 @@ function Sell() {
       parseFloat(clonedInvoiceData.total).toFixed(2)
     );
 
-    var discountedInputValue = Helpers.var_check(
-      costFormValues.discounted_value
-    )
-      ? costFormValues.discounted_value
-      : 0;
+   
+    /*-------------------new version----------------------------------------*/
+    let discountedInputValue = 0 ;
+    if(costFormValues.discounted_value){
+      discountedInputValue = costFormValues.discounted_value;
+    }
+    else if(clonedInvoiceData.discountVal){
+      discountedInputValue = clonedInvoiceData.discountVal;
+    }
+    /*-------------------new version----------------------------------------*/
+
+    /*let discountedInputValue = (Helpers.var_check(costFormValues.discounted_value)) ? costFormValues.discounted_value
+      : (clonedInvoiceData.discountVal) ? clonedInvoiceData.discountVal : 0;   imp prev version */ 
+    
+
     discountedInputValue = parseInt(discountedInputValue).toFixed(2);
-    console.log(discountedInputValue);
+    //console.log(discountedInputValue);
     discountedInputValue = parseFloat(discountedInputValue);
 
     clonedInvoiceData.discountVal = discountedInputValue;
@@ -732,7 +773,12 @@ function Sell() {
     setSaleInvoiceData(clonedInvoiceData); //imp
     console.log(clonedInvoiceData);
 
-    costForm.setFieldsValue({ paid: clonedInvoiceData && clonedInvoiceData.payed }); //imp
+
+    costForm.setFieldsValue({
+      paid: clonedInvoiceData && clonedInvoiceData.payed,
+      discounted_value: clonedInvoiceData && clonedInvoiceData.discountVal
+    }); //imp
+
 
     if (tableProducsData.length > 0) {
       saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, clonedInvoiceData);  //imp
@@ -772,9 +818,6 @@ function Sell() {
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
           >
-            <div style={{ textAlign: "center" }}>
-              {loading && <Spin size='large' tip='Loading Products...' />}
-            </div>
 
             <Form.Item label='Search for products'>
               <AutoComplete
@@ -1051,6 +1094,17 @@ function Sell() {
                         ).toFixed(2)}
                     </span>
                   </div>
+                  
+                  <div className='cost__box'>
+                    <h3>Discounted Amount</h3>
+                    <span>
+                      {saleInvoiceData &&
+                        (
+                          saleInvoiceData.discountAmount && saleInvoiceData.discountAmount.toFixed(2)
+                        )}
+                    </span>
+                  </div>
+
                 </div>
               </div>
               <Form.Item>
@@ -1064,10 +1118,12 @@ function Sell() {
                     saleInvoiceData.products.length < 1
                   }
                 >
+                  Enter Sale Amount(
                   {saleInvoiceData &&
                     (
                       saleInvoiceData.total - saleInvoiceData.discountAmount
                     ).toFixed(2)}
+                  )
                 </Button>
               </Form.Item>
             </div>

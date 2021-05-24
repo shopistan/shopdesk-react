@@ -20,12 +20,15 @@ const PurchaseOrder = (props) => {
 
 
   const fetchPurchaseOrdersData = async (pageLimit = 10, pageNumber = 1) => {
+    document.getElementById('app-loader-container').style.display = "block";
     const purchaseOrdersViewResponse = await StockApiUtil.viewPurchaseOrders(pageLimit, pageNumber);
     console.log('poViewResponse:', purchaseOrdersViewResponse);
 
     if (purchaseOrdersViewResponse.hasError) {
       console.log('Cant fetch Purchase Ordrs Data -> ', purchaseOrdersViewResponse.errorMessage);
       setLoading(false);
+      message.warning(purchaseOrdersViewResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', purchaseOrdersViewResponse);
@@ -34,6 +37,7 @@ const PurchaseOrder = (props) => {
         setData(purchaseOrdersViewResponse.purchase.data || purchaseOrdersViewResponse.purchase);
         setPaginationData(purchaseOrdersViewResponse.purchase.page || {});
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   }

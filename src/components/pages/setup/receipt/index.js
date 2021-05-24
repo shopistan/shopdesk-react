@@ -15,12 +15,14 @@ const Receipts = () => {
 
 
   const fetchUsersTemplatesData = async (pageLimit = 10, pageNumber = 1) => {
+    document.getElementById('app-loader-container').style.display = "block";
     const userTemplatesViewResponse = await SetupApiUtil.viewTemplates(pageLimit, pageNumber);
     console.log('userTemplatesViewResponse:', userTemplatesViewResponse);
 
     if (userTemplatesViewResponse.hasError) {
       console.log('Cant fetch Users templates Data -> ', userTemplatesViewResponse.errorMessage);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', userTemplatesViewResponse);
@@ -29,6 +31,7 @@ const Receipts = () => {
         setData(userTemplatesViewResponse.templates.data || userTemplatesViewResponse.templates);
         setPaginationData(userTemplatesViewResponse.templates.page || {});
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   }

@@ -65,6 +65,8 @@ const Suppliers = () => {
 
 
   const fetchSuppliersData = async (pageLimit = 10, pageNumber = 1) => {
+    
+    document.getElementById('app-loader-container').style.display = "block";
     const suppliersViewResponse = await SuppliersApiUtil.viewSuppliers(
       pageLimit,
       pageNumber
@@ -78,6 +80,7 @@ const Suppliers = () => {
       );
       //message.error(suppliersViewResponse.errorMessage, 3);   //imp not to show on Ui
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     } else {
       console.log("res -> ", suppliersViewResponse);
       if (mounted) {     //imp if unmounted
@@ -86,6 +89,7 @@ const Suppliers = () => {
         message.success(suppliersViewResponse.message, 3);
         setPaginationData(suppliersViewResponse.suppliers.page || {});
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   };

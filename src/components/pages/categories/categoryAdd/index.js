@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Input, Button, message } from "antd";
 import { useHistory } from "react-router-dom";
 import * as CategoriesApiUtil from "../../../../utils/api/categories-api-utils";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import BackButton from "../../../atoms/backButton";
 
 const CategoryAdd = () => {
@@ -15,6 +16,7 @@ const CategoryAdd = () => {
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
     console.log("Success:", values);
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Saving Changes in progress..', 0);
     const categoryAddResponse = await CategoriesApiUtil.addCategory(
       values.category_name
@@ -28,11 +30,13 @@ const CategoryAdd = () => {
       message.error(categoryAddResponse.errorMessage, 3);
       setButtonDisabled(false);
       setTimeout(hide, 1500);
+      document.getElementById('app-loader-container').style.display = "none";
     } else {
       console.log("res -> ", categoryAddResponse);
       if (mounted) {     //imp if unmounted
         message.success(categoryAddResponse.message, 3);
         setTimeout(hide, 1500);
+        document.getElementById('app-loader-container').style.display = "none";
         setTimeout(() => {
           history.push({
             pathname: "/categories",
@@ -54,11 +58,21 @@ const CategoryAdd = () => {
     console.log("Failed:", errorInfo);
   };
 
+
+  const handleCancel = () => {
+    history.push({
+      pathname: '/categories',
+    });
+  }
+
+
+
   return (
     <div className="page dashboard">
       <div className="page__header">
-        <h1>
-          <BackButton />
+        <h1><Button type="primary" shape="circle" className="back-btn"
+          icon={<ArrowLeftOutlined />}
+          onClick={handleCancel} />
           New Category
         </h1>
       </div>
