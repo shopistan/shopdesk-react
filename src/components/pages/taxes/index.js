@@ -80,7 +80,7 @@ const Taxes = () => {
       if (mounted) {     //imp if unmounted
         const taxesData = taxesViewResponse.taxes.data || taxesViewResponse.taxes;
         setData(taxesData);
-        message.success(taxesViewResponse.message, 3);
+        //message.success(taxesViewResponse.message, 3);
         setPaginationData(taxesViewResponse.taxes.page || {});
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";

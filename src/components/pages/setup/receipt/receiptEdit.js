@@ -314,8 +314,9 @@ function ReceiptEdit(props) {
               <Button type="primary"
                 htmlType="submit"
                 disabled={buttonDisabled}
+                className='custom-btn custom-btn--primary'
               >
-                Confirm
+                Save
               </Button>
             </div>
           </Form>

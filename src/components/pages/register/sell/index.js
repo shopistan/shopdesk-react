@@ -113,7 +113,7 @@ function Sell() {
     } else {
       console.log("res -> ", couriersViewResponse);
       if (mounted) {     //imp if unmounted
-        message.success(couriersViewResponse.message, 3);
+        //message.success(couriersViewResponse.message, 3);
         setCouriersData(
           couriersViewResponse.courier.data || couriersViewResponse.courier
         );
@@ -134,14 +134,14 @@ function Sell() {
         "Cant fetch registered products Data -> ",
         productsDiscountsViewResponse.errorMessage
       );
-      message.error(productsDiscountsViewResponse.errorMessage, 3);
+      message.warning(productsDiscountsViewResponse.errorMessage, 3);
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
     } else {
       console.log("res -> ", productsDiscountsViewResponse);
 
       if (mounted) {     //imp if unmounted
-        message.success(productsDiscountsViewResponse.message, 3);
+        //message.success(productsDiscountsViewResponse.message, 3);
         /*-------for filtering products--------*/
         var products =
           productsDiscountsViewResponse.products.data ||

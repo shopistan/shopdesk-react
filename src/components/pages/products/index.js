@@ -48,12 +48,12 @@ const Products = () => {
     console.log('productsSearchResponse:', productsSearchResponse);
     if (productsSearchResponse.hasError) {
       console.log('Cant Search Products -> ', productsSearchResponse.errorMessage);
-      message.warning(productsSearchResponse.errorMessage, 2);
+      //message.warning(productsSearchResponse.errorMessage, 2);
       setLoading(false);
     }
     else {
       console.log('res -> ', productsSearchResponse);
-      message.success(productsSearchResponse.message, 2);
+      //message.success(productsSearchResponse.message, 2);
       setData(productsSearchResponse.products.data);
       setPaginationData(productsSearchResponse.products.page);
       setLoading(false);
@@ -77,7 +77,7 @@ const Products = () => {
     else {
       console.log('res -> ', productsViewResponse);
       if (mounted) {     //imp if unmounted
-        message.success(productsViewResponse.message, 3);
+        //message.success(productsViewResponse.message, 3);
         setData(productsViewResponse.products.data);
         setPaginationData(productsViewResponse.products.page);
         setLoading(false);

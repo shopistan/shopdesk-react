@@ -45,6 +45,8 @@ const TransferInventory = () => {
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
   const [currentStoreId, setCurrentStoreId] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [userLocalStorageData, setUserLocalStorageData] = useState(null);
+  
 
 
   var mounted = true;
@@ -67,6 +69,9 @@ const TransferInventory = () => {
         ? readFromLocalStorage.data
         : null;
       if (readFromLocalStorage) {
+
+        setUserLocalStorageData(readFromLocalStorage);
+
         if (
           checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
         ) {
@@ -439,7 +444,10 @@ const TransferInventory = () => {
                     tableData={productsTableData}
                     tableDataLoading={loading}
                     onChangeProductsData={handleChangeProductsData}
-                    tableType="order_transfer" />
+                    tableType="order_transfer" 
+                    currency={userLocalStorageData.currency.symbol}
+                    
+                  />
                 </div>
                 {/* Table */}
                 <Divider />

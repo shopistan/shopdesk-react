@@ -89,7 +89,7 @@ const Customers = () => {
     } else {
       console.log("res -> ", customersViewResponse);
       if (mounted) {     //imp if unmounted
-        message.success(customersViewResponse.message, 3);
+        //message.success(customersViewResponse.message, 3);
         setData(customersViewResponse.Customer.data || customersViewResponse.Customer);
         setPaginationData(customersViewResponse.Customer.page || {});
         setLoading(false);

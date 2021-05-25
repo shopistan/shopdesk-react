@@ -64,7 +64,7 @@ function EditUser(props) {
         }
         else {
             console.log('res -> ', outletsViewResponse);
-            message.success(outletsViewResponse.message, 3);
+            //message.success(outletsViewResponse.message, 3);
             setOutletsData(outletsViewResponse.outlets.data || outletsViewResponse.outlets);
             //setLoading(false);
         }
@@ -386,8 +386,9 @@ function EditUser(props) {
                             <Button type="primary"
                                 htmlType="submit"
                                 disabled={buttonDisabled}
+                                className='custom-btn custom-btn--primary'
                             >
-                                Confirm
+                                Save
                             </Button>
                         </div>
                     </Form>

@@ -85,7 +85,7 @@ function OutletEdit(props) {
     }
     else {
       console.log('res -> ', getWebHooksViewResponse);
-      message.success(getWebHooksViewResponse.message, 3);
+      //message.success(getWebHooksViewResponse.message, 3);
       setWebHooksData(getWebHooksViewResponse.webhooks);
     }
   }
@@ -141,7 +141,7 @@ function OutletEdit(props) {
     }
     else {
       console.log('res -> ', userTemplatesViewResponse);
-      message.success(userTemplatesViewResponse.message, 3);
+      //message.success(userTemplatesViewResponse.message, 3);
       setTemplatesData(userTemplatesViewResponse.templates.data || userTemplatesViewResponse.templates);
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
@@ -623,7 +623,7 @@ function OutletEdit(props) {
                   className='custom-btn custom-btn--primary'
                   disabled={buttonDisabled}
                 >
-                  Confirm
+                  Save
                 </Button>
               </div>
             </div>
@@ -744,7 +744,7 @@ function OutletEdit(props) {
                 className='custom-btn custom-btn--primary'
                 disabled={buttonDisabled}
               >
-                Confirm
+                Save
               </Button>
             </div>
             {/* Form Section */}

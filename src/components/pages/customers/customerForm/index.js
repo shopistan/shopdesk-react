@@ -332,11 +332,12 @@ const CustomerForm = (props) => {
               {isEditMode ? <div className='form__col'></div> : ''}
             </div>
             <div className='form__row--footer'>
-              <Button type='secondary' onClick={history.goBack}>
+              {/*<Button type='secondary' onClick={history.goBack}>
                 Cancel
-              </Button>
+                </Button>*/}
 
-              <Button type='primary' htmlType='submit' disabled={buttonDisabled}>
+              <Button type='primary' className="custom-btn--primary"
+                htmlType='submit' disabled={buttonDisabled}>
                 Save
               </Button>
             </div>

@@ -25,7 +25,7 @@ const TransferInventory = (props) => {
 
 
   const fetchInventoryTransfersData = async (pageLimit = 10, pageNumber = 1) => {
-    
+
     document.getElementById('app-loader-container').style.display = "block";
     const inventoryTransfersViewResponse = await StockApiUtil.viewInventoryTransfers(pageLimit, pageNumber);
     console.log('inventoryTransfersViewResponse:', inventoryTransfersViewResponse);
@@ -39,7 +39,7 @@ const TransferInventory = (props) => {
       console.log('res -> ', inventoryTransfersViewResponse);
       let inventoryTransfersData =  inventoryTransfersViewResponse.transfer.data || inventoryTransfersViewResponse.transfer;
       if (mounted) {     //imp if unmounted
-        message.success(inventoryTransfersViewResponse.message, 3);
+        //message.success(inventoryTransfersViewResponse.message, 3);
         for (let i in inventoryTransfersData) {
           if (
             inventoryTransfersData[i].transfer_status === "1"

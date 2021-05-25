@@ -58,14 +58,14 @@ const ProductDiscount = () => {
 
     if (productsDiscountsViewResponse.hasError) {
       console.log('Cant fetch products Discounts Data -> ', productsDiscountsViewResponse.errorMessage);
-      message.error('Cant fetch products Discounts Data ', 3);
+      //message.error('Cant fetch products Discounts Data ', 3);
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', productsDiscountsViewResponse);
       if (mounted) {     //imp if unmounted
-        message.success(productsDiscountsViewResponse.message, 3);
+        //message.success(productsDiscountsViewResponse.message, 3);
         setData(productsDiscountsViewResponse.products.data || productsDiscountsViewResponse.products);
         //setPaginationData(productsDiscountsViewResponse.products.page || {});
         setLoading(false);
@@ -97,7 +97,7 @@ const ProductDiscount = () => {
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
       }
-      
+
     }
   }
 

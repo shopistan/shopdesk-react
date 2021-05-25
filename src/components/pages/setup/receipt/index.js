@@ -27,7 +27,7 @@ const Receipts = () => {
     else {
       console.log('res -> ', userTemplatesViewResponse);
       if (mounted) {    //imp if unmounted
-        message.success(userTemplatesViewResponse.message, 3);
+        //message.success(userTemplatesViewResponse.message, 3);
         setData(userTemplatesViewResponse.templates.data || userTemplatesViewResponse.templates);
         setPaginationData(userTemplatesViewResponse.templates.page || {});
         setLoading(false);

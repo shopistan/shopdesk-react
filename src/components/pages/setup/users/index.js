@@ -27,7 +27,7 @@ const Users = () => {
     else {
       console.log('res -> ', usersViewResponse);
       if (mounted) {    //imp if unmounted
-        message.success(usersViewResponse.message, 3);
+        //message.success(usersViewResponse.message, 3);
         setData(usersViewResponse.Users.data || usersViewResponse.Users);
         setPaginationData(usersViewResponse.Users.page || {});
         setLoading(false);

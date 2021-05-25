@@ -83,7 +83,7 @@ function OutletAdd() {
       message.error(addOutletResponse.errorMessage, 3);
       setButtonDisabled(false);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1500);
+      setTimeout(hide, 1000);
     }
     else {
       console.log('res -> ', addOutletResponse);
@@ -269,8 +269,10 @@ function OutletAdd() {
                 Cancel
               </Button>
 
-              <Button type="primary" htmlType="submit" disabled={buttonDisabled}>
-                Confirm
+              <Button type="primary"
+                className='custom-btn custom-btn--primary'
+                htmlType="submit" disabled={buttonDisabled}>
+                Save
               </Button>
             </div>
           </Form>

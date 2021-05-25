@@ -326,8 +326,9 @@ function UserAdd() {
               <Button type="primary"
                 htmlType="submit"
                 disabled={buttonDisabled}
+                className='custom-btn custom-btn--primary'
               >
-                Confirm
+                Add
               </Button>
             </div>
           </Form>
