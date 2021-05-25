@@ -80,6 +80,16 @@ const SellHistoryProductsTable = (props) => {
             }
         },
         {
+            title: "Discounted Amount",
+            render: (_, record) => {
+                return (
+                    <div>
+                        { parseFloat(record.discounted_amount).toFixed(2)}
+                    </div>
+                );
+            }
+        },
+        {
             title: "Mop",
             dataIndex: "invoice_method",
             render: (_, record) => {
