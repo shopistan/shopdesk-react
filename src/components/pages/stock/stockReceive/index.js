@@ -21,6 +21,10 @@ import {
     Divider,
 } from "antd";
 
+import {
+    ArrowLeftOutlined,
+  } from "@ant-design/icons";
+
 const { Option } = Select;
 
 
@@ -172,7 +176,9 @@ const StockReceive = (props) => {
         <div className="page stock-add">
             
             <div className="page__header">
-                <h1>Receive  Purchase Order</h1>
+                <h1><Button type="primary" shape="circle" className="back-btn"
+                    icon={<ArrowLeftOutlined />}
+                    onClick={handleCancel} />Receive  Purchase Order</h1>
             </div>
 
             {!loading &&

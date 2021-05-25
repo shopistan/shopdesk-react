@@ -28,6 +28,10 @@ import {
   InputNumber,
 } from "antd";
 
+import {
+  ArrowLeftOutlined,
+} from "@ant-design/icons";
+
 const { Option } = Select;
 
 
@@ -46,7 +50,7 @@ const TransferInventory = () => {
   const [currentStoreId, setCurrentStoreId] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [userLocalStorageData, setUserLocalStorageData] = useState(null);
-  
+
 
 
   var mounted = true;
@@ -124,7 +128,7 @@ const TransferInventory = () => {
 
     if (productsDiscountsViewResponse.hasError) {
       console.log('Cant fetch registered products Data -> ', productsDiscountsViewResponse.errorMessage);
-      message.error(productsDiscountsViewResponse.errorMessage, 3);
+      message.warning(productsDiscountsViewResponse.errorMessage, 3);
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
     }
@@ -132,7 +136,7 @@ const TransferInventory = () => {
       console.log('res -> ', productsDiscountsViewResponse);
 
       if (mounted) {     //imp if unmounted
-        message.success(productsDiscountsViewResponse.message, 3);
+        //message.success(productsDiscountsViewResponse.message, 3);
         /*-------for filtering products--------*/
         var products = productsDiscountsViewResponse.products.data
           || productsDiscountsViewResponse.products;
@@ -168,7 +172,7 @@ const TransferInventory = () => {
     else {
       console.log('res -> ', outletsViewResponse);
       if (mounted) {     //imp if unmounted
-        message.success(outletsViewResponse.message, 3);
+        //message.success(outletsViewResponse.message, 3);
         let outletsData = outletsViewResponse.outlets.data || outletsViewResponse.outlets;
         const filteredOutletsData = outletsData.filter((outlet) => {
           return outlet.store_id !== activeStoreId;
@@ -319,7 +323,9 @@ const TransferInventory = () => {
   return (
     <div className="page stock-add">
       <div className="page__header">
-        <h1>Transfer Out</h1>
+        <h1><Button type="primary" shape="circle" className="back-btn"
+          icon={<ArrowLeftOutlined />}
+          onClick={handleCancel} />Transfer Out</h1>
       </div>
 
 

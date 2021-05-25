@@ -17,6 +17,10 @@ import {
     Divider,
 } from "antd";
 
+import {
+    ArrowLeftOutlined,
+  } from "@ant-design/icons";
+
 const { Option } = Select;
 
 
@@ -135,7 +139,9 @@ const TransferIn = (props) => {
         <div className="page stock-add">
             
             <div className="page__header">
-                <h1>Transfer In</h1>
+                <h1><Button type="primary" shape="circle" className="back-btn"
+                    icon={<ArrowLeftOutlined />}
+                    onClick={handleCancel} />Transfer In</h1>
             </div>
 
             {!loading &&

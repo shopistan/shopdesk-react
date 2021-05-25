@@ -28,10 +28,11 @@ import {
 } from "antd";
 
 import {
-  CloseOutlined,
-  CheckOutlined,
+  //CloseOutlined,
+  //CheckOutlined,
   UploadOutlined,
   DownloadOutlined,
+  ArrowLeftOutlined,
 } from "@ant-design/icons";
 
 const { Option } = Select;
@@ -110,7 +111,7 @@ const AdjustmentStock = () => {
 
     if (productsDiscountsViewResponse.hasError) {
       console.log('Cant fetch registered products Data -> ', productsDiscountsViewResponse.errorMessage);
-      message.error(productsDiscountsViewResponse.errorMessage, 3);
+      message.warning(productsDiscountsViewResponse.errorMessage, 3);
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
     }
@@ -118,7 +119,7 @@ const AdjustmentStock = () => {
       console.log('res -> ', productsDiscountsViewResponse);
 
       if (mounted) {     //imp if unmounted
-        message.success(productsDiscountsViewResponse.message, 3);
+        //message.success(productsDiscountsViewResponse.message, 3);
         /*-------for filtering products--------*/
         var products = productsDiscountsViewResponse.products.data
           || productsDiscountsViewResponse.products;
@@ -426,10 +427,11 @@ const AdjustmentStock = () => {
   return (
     <div className="page stock-add">
       <div className="page__header">
-        <h1>New Stock Adjustment</h1>
+        <h1><Button type="primary" shape="circle" className="back-btn"
+          icon={<ArrowLeftOutlined />}
+          onClick={handleCancel} />New Stock Adjustment</h1>
       </div>
       
-
 
       {!loading &&
         <div className="page__content">

@@ -22,27 +22,42 @@ const Outlet = () => {
   var mounted = true;
 
 
-  useEffect(async () => {
+  useEffect( () => {
+    
     var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
     readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
-    if (readFromLocalStorage) {
-      setLoginCacheData(readFromLocalStorage);
-      if (checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication) {
-        setStoreInfo(readFromLocalStorage.auth.storeInfo);
-        setActiveOutlet(readFromLocalStorage.auth.current_store);
-      }
-      else {
-        setStoreInfo(readFromLocalStorage.store_info);
-        setActiveOutlet(null);
-      }
-    }
+    document.getElementById('app-loader-container').style.display = "block";
 
-
+    setTimeout(() => {
+      fetchOutlets(readFromLocalStorage)
+    }, 2000);
+    
     return () => {
       mounted = false;
     }
 
   }, []);
+
+
+
+  const fetchOutlets =  (localStorageData) => {
+
+    if (localStorageData) {
+      setLoginCacheData(localStorageData);
+      if (checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication) {
+        setStoreInfo(localStorageData.auth.storeInfo);
+        setActiveOutlet(localStorageData.auth.current_store);
+        document.getElementById('app-loader-container').style.display = "none";
+      }
+      else {
+        setStoreInfo(localStorageData.store_info);
+        setActiveOutlet(null);
+        document.getElementById('app-loader-container').style.display = "none";
+      }
+    }
+
+  } 
+
 
 
   const onSelectOutlet = async (e) => {

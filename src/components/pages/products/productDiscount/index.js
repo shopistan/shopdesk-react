@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, Button, message, Select } from "antd";
-import { CheckCircleOutlined } from "@ant-design/icons";
+import { useHistory } from "react-router-dom";
+import { CheckCircleOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import ProductsDiscountsTable from "../../../organism/table/productsNestedTable/productsDiscounts";
 import * as ProductsApiUtil from '../../../../utils/api/products-api-utils';
 
 
+
 const ProductDiscount = () => {
+  const history = useHistory();
   const [paginationLimit, setPaginationLimit] = useState(20);
   //const [paginationData, setPaginationData] = useState({});
   //const [currentPage, setCurrentPage] = useState(1);
@@ -96,6 +99,12 @@ const ProductDiscount = () => {
         setTimeout(hide, 1000);
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
+        setTimeout(() => {
+          history.push({
+            pathname: '/products',
+          });
+        }, 2000);
+
       }
 
     }
@@ -217,11 +226,20 @@ const ProductDiscount = () => {
   };
 
 
+  const handleCancel = () => {
+    history.push({
+      pathname: '/products',
+    });
+  };
+
+
 
   return (
     <div className='page dashboard'>
       <div className='page__header'>
-        <h1>Product Discounts</h1>
+        <h1><Button type="primary" shape="circle" className="back-btn"
+          icon={<ArrowLeftOutlined />}
+          onClick={handleCancel} />Product Discounts</h1>
       </div>
 
       <div className='page__content'>
