@@ -176,7 +176,7 @@ const EditTax = (props) => {
                       className="custom-btn custom-btn--primary"
                       disabled={buttonDisabled}
                     >
-                      Edit
+                      Save
                   </Button>
                   </Form.Item>
                 </div>

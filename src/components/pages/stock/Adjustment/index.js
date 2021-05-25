@@ -28,7 +28,7 @@ const  StockAdjustment = (props) => {
     else {
       console.log('res -> ', stockAdjustmentsViewResponse);
       if (mounted) {     //imp if unmounted
-        message.success(stockAdjustmentsViewResponse.message, 3);
+        //message.success(stockAdjustmentsViewResponse.message, 3);
         setData(stockAdjustmentsViewResponse.adjustment.data || stockAdjustmentsViewResponse.adjustment);
         setPaginationData(stockAdjustmentsViewResponse.adjustment.page || {});
         setLoading(false);

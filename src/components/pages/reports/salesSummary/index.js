@@ -35,6 +35,7 @@ const SalesSummary = () => {
     let startDate = selectedDates[0];
     let endDate = selectedDates[1];
 
+    document.getElementById('app-loader-container').style.display = "block";
     const salesSummaryResponse = await ReportsApiUtil.viewSalesSummery(
       startDate,
       endDate,
@@ -49,6 +50,7 @@ const SalesSummary = () => {
       );
       message.error(salesSummaryResponse.errorMessage, 3);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     } else {
       console.log("res -> ", salesSummaryResponse);
       message.success(salesSummaryResponse.message, 3);
@@ -78,6 +80,7 @@ const SalesSummary = () => {
       );
 
       setSalesMops(salesDataMops); //setting sales mops
+      document.getElementById('app-loader-container').style.display = "none";
 
       /*--setting sales Mops--*/
     }
@@ -163,7 +166,7 @@ const SalesSummary = () => {
 
       export_table_to_csv(html, "sales_summary.csv");
     } else {
-      message.error("No Sales Data Found", 3);
+      message.warning("No Sales Data Found", 3);
     }
   };
 

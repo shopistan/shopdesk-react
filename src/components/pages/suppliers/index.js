@@ -86,7 +86,7 @@ const Suppliers = () => {
       if (mounted) {     //imp if unmounted
         const suppliersData = suppliersViewResponse.suppliers.data || suppliersViewResponse.suppliers;
         setData(suppliersData);
-        message.success(suppliersViewResponse.message, 3);
+        //message.success(suppliersViewResponse.message, 3);
         setPaginationData(suppliersViewResponse.suppliers.page || {});
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";

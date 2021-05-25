@@ -82,7 +82,7 @@ const Couriers = () => {
     } else {
       console.log("res -> ", couriersViewResponse);
       if (mounted) {     //imp if unmounted
-        message.success(couriersViewResponse.message, 3);
+        //message.success(couriersViewResponse.message, 3);
         const couriersData = couriersViewResponse.courier.data || couriersViewResponse.courier;
         setData(couriersData);
         setPaginationData(couriersViewResponse.courier.page || {});

@@ -24,8 +24,11 @@ const CustomerProfile = (props) => {
     if (!customerId) {
       return popPage();
     }
+
+    document.getElementById('app-loader-container').style.display = "block";
     const singleCustomerDataResponse = await getSingleCustomer(customerId);
     if (singleCustomerDataResponse.hasError) {
+      document.getElementById('app-loader-container').style.display = "none";
       return popPage();
     }
     const customerData = singleCustomerDataResponse.customer;
@@ -40,6 +43,8 @@ const CustomerProfile = (props) => {
       id: customerData.id,
     };
     setCustomerData(mappedCustomerResponse);
+    document.getElementById('app-loader-container').style.display = "none";
+
   };
 
   const popPage = () => {

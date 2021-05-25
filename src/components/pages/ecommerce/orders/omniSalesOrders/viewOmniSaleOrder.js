@@ -22,7 +22,7 @@ import * as EcommerceApiUtil from '../../../../../utils/api/ecommerce-api-utils'
 import Constants from '../../../../../utils/constants/constants';
 import {
     getDataFromLocalStorage,
-  } from "../../../../../utils/local-storage/local-store-utils";
+} from "../../../../../utils/local-storage/local-store-utils";
 
 
 
@@ -73,6 +73,8 @@ const ViewOmniSaleOrder = (props) => {
 
 
     const fetchOeSaleOrderData = async (invoice_id) => {
+
+        document.getElementById('app-loader-container').style.display = "block";
         const fetchOeSaleOrderViewResponse = await EcommerceApiUtil.getOeSaleOrderData(invoice_id);
         console.log('fetchOeSaleOrderViewResponse:', fetchOeSaleOrderViewResponse);
 
@@ -80,6 +82,7 @@ const ViewOmniSaleOrder = (props) => {
             console.log('Cant fetch Oe Sales Orders Data -> ', fetchOeSaleOrderViewResponse.errorMessage);
             message.error(fetchOeSaleOrderViewResponse.errorMessage, 3);
             setLoading(false);
+            document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             console.log('res -> ', fetchOeSaleOrderViewResponse);
@@ -103,6 +106,7 @@ const ViewOmniSaleOrder = (props) => {
                 total -= parseFloat(invoiceData.invoice_discount);
                 setSaleOrdersInvoiceTotal(total);
                 setLoading(false);
+                document.getElementById('app-loader-container').style.display = "none";
             }
         }
 
@@ -112,7 +116,8 @@ const ViewOmniSaleOrder = (props) => {
 
     const cancelOeSalesOrders = async () => {
         let invoices = [invoice_id];
-        console.log(invoices);
+        //console.log(invoices);
+        document.getElementById('app-loader-container').style.display = "block";
         const hide = message.loading('Saving Changes in progress..', 0);
         const cancelOeSalesOrdersResponse = await EcommerceApiUtil.cancelOeSalesOrders(invoices);
         console.log('cancelOeSalesOrdersResponse:', cancelOeSalesOrdersResponse);
@@ -120,12 +125,14 @@ const ViewOmniSaleOrder = (props) => {
         if (cancelOeSalesOrdersResponse.hasError) {
           console.log('Cant Confirm Oe Sales Orders Data -> ', cancelOeSalesOrdersResponse.errorMessage);
           message.error(cancelOeSalesOrdersResponse.errorMessage, 2);
+          document.getElementById('app-loader-container').style.display = "none";
           setTimeout(hide, 1000);
         }
         else {
           console.log('res -> ', cancelOeSalesOrdersResponse);
           if (mounted) {     //imp if unmounted
             message.success(cancelOeSalesOrdersResponse.message, 2);
+            document.getElementById('app-loader-container').style.display = "none";
             setTimeout(hide, 1000);
             setLoading(true);
             fetchOeSaleOrderData(invoice_id);
@@ -138,6 +145,7 @@ const ViewOmniSaleOrder = (props) => {
 
     const confirmOeSalesOrders = async () => {
         let invoices = [invoice_id];
+        document.getElementById('app-loader-container').style.display = "block";
         const hide = message.loading('Saving Changes in progress..', 0);
         const confirmOeSalesOrdersResponse = await EcommerceApiUtil.confirmOeSalesOrders(invoices);
         console.log('confirmOeSalesOrdersResponse:', confirmOeSalesOrdersResponse);
@@ -145,12 +153,14 @@ const ViewOmniSaleOrder = (props) => {
         if (confirmOeSalesOrdersResponse.hasError) {
           console.log('Cant Confirm Oe Sales Orders Data -> ', confirmOeSalesOrdersResponse.errorMessage);
           message.error(confirmOeSalesOrdersResponse.errorMessage, 2);
+          document.getElementById('app-loader-container').style.display = "none";
           setTimeout(hide, 1000);
         }
         else {
           console.log('res -> ', confirmOeSalesOrdersResponse);
           if (mounted) {     //imp if unmounted
             message.success(confirmOeSalesOrdersResponse.message, 2);
+            document.getElementById('app-loader-container').style.display = "none";
             setTimeout(hide, 1000);
             setLoading(true);
             fetchOeSaleOrderData(invoice_id);
@@ -214,9 +224,6 @@ const ViewOmniSaleOrder = (props) => {
 
     return (
         <div id="omni-sale-order-page"  className="page ecom-orders">
-            <div style={{ textAlign: "center" }}>
-                {loading && <Spin size="large" tip="Loading..." />}
-            </div>
 
             <div className="page__header">
                 <Button type="primary" shape="circle"

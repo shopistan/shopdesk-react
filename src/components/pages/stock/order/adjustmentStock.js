@@ -4,6 +4,10 @@ import { useHistory } from "react-router-dom";
 import * as ProductsApiUtil from '../../../../utils/api/products-api-utils';
 import * as StockApiUtil from '../../../../utils/api/stock-api-utils';
 import * as Helpers from "../../../../utils/helpers/scripts";
+import Constants from '../../../../utils/constants/constants';
+import {
+  getDataFromLocalStorage,
+} from "../../../../utils/local-storage/local-store-utils";
 import StockNestedProductsTable from "../../../organism/table/stock/stockNestedProductsTable";
 
 
@@ -47,6 +51,8 @@ const AdjustmentStock = () => {
   const [selectedProductId, setSelectedProductId] = useState("");
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
   const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [userLocalStorageData, setUserLocalStorageData] = useState(null);
+
 
 
   var mounted = true;
@@ -54,7 +60,13 @@ const AdjustmentStock = () => {
 
   useEffect(() => {
     fetchRegisteredProductsData();
-    
+
+    /*--------------set user local data-------------------------------*/
+    var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+    readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
+    setUserLocalStorageData(readFromLocalStorage);
+    /*--------------set user local data-------------------------------*/
+
     return () => {
       mounted = false;
     }
@@ -566,7 +578,9 @@ const AdjustmentStock = () => {
                     tableData={productsTableData}
                     tableDataLoading={loading}
                     onChangeProductsData={handleChangeProductsData}
-                    tableType="order_adjustment" />
+                    tableType="order_adjustment"
+                    currency={userLocalStorageData.currency.symbol}
+                  />
                 </div>
                 {/* Table */}
                 <Divider />

@@ -27,13 +27,13 @@ const PurchaseOrder = (props) => {
     if (purchaseOrdersViewResponse.hasError) {
       console.log('Cant fetch Purchase Ordrs Data -> ', purchaseOrdersViewResponse.errorMessage);
       setLoading(false);
-      message.warning(purchaseOrdersViewResponse.errorMessage, 3);
+      //message.warning(purchaseOrdersViewResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', purchaseOrdersViewResponse);
       if (mounted) {     //imp if unmounted
-        message.success(purchaseOrdersViewResponse.message, 3);
+        //message.success(purchaseOrdersViewResponse.message, 3);
         setData(purchaseOrdersViewResponse.purchase.data || purchaseOrdersViewResponse.purchase);
         setPaginationData(purchaseOrdersViewResponse.purchase.page || {});
         setLoading(false);

@@ -27,7 +27,7 @@ const Outlets = () => {
     else {
       console.log('res -> ', outletsViewResponse);
       if (mounted) {     //imp if unmounted
-        message.success(outletsViewResponse.message, 3);
+        //message.success(outletsViewResponse.message, 3);
         setData(outletsViewResponse.outlets.data || outletsViewResponse.outlets);
         setPaginationData(outletsViewResponse.outlets.page || {});
         setLoading(false);

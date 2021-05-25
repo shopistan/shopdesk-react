@@ -6,6 +6,10 @@ import * as SuppliersApiUtil from "../../../../utils/api/suppliers-api-utils";
 import * as StockApiUtil from '../../../../utils/api/stock-api-utils';
 import * as Helpers from "../../../../utils/helpers/scripts";
 import StockNestedProductsTable from "../../../organism/table/stock/stockNestedProductsTable";
+import Constants from '../../../../utils/constants/constants';
+import {
+  getDataFromLocalStorage,
+} from "../../../../utils/local-storage/local-store-utils";
 import moment from 'moment';
 
 
@@ -55,6 +59,7 @@ const PurchaseOrder = () => {
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
   const [orderDueDate, setOrderDueDate] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [userLocalStorageData, setUserLocalStorageData] = useState(null);
   //const [suppliersPaginationData, setSuppliersPaginationData] = useState({});
   //const [isBusy, setIsBusy] = useState(false);
   //const [suppliersScrollLoading, setSuppliersScrollLoading] = useState(false);
@@ -73,6 +78,12 @@ const PurchaseOrder = () => {
       order_reference_name: `Order - ${moment(new Date()).format("yyyy/MM/DD HH:mm:ss")}`,
     });
     /*-----setting template data to fields value------*/
+
+    /*--------------set user local data-------------------------------*/
+    var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+    readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
+    setUserLocalStorageData(readFromLocalStorage);
+    /*--------------set user local data-------------------------------*/
 
     return () => {
       mounted = false;
@@ -369,7 +380,7 @@ const PurchaseOrder = () => {
     addPurchaseOrderPostData.ordered_date = moment(new Date()).format("yyyy/MM/DD HH:mm:ss");
     addPurchaseOrderPostData.supplier_id = formValues.supplier;
 
-    //console.log("vvimp-final", clonedProductsPostData);
+    console.log("vvimp-final", clonedProductsPostData);
 
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
@@ -719,7 +730,9 @@ const PurchaseOrder = () => {
                     tableData={productsTableData}
                     tableDataLoading={loading}
                     onChangeProductsData={handleChangeProductsData}
-                    tableType="order_stock" />
+                    tableType="order_stock"
+                    currency={userLocalStorageData.currency.symbol}
+                  />
                 </div>
                 {/* Table */}
                 <Divider />

@@ -93,6 +93,7 @@ const EditableCell = ({
 
 
 const StockReceiveTable = (props) => {
+    const {currency = "" } = props;
     const [form] = Form.useForm();
     const [data, setData] = useState([]);
     const [productsTotalAmount, setProductsTotalAmount] = useState(0);
@@ -127,6 +128,8 @@ const StockReceiveTable = (props) => {
 
     useEffect(async () => {
         setData(props.tableData);
+        console.log("pro-table-data", props.tableData);
+
 
     }, [props.tableData, props.tableDataLoading]);  /* imp passing props to re-render */
 
@@ -195,14 +198,21 @@ const StockReceiveTable = (props) => {
             {
                 title: "Price",
                 dataIndex: "purchase_order_junction_price",
+                render: (_, record) => {
+                    return (
+                        <div>
+                        {currency+record.purchase_order_junction_price}
+                    </div>
+                    );
+                }
             },
             {
                 title: "Total",
                 render: (_, record) => {
                     return (
                         <span>
-                            {record.qty ? (parseFloat(record.qty) * parseFloat(record.purchase_order_junction_price)).toFixed(2)
-                                : parseFloat(0)
+                            {record.qty ? currency + (parseFloat(record.qty) * parseFloat(record.purchase_order_junction_price)).toFixed(2)
+                                : currency + parseFloat(0)
                             }
                         </span>
                     );

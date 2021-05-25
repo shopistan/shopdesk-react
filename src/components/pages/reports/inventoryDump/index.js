@@ -29,13 +29,13 @@ const InventoryDump = () => {
 
     if (productsInventoryResponse.hasError) {
       console.log('Cant fetch Products Inventory Data -> ', productsInventoryResponse.errorMessage);
-      message.error(productsInventoryResponse.errorMessage, 3);
+      //message.error(productsInventoryResponse.errorMessage, 3);
       setLoading(false);
     }
     else {
       console.log('res -> ', productsInventoryResponse);
       if (mounted) {     //imp if unmounted
-        message.success(productsInventoryResponse.message, 3);
+        //message.success(productsInventoryResponse.message, 3);
         setInventoryData(productsInventoryResponse.inventory_report);
         setLoading(false);
         SetinventoryCount((productsInventoryResponse.inventory_report).length);
@@ -124,19 +124,21 @@ const InventoryDump = () => {
   const ExportToCsv = async (e) => {
 
     if (inventoryData.length > 0) {
+      document.getElementById('app-loader-container').style.display = "block";
       const hide = message.loading('Inventory Dump Is In Progress..', 0);
       const getStoreResponse = await ReportsApiUtil.getStoreId();
       if (getStoreResponse.hasError) {
         const errorMessage = getStoreResponse.errorMessage;
         console.log('Cant get Store Id -> ', errorMessage);
         message.error(errorMessage, 3);
+        document.getElementById('app-loader-container').style.display = "none";
         setTimeout(hide, 1500);
       } else {
         console.log("Success:", getStoreResponse.message);
         downloadInventoryDump(hide, getStoreResponse.store_id || null);
       }
     }
-    else { message.error("No Inventory Data Found", 3) }
+    else { message.warning("No Inventory Data Found", 3) }
 
   }
 
@@ -153,6 +155,7 @@ const InventoryDump = () => {
         inventoryDumpExportResponse.errorMessage
       );
       message.error(inventoryDumpExportResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1500);
     } else {
       console.log("res -> ", inventoryDumpExportResponse.data);
@@ -170,6 +173,7 @@ const InventoryDump = () => {
         a.remove();  //afterwards we remove the element again
         /*---------------csv download--------------------------------*/
         message.success(inventoryDumpExportResponse.message, 3);
+        document.getElementById('app-loader-container').style.display = "none";
       }
 
     }
@@ -184,6 +188,7 @@ const InventoryDump = () => {
         <h1>Inventory Dump</h1>
 
         <Button type='primary'
+          className='custom-btn custom-btn--primary'
           icon={<DownloadOutlined />}
           onClick={ExportToCsv}
         >

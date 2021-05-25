@@ -679,7 +679,7 @@ const ProductAdd = () => {
             <div className="form__row--footer">
               <Button
                 type="primary"
-                className="product-btn-edit"
+                className="custom-btn--primary"
                 htmlType="submit"
                 disabled={buttonDisabled}
               >
@@ -1193,7 +1193,7 @@ const ProductAdd = () => {
             <div className="form__row--footer">
               <Button
                 type="primary"
-                className="product-btn-edit"
+                className="custom-btn--primary"
                 htmlType="submit"
                 disabled={buttonDisabled}
               >

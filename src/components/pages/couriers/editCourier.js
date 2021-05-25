@@ -163,7 +163,8 @@ const EditCourier = (props) => {
                         </div>
 
                         <div className='form__row--footer'>
-                            <Button type='primary' htmlType='submit' disabled={buttonDisabled}>
+                            <Button type='primary'
+                                className="custom-btn--primary" htmlType='submit' disabled={buttonDisabled}>
                                 Save
                             </Button>
                             <Button

@@ -76,15 +76,21 @@ function ReceiptAdd() {
 
   const handleUpload = async () => {
     //console.log(fileList[0]);   //imp
+    document.getElementById('app-loader-container').style.display = "block";
+    const hide = message.loading('Image Uploading Is In Progress...', 0);
     const ImageUploadResponse = await ProductsApiUtil.imageUpload(fileList[0]);
     console.log('ImageUploadResponse:', ImageUploadResponse);
     if (ImageUploadResponse.hasError) {
       console.log('Product Image Cant Upload -> ', ImageUploadResponse.errorMessage);
       message.error('Product  Image Cant Upload', 3);
+      document.getElementById('app-loader-container').style.display = "none";
+      setTimeout(hide, 1000);
     }
     else {
       console.log('res -> ', ImageUploadResponse);
       message.success(ImageUploadResponse.message, 3);
+      document.getElementById('app-loader-container').style.display = "none";
+      setTimeout(hide, 1000);
       setFileList([]);
       setproductImagePreviewSource(ImageUploadResponse.upload_data);
       setIsImageUpload(true);
@@ -254,8 +260,9 @@ function ReceiptAdd() {
               <Button type="primary"
                 htmlType="submit"
                 disabled={buttonDisabled}
+                className='custom-btn custom-btn--primary'
               >
-                Confirm
+                Add
               </Button>
             </div>
           </Form>

@@ -96,6 +96,7 @@ const EditableCell = ({
 
 const StockNestedProductsTable = (props) => {
     const history = useHistory();
+    const {currency = "" } = props;
     const [form] = Form.useForm();
     const [data, setData] = useState([]);
     const [productsTotalAmount, setProductsTotalAmount] = useState(0);
@@ -161,7 +162,7 @@ const StockNestedProductsTable = (props) => {
 
     useEffect(async () => {
         setData(props.tableData);
-        console.log("pro", props.tableData);
+        console.log("pro-table-data", props.tableData);
         calculateTotalAmount(props.tableData);
 
     }, [props.tableData, props.tableDataLoading,]);  /* imp passing props to re-render */
@@ -236,12 +237,24 @@ const StockNestedProductsTable = (props) => {
             }
         },
         {
-            title: "Price",
+            title: "Purchase Price",
             dataIndex: "product_purchase_price",
             render: (_, record) => {
                 return (
                     <div>
-                        {record.product_purchase_price}
+                        {currency+record.product_purchase_price}
+                    </div>
+                );
+            }
+        },
+        {
+            title: "Sale Price",
+            dataIndex: "product_sale_price",
+            editable: true,    //imp new one
+            render: (_, record) => {
+                return (
+                    <div>
+                        {currency+record.product_sale_price}
                     </div>
                 );
             }
@@ -312,7 +325,7 @@ const StockNestedProductsTable = (props) => {
                 dataIndex: col.dataIndex,
                 title: col.title,
                 handleSave: handleSave,
-                inputType: col.dataIndex === 'qty' ? 'number' : 'text',
+                inputType: col.dataIndex === 'qty' || col.dataIndex === 'product_sale_price'   ? 'number' : 'text',
                 editable: col.editable,
             }),
         };

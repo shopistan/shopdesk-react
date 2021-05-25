@@ -467,7 +467,7 @@ const SalesHistory = () => {
               Return to sale in progress
             </Button>,
             <Button key="submit" type="primary" //loading={loading} 
-              onClick={saveAndContinue}
+              className="custom-btn--primary" onClick={saveAndContinue}
             >
               Save and Continue
             </Button>

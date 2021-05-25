@@ -5,6 +5,10 @@ import * as ProductsApiUtil from '../../../../utils/api/products-api-utils';
 import * as SuppliersApiUtil from "../../../../utils/api/suppliers-api-utils";
 import * as StockApiUtil from '../../../../utils/api/stock-api-utils';
 import * as Helpers from "../../../../utils/helpers/scripts";
+import Constants from '../../../../utils/constants/constants';
+import {
+  getDataFromLocalStorage,
+} from "../../../../utils/local-storage/local-store-utils";
 import StockNestedProductsTable from "../../../organism/table/stock/stockNestedProductsTable";
 import moment from 'moment';
 
@@ -41,6 +45,7 @@ const ReturnStock = () => {
   const [selectedProductId, setSelectedProductId] = useState("");
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
   const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [userLocalStorageData, setUserLocalStorageData] = useState(null);
   //const [suppliersPaginationData, setSuppliersPaginationData] = useState({});
   
 
@@ -61,6 +66,12 @@ const ReturnStock = () => {
       order_reference_name: `Return - ${moment(new Date()).format("yyyy/MM/DD HH:mm:ss")}`,
     });
     /*-----setting template data to fields value------*/
+
+    /*--------------set user local data-------------------------------*/
+    var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+    readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
+    setUserLocalStorageData(readFromLocalStorage);
+    /*--------------set user local data-------------------------------*/
 
     return () => {
       mounted = false;
@@ -497,7 +508,9 @@ const ReturnStock = () => {
                     tableData={productsTableData}
                     tableDataLoading={loading}
                     onChangeProductsData={handleChangeProductsData}
-                    tableType="order_return" />
+                    tableType="order_return"
+                    currency={userLocalStorageData.currency.symbol}
+                  />
                 </div>
                 {/* Table */}
                 <Divider />

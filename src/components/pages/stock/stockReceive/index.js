@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import "../style.scss";
 import StockReceiveProductsTable from "../../../organism/table/stock/stockReceiveTable";
 import * as StockApiUtil from '../../../../utils/api/stock-api-utils';
+import Constants from '../../../../utils/constants/constants';
+import {
+  getDataFromLocalStorage,
+} from "../../../../utils/local-storage/local-store-utils";
 import { useHistory } from "react-router-dom";
 import moment from 'moment';
 
@@ -30,6 +34,7 @@ const StockReceive = (props) => {
     const [productsData, setProductsData] = useState([]);
     const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
     const [buttonDisabled, setButtonDisabled] = useState(false);
+    const [userLocalStorageData, setUserLocalStorageData] = useState(null);
     const { match = {} } = props;
     const { po_id = {} } =  match !== undefined && match.params;
 
@@ -48,6 +53,12 @@ const StockReceive = (props) => {
                 history.goBack();
             }, 1000);
         }
+
+        /*--------------set user local data-------------------------------*/
+        var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+        readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
+        setUserLocalStorageData(readFromLocalStorage);
+        /*--------------set user local data-------------------------------*/
 
         return () => {
             mounted = false;
@@ -204,7 +215,9 @@ const StockReceive = (props) => {
                                     tableData={productsData}
                                     tableDataLoading={loading}
                                     onChangeProductsData={handleChangeProductsData}
-                                    tableType="receive_purchase_orders" />
+                                    tableType="receive_purchase_orders"
+                                    currency={userLocalStorageData.currency.symbol}
+                                />
                             </div>
                             {/* Table */}
                         </Col>
