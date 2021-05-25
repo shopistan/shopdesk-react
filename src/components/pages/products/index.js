@@ -48,7 +48,7 @@ const Products = () => {
     console.log('productsSearchResponse:', productsSearchResponse);
     if (productsSearchResponse.hasError) {
       console.log('Cant Search Products -> ', productsSearchResponse.errorMessage);
-      //message.warning(productsSearchResponse.errorMessage, 2);
+      message.warning(productsSearchResponse.errorMessage, 2);
       setLoading(false);
     }
     else {

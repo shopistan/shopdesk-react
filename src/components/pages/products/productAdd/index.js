@@ -178,7 +178,7 @@ const ProductAdd = () => {
     //console.log("changed", values);
 
     var formValues = form.getFieldsValue();
-    //console.log("changed", formValues);
+    console.log("changed", formValues);
 
     var addProductData = {}; ///imp
     var productVar1Name = formValues.product_variant1_name;
@@ -226,7 +226,12 @@ const ProductAdd = () => {
     addProductData.cat_id = formValues.category;
     addProductData.product_name = formValues.product_name;
     addProductData.sale_price = formValues.sale_price;
-    addProductData.purchase_price = formValues.purchase_price;
+    if(Helpers.var_check(formValues.purchase_price)){
+      addProductData.purchase_price = formValues.purchase_price;
+    }
+    else{
+      addProductData.purchase_price = "";
+    }
     addProductData.var1_name = productVar1Name;
     addProductData.var2_name = productVar2Name;
     if (productVariantsDataDeepClone.length > 0) {
@@ -238,7 +243,7 @@ const ProductAdd = () => {
       JSON.stringify(formValues.product_attributes) || [];
 
 
-    //console.log("final-post-data", addProductData);
+    console.log("final-post-data", addProductData);
 
 
     if (buttonDisabled === false) {

@@ -27,6 +27,10 @@ import {
   InputNumber,
 } from "antd";
 
+import {
+  ArrowLeftOutlined,
+} from "@ant-design/icons";
+
 const { Option } = Select;
 
 const pageLimit = 20;
@@ -116,7 +120,7 @@ const ReturnStock = () => {
 
     if (productsDiscountsViewResponse.hasError) {
       console.log('Cant fetch registered products Data -> ', productsDiscountsViewResponse.errorMessage);
-      message.error(productsDiscountsViewResponse.errorMessage, 3);
+      message.warning(productsDiscountsViewResponse.errorMessage, 3);
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
     }
@@ -124,7 +128,7 @@ const ReturnStock = () => {
       console.log('res -> ', productsDiscountsViewResponse);
 
       if (mounted) {     //imp if unmounted
-        message.success(productsDiscountsViewResponse.message, 3);
+        //message.success(productsDiscountsViewResponse.message, 3);
         /*-------for filtering products--------*/
         var products = productsDiscountsViewResponse.products.data
           || productsDiscountsViewResponse.products;
@@ -354,10 +358,11 @@ const ReturnStock = () => {
   return (
     <div className="page stock-add">
       <div className="page__header">
-        <h1>New Return Stock</h1>
+        <h1><Button type="primary" shape="circle" className="back-btn"
+          icon={<ArrowLeftOutlined />}
+          onClick={handleCancel} />New Return Stock</h1>
       </div>
       
-
 
       {!loading &&
         <div className="page__content">

@@ -10,6 +10,11 @@
         "symbol": "CA$"
     },
     {
+        "code": "EUR",
+        "name": "Euro",
+        "symbol": "€"
+    },
+    {
         "code": "AED",
         "name": "United Arab Emirates Dirham",
         "symbol": "AED"

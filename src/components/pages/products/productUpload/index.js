@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
 import { Form, Upload, Button, message } from "antd";
-
-import { UploadOutlined } from "@ant-design/icons";
+import { useHistory } from "react-router-dom";
+import { UploadOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import UrlConstants from '../../../../utils/constants/url-configs';
 import * as ProductsApiUtil from '../../../../utils/api/products-api-utils';
 import Joi_sd from '../../../../utils/helpers/joi-custom';
@@ -19,6 +19,7 @@ var bulkProcess = {
 
 
 const ProductUpload = () => {
+  const history = useHistory();
   const [fileList, setFileList] = useState([]);
 
 
@@ -183,6 +184,13 @@ const ProductUpload = () => {
     setFileList([]);
   };
 
+
+  const handleCancel = () => {
+    history.push({
+      pathname: '/products',
+    });
+  };
+
   
 
   var ProductBulkTemplateImageSrc = `${UrlConstants.BASE_URL}/template-files/bulk-products.csv`; //imp to set image source
@@ -190,7 +198,9 @@ const ProductUpload = () => {
   return (
     <div className="page dashboard">
       <div className="page__header">
-        <h1>Bulk Upload</h1>
+        <h1><Button type="primary" shape="circle" className="back-btn"
+          icon={<ArrowLeftOutlined />}
+          onClick={handleCancel} />Bulk Upload</h1>
       </div>
 
       <div className="page__content">

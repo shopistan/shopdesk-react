@@ -27,6 +27,7 @@ import * as ProductsApiUtil from '../../../utils/api/products-api-utils';
 import * as TaxexApiUtil from '../../../utils/api/tax-api-utils';
 import * as CategoriesApiUtil from '../../../utils/api/categories-api-utils';
 //import UrlConstants from '../../../utils/constants/url-configs';
+import * as Helpers from "../../../utils/helpers/scripts";
 
 
 const { TextArea } = Input;
@@ -90,7 +91,8 @@ const EditProduct = (props) => {
                 product_name: productsData.product_name,
                 product_description: removeHTML(productsData.product_description),
                 sale_price: productsData.product_sale_price,
-                purchase_price: productsData.product_purchase_price || 'N/A',
+                purchase_price: Helpers.var_check(productsData.product_purchase_price) ?
+                    productsData.product_purchase_price  === "0" ? 'N/A': productsData.product_purchase_price : 'N/A',
                 product_variant1_key: productsData.product_variant1_name,
                 product_variant1_value: productsData.product_variant1_value,
                 product_variant2_key: productsData.product_variant2_name,

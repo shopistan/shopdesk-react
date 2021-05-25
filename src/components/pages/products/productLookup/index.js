@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "../productsStyleMain.scss";
-import { ProfileOutlined } from "@ant-design/icons";
+import { ProfileOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import { Input, AutoComplete, Select, Button, message } from "antd";
+import { useHistory } from "react-router-dom";
 import ProductsNestedTable from "../../../organism/table/productsNestedTable/productsViewNestedTable";
 import ProductsLookUpTable from "../../../organism/table/productsNestedTable/productsLookUp";
 import * as ProductsApiUtil from "../../../../utils/api/products-api-utils";
 
+
+
 const ProductLookup = () => {
+  const history = useHistory();
   const [productsSearchResult, setProductsSearchResult] = useState([]);
   const [selectedValue, setSelectedValue] = useState("");
   const [selectedProduct, setSelectedProduct] = useState("");
@@ -57,10 +61,21 @@ const ProductLookup = () => {
     }
   };
 
+
+  const handleCancel = () => {
+    history.push({
+      pathname: '/products',
+    });
+  };
+
+
+
   return (
     <div className="page dashboard">
       <div className="page__header">
-        <h1>Product Lookup</h1>
+        <h1><Button type="primary" shape="circle" className="back-btn"
+          icon={<ArrowLeftOutlined />}
+          onClick={handleCancel} />Product Lookup</h1>
       </div>
 
       <div className="page__content">

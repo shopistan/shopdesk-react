@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { Button, Form, Input, Select, message, Row, Col } from "antd";
 import { useHistory } from "react-router-dom";
-import { } from "@ant-design/icons";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
 import {
   getSingleCustomer,
@@ -84,12 +84,14 @@ const CustomerPay = (props) => {
       return message.error("Cannot recharge user account!", 3);
     }
 
-    message.success(
+    /*message.success(
       customerRechargeResponse.message
         ? customerRechargeResponse.message
         : "Balance successfully updated!",
       3
-    );
+    );*/
+
+    message.success("Customer Amount Addded!", 3);
 
     document.getElementById('app-loader-container').style.display = "none";
     history.push(`/customers/${customer_id}/view`);
@@ -104,7 +106,9 @@ const CustomerPay = (props) => {
   return (
     <div className="page customer-profile">
       <div className="page__header">
-        <h1>Pay Account Balance</h1>
+        <h1><Button type="primary" shape="circle" className="back-btn"
+            icon={<ArrowLeftOutlined />}
+            onClick={handleCancel} />Pay Account Balance</h1>
       </div>
 
       <div className="page__content">
