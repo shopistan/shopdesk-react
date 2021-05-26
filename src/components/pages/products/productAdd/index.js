@@ -178,7 +178,7 @@ const ProductAdd = () => {
     //console.log("changed", values);
 
     var formValues = form.getFieldsValue();
-    console.log("changed", formValues);
+    //console.log("changed", formValues);
 
     var addProductData = {}; ///imp
     var productVar1Name = formValues.product_variant1_name;
@@ -243,7 +243,7 @@ const ProductAdd = () => {
       JSON.stringify(formValues.product_attributes) || [];
 
 
-    console.log("final-post-data", addProductData);
+    //console.log("final-post-data", addProductData);
 
 
     if (buttonDisabled === false) {

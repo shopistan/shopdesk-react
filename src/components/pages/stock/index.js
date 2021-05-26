@@ -1,6 +1,6 @@
-import React, { useState, useEffect} from "react";
+import React, { useEffect} from "react";
 
-import { Button, Tabs, Select, Input, message, Menu, Dropdown } from "antd";
+import { Button, Tabs, Menu, Dropdown } from "antd";
 import { ProfileOutlined, DownOutlined } from "@ant-design/icons";
 import PurchaseOrders from "./Po";
 import InventoryTransfers from "./Transfer";
@@ -11,21 +11,24 @@ const { TabPane } = Tabs;
 
 
 
-function Stock() {
+function Stock(props) {
   const history = useHistory();
-  const [currentTab, setCurrentTab] = useState("");
+  const { activeKey = "" } = props;
+  //const [currentTab, setCurrentTab] = useState("");
+
+  //console.log("props", props);
 
 
   useEffect( () => {
-    if(history.location.activeKey){
+    /*if(history.location.activeKey){
       setCurrentTab(history.location.activeKey);
     }
     else{
       //console.log(window.location.pathname);
       var path = (window.location.pathname).split("/");
       //console.log(path);
-      setCurrentTab(path[2]);
-    }
+      setCurrentTab(path[2]); 
+    } */
 
 
   }, [history.location.activeKey]);  //imp to render when history prop changes
@@ -92,7 +95,7 @@ function Stock() {
       </div>
 
       <div className="page__content">
-        <Tabs  activeKey={currentTab} onChange={handletabChange}>
+        <Tabs  activeKey={activeKey && activeKey} onChange={handletabChange}>
           <TabPane tab="Purchase Orders" key="purchase-orders">
             <PurchaseOrders />
           </TabPane>

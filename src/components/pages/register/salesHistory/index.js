@@ -110,7 +110,7 @@ const SalesHistory = () => {
 
     if (salesHistoryViewResponse.hasError) {
       console.log('Cant fetch registered products Data -> ', salesHistoryViewResponse.errorMessage);
-      message.error(salesHistoryViewResponse.errorMessage, 3);
+      message.warning(salesHistoryViewResponse.errorMessage, 3);
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
     }
@@ -118,7 +118,7 @@ const SalesHistory = () => {
       console.log('res -> ', salesHistoryViewResponse);
       if (mounted) {     //imp if unmounted
         var salesData = salesHistoryViewResponse.invoices.data || salesHistoryViewResponse.invoices;
-        message.success(salesHistoryViewResponse.message, 3);
+        //message.success(salesHistoryViewResponse.message, 3);
         setSalesHistoryData(salesData);
         setPaginationData(salesHistoryViewResponse.invoices.page || {});
         /*-------setting sales data selection---------*/

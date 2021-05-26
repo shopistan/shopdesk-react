@@ -48,12 +48,12 @@ const SalesSummary = () => {
         "Cant fetch Omni Sales Data -> ",
         salesSummaryResponse.errorMessage
       );
-      message.error(salesSummaryResponse.errorMessage, 3);
+      message.warning(salesSummaryResponse.errorMessage, 3);
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
     } else {
       console.log("res -> ", salesSummaryResponse);
-      message.success(salesSummaryResponse.message, 3);
+      //message.success(salesSummaryResponse.message, 3);
       setSalesSummaryData(salesSummaryResponse.sales_summary);
       setLoading(false);
       setShowSummaryTable(true); //imp to show

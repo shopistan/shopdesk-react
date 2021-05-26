@@ -29,7 +29,7 @@ const InventoryDump = () => {
 
     if (productsInventoryResponse.hasError) {
       console.log('Cant fetch Products Inventory Data -> ', productsInventoryResponse.errorMessage);
-      //message.error(productsInventoryResponse.errorMessage, 3);
+      message.warning(productsInventoryResponse.errorMessage, 3);
       setLoading(false);
     }
     else {

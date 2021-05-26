@@ -32,7 +32,7 @@ function UserAdd() {
     else {
       console.log('res -> ', outletsViewResponse);
       if (mounted) {     //imp if unmounted
-        message.success(outletsViewResponse.message, 3);
+        //message.success(outletsViewResponse.message, 3);
         setStoresData(outletsViewResponse.outlets.data || outletsViewResponse.outlets);
         setLoading(false);
       }

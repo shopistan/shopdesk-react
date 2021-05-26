@@ -86,7 +86,7 @@ function EditUser(props) {
         }
         else {
             console.log('res -> ', getUserResponse);
-            message.success(getUserResponse.message, 3);
+            //message.success(getUserResponse.message, 3);
             /*--setting selected stores data---*/
             var selectedStoresData = [];
             getUserResponse.store.forEach(element => {
