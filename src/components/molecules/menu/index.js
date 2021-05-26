@@ -190,7 +190,8 @@ const SideMenu = () => {
       {readFromLocalStorage && (
         <React.Fragment>
           <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
-            <Link className="nav-menu-item-link"  >Dashboard</Link>
+            <Link to={(readFromLocalStorage && authenticateDashboard) ? "/dashboard" : "/outlets"}
+              className="nav-menu-item-link" >Dashboard</Link>
           </Menu.Item>
         </React.Fragment>
       )}

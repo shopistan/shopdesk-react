@@ -14,6 +14,11 @@ const SignIn = () => {
 
   useEffect(() => {
 
+    document.getElementById('app-loader-container').style.display = "block";
+    setTimeout(() => {
+      document.getElementById('app-loader-container').style.display = "none";
+    }, 1000);
+
     return () => {
       mounted = false;
     }
