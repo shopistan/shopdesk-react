@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./style.scss";
 import moment from "moment";
-import $ from "jquery";
+//import $ from "jquery";
 
 import {
   Form,
@@ -12,9 +12,9 @@ import {
   AutoComplete,
   message,
   Divider,
-  Spin,
   InputNumber,
   Collapse,
+  DatePicker,
 } from "antd";
 
 import {
@@ -33,7 +33,7 @@ import {
 } from "../../../../utils/local-storage/local-store-utils";
 import { useHistory } from "react-router-dom";
 import Constants from "../../../../utils/constants/constants";
-import UrlConstants from "../../../../utils/constants/url-configs";
+//import UrlConstants from "../../../../utils/constants/url-configs";
 import * as ProductsApiUtil from "../../../../utils/api/products-api-utils";
 import * as CustomersApiUtil from "../../../../utils/api/customer-api-utils";
 import * as CouriersApiUtil from "../../../../utils/api/couriers-api-utils";
@@ -41,6 +41,8 @@ import * as SalesApiUtil from "../../../../utils/api/sales-api-utils";
 import * as Helpers from "../../../../utils/helpers/scripts";
 import SellNestedProductsTable from "../../../organism/table/sell/sellNestedProductsTable";
 import PrintSalesInvoiceTable from "./sellInvoice";
+
+ 
 
 function Sell() {
   const history = useHistory();
@@ -68,13 +70,18 @@ function Sell() {
   const { Search } = Input;
   const { Option } = Select;
 
+  const todayDate = moment();
+  const dateFormat = "yyyy/MM/DD";
+  const timeFormat = "hh:mm:ss";  
+
+
   var mounted = true;
 
 
   useEffect(() => {
     if (history.location.selected_invoice_data !== undefined) {
       var selectedViewedInvoice = history.location.selected_invoice_data;
-      console.log("invoice-imp", selectedViewedInvoice );
+      //console.log("invoice-imp", selectedViewedInvoice );
       var tmpInvoice = createNewInvoice();
       var rt = false;
       if (selectedViewedInvoice.status_invoice == 0) {
@@ -93,6 +100,7 @@ function Sell() {
     fetchRegisteredProductsData();
     fetchCouriersData();
     startInvoice();
+
 
     return () => {
       console.log("unmount");
@@ -179,6 +187,9 @@ function Sell() {
   };
 
   const handleCustomerSearch = async (searchValue) => {
+
+    setSelectedCustomerValue(searchValue);      //imp  working correctly
+
     const customersSearchResponse = await CustomersApiUtil.searchCustomer(
       searchValue
     );
@@ -303,6 +314,25 @@ function Sell() {
     saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, clonedInvoice); //imp
     setSaleInvoiceData(clonedInvoice);
   };
+  
+
+  const onInvoiceDateChange = (value, dateString) => {
+    //console.log(value+"-"+dateString);
+    //let today = moment(new Date()).format(dateFormat);  //current date
+    let currentTime = moment().format(timeFormat);  //current time
+    if (value) {
+      const clonedSaleInvoiceData = { ...saleInvoiceData };
+      clonedSaleInvoiceData.dateTime = dateString + " " + currentTime;
+      setSaleInvoiceData(clonedSaleInvoiceData);
+    }
+  };
+
+
+  function disabledDate(current) {
+    // Can not select days after today
+    return current && current > moment().endOf('day');
+  }
+
 
   const handleInvoiceNoteChange = (e) => {
     //console.log(e.target.value);
@@ -311,7 +341,6 @@ function Sell() {
     saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, clonedInvoice); //imp
     setSaleInvoiceData(clonedInvoice);
   };
-
 
   const handlePaidChange = (value) => {
     var inputValue = parseFloat(value);
@@ -343,7 +372,7 @@ function Sell() {
   };
 
   const handleAddProduct = () => {
-    var formValues = form.getFieldsValue();
+    //var formValues = form.getFieldsValue();
 
     var productExistsCheck = false;
     var newData = [...productsTableData];
@@ -381,7 +410,7 @@ function Sell() {
       if (!productExistsCheck) {
         selectedItem.qty = 1;
         newData.push(selectedItem);
-        console.log("imp1-table", newData);
+        //console.log("imp1-table", newData);
         calculateProductsTotalQuantityAndAmount(newData);
         //setProductsTableData(newData);  // callng in updatecart now imppp
         //update cart  imp
@@ -468,11 +497,17 @@ function Sell() {
     }
 
     setSelectedCutomer("");
+
     form.setFieldsValue({
       invoiceNote: "",
     }); //imp
+    form.setFieldsValue({
+      invoiceDate:  todayDate,
+    }); //imp  
+
     let newInvoice = createNewInvoice(); //new invoice again
     updateCart(newInvoice);
+
   };
 
   const printSalesOverview = () => {
@@ -654,7 +689,7 @@ function Sell() {
     // $scope.invoice
     var data = {};
     data.isDiscount = false;
-    data.dateTime = moment(new Date()).format("yyyy/MM/DD hh:mm:ss");
+    data.dateTime = moment(new Date()).format("yyyy/MM/DD hh:mm:ss");      //imp prev ver
     data.invoiceNo = Helpers.uniqid();
     data.store_id = readFromLocalStorage.auth.store_random;
     data.user_id = readFromLocalStorage.user_info.user_random;
@@ -671,6 +706,7 @@ function Sell() {
     data.hasCustomer = false;
     data.discountAmount = 0;
     data.courier_code = "";
+
 
     setSaleInvoiceData(data);
 
@@ -816,6 +852,8 @@ function Sell() {
             layout='vertical'
             initialValues={{
               remember: true,
+              invoiceDate: todayDate,    //imp to set
+              
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
@@ -857,6 +895,17 @@ function Sell() {
                   );
                 })}
               </Select>
+            </Form.Item>
+            <Form.Item
+              label='Invoice Back Date'
+              name='invoiceDate'
+            >
+              <DatePicker  className='select-w-100'
+               onChange={onInvoiceDateChange}
+               format={"yyyy/MM/DD"}
+               disabledDate={disabledDate}
+
+              />
             </Form.Item>
             <Form.Item
               label='Invoice Note'
