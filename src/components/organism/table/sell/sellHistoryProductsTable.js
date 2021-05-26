@@ -90,6 +90,10 @@ const SellHistoryProductsTable = (props) => {
             }
         },
         {
+            title: "Invoice Note",
+            dataIndex: "invoice_note",
+        },
+        {
             title: "Mop",
             dataIndex: "invoice_method",
             render: (_, record) => {

@@ -32,7 +32,7 @@ const PrintSalesInvoice = (props) => {
 
     var today = moment(props.invoice.dateTime).format("dd MMM , yyyy HH:mm:A");  
     var userName = props.user.user_info.user_name;
-    var {invoice} = props;
+    var { invoice = "" } = props;
     
 
 
@@ -46,7 +46,8 @@ const PrintSalesInvoice = (props) => {
                     <div style={{ fontSize: "10px", marginTop: "7px" }}></div>
 
                     <span>Receipt / Tax Invoice</span><br /><br />
-                    <b style={{fontSize: "10px"}}>Recipt #: </b> <span>{invoice.invoiceNo}</span><br />
+                    <b style={{fontSize: "10px"}}>Recipt #: </b> <span>{invoice.invoiceNo}</span><br /> 
+                    <b style={{fontSize: "10px"}}>Invoice Note: </b> <span>{invoice.reference}</span><br />
                     <b style={{fontSize: "10px"}}>Date: </b> <span>{today}</span><br />
                     <b style={{fontSize: "10px"}}>Sales Person: </b><span>{userName}</span><br />
                 </center>

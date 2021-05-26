@@ -414,8 +414,7 @@ function Sell() {
   };
 
   const handlePayBill = (status, check = false) => {
-    var formValues = form.getFieldsValue();
-    console.log("changed", formValues);
+    //console.log("changed", formData);
     //console.log(status);
 
     if (productsTableData.length === 0) {
@@ -426,7 +425,7 @@ function Sell() {
     var localInvoiceQueue = getSellInvoiceDataFromLocalStorage(
       Constants.SELL_INVOICE_QUEUE_KEY
     );
-    console.log(localInvoiceQueue);
+    //console.log(localInvoiceQueue);
 
     var readFromLocalStorage = getDataFromLocalStorage(
       Constants.SELL_CURRENT_INVOICE_KEY
@@ -447,7 +446,7 @@ function Sell() {
     //console.log(clonedInvoiceData);
 
     saleInvoiceData.status = status; //imp
-    console.log(saleInvoiceData);
+    //console.log(saleInvoiceData);
     //updateCart(clonedInvoiceData); // impppp  prev but no need here
 
 
@@ -469,6 +468,9 @@ function Sell() {
     }
 
     setSelectedCutomer("");
+    form.setFieldsValue({
+      invoiceNote: "",
+    }); //imp
     let newInvoice = createNewInvoice(); //new invoice again
     updateCart(newInvoice);
   };
