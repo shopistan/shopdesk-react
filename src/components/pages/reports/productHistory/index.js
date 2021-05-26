@@ -66,6 +66,7 @@ const ProductHistory = () => {
         "Cant fetch productMovementReport Data -> ",
         productMovementReportResponse.errorMessage
       );
+      message.warning(productMovementReportResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1000);
     } else {

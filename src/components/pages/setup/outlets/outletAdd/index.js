@@ -35,7 +35,7 @@ function OutletAdd() {
     else {
       console.log('res -> ', userTemplatesViewResponse);
       if (mounted) {     //imp if unmounted
-        message.success(userTemplatesViewResponse.message, 3);
+        //message.success(userTemplatesViewResponse.message, 3);
         setTemplatesData(userTemplatesViewResponse.templates.data || userTemplatesViewResponse.templates);
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";

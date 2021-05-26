@@ -37,7 +37,7 @@ const CategoryWiseSummary = () => {
         "Cant fetch Sales Summary -> ",
         categoryWiseSalesSummaryResponse.errorMessage
       );
-      //message.error(categoryWiseSalesSummaryResponse.errorMessage, 3);
+      message.warning(categoryWiseSalesSummaryResponse.errorMessage, 3);
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
 

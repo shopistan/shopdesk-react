@@ -57,7 +57,7 @@ function ReceiptEdit(props) {
     else {
       console.log('res -> ', getTepmlateResponse);
       var receivedTemplateData = getTepmlateResponse.template;
-      message.success(getTepmlateResponse.message, 3);
+      //message.success(getTepmlateResponse.message, 3);
       setTemplateData(receivedTemplateData);
       setTemplateLastImg(receivedTemplateData.template_image);
       /*-----setting template data to fields value------*/

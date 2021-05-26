@@ -101,7 +101,7 @@ function OutletEdit(props) {
     else {
       console.log('res -> ', getOutletViewResponse);
       var selectedStore = getOutletViewResponse.outlet;
-      message.success(getOutletViewResponse.message, 3);
+      //message.success(getOutletViewResponse.message, 3);
       setSelectedStoreObj(getOutletViewResponse.outlet);
       setSelectedCurrencyObj({
         code: selectedStore.currency_code,

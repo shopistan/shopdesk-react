@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, } from "react";
 import { Tabs, Menu, Dropdown, Button } from "antd";
 import { ProfileOutlined, DownOutlined } from "@ant-design/icons";
 import Outlets from "./outlets";
@@ -9,23 +9,28 @@ import { useHistory } from 'react-router-dom';
 const { TabPane } = Tabs;
 
 
-const Setup = () => {
+const Setup = (props) => {
   const history = useHistory();
-  const [currentTab, setCurrentTab] = useState("");
+  const { activeKey = "" } = props;
+  //const [currentTab, setCurrentTab] = useState("");
 
+
+  //console.log("props", props);
 
   useEffect(() => {
-    if (history.location.activeKey) {
+    //console.log("useeffect");
+    
+    /*if (history.location.activeKey) {
       setCurrentTab(history.location.activeKey);
     }
     else {
       //console.log(window.location.pathname);
       var path = (window.location.pathname).split("/");
       setCurrentTab(path[2]);
-    }
+    }*/
 
 
-  }, [history.location.activeKey]);  //imp to render when history prop changes
+  }, []);  //imp to render when history prop changes
 
 
 
@@ -78,7 +83,7 @@ const Setup = () => {
 
 
       <div className="page__content">
-        <Tabs activeKey={currentTab} onChange={handletabChange}>
+        <Tabs activeKey={activeKey && activeKey} onChange={handletabChange}>
           <TabPane tab="Outlets" key="outlets">
             <Outlets />
           </TabPane>

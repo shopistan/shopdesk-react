@@ -204,9 +204,7 @@ const Dashboard = () => {
       <div className="page__header">
         <h1>Dashboard</h1>
       </div>
-      <div className="loading-container">
-        {loading && <Spin size="large" />}
-      </div>
+      
 
       {!loading && (
         <div className="page__content">

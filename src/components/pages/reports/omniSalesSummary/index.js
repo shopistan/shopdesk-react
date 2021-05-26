@@ -47,7 +47,7 @@ const OmniSalesSummary = () => {
         "Cant fetch omni Sales Data -> ",
         omnisalesSummaryResponse.errorMessage
       );
-      //message.error(omnisalesSummaryResponse.errorMessage, 3);
+      message.warning(omnisalesSummaryResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
       setLoading(false);
     } else {
