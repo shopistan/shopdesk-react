@@ -133,6 +133,8 @@ const urls = {
     VIEW_HISTORY: BASE_URL + '/api/register/view',
     GET_SALE_HISTORY: BASE_URL + '/api/register/get',
     REGISTER_INVOICE: BASE_URL + '/api/register/add',
+    GET_STORE: BASE_URL + '/api/register/get_store_id',
+    EXPORT_INVENTORY_DUMP: BASE_URL + '/api/register/parkedSaleReportCsv',
 
   },
   DASHBOARD:{

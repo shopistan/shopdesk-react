@@ -72,10 +72,10 @@ const InventorySync = () => {
 
 
 
-  const fetchOmniInventoryDump = async () => {
-    
+  /*const fetchOmniInventoryDump = async () => {
+
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Saving Changes in progress..', 0);
+    const hide = message.loading('Sync Is In Progress..', 0);
     const fetchOmniInventoryDumpViewResponse = await EcommerceApiUtil.getOmniInventoryDump();
     console.log('fetchOmniInventoryDumpViewResponse:', fetchOmniInventoryDumpViewResponse);
 
@@ -89,19 +89,27 @@ const InventorySync = () => {
       console.log('res -> ', fetchOmniInventoryDumpViewResponse);
       if (mounted) {     //imp if unmounted
         message.success(fetchOmniInventoryDumpViewResponse.message, 3);
-        document.getElementById('app-loader-container').style.display = "none";
         setTimeout(hide, 1000);
+        document.getElementById('app-loader-container').style.display = "none";
+        setTimeout(() => {
+          history.push({
+            pathname: '/ecommerce/inventory-sync',
+          });
+        }, 500);
+
       }
     }
 
-  }
+  }*/
 
 
 
 
   const InventorySyncMenu = (
     <Menu>
-      <Menu.Item key="0" onClick={fetchOmniInventoryDump}>
+      <Menu.Item key="0"
+      //onClick={fetchOmniInventoryDump}
+      >
         Inventory Sync
       </Menu.Item>
     </Menu>

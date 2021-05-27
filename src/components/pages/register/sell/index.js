@@ -1066,7 +1066,7 @@ function Sell() {
             <div className='cost'>
               <div className='cost__wrapper'>
                 <div className='cost__left'>
-                  <div className='cost__box'>
+                  <div className='cost__box cost__text-border'>
                     <h3>Subtotal</h3>
                     <span>{saleInvoiceData && saleInvoiceData.sub_total}</span>
                   </div>
@@ -1080,7 +1080,7 @@ function Sell() {
                     />
                   </Form.Item>
 
-                  <div className='cost__box'>
+                  <div className='cost__box cost__text-border'>
                     <h3>Tax</h3>
                     <span>{saleInvoiceData && saleInvoiceData.tax}</span>
                   </div>
@@ -1162,7 +1162,7 @@ function Sell() {
                     />
                   </Form.Item>
 
-                  <div className='cost__box'>
+                  <div className='cost__box cost__text-border'>
                     <h3>Change</h3>
                     <span>
                       {saleInvoiceData &&
@@ -1174,7 +1174,7 @@ function Sell() {
                     </span>
                   </div>
                   
-                  <div className='cost__box'>
+                  <div className='cost__box cost__text-border'>
                     <h3>Discounted Amount</h3>
                     <span>
                       {saleInvoiceData &&
