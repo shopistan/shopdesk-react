@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { Button, message, Select, Input } from "antd";
-import { PlusCircleOutlined } from "@ant-design/icons";
+import { PlusCircleOutlined, DownloadOutlined } from "@ant-design/icons";
 import CustomerTable from "../../organism/table/customerTable";
 import { useHistory } from "react-router-dom";
 import * as CustomersApiUtil from "../../../utils/api/customer-api-utils";
@@ -31,7 +31,7 @@ const Customers = () => {
 
 
   const onSearch = async (e) => {
-    let searchValue = e.target.value;;
+    let searchValue = e.target.value;
     if(searchValue === ""){ // if empty value
       setSearchedData(null);
       setLoading(true);
@@ -234,7 +234,7 @@ const Customers = () => {
           </Button>*/}
 
           <Button type="primary" className="custom-btn custom-btn--primary"
-            onClick={ExportToCsv}
+            onClick={ExportToCsv}  icon={<DownloadOutlined />}
           >
             Export CSV
           </Button>

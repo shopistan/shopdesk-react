@@ -14,7 +14,7 @@ import {
   Pagination,
 }
   from "antd";
-import { ProfileOutlined, DownOutlined } from "@ant-design/icons";
+import { ProfileOutlined, DownOutlined, DownloadOutlined } from "@ant-design/icons";
 import * as SalesApiUtil from '../../../../utils/api/sales-api-utils';
 import { useHistory } from "react-router-dom";
 import * as Helpers from "../../../../utils/helpers/scripts";
@@ -369,6 +369,69 @@ const SalesHistory = () => {
 
 
 
+  const ExportToCsv = async (e) => {
+
+    if (salesHistoryData.length > 0) {
+      document.getElementById('app-loader-container').style.display = "block";
+      const hide = message.loading('Exporting Parked Sales Is In Progress..', 0);
+      const getStoreResponse = await SalesApiUtil.getStoreId();
+      if (getStoreResponse.hasError) {
+        const errorMessage = getStoreResponse.errorMessage;
+        console.log('Cant get Store Id -> ', errorMessage);
+        message.error(errorMessage, 3);
+        document.getElementById('app-loader-container').style.display = "none";
+        setTimeout(hide, 1500);
+      } else {
+        console.log("Success:", getStoreResponse.message);
+        downloadParkedSalesInvoices(hide, getStoreResponse || null);
+      }
+    }
+    else { message.warning("Sales History Data Not Found", 3) } 
+
+  }
+
+
+  const downloadParkedSalesInvoices = async (hide, fetchedStore) => {
+    console.log("fetchedStore", fetchedStore);
+    const parkedSalesInvoicesExportResponse = await SalesApiUtil.exportParkedSalesInvoices(
+      fetchedStore.store_id,
+      fetchedStore.currency
+    );
+    console.log("Parked Sales Invoices export response:", parkedSalesInvoicesExportResponse);
+
+    if (parkedSalesInvoicesExportResponse.hasError) {
+      console.log(
+        "Cant Export Parked Sales Invoices -> ",
+        parkedSalesInvoicesExportResponse.errorMessage
+      );
+      message.error(parkedSalesInvoicesExportResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
+      setTimeout(hide, 1500);
+    } else {
+      console.log("res -> ", parkedSalesInvoicesExportResponse.data);
+      setTimeout(hide, 1500);
+      /*---------------csv download--------------------------------*/
+      if (mounted) {     //imp if unmounted
+        // CSV FILE
+        let csvFile = new Blob([parkedSalesInvoicesExportResponse.data], { type: "text/csv" });
+        let url = window.URL.createObjectURL(csvFile);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = "parked_sales_invoices_" + new Date().toUTCString() + ".csv";
+        document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+        a.click();
+        a.remove();  //afterwards we remove the element again
+        /*---------------csv download--------------------------------*/
+        message.success(parkedSalesInvoicesExportResponse.message, 3);
+        document.getElementById('app-loader-container').style.display = "none";
+      }
+
+    }
+
+  }
+
+
+
 
   const OptionsDropdown = (
     <Menu>
@@ -390,6 +453,15 @@ const SalesHistory = () => {
         <h1>Sale History</h1>
 
         <div className="page__header__buttons">
+          {currentTab === salesHistoryEnum.CONTINUE &&
+            <Button type='primary'
+              className='custom-btn custom-btn--primary'
+              icon={<DownloadOutlined />}
+              onClick={ExportToCsv}
+            >
+              Export CSV
+        </Button>}
+
           <Dropdown overlay={OptionsDropdown} trigger={["click"]}>
             <Button
               type="Default"
@@ -400,7 +472,6 @@ const SalesHistory = () => {
             </Button>
           </Dropdown>
         </div>
-
       </div>
 
       <div className='page__content'>

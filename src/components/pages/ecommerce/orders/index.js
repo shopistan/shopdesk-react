@@ -258,25 +258,41 @@ function EcommerceOrders() {
 
 
 
-  /*const fetchOeSalesOrdersRequest = async () => {
-    const hide = message.loading('Saving Changes in progress..', 0);
-    const fetchOeSalesOrdersResponse = await EcommerceApiUtil.fetchOeSalesOrders(selectedOeSalesOrders);
+  const fetchOeSalesOrdersRequest = async () => {
+
+    document.getElementById('app-loader-container').style.display = "block";
+    const hide = message.loading('Fetching Oe orders in progress..', 0);
+    const fetchOeSalesOrdersResponse = await EcommerceApiUtil.fetchOeSalesOrders();
     console.log('fetchOeSalesOrdersResponse:', fetchOeSalesOrdersResponse);
 
     if (fetchOeSalesOrdersResponse.hasError) {
       console.log('Cant Confirm Oe Sales Orders Data -> ', fetchOeSalesOrdersResponse.errorMessage);
-      message.error(fetchOeSalesOrdersResponse.errorMessage, 3);
       setTimeout(hide, 1000);
+      message.warning(fetchOeSalesOrdersResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
+      
     }
     else {
       console.log('res -> ', fetchOeSalesOrdersResponse);
+
       if (mounted) {     //imp if unmounted
         message.success(fetchOeSalesOrdersResponse.message, 3);
         setTimeout(hide, 1000);
-  
+        let oeSalesData = fetchOeSalesOrdersResponse.sale_orders.orders || fetchOeSalesOrdersResponse.sale_orders;
+        setOmniSalesOrdersData(oeSalesData);
+        setPaginationData(fetchOeSalesOrdersResponse.sale_orders.page || {});
+        /*-------setting sales data selection---------*/
+        handletabChangeData(oeSalesData); //imp
+        /*-------setting continue sales data---------*/
+        /*----------handle data serching response------------*/
+        handledSearchedDataResponse(oeSalesData);
+        /*-----------handle data serching response-----------*/
+        setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
+        
       }
     }
-  }*/
+  }
 
 
 
@@ -308,7 +324,7 @@ function EcommerceOrders() {
   const saleOrdrsMenu = (
     <Menu>
       <Menu.Item key="0"
-      //onClick={fetchOeSalesOrdersRequest}
+        //onClick={fetchOeSalesOrdersRequest}
       >
         Fetch Orders
       </Menu.Item>
