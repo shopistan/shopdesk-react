@@ -38,7 +38,8 @@ const urls = {
     GET_SUPPLIER: BASE_URL + '/api/suppliers/get',
   },
   OULETS: {
-    SELECT_OUTLET: BASE_URL + '/api/users/selectStore'
+    SELECT_OUTLET: BASE_URL + '/api/users/selectStore',
+    VIEW_ALL: BASE_URL + '/api/stores/viewAll',
   },
   COURIERS: {
     VIEW: BASE_URL + '/api/couriers/view',

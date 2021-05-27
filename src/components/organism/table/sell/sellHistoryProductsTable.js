@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import "./sellHistory.scss";
 import { Table, Form } from "antd";
-import { HistoryOutlined, RollbackOutlined } from "@ant-design/icons";
+import { HistoryOutlined, RollbackOutlined, EyeOutlined } from "@ant-design/icons";
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 
@@ -20,6 +20,11 @@ const SellHistoryProductsTable = (props) => {
 
     };
 
+
+    /*const handleInvoiceQuickView = (record) => {
+        props.onInvoiceQuickViewSelection(record);
+
+    };*/
 
 
     useEffect(async () => {
@@ -120,6 +125,17 @@ const SellHistoryProductsTable = (props) => {
                 );
             },
         },
+        /*{
+            title: "Quick View",
+            render: (_, record) => {
+                return (
+                    <div>
+                        <EyeOutlined 
+                        onClick={() => handleInvoiceQuickView(record)} />
+                    </div>
+                );
+            },
+        },*/
         {
             title: "Action",
             render: (_, record) => {

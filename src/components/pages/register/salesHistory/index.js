@@ -14,7 +14,7 @@ import {
   Pagination,
 }
   from "antd";
-import { PlusCircleOutlined, ProfileOutlined, DownOutlined } from "@ant-design/icons";
+import { ProfileOutlined, DownOutlined } from "@ant-design/icons";
 import * as SalesApiUtil from '../../../../utils/api/sales-api-utils';
 import { useHistory } from "react-router-dom";
 import * as Helpers from "../../../../utils/helpers/scripts";
@@ -41,8 +41,11 @@ const SalesHistory = () => {
   const [paginationData, setPaginationData] = useState({});
   const [salesListLimitCheck, setSalesListLimitCheck] = useState(true);
   const [currentViewedInvoiceId, setCurrentViewedInvoiceId] = useState("");
+  const [currentViewedInvoiceQuickViewId, setCurrentViewedInvoiceQuickViewId] = useState("");
   const [selectedInvoiceData, setSelectedInvoiceData] = useState("");
+  const [selectedQuickViewInvoiceData, setSelectedQuickViewInvoiceData] = useState("");
   const [isViewInvoiceModalVisible, setIsViewInvoiceModalVisible] = useState(false);
+  const [isQuickViewInvoiceModalVisible, setIsQuickViewInvoiceModalVisible] = useState(false);
   const [localCurrentInvoice, setLocalCurrentInvoice] = useState("");
   const [loading, setLoading] = useState(true);
   const [dataSearched, setDataSearched] = useState([]);
@@ -228,9 +231,6 @@ const SalesHistory = () => {
   };
 
 
-
-
-
   function handleInvoiceSelection(tableRecord) {
     setCurrentViewedInvoiceId(tableRecord.invoice_id);
     /*-----------set user current invoice store-------------*/
@@ -248,6 +248,19 @@ const SalesHistory = () => {
     else { getSelectedInvoiceHistory(tableRecord.invoice_id); }
 
   }
+
+  
+
+  function handleInvoiceQuickViewSelection(tableRecord) {
+    if (tableRecord) {
+      setCurrentViewedInvoiceQuickViewId(tableRecord.invoice_id);
+
+      getSelectedQuickViewInvoiceHistory(tableRecord.invoice_id);
+
+    }
+
+  }
+
 
 
   const returnToSaleInProgress = () => {
@@ -299,11 +312,36 @@ const SalesHistory = () => {
 
 
 
+  const getSelectedQuickViewInvoiceHistory = async (invoiceId) => {
+    const hide = message.loading('Getting Invoice in progress..', 0);
+    const getSaleHistoryResponse = await SalesApiUtil.getSalesInvoiceHistory(invoiceId);
+    console.log('getSaleHistoryResponse:', getSaleHistoryResponse);
+
+    if (getSaleHistoryResponse.hasError) {
+      console.log('Cant fetch registered products Data -> ', getSaleHistoryResponse.errorMessage);
+      message.error(getSaleHistoryResponse.errorMessage, 3);
+      setTimeout(hide, 1000);
+    }
+    else {
+      console.log('res -> ', getSaleHistoryResponse);
+      message.success(getSaleHistoryResponse.message, 2);
+      setSelectedQuickViewInvoiceData(getSaleHistoryResponse);
+      setTimeout(hide, 1000);
+      //setIsQuickViewInvoiceModalVisible(true);     //imp false for to hide
+
+    }
+  }
+
+
   const handleCancelModal = () => {
     setIsViewInvoiceModalVisible(false);
 
   }
 
+  const handleQuickViewCancelModal = () => {
+    setIsQuickViewInvoiceModalVisible(false);
+
+  }
 
 
   function handleChange(value) {
@@ -436,6 +474,7 @@ const SalesHistory = () => {
                 pageLimit={paginationLimit}
                 paginationData={paginationData}
                 onInvoiceSelection={handleInvoiceSelection}
+                onInvoiceQuickViewSelection={handleInvoiceQuickViewSelection}
                 tableType={salesHistoryEnum.PROCESS} />
             </div>
             {/* Table */}
@@ -476,6 +515,20 @@ const SalesHistory = () => {
           <p> You have a sale on the Sell screen that hasn’t been completed.
           You can choose to return to that sale to complete it,
               or save that sale and continue with this one.</p>
+
+
+        </Modal>
+
+        {/*--Modal for navigation to register screen*/}
+
+
+        {/*--Modal for quick view functionality*/}
+        <Modal title="Invoice Sale Data"
+          visible={isQuickViewInvoiceModalVisible}
+          onCancel={handleQuickViewCancelModal}
+         
+        >
+          
 
 
         </Modal>

@@ -886,7 +886,21 @@ function Sell() {
             </Button>
 
             <Form.Item label='Courier' name='courier_code'>
-              <Select onChange={handleCourierChange}>
+              <Select 
+                onChange={handleCourierChange}
+                placeholder="Select Courier"
+                showSearch    //vimpp to seach
+                optionFilterProp="children"
+                filterOption={(input, option) => {
+                  //console.log(option);
+                  return (
+                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0)
+                }}
+                filterSort={(optionA, optionB) =>
+                  optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                }
+
+              >
                 {couriersData.map((obj, index) => {
                   return (
                     <Option key={obj.courier_id} value={obj.courier_code}>
@@ -915,7 +929,21 @@ function Sell() {
               <Input placeholder='input Invoice Note' />
             </Form.Item>
             <Form.Item label='Tax Category' name='tax_value'>
-              <Select onChange={handleTaxCategoryChange}>
+              <Select
+                onChange={handleTaxCategoryChange}
+                placeholder="Select Tax"
+                showSearch    //vimpp to seach
+                optionFilterProp="children"
+                filterOption={(input, option) => {
+                  //console.log(option);
+                  return (
+                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0)
+                }}
+                filterSort={(optionA, optionB) =>
+                  optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                }
+
+              >
                 <Option key='1' value={16}>
                   Simple
                 </Option>

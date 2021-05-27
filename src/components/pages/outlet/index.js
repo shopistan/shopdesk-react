@@ -24,13 +24,9 @@ const Outlet = () => {
 
   useEffect( () => {
     
-    var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+    let readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
     readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
-    document.getElementById('app-loader-container').style.display = "block";
-
-    setTimeout(() => {
-      fetchOutlets(readFromLocalStorage)
-    }, 2000);
+    fetchAllOutletsData(readFromLocalStorage);   //imp
     
     return () => {
       mounted = false;
@@ -40,7 +36,7 @@ const Outlet = () => {
 
 
 
-  const fetchOutlets =  (localStorageData) => {
+  /*const fetchOutlets =  (localStorageData) => {
 
     if (localStorageData) {
       setLoginCacheData(localStorageData);
@@ -56,7 +52,45 @@ const Outlet = () => {
       }
     }
 
-  } 
+  }*/
+
+
+
+  const fetchAllOutletsData = async (localStorageData) => {
+
+    document.getElementById('app-loader-container').style.display = "block";
+    const outletsViewResponse = await OutletsApiUtil.viewAllOutlets();
+    console.log('outletsViewResponse:', outletsViewResponse);
+
+    if (outletsViewResponse.hasError) {
+      console.log('Cant fetch Outlets Data -> ', outletsViewResponse.errorMessage);
+      setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
+    }
+    else {
+      console.log('res -> ', outletsViewResponse);
+
+      if (mounted) {     //imp if unmounted
+        //message.success(outletsViewResponse.message, 3);
+        if (localStorageData) {
+          setLoginCacheData(localStorageData);
+          if (checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication) {
+            setStoreInfo(outletsViewResponse && outletsViewResponse.outlets);
+            setActiveOutlet(localStorageData.auth.current_store);
+            document.getElementById('app-loader-container').style.display = "none";
+          }
+          else {
+            setStoreInfo(outletsViewResponse && outletsViewResponse.outlets);
+            setActiveOutlet(null);
+            document.getElementById('app-loader-container').style.display = "none";
+          }
+        }
+        
+      }
+
+    }
+
+  }
 
 
 
