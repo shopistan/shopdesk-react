@@ -12,6 +12,8 @@ import {
   Divider,
   Modal,
   Pagination,
+  Row,
+  Col,
 }
   from "antd";
 import { ProfileOutlined, DownOutlined, DownloadOutlined } from "@ant-design/icons";
@@ -19,11 +21,16 @@ import * as SalesApiUtil from '../../../../utils/api/sales-api-utils';
 import { useHistory } from "react-router-dom";
 import * as Helpers from "../../../../utils/helpers/scripts";
 import SellHistoryNestedProductsTable from "../../../organism/table/sell/sellHistoryProductsTable";
+import SellNestedQuickViewProductsTable from "../../../organism/table/sell/sellNestedQuickViewProductsTable";
+
 import {
   getSellInvoiceDataFromLocalStorage,
   saveDataIntoLocalStorage,
+  getDataFromLocalStorage,
+  checkUserAuthFromLocalStorage,
 } from "../../../../utils/local-storage/local-store-utils";
 import Constants from '../../../../utils/constants/constants';
+//import PrintSalesInvoiceTable from "../sell/sellInvoice";
 
 
 
@@ -43,8 +50,11 @@ const SalesHistory = () => {
   const [currentViewedInvoiceId, setCurrentViewedInvoiceId] = useState("");
   const [currentViewedInvoiceQuickViewId, setCurrentViewedInvoiceQuickViewId] = useState("");
   const [selectedInvoiceData, setSelectedInvoiceData] = useState("");
+  const [selectedHistoryRecordData, setSelectedHistoryRecordData] = useState("");
   const [selectedQuickViewInvoiceData, setSelectedQuickViewInvoiceData] = useState("");
+  const [quickViewInvoicePrintData, setQuickViewInvoicePrintData] = useState(null);
   const [isViewInvoiceModalVisible, setIsViewInvoiceModalVisible] = useState(false);
+  const [localStorageData, setLocalStorageData] = useState("");
   const [isQuickViewInvoiceModalVisible, setIsQuickViewInvoiceModalVisible] = useState(false);
   const [localCurrentInvoice, setLocalCurrentInvoice] = useState("");
   const [loading, setLoading] = useState(true);
@@ -62,6 +72,17 @@ const SalesHistory = () => {
   useEffect(() => {
 
     fetchSalesHistoryData();
+
+    var userData = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+    userData = userData.data ? userData.data : null;
+
+    if (userData) {
+      if (
+        checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
+      ) {
+        setLocalStorageData(userData);
+      }
+    }
 
     return () => {
       mounted = false;
@@ -254,8 +275,8 @@ const SalesHistory = () => {
   function handleInvoiceQuickViewSelection(tableRecord) {
     if (tableRecord) {
       setCurrentViewedInvoiceQuickViewId(tableRecord.invoice_id);
-
-      getSelectedQuickViewInvoiceHistory(tableRecord.invoice_id);
+      setSelectedHistoryRecordData(tableRecord);  //imp for quick view stats
+      getSelectedQuickViewInvoiceHistory(tableRecord.invoice_id, tableRecord);    //imp
 
     }
 
@@ -285,6 +306,44 @@ const SalesHistory = () => {
 
   }
 
+  
+  const handlePrintQuickSaleInvoice = () => {
+    console.log("print");
+
+    /*let printquickViewInvoiceDetails = JSON.parse(
+      JSON.stringify(selectedQuickViewInvoiceData)
+    );
+
+    for (var key in selectedHistoryRecordData) {
+      // check if the property/key is defined in the object itself, not in parent
+      if (selectedHistoryRecordData.hasOwnProperty(key)) {
+        //console.log(key, dictionary[key]);
+        printquickViewInvoiceDetails[key] = selectedHistoryRecordData[key];
+      }
+    }
+
+    setQuickViewInvoicePrintData(printquickViewInvoiceDetails);
+    */
+    printSalesOverview();
+
+  }
+
+
+  const printSalesOverview = () => {
+    var previewSalesInvoiceHtml = document.getElementById("printSalesTable")
+      .innerHTML;
+    var doc =
+      '<html><head><title>Close Me ~ Shopdesk</title><link rel="stylesheet" type="text/css" href="/printInvoice.scss" /></head><body onload="window.print(); window.close();">' +
+      previewSalesInvoiceHtml +
+      "</body></html>";
+    /* NEW TAB OPEN PRINT */
+    var popupWin = window.open("", "_blank");
+    popupWin.document.open();
+    // window.print(); window.close(); 'width: 80%, height=80%'
+    popupWin.document.write(doc);
+    //popupWin.document.close();  //vvimp for autoprint
+  };
+
 
   const getSelectedInvoiceHistory = async (invoiceId) => {
     const hide = message.loading('Getting Invoice in progress..', 0);
@@ -312,7 +371,8 @@ const SalesHistory = () => {
 
 
 
-  const getSelectedQuickViewInvoiceHistory = async (invoiceId) => {
+  const getSelectedQuickViewInvoiceHistory = async (invoiceId, tableRecord) => {
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Getting Invoice in progress..', 0);
     const getSaleHistoryResponse = await SalesApiUtil.getSalesInvoiceHistory(invoiceId);
     console.log('getSaleHistoryResponse:', getSaleHistoryResponse);
@@ -320,14 +380,50 @@ const SalesHistory = () => {
     if (getSaleHistoryResponse.hasError) {
       console.log('Cant fetch registered products Data -> ', getSaleHistoryResponse.errorMessage);
       message.error(getSaleHistoryResponse.errorMessage, 3);
-      setTimeout(hide, 1000);
+      document.getElementById('app-loader-container').style.display = "none";
+      setTimeout(hide, 500);
     }
     else {
       console.log('res -> ', getSaleHistoryResponse);
-      message.success(getSaleHistoryResponse.message, 2);
-      setSelectedQuickViewInvoiceData(getSaleHistoryResponse);
-      setTimeout(hide, 1000);
-      //setIsQuickViewInvoiceModalVisible(true);     //imp false for to hide
+      //message.success(getSaleHistoryResponse.message, 2);
+      setTimeout(hide, 500);
+      document.getElementById('app-loader-container').style.display = "none";
+      let tableProducsData = getSaleHistoryResponse.invoices;
+      /*---------------------------------------------------*/
+      for (let i in tableProducsData) {
+        if (Helpers.var_check(tableProducsData[i].qty))
+          tableProducsData[i].qty = parseInt(tableProducsData[i].qty) > 0 ? parseInt(tableProducsData[i].qty)  : parseInt(tableProducsData[i].qty) * (-1) ;
+        else tableProducsData[i].qty = 0;
+        if (Helpers.var_check(tableProducsData[i].product_sale_price))
+          tableProducsData[i].product_sale_price = parseFloat(
+            parseFloat(tableProducsData[i].product_sale_price).toFixed(2)
+          );
+        else tableProducsData[i].product_sale_price = 0;
+
+      } //enf of for loop
+
+
+      /*---------------------------------------------------*/
+      //////////////////////////////////////////////////////
+      //console.log("imp", tableRecord);
+      let invoiceData = JSON.parse(
+        JSON.stringify(tableRecord)
+      );
+      invoiceData.invoice_details = getSaleHistoryResponse.invoice_details;
+      invoiceData.products = tableProducsData;
+      setSelectedQuickViewInvoiceData(tableProducsData);   //impp
+  
+      /*for (var key in tableRecord) {
+        // check if the property/key is defined in the object itself, not in parent
+        if (selectedHistoryRecordData.hasOwnProperty(key)) {
+          //console.log(key, dictionary[key]);
+          invoiceData[key] = tableRecord[key];
+        }
+      }*/
+  
+      setQuickViewInvoicePrintData(invoiceData);
+      //////////////////////////////////////////////////////
+      setIsQuickViewInvoiceModalVisible(true);     //imp false for to hide
 
     }
   }
@@ -342,6 +438,7 @@ const SalesHistory = () => {
     setIsQuickViewInvoiceModalVisible(false);
 
   }
+
 
 
   function handleChange(value) {
@@ -394,8 +491,7 @@ const SalesHistory = () => {
   const downloadParkedSalesInvoices = async (hide, fetchedStore) => {
     console.log("fetchedStore", fetchedStore);
     const parkedSalesInvoicesExportResponse = await SalesApiUtil.exportParkedSalesInvoices(
-      fetchedStore.store_id,
-      fetchedStore.currency
+      fetchedStore.store_id
     );
     console.log("Parked Sales Invoices export response:", parkedSalesInvoicesExportResponse);
 
@@ -429,6 +525,8 @@ const SalesHistory = () => {
     }
 
   }
+
+  console.log("reord", selectedHistoryRecordData);
 
 
 
@@ -560,6 +658,7 @@ const SalesHistory = () => {
                 paginationData={paginationData}
                 tableDataLoading={loading}
                 onInvoiceSelection={handleInvoiceSelection}
+                onInvoiceQuickViewSelection={handleInvoiceQuickViewSelection}
                 tableType={salesHistoryEnum.ALL} />
             </div>
             {/* Table */}
@@ -595,11 +694,70 @@ const SalesHistory = () => {
 
         {/*--Modal for quick view functionality*/}
         <Modal title="Invoice Sale Data"
+          wrapClassName='modal-dailog'
           visible={isQuickViewInvoiceModalVisible}
           onCancel={handleQuickViewCancelModal}
-         
+          onOk={handleQuickViewCancelModal}
+          width={700}
+          /*footer={[
+            <Button key="back" onClick={handleQuickViewCancelModal}
+            >
+              Cancel
+            </Button>,
+            <Button key="submit" type="primary" //loading={loading} 
+              className="custom-btn--primary" onClick={handlePrintQuickSaleInvoice}
+            >
+              Print
+            </Button>
+          ]}*/
+
         >
-          
+
+          {/* Table */}
+          {<div className='table'>
+            <SellNestedQuickViewProductsTable
+              tableData={selectedQuickViewInvoiceData}
+              //tableDataLoading={loading}
+              onChangeProductsData={handleInvoiceQuickViewSelection}
+            />
+          </div>}
+          {/* Table */}
+
+          <Row style={{ textAlign: "center", marginTop: "2rem" }}>
+            <Col xs={24} sm={24} md={6} offset={12}>
+              <span> SUB-TOTAL: </span>
+            </Col>
+            <Col xs={24} sm={24} md={6} >
+              <span> {selectedHistoryRecordData && parseFloat(selectedHistoryRecordData.sale_total).toFixed(2)} </span>
+            </Col>
+            {/*-------------------------------------------*/}
+
+            <Col xs={24} sm={24} md={6} offset={12}>
+              <span> Discount: </span>
+            </Col>
+            <Col xs={24} sm={24} md={6} >
+              <span> {selectedHistoryRecordData && parseFloat(selectedHistoryRecordData.discounted_amount).toFixed(2)} </span>
+            </Col>
+            {/*-------------------------------------------*/}
+
+            <Col xs={24} sm={24} md={6} offset={12}>
+              <span> Tax: </span>
+            </Col>
+            <Col xs={24} sm={24} md={6} >
+              <span> {selectedHistoryRecordData && parseFloat(selectedHistoryRecordData.tax_total).toFixed(2)} </span>
+            </Col>
+            {/*-------------------------------------------*/}
+            <Col xs={24} sm={24} md={6} offset={12}>
+              <span> Total: </span>
+            </Col>
+            <Col xs={24} sm={24} md={6} >
+              <span> {selectedHistoryRecordData &&
+               parseFloat((parseFloat(selectedHistoryRecordData.sale_total)+parseFloat(selectedHistoryRecordData.tax_total)) - parseFloat(selectedHistoryRecordData.discounted_amount)).toFixed(2)
+              } </span>
+            </Col>
+
+          </Row>
+
 
 
         </Modal>
@@ -608,7 +766,19 @@ const SalesHistory = () => {
 
 
       </div>
+
+
+      {/* print sales overview */}
+      {/*quickViewInvoicePrintData && (
+        <PrintSalesInvoiceTable
+          user={localStorageData}
+          invoice={quickViewInvoicePrintData}
+        />
+      )*/}
+
+
     </div>
+    
   );
 };
 

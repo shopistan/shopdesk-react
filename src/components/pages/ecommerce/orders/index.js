@@ -278,14 +278,14 @@ function EcommerceOrders() {
       if (mounted) {     //imp if unmounted
         message.success(fetchOeSalesOrdersResponse.message, 3);
         setTimeout(hide, 1000);
-        let oeSalesData = fetchOeSalesOrdersResponse.sale_orders.orders || fetchOeSalesOrdersResponse.sale_orders;
-        setOmniSalesOrdersData(oeSalesData);
-        setPaginationData(fetchOeSalesOrdersResponse.sale_orders.page || {});
+        //let oeSalesData = fetchOeSalesOrdersResponse.sale_orders.orders || fetchOeSalesOrdersResponse.sale_orders;
+        //setOmniSalesOrdersData(oeSalesData);
+        //setPaginationData(fetchOeSalesOrdersResponse.sale_orders.page || {});
         /*-------setting sales data selection---------*/
-        handletabChangeData(oeSalesData); //imp
+        //handletabChangeData(oeSalesData); //imp
         /*-------setting continue sales data---------*/
         /*----------handle data serching response------------*/
-        handledSearchedDataResponse(oeSalesData);
+        //handledSearchedDataResponse(oeSalesData);
         /*-----------handle data serching response-----------*/
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
@@ -324,7 +324,7 @@ function EcommerceOrders() {
   const saleOrdrsMenu = (
     <Menu>
       <Menu.Item key="0"
-        //onClick={fetchOeSalesOrdersRequest}
+        onClick={fetchOeSalesOrdersRequest}
       >
         Fetch Orders
       </Menu.Item>

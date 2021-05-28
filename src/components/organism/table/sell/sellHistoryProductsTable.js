@@ -21,10 +21,10 @@ const SellHistoryProductsTable = (props) => {
     };
 
 
-    /*const handleInvoiceQuickView = (record) => {
+    const handleInvoiceQuickView = (record) => {
         props.onInvoiceQuickViewSelection(record);
 
-    };*/
+    };
 
 
     useEffect(async () => {
@@ -125,17 +125,6 @@ const SellHistoryProductsTable = (props) => {
                 );
             },
         },
-        /*{
-            title: "Quick View",
-            render: (_, record) => {
-                return (
-                    <div>
-                        <EyeOutlined 
-                        onClick={() => handleInvoiceQuickView(record)} />
-                    </div>
-                );
-            },
-        },*/
         {
             title: "Action",
             render: (_, record) => {
@@ -157,6 +146,24 @@ const SellHistoryProductsTable = (props) => {
         },
     ];
 
+
+    if (props.tableType === "process-returns" || props.tableType === "all-sales") {
+        let item = {
+            title: "Quick View",
+            render: (_, record) => {
+                return (
+                    <div className='action-btns stock-table-delete-item'>
+                        {record.invoice_status === "0" && <EyeOutlined
+                            onClick={() => handleInvoiceQuickView(record)}
+                            className="sell-history-action-btn-quick-view"
+                        />}
+                    </div>
+                );
+            },
+        };
+
+        columns.push(item);
+    }
 
 
 

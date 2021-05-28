@@ -30,7 +30,7 @@ const PrintSalesInvoice = (props) => {
         return tmp.textContent || tmp.innerText || "";
     }
 
-    var today = moment(props.invoice.dateTime).format("dd MMM , yyyy HH:mm:A");  
+    var today = moment(props.invoice.dateTime).format("ddd MMM, yyyy HH:mm A");  
     var userName = props.user.user_info.user_name;
     var { invoice = "" } = props;
     

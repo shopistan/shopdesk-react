@@ -72,7 +72,7 @@ function Sell() {
 
   const todayDate = moment();
   const dateFormat = "yyyy/MM/DD";
-  const timeFormat = "hh:mm:ss";  
+  const timeFormat = "hh:mm:ss A";  
 
 
   var mounted = true;
@@ -267,6 +267,9 @@ function Sell() {
 
   const handleDeleteSale = (e) => {
     saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, null);
+    form.setFieldsValue({
+      tax_value:  "",
+    }); //imp
     let newInvoice = createNewInvoice();
     updateCart(newInvoice);
   };
@@ -504,6 +507,9 @@ function Sell() {
     form.setFieldsValue({
       invoiceDate:  todayDate,
     }); //imp  
+    form.setFieldsValue({
+      tax_value:  "",
+    }); //imp
 
     let newInvoice = createNewInvoice(); //new invoice again
     updateCart(newInvoice);
@@ -689,7 +695,7 @@ function Sell() {
     // $scope.invoice
     var data = {};
     data.isDiscount = false;
-    data.dateTime = moment(new Date()).format("yyyy/MM/DD hh:mm:ss");      //imp prev ver
+    data.dateTime = moment(new Date()).format("yyyy/MM/DD hh:mm:ss A");      //imp prev ver
     data.invoiceNo = Helpers.uniqid();
     data.store_id = readFromLocalStorage.auth.store_random;
     data.user_id = readFromLocalStorage.user_info.user_random;
