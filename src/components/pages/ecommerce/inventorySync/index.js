@@ -72,7 +72,7 @@ const InventorySync = () => {
 
 
 
-  /*const fetchOmniInventoryDump = async () => {
+  const fetchOmniInventoryDump = async () => {
 
     document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Sync Is In Progress..', 0);
@@ -82,8 +82,9 @@ const InventorySync = () => {
     if (fetchOmniInventoryDumpViewResponse.hasError) {
       console.log('Cant fetch Omni Inventory Sync Data -> ', fetchOmniInventoryDumpViewResponse.errorMessage);
       message.error(fetchOmniInventoryDumpViewResponse.errorMessage, 3);
-      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1000);
+      document.getElementById('app-loader-container').style.display = "none";
+
     }
     else {
       console.log('res -> ', fetchOmniInventoryDumpViewResponse);
@@ -91,16 +92,12 @@ const InventorySync = () => {
         message.success(fetchOmniInventoryDumpViewResponse.message, 3);
         setTimeout(hide, 1000);
         document.getElementById('app-loader-container').style.display = "none";
-        setTimeout(() => {
-          history.push({
-            pathname: '/ecommerce/inventory-sync',
-          });
-        }, 500);
+        fetchOmniAlInventorySync();
 
       }
     }
 
-  }*/
+  }
 
 
 
@@ -108,7 +105,7 @@ const InventorySync = () => {
   const InventorySyncMenu = (
     <Menu>
       <Menu.Item key="0"
-      //onClick={fetchOmniInventoryDump}
+        onClick={fetchOmniInventoryDump}
       >
         Inventory Sync
       </Menu.Item>

@@ -172,8 +172,8 @@
 }
 
 
-.modal-dailog{
-  margin-top: -1rem;
+.quick-view-modal-dailog{
+  margin-top: -2rem;
   
   .table{
     overflow: auto;
@@ -186,7 +186,16 @@
     margin-bottom: 1rem;
   }
 
+  .ant-modal-content{
+    overflow-y: scroll;
+    height: 400px;
+  }
 
+  .ant-col{
+    @include respond(mobile) {
+      margin-left: 0px !important;
+    }
+  }
 
 
 

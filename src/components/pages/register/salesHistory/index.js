@@ -30,7 +30,9 @@ import {
   checkUserAuthFromLocalStorage,
 } from "../../../../utils/local-storage/local-store-utils";
 import Constants from '../../../../utils/constants/constants';
-//import PrintSalesInvoiceTable from "../sell/sellInvoice";
+import PrintSalesInvoiceTable from "../sell/sellInvoice";
+import moment from 'moment';
+
 
 
 
@@ -308,7 +310,7 @@ const SalesHistory = () => {
 
   
   const handlePrintQuickSaleInvoice = () => {
-    console.log("print");
+    //console.log("print");
 
     /*let printquickViewInvoiceDetails = JSON.parse(
       JSON.stringify(selectedQuickViewInvoiceData)
@@ -404,12 +406,11 @@ const SalesHistory = () => {
 
 
       /*---------------------------------------------------*/
-      //////////////////////////////////////////////////////
       //console.log("imp", tableRecord);
       let invoiceData = JSON.parse(
         JSON.stringify(tableRecord)
       );
-      invoiceData.invoice_details = getSaleHistoryResponse.invoice_details;
+      //invoiceData.invoice_details = getSaleHistoryResponse.invoice_details;   no need now 
       invoiceData.products = tableProducsData;
       setSelectedQuickViewInvoiceData(tableProducsData);   //impp
   
@@ -420,9 +421,11 @@ const SalesHistory = () => {
           invoiceData[key] = tableRecord[key];
         }
       }*/
+
+      console.log("print-data", invoiceData);
   
       setQuickViewInvoicePrintData(invoiceData);
-      //////////////////////////////////////////////////////
+      /*---------------------------------------------------*/
       setIsQuickViewInvoiceModalVisible(true);     //imp false for to hide
 
     }
@@ -489,7 +492,7 @@ const SalesHistory = () => {
 
 
   const downloadParkedSalesInvoices = async (hide, fetchedStore) => {
-    console.log("fetchedStore", fetchedStore);
+    //console.log("fetchedStore", fetchedStore);
     const parkedSalesInvoicesExportResponse = await SalesApiUtil.exportParkedSalesInvoices(
       fetchedStore.store_id
     );
@@ -526,9 +529,7 @@ const SalesHistory = () => {
 
   }
 
-  console.log("reord", selectedHistoryRecordData);
-
-
+ 
 
 
   const OptionsDropdown = (
@@ -693,13 +694,16 @@ const SalesHistory = () => {
 
 
         {/*--Modal for quick view functionality*/}
-        <Modal title="Invoice Sale Data"
-          wrapClassName='modal-dailog'
+        <Modal title={`Invoice Sale Data ( invoice-id ${quickViewInvoicePrintData && quickViewInvoicePrintData.invoice_show_id} , 
+          ${moment(quickViewInvoicePrintData
+          &&
+          quickViewInvoicePrintData.invoice_datetime).format("ddd MMM, yyyy HH:mm A")} )`}
+          wrapClassName='quick-view-modal-dailog'
           visible={isQuickViewInvoiceModalVisible}
           onCancel={handleQuickViewCancelModal}
           onOk={handleQuickViewCancelModal}
           width={700}
-          /*footer={[
+          footer={[
             <Button key="back" onClick={handleQuickViewCancelModal}
             >
               Cancel
@@ -709,7 +713,7 @@ const SalesHistory = () => {
             >
               Print
             </Button>
-          ]}*/
+          ]}
 
         >
 
@@ -769,12 +773,13 @@ const SalesHistory = () => {
 
 
       {/* print sales overview */}
-      {/*quickViewInvoicePrintData && (
+      {quickViewInvoicePrintData && (
         <PrintSalesInvoiceTable
           user={localStorageData}
           invoice={quickViewInvoicePrintData}
+          invoiceType={"quick_view"}
         />
-      )*/}
+      )}
 
 
     </div>
