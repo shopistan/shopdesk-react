@@ -78,9 +78,9 @@ export const getStoreId = async () => {
 };
   
   
-export const exportParkedSalesInvoices = async (storeId, currency) => {
+export const exportParkedSalesInvoices = async (storeId) => {
 
-    const url = UrlConstants.SALES.EXPORT_INVENTORY_DUMP+`/${storeId}`+`/${currency}`;
+    const url = UrlConstants.SALES.EXPORT_INVENTORY_DUMP+`/${storeId}`;
     const headers = {
         'Authorization': ApiCallUtil.getUserAuthToken(),
     };
