@@ -646,7 +646,7 @@ function Sell() {
             }
           }
           if (index != -1) {
-            console.log("imp-sync-queue-inserted-val", localInvoiceQueue[index]);
+            //console.log("imp-sync-queue-inserted-val", localInvoiceQueue[index]);
             localInvoiceQueue.splice(index, 1);
             saveDataIntoLocalStorage(Constants.SELL_INVOICE_QUEUE_KEY, localInvoiceQueue);
             console.log(index);
@@ -654,7 +654,7 @@ function Sell() {
         }
 
 
-        console.log(invoicesData);
+        //console.log(invoicesData);
         setTimeout(sync, 3000);
 
       }
