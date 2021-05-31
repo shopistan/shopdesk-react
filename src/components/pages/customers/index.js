@@ -1,27 +1,79 @@
 import React, { useState, useEffect } from "react";
 
-import { Button, Select, Input, message } from "antd";
+import { Button, message, Select, Input } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
-
 import CustomerTable from "../../organism/table/customerTable";
 import { useHistory } from "react-router-dom";
-
 import * as CustomersApiUtil from "../../../utils/api/customer-api-utils";
+import Constants from '../../../utils/constants/constants';
+import {
+  getDataFromLocalStorage,
+} from "../../../utils/local-storage/local-store-utils";
+
+
 
 const Customers = () => {
-  const [paginationLimit, setPaginationLimit] = useState(10);
+  const [paginationLimit, setPaginationLimit] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [paginationData, setPaginationData] = useState({});
+  const [userLocalStorageData, setUserLocalStorageData] = useState("");
+  const [searchedData, setSearchedData] = useState(null);
+  const [currentPageSearched, setCurrentPageSearched] = useState(1);
 
-
+  const { Option } = Select;
+  const { Search } = Input;
   const history = useHistory();
+
 
   var mounted = true;
 
-  const fetchCustomersData = async (pageLimit = 10, pageNumber = 1) => {
+
+  const onSearch = async (e) => {
+    let searchValue = e.target.value;;
+    if(searchValue === ""){ // if empty value
+      setSearchedData(null);
+      setLoading(true);
+      fetchCustomersData(paginationLimit, currentPage);
+      return;
+    }
+
+    setSearchedData(searchValue);
+    setLoading(true);
+    setCurrentPageSearched(1);   //imp
+    fetchSearchCustomers(paginationLimit, 1, searchValue);
+  }
+
+
+  const fetchSearchCustomers = async (pageLimit = 20, pageNumber = 1, searchValue) => {
+    const customersSearchResponse = await CustomersApiUtil.searchCustomers(
+      pageLimit,
+      pageNumber,
+      searchValue
+    );
+    console.log('couriersSearchResponse:', customersSearchResponse);
+    if (customersSearchResponse.hasError) {
+      console.log('Cant Search Customers -> ', customersSearchResponse.errorMessage);
+      message.error(customersSearchResponse.errorMessage, 2);
+      setLoading(false);
+    }
+    else {
+      console.log('res -> ', customersSearchResponse.message);
+      if (mounted) {     //imp if unmounted
+        setData(customersSearchResponse.Customer.data);
+        setPaginationData(customersSearchResponse.Customer.page);
+        setLoading(false);
+      }
+    }
+    
+  }
+
+
+
+  const fetchCustomersData = async (pageLimit = 20, pageNumber = 1) => {
     const customersViewResponse = await CustomersApiUtil.viewCustomers(
+      pageLimit,
       pageNumber
     );
     console.log("customers view response:", customersViewResponse);
@@ -36,21 +88,35 @@ const Customers = () => {
       console.log("res -> ", customersViewResponse);
       if (mounted) {     //imp if unmounted
         message.success(customersViewResponse.message, 3);
-        setData(customersViewResponse.Customer.data);
+        setData(customersViewResponse.Customer.data || customersViewResponse.Customer);
         setPaginationData(customersViewResponse.Customer.page || {});
         setLoading(false);
       }
     }
   };
 
+
   function handlePageChange(currentPg) {
     setCurrentPage(currentPg);
     setLoading(true);
     fetchCustomersData(paginationLimit, currentPg);
   }
+  
+
+  function handleSearchedDataPageChange(currentPg) {
+    setCurrentPageSearched(currentPg);
+    setLoading(true);
+    fetchSearchCustomers(paginationLimit, currentPg, searchedData);
+  }
+
 
   useEffect(() => {
     fetchCustomersData();
+    /*--------------set user local data-------------------------------*/
+    let readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+    readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
+    setUserLocalStorageData(readFromLocalStorage.auth || null);
+    /*--------------set user local data-------------------------------*/
     return () => {
       mounted = false;
     }
@@ -58,63 +124,80 @@ const Customers = () => {
 
 
 
-
-
-  function download_csv(csv, filename) {
-    var csvFile;
-    var downloadLink;
-
-    // CSV FILE
-    csvFile = new Blob([csv], { type: "text/csv" });
-
-    // Download link
-    downloadLink = document.createElement("a");
-
-    // File name
-    downloadLink.download = filename;
-
-    // We have to create a link to the file
-    downloadLink.href = window.URL.createObjectURL(csvFile);
-
-    // Make sure that the link is not displayed
-    downloadLink.style.display = "none";
-
-    // Add the link to your DOM
-    document.body.appendChild(downloadLink);
-
-    // Lanzamos
-    downloadLink.click();
-  }
-
-
-  function export_table_to_csv(html, filename) {
-    var csv = [];
-    //imp selection below
-    var rows = document.querySelectorAll("div#customers-list-table  tr");
-
-    for (var i = 0; i < rows.length; i++) {
-      var row = [], cols = rows[i].querySelectorAll("td, th");
-
-      for (var j = 0; j < cols.length-1; j++)
-        row.push(cols[j].innerText);
-
-      csv.push(row.join(","));
+  function handleChange(value) {
+    setPaginationLimit(value);
+    setLoading(true);
+    if(searchedData){   //imp is search data exists
+      if (currentPageSearched > Math.ceil(paginationData.totalElements / value)) {
+        fetchSearchCustomers(value, 1, searchedData);
+      } else {
+        fetchSearchCustomers(value, currentPageSearched, searchedData);
+      }
+    }  /*------end of outer if---------*/
+    else {
+      if (currentPage > Math.ceil(paginationData.totalElements / value)) {
+        fetchCustomersData(value, 1);
+      } else {
+        fetchCustomersData(value, currentPage);
+      }  /*------end of outer else---------*/
     }
 
-    // Download CSV
-    download_csv(csv.join("\n"), filename);
   }
 
 
-  const DownloadToCsv = (e) => {
 
+  const ExportToCsv = async (e) => {
     if (data.length > 0) {
-      var html = document.getElementById('customers-list-table').innerHTML;
+      const hide = message.loading('Exporting Customers Is In Progress..', 0);
+      const getuserResponse = await CustomersApiUtil.getUserId();
+      console.log("customers export response:", getuserResponse);
+      if (getuserResponse.hasError) {
+        const errorMessage = getuserResponse.errorMessage;
+        console.log('Cant get User Id -> ', errorMessage);
+        message.error(errorMessage, 3);
+        setTimeout(hide, 1500);
+      } else {
+        console.log("Success:", getuserResponse.message);
+        exportCustomersData(hide, getuserResponse.user_id || null);
+      }
+    }
+    else { 
+      message.error("No Customer Data Found", 3);
+    }
 
-      export_table_to_csv(html, "customers_" + new Date().toUTCString() + ".csv")
+  }
+
+
+  const exportCustomersData = async (hide, currentUserId) => {
+    console.log("currentUserId", currentUserId);
+    const customersExportResponse = await CustomersApiUtil.exportCustomers(currentUserId);
+    console.log("customers export response:", customersExportResponse);
+
+    if (customersExportResponse.hasError) {
+      console.log(
+        "Cant Export customers -> ",
+        customersExportResponse.errorMessage
+      );
+      setTimeout(hide, 1500);
+    } else {
+      console.log("res -> ", customersExportResponse.data);
+      setTimeout(hide, 1500);
+      /*---------------csv download--------------------------------*/
+      if (mounted) {     //imp if unmounted
+        // CSV FILE
+        let csvFile = new Blob([customersExportResponse.data], { type: "text/csv" });
+        let url = window.URL.createObjectURL(csvFile);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = "customers_" + new Date().toUTCString() + ".csv";
+        document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+        a.click();
+        a.remove();  //afterwards we remove the element again
+        /*---------------csv download--------------------------------*/
+        message.success(customersExportResponse.message, 3);
+      }
 
     }
-    else { message.error("No Customer Data Found", 3) }
 
   }
 
@@ -144,14 +227,41 @@ const Customers = () => {
           </Button>*/}
 
           <Button type="primary" className="custom-btn custom-btn--primary"
-            onClick={DownloadToCsv}
-
+            onClick={ExportToCsv}
           >
             Export CSV
           </Button>
         </div>
       </div>
       <div className="page__content">
+
+      <div className="action-row">
+          <div className="action-row__element">
+            Show
+            <Select
+              defaultValue="10"
+              style={{ width: 120, margin: "0 5px" }}
+              onChange={handleChange}
+            >
+              <Option value="10">10</Option>
+              <Option value="20">20</Option>
+              <Option value="50">50</Option>
+              <Option value="100">100</Option>
+            </Select>
+            entries
+          </div>
+
+          <div className="action-row__element">
+            <Search
+              placeholder="search customers"
+              allowClear
+              //enterButton='Search'
+              size="large"
+              onChange={onSearch}
+            />
+          </div>
+        </div>
+
         {/* Table */}
         <div className="table">
           <CustomerTable
@@ -159,8 +269,8 @@ const Customers = () => {
             paginationData={paginationData}
             tableData={data}
             tableDataLoading={loading}
-            onClickPageChanger={handlePageChange}
-            currentPageIndex={currentPage}
+            onClickPageChanger={searchedData ? handleSearchedDataPageChange : handlePageChange}
+            currentPageIndex={searchedData ? currentPageSearched : currentPage}
             tableId='customers-list-table'
           />
         </div>

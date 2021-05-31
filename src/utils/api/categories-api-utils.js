@@ -19,6 +19,19 @@ export const addCategory = async (categoryName) => {
   );
 };
 
+
+export const searchCategories = async (limit, PageNumber, searchvalue) => {
+
+  const url = UrlConstants.CATEGORIES.SEARCH + `?name=${searchvalue}&limit=${limit}&page=${PageNumber}`;
+  const callType = GenericConstants.API_CALL_TYPE.GET;
+
+  return await ApiCallUtil.http(
+    url, //api url
+    callType, //calltype
+  );
+};
+
+
 export const viewCategories = async (limit, PageNumber) => {
   const formDataPair = {
     limit: limit,
@@ -34,6 +47,19 @@ export const viewCategories = async (limit, PageNumber) => {
       viewCategoriesFormDataBody,
     );
 };
+
+
+export const viewAllCategories = async () => {
+
+    const url = UrlConstants.CATEGORIES.VIEW_ALL;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+  
+    return await ApiCallUtil.http(
+      url, //api url
+      callType, //calltype
+    );
+};
+
 
 export const deleteCategory = async (categoryId) => {
   const formDataPair = {

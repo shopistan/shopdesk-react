@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Button, message } from "antd";
 import { useHistory } from "react-router-dom";
 import * as CategoriesApiUtil from "../../../../utils/api/categories-api-utils";
@@ -6,9 +6,16 @@ import BackButton from "../../../atoms/backButton";
 
 const CategoryAdd = () => {
   const history = useHistory();
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
+  var mounted = true;
+
 
   const onFinish = async (values) => {
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     console.log("Success:", values);
+    const hide = message.loading('Saving Changes in progress..', 0);
     const categoryAddResponse = await CategoriesApiUtil.addCategory(
       values.category_name
     );
@@ -18,17 +25,30 @@ const CategoryAdd = () => {
         "Cant add new Category -> ",
         categoryAddResponse.errorMessage
       );
-      message.error("Category Cannot Added ", 3);
+      message.error(categoryAddResponse.errorMessage, 3);
+      setButtonDisabled(false);
+      setTimeout(hide, 1500);
     } else {
       console.log("res -> ", categoryAddResponse);
-      message.success("Category Succesfull Added ", 3);
-      setTimeout(() => {
-        history.push({
-          pathname: "/categories",
-        });
-      }, 2000);
+      if (mounted) {     //imp if unmounted
+        message.success(categoryAddResponse.message, 3);
+        setTimeout(hide, 1500);
+        setTimeout(() => {
+          history.push({
+            pathname: "/categories",
+          });
+        }, 2000);
+      }
     }
   };
+
+
+  useEffect(() => {
+    return () => {
+      mounted = false;
+    }
+  }, []);
+
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -76,6 +96,7 @@ const CategoryAdd = () => {
                     type="primary"
                     htmlType="submit"
                     className="custom-btn custom-btn--primary"
+                    disabled={buttonDisabled}
                   >
                     Add
                   </Button>

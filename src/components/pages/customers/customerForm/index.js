@@ -20,6 +20,7 @@ const CustomerForm = (props) => {
   //These are used to set data in the ant form
   const [customerDataFields, setCustomerDataFields] = useState([]);
   const [customerData, setCustomerData] = useState({});
+  const [buttonDisabled, setButtonDisabled] = useState(false);
   const isEditMode = props.isCustomerEditMode;
 
 
@@ -82,11 +83,15 @@ const CustomerForm = (props) => {
     history.goBack();
   };
 
-  const goToPage = (url) => {
+
+  /*const goToPage = (url) => {
     history.push(url);
-  };
+  };*/
+  
 
   const onFinish = async (values) => {
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     const updatedCustomerData = {
       name: values.customer_name,
       email: values.email,
@@ -98,13 +103,29 @@ const CustomerForm = (props) => {
     try {
 
       if (isEditMode) {
+        const hide = message.loading('Saving Changes in progress..', 0);
         const userDataUpdateResponse = await updateUserDetails(
           updatedCustomerData
         );
         //console.log(userDataUpdateResponse);
-        message.success(userDataUpdateResponse.message, 3);
-        goToPage(`/customers/${customer_id}/view`);
-      }
+        if (userDataUpdateResponse.hasError) {
+          console.log('Cant Edit Customer -> ', userDataUpdateResponse.errorMessage);
+          message.error(userDataUpdateResponse.errorMessage, 3);
+          setButtonDisabled(false);
+          setTimeout(hide, 1000);
+        }
+        else {
+          setTimeout(hide, 1000);
+          console.log('res -> ', userDataUpdateResponse);
+          message.success(userDataUpdateResponse.message, 3);
+          setTimeout(() => {
+            history.push({
+              pathname: `/customers/${customer_id}/view`,
+            });
+          }, 1500);
+        }
+
+      }  /*---end of if---*/
       else {
         const addCustomerData = {
           name: values.customer_name,
@@ -114,13 +135,27 @@ const CustomerForm = (props) => {
           code: values.code,
           balance: values.balance,
         };
-
+        const hide = message.loading('Saving Changes in progress..', 0);
         const userDataAddResponse = await addCustomer(addCustomerData);
         //console.log(userDataAddResponse);
-        message.success(userDataAddResponse.message, 3);
-        goToPage('/customers');
+        if (userDataAddResponse.hasError) {
+          console.log('Cant Edit Customer -> ', userDataAddResponse.errorMessage);
+          message.error(userDataAddResponse.errorMessage, 3);
+          setButtonDisabled(false);
+          setTimeout(hide, 1000);
+        }
+        else {
+          setTimeout(hide, 1000);
+          console.log('res -> ', userDataAddResponse);
+          message.success(userDataAddResponse.message, 3);
+          setTimeout(() => {
+            history.push({
+              pathname: '/customers',
+            });
+          }, 1500);
+        }
 
-      }
+      } /*---end of else---*/
       
     } catch (err) {
       message.err('Unable to update user', 3);
@@ -193,7 +228,8 @@ const CustomerForm = (props) => {
                   rules={[
                     {
                       required: true,
-                      message: 'Please input valid email!'
+                      message: 'Please input valid email!',
+                      type: "email",
                     }
                   ]}
                 >
@@ -264,7 +300,7 @@ const CustomerForm = (props) => {
                 Cancel
               </Button>
 
-              <Button type='primary' htmlType='submit'>
+              <Button type='primary' htmlType='submit' disabled={buttonDisabled}>
                 Confirm
               </Button>
             </div>

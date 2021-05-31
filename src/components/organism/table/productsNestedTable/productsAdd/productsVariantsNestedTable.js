@@ -27,7 +27,6 @@ const EditableCell = ({
     handleSave,
     inputType,
     editable,
-    taxesData,
     children,
     ...restProps
 }) => {
@@ -65,18 +64,7 @@ const EditableCell = ({
 
     inputNode = inputType === 'number' ?
         <InputNumber ref={inputRef}  onBlur={save} />
-        : inputType === 'select' ? <Select ref={inputRef} onChange={save} >
-            {
-                taxesData.map((obj, index) => {
-                    return (
-                        <Option key={obj.tax_id} value={obj.tax_id}>
-                            {`${obj.tax_name}(${obj.tax_value}%)`}
-                        </Option>
-                    )
-                })
-            }
-        </Select>
-            : <Input ref={inputRef} onBlur={save} />;
+        : <Input ref={inputRef} onBlur={save} />;
 
 
 
@@ -107,6 +95,7 @@ const EditableCell = ({
 const ProductsVariantsNestedTable = (props) => {
     const [data, setData] = useState([]);
     const [currentExpandedRow, setCurrentExpandedRow] = useState("");
+    const [selectedInputTaxVal, setSelectedInputTaxVal] = useState({});
 
 
     const handleSave = async (row, selectedRowId) => {
@@ -128,12 +117,54 @@ const ProductsVariantsNestedTable = (props) => {
     }
 
 
+
+    const onChangeSelectTax = (value, currentRowId) => {
+        var selectTaxData = {...selectedInputTaxVal};
+        selectTaxData[currentRowId] = value;
+        setSelectedInputTaxVal(selectTaxData);  //imp
+        handleTableData(props.tableData, selectTaxData);   //imp
+
+    }
+
+
+
+    const setSelectedTaxChange = (tableData, currentRowId) => {
+        var selectTaxData = {...selectedInputTaxVal};
+        tableData.forEach(item => {
+            let selectInputId = item.store_id;
+            selectTaxData[selectInputId] = item.tax;
+
+        });
+
+        setSelectedInputTaxVal(selectTaxData);  //imp
+        handleTableData(props.tableData, selectTaxData);   //imp
+
+    }
+
+
+    const handleTableData = (tableData, taxData) => {
+        var newData = [...tableData];
+        newData.forEach(item => {
+            let taxValue =  taxData[item.store_id] && taxData[item.store_id];
+            item.tax = taxValue;
+        });
+
+        setData(newData);   //imp
+
+    }
+
+
+
+
     useEffect(() => {
-        setData(props.tableData);
+        //setData(props.tableData);
         //console.log(props.tableData);
         setCurrentExpandedRow(props.currentExpandedRow);
+        setSelectedTaxChange(props.tableData, props.currentExpandedRow);
+    
 
-    }, [props.userStores, props.tableData, props.taxes, props.currentExpandedRow]);  /* imp passing props to re-render */
+    }, [props.userStores,props.tableData, props.taxes, props.currentExpandedRow]);  /* imp passing props to re-render */
+
 
     
     var columns = null;
@@ -161,13 +192,21 @@ const ProductsVariantsNestedTable = (props) => {
         },
         {
             title: "Tax",
-            dataIndex: "tax_id",
-            editable: true,
+            //dataIndex: "tax",
+            //editable: true,
             width: "40%",
             render: (_, record) => {
+                //let selectInputRowId = record.store_id+'_'+currentExpandedRow;
+                let selectInputRowId = record.store_id;
+
                 return (
                     <div >
-                        <Select className='select-w-100' value={record.tax_id}>
+                        <Select 
+                            className='select-w-100'
+                            value={selectedInputTaxVal[selectInputRowId]}
+                            onChange={(value) => onChangeSelectTax(value, selectInputRowId)}
+                        
+                        >
                             {
                                 props.taxes.map((obj, index) => {
                                     return (
@@ -211,13 +250,14 @@ const ProductsVariantsNestedTable = (props) => {
                 dataIndex: col.dataIndex,
                 title: col.title,
                 handleSave: handleSave,
-                inputType: col.dataIndex === 'qty' ? 'number' : col.dataIndex === 'tax_id' ? 'select' : 'text',
+                inputType: col.dataIndex === 'qty' ? 'number' : 'text',
                 editable: col.editable,
-                taxesData: props.taxes,
             }),
         };
     });
 
+
+        
 
     return (
         <Table
@@ -231,6 +271,8 @@ const ProductsVariantsNestedTable = (props) => {
         />
 
     );
+
+
 };
 
 export default ProductsVariantsNestedTable;

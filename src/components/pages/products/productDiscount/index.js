@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, Button, message, Select } from "antd";
-import { PlusCircleOutlined, CheckCircleOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined } from "@ant-design/icons";
 import ProductsDiscountsTable from "../../../organism/table/productsNestedTable/productsDiscounts";
 import * as ProductsApiUtil from '../../../../utils/api/products-api-utils';
 
 
 const ProductDiscount = () => {
   const [paginationLimit, setPaginationLimit] = useState(20);
-  const [paginationData, setPaginationData] = useState({});
-  const [currentPage, setCurrentPage] = useState(1);
+  //const [paginationData, setPaginationData] = useState({});
+  //const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [discountedRows, setDiscountedRows] = useState([]);
   const [discountedRowsKeys, setDiscountedRowsKeys] = useState([]);
+  const [selectedDiscountedProducts, setSelectedDiscountedProducts] = useState([]);
 
   var mounted = true;
 
@@ -35,9 +36,7 @@ const ProductDiscount = () => {
         var productSku = entry.product_sku;
         productSku = productSku.toLowerCase();
         var discountedPrice = entry.discounted_price;
-        discountedPrice = discountedPrice.toLowerCase();
         var salePrice = entry.product_sale_price;
-        salePrice = salePrice.toLowerCase();
       
         return (
           productName.includes(currValue) ||
@@ -50,6 +49,7 @@ const ProductDiscount = () => {
       setData(filteredData);
     }
   };
+
 
   const fetchProductsDiscountsData = async (pageLimit = 20, pageNumber = 1) => {
     const productsDiscountsViewResponse = await ProductsApiUtil.getFullRegisteredProducts();
@@ -95,7 +95,6 @@ const ProductDiscount = () => {
 
   useEffect( () => {
     fetchProductsDiscountsData();
-
     return () => {
       mounted = false;
     }
@@ -115,11 +114,11 @@ const ProductDiscount = () => {
     } */
   }
 
-  function handlePageChange(currentPg) {
-    /*setCurrentPage(currentPg);
+  /*function handlePageChange(currentPg) {
+    setCurrentPage(currentPg);
     setLoading(true);
-    fetchProductsDiscountsData(paginationLimit, currentPg);*/
-  }
+    fetchProductsDiscountsData(paginationLimit, currentPg);
+  }*/
 
 
   const onApplyDiscount = (value) => {
@@ -132,21 +131,50 @@ const ProductDiscount = () => {
       const newData = [...data];
       discountedRowsKeys.forEach((val, indx) => {
         const index = newData.findIndex(item => val === item.product_id);
-        if (index > -1) {
+        if (index > -1) {      //if item found
           const item = newData[index];
           if (item.hasOwnProperty('discounted_price')) {
             item.discounted_price = (item.product_sale_price - ((parseFloat(item.product_sale_price) * discountedValue) / 100));
+            //console.log("founddisitem", item);
             newData.splice(index, 1, {
               ...item
             });
-          }
-        }
+
+            /*-----------------------------------------*/
+            handleSetSelectedDiscountedProducts(item);   //imp here to set selected discounted products
+            /*-----------------------------------------*/
+
+          }  /*--end of inner if condition--*/
+
+        }  /*--end of found if condition--*/
+
       }); /*--end of foreach--*/
 
       setData(newData);
       message.success("Discount applied", 3);
-      console.log("save-values-new", newData); //coreect
+      //console.log("save-values-new", newData); //correct
+
     }
+
+  };
+
+
+
+  const handleSetSelectedDiscountedProducts = (productsDiscountedObj) => {
+    let newData = [...selectedDiscountedProducts];
+    const index = newData.findIndex(item => productsDiscountedObj.product_id === item.product_id);
+    if (index > -1) {      // if item found
+        //const item = newData[index];
+        newData.splice(index, 1, {
+            ...productsDiscountedObj,
+        });
+    }
+    else {       //if item not found
+      newData.push(productsDiscountedObj);
+    }
+
+    //console.log("newData", newData);
+    setSelectedDiscountedProducts(newData);  //imp
 
   };
 
@@ -158,19 +186,25 @@ const ProductDiscount = () => {
 
   };
 
+
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
 
+
   const onFinish = async (values) => {
-    console.log('changed', values);
-    saveProductsDiscountedData(data);
+    //console.log('changed', values);
+    //saveProductsDiscountedData(data);    // imp prev version
+    saveProductsDiscountedData(selectedDiscountedProducts);   //imp here new one
 
   };
 
-  const handleSaveSpecialPrice = (updatedDiscountProducts) => {
-    console.log('changed', updatedDiscountProducts);
+
+  const handleSaveSpecialPrice = (updatedDiscountProducts, selectedProductsDiscountedItem) => {
+    //console.log('changed', updatedDiscountProducts);
     setData(updatedDiscountProducts);
+    handleSetSelectedDiscountedProducts(selectedProductsDiscountedItem);  //imp to call here 
+
   };
 
 

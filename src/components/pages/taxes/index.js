@@ -10,38 +10,60 @@ const Taxes = () => {
   const history = useHistory();
   const { Search } = Input;
 
-  const [paginationLimit, setPaginationLimit] = useState(10);
+  const [paginationLimit, setPaginationLimit] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-  const [dataSearched, setDataSearched] = useState([]);
   const [paginationData, setPaginationData] = useState({});
+  const [searchedData, setSearchedData] = useState(null);
+  const [currentPageSearched, setCurrentPageSearched] = useState(1);
   const { Option } = Select;
+
 
   var mounted = true;
 
+
   const onSearch = async (e) => {
-    var currValue = e.target.value;
-    currValue = currValue.toLowerCase();
-    if (currValue === "") {
+    let searchValue = e.target.value;;
+    if(searchValue === ""){ // if empty value
+      setSearchedData(null);
       setLoading(true);
       fetchTaxesData(paginationLimit, currentPage);
-    } else {
-      const filteredData = dataSearched.filter((entry) => {
-        var taxName = entry.tax_name;
-        taxName = taxName.toLowerCase();
-        var taxValue = entry.tax_value;
-        taxValue = taxValue.toLowerCase();
-
-        return taxName.includes(currValue) || taxValue.includes(currValue);
-      });
-
-      setData(filteredData);
-      paginationData.totalElements = filteredData.length;
-      setPaginationData(paginationData);
-      setPaginationLimit(paginationLimit);
+      return;
     }
-  };
+
+    setSearchedData(searchValue);
+    setLoading(true);
+    setCurrentPageSearched(1);  //imp to set page no here
+    fetchSearchTaxes(paginationLimit, 1, searchValue);
+  }
+
+
+
+  const fetchSearchTaxes = async (pageLimit = 20, pageNumber = 1, searchValue) => {
+    const taxesSearchResponse = await TaxApiUtil.searchTaxes(
+      pageLimit,
+      pageNumber,
+      searchValue
+    );
+    console.log('taxesSearchResponse:', taxesSearchResponse);
+    if (taxesSearchResponse.hasError) {
+      console.log('Cant Search Taxes -> ', taxesSearchResponse.errorMessage);
+      message.error(taxesSearchResponse.errorMessage, 2);
+      setLoading(false);
+    }
+    else {
+      console.log('res -> ', taxesSearchResponse.message);
+      if (mounted) {     //imp if unmounted
+        setData(taxesSearchResponse.taxes.data);
+        setPaginationData(taxesSearchResponse.taxes.page);
+        setLoading(false);
+      }
+    }
+    
+  }
+
+
 
   const fetchTaxesData = async (pageLimit = 10, pageNumber = 1) => {
     const taxesViewResponse = await TaxApiUtil.viewTaxes(pageLimit, pageNumber);
@@ -49,14 +71,12 @@ const Taxes = () => {
 
     if (taxesViewResponse.hasError) {
       console.log("Cant fetch taxes -> ", taxesViewResponse.errorMessage);
+      message.error(taxesViewResponse.errorMessage, 3);
       setLoading(false);
     } else {
       console.log("res -> ", taxesViewResponse);
       if (mounted) {     //imp if unmounted
         const taxesData = taxesViewResponse.taxes.data || taxesViewResponse.taxes;
-        /*----------handle data serching response------------*/
-        handledSearchedDataResponse(taxesData);
-        /*-----------handle data serching response-----------*/
         setData(taxesData);
         message.success(taxesViewResponse.message, 3);
         setPaginationData(taxesViewResponse.taxes.page || {});
@@ -67,23 +87,6 @@ const Taxes = () => {
 
 
 
-  function handledSearchedDataResponse(dataResponse) {
-    var newData = [...dataSearched];
-    dataResponse.forEach(item => {
-      var foundObj = newData.find(obj => {
-        return obj.tax_id === item.tax_id;
-      });
-
-      if(!foundObj){
-        newData.push(item);
-      }
-    });
-    //console.log(newData);
-    setDataSearched(newData);
-  }
-
-
-
   useEffect(async () => {
     fetchTaxesData();
     return () => {
@@ -91,21 +94,43 @@ const Taxes = () => {
     }
   }, []);
 
+
+
   function handleChange(value) {
     setPaginationLimit(value);
     setLoading(true);
-    if (currentPage > Math.ceil(paginationData.totalElements / value)) {
-      fetchTaxesData(value, 1);
-    } else {
-      fetchTaxesData(value, currentPage);
+    if(searchedData){   //imp is search data exists
+      if (currentPageSearched > Math.ceil(paginationData.totalElements / value)) {
+        fetchSearchTaxes(value, 1, searchedData);
+      } else {
+        fetchSearchTaxes(value, currentPageSearched, searchedData);
+      }
+    }  /*------end of outer if---------*/
+    else {
+      if (currentPage > Math.ceil(paginationData.totalElements / value)) {
+        fetchTaxesData(value, 1);
+      } else {
+        fetchTaxesData(value, currentPage);
+      }  /*------end of outer else---------*/
     }
+
   }
+
 
   function handlePageChange(currentPg) {
     setCurrentPage(currentPg);
     setLoading(true);
     fetchTaxesData(paginationLimit, currentPg);
   }
+
+
+  function handleSearchedDataPageChange(currentPg) {
+    setCurrentPageSearched(currentPg);
+    setLoading(true);
+    fetchSearchTaxes(paginationLimit, currentPg, searchedData);
+  }
+
+
 
   const handleAddTaxes = () => {
     history.push({
@@ -160,7 +185,8 @@ const Taxes = () => {
             tableData={data}
             paginationData={paginationData}
             tableDataLoading={loading}
-            onClickPageChanger={handlePageChange}
+            onClickPageChanger={searchedData ? handleSearchedDataPageChange : handlePageChange}
+            currentPageIndex={searchedData ? currentPageSearched : currentPage}
           />
         </div>
         {/* Table */}

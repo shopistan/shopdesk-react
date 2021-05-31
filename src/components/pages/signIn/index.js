@@ -1,15 +1,28 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { Form, Input, Button, Checkbox, message } from "antd";
 import { login } from "../../../utils/api/auth-api-utils";
 import { saveDataIntoLocalStorage } from "../../../utils/local-storage/local-store-utils";
-import { useHistory } from "react-router-dom";
 import Constants from "../../../utils/constants/constants";
 
 const SignIn = () => {
-  const history = useHistory();
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
+  var mounted = true;
+
+
+  useEffect(() => {
+
+    return () => {
+      mounted = false;
+    }
+
+  }, []);
+
 
   const onFinish = async (values) => {
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     //The values that will be in form data:
     //{ username: 'a', password: 'a', remember: true };
 
@@ -17,17 +30,21 @@ const SignIn = () => {
     const loginResponse = await login(values.username, values.password);
     if (loginResponse.hasError) {
       const errorMessage = loginResponse.errorMessage;
-      message.error("Login UnSuccesfull ", 3);
+      message.error(errorMessage, 3);
+      setButtonDisabled(false);
     } else {
       const loggedInUserDetails = loginResponse;
-      saveDataIntoLocalStorage(Constants.USER_DETAILS_KEY, loggedInUserDetails);
-      message.success("Login Succesfull ", 3);
-      setTimeout(() => {
-        window.open("/outlets", "_self");
-      }, 2000);
+      if (mounted) {   //imp if unmounted
+        saveDataIntoLocalStorage(Constants.USER_DETAILS_KEY, loggedInUserDetails);
+        message.success("Login Succesfull ", 3);
+        setTimeout(() => {
+          window.open("/outlets", "_self");
+        }, 2000);
+      }
     }
 
     console.log("Success:", loginResponse);
+
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -86,8 +103,9 @@ const SignIn = () => {
                 type='primary'
                 htmlType='submit'
                 className='custom-btn custom-btn--primary'
+                disabled={buttonDisabled}
               >
-                Submit
+                Submit 
               </Button>
             </Form.Item>
           </Form>

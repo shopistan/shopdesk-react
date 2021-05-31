@@ -9,9 +9,12 @@ const DeleteTax = (props) => {
     const history = useHistory();
     const [selectedTaxData, setSelectedTaxData] = useState({});
     const [loading, setLoading] = useState(true);
+    const [buttonDisabled, setButtonDisabled] = useState(false);
     const { match = {} } = props;
     const { tax_id = {} } = match !== undefined && match.params;
-    
+
+    var mounted = true;
+
 
 
     useEffect(async () => {
@@ -23,6 +26,10 @@ const DeleteTax = (props) => {
             }, 1000);
         }
 
+        return () => {
+            mounted = false;
+        }
+
     }, []);
 
 
@@ -31,20 +38,26 @@ const DeleteTax = (props) => {
         console.log('gettaxResponse:', gettaxResponse);
         if (gettaxResponse.hasError) {
             console.log('getTax Cant Fetched -> ', gettaxResponse.errorMessage);
+            message.error(gettaxResponse.errorMessage, 2);
             setLoading(false);
         }
         else {
-            console.log('res -> ', gettaxResponse);
-            message.success(gettaxResponse.message, 2);
-            const taxData = gettaxResponse.tax[0];  //vvimp
-            setSelectedTaxData(taxData);
-            setLoading(false);
+            console.log('res -> ', gettaxResponse.message);
+            if (mounted) {     //imp if unmounted
+                message.success(gettaxResponse.message, 2);
+                const taxData = gettaxResponse.tax[0];  //vvimp
+                setSelectedTaxData(taxData);
+                setLoading(false);
+            }
 
         }
     }
 
 
     const handleConfirm = async () => {
+        if (buttonDisabled === false) {
+            setButtonDisabled(true);
+        }
         const hide = message.loading('Saving Changes in progress..', 0);
         const taxDeleteResponse = await TaxApiUtil.deleteTax(selectedTaxData.tax_id);
         console.log('taxDeleteResponse:', taxDeleteResponse);
@@ -52,17 +65,20 @@ const DeleteTax = (props) => {
 
         if (taxDeleteResponse.hasError) {
             console.log('Cant delete Tax -> ', taxDeleteResponse.errorMessage);
-            message.error('Tax deletion UnSuccesfull ', 3);
+            message.error(taxDeleteResponse.errorMessage, 3);
+            setButtonDisabled(false);
         }
         else {
-            console.log('res -> ', taxDeleteResponse);
-            message.success(taxDeleteResponse.message, 3);
-            setTimeout(hide, 1500);
-            setTimeout(() => {
-                history.push({
-                    pathname: '/taxes',
-                });
-            }, 2000);
+            console.log('res -> ', taxDeleteResponse.message);
+            if (mounted) {     //imp if unmounted
+                message.success(taxDeleteResponse.message, 3);
+                setTimeout(hide, 1500);
+                setTimeout(() => {
+                    history.push({
+                        pathname: '/taxes',
+                    });
+                }, 2000);
+            }
         }
     };
 
@@ -96,6 +112,7 @@ const DeleteTax = (props) => {
                         <br />
                         <div className='form__row--footer'>
                             <Button type='primary' danger
+                                disabled={buttonDisabled}
                                 onClick={() => handleConfirm()}>
                                 Confirm
                         </Button>

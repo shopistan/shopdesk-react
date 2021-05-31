@@ -37,7 +37,7 @@ const CategorySalesSummaryTable = (props) => {
 
                 <tbody >
                     {
-                        data.map(item => {
+                        data.map((item, index) => {
 
                             return (
                                 <>
@@ -45,9 +45,9 @@ const CategorySalesSummaryTable = (props) => {
                                         <td colSpan="8" style={{ backgroundColor: "#eef9fb" }}><strong>{item.categoryName}</strong></td>
                                     </tr>
 
-                                    {item.sales.map(salesObj => {
+                                    {item.sales.map((salesObj, index) => {
                                         return (
-                                            <tr key={salesObj.product_id}>
+                                            <tr>
 
                                                 <td>{salesObj.product_sku}</td>
                                                 <td>{salesObj.product_name}</td>

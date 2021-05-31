@@ -39,10 +39,15 @@ const SuppliersTable = (props) => {
     ) {
       setcurrentPageNumber(1);
     }
+    else{
+      setcurrentPageNumber(props.currentPageIndex);
+    }
+
   }, [
     props.tableData,
     props.tableDataLoading,
     props.paginationData,
+    props.currentPageIndex,
   ]); /* imp passing props to re-render */
 
   const columns = [

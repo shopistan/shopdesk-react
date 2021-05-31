@@ -20,6 +20,7 @@ function ReceiptEdit(props) {
   const [isImageUpload, setIsImageUpload] = useState(false);
   const [templateData, setTemplateData] = useState({});
   const [templateLastImg, setTemplateLastImg] = useState("");
+  const [buttonDisabled, setButtonDisabled] = useState(false);
   const { match = {} } = props;
   const { template_id = {} } = match !== undefined && match.params;
 
@@ -73,7 +74,7 @@ function ReceiptEdit(props) {
 
   const onFinish = async (values) => {
     var formValues = form.getFieldsValue();
-    console.log("changed", formValues);
+    //console.log("changed", formValues);
 
     var editTemplatePostData = {};
     editTemplatePostData.img = productImagePreviewSource;
@@ -86,12 +87,16 @@ function ReceiptEdit(props) {
     editTemplatePostData.template_id = templateData.template_id;
 
 
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     const hide = message.loading('Saving Changes in progress..', 0);
     const editTemplateResponse = await SetupApiUtil.editTemplate(editTemplatePostData);
     console.log('editTemplateResponse:', editTemplateResponse);
 
     if (editTemplateResponse.hasError) {
       console.log('Cant Edit Template -> ', editTemplateResponse.errorMessage);
+      message.error(editTemplateResponse.errorMessage, 3);
+      setButtonDisabled(false);
       setTimeout(hide, 1500);
     }
     else {
@@ -297,7 +302,10 @@ function ReceiptEdit(props) {
                 Cancel
               </Button>
 
-              <Button type="primary" htmlType="submit">
+              <Button type="primary"
+                htmlType="submit"
+                disabled={buttonDisabled}
+              >
                 Confirm
               </Button>
             </div>

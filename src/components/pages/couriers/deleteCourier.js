@@ -9,9 +9,11 @@ const DeleteCourier  = (props) => {
     const history = useHistory();
     const [selectedCourierData, setSelectedCourierData] = useState({});
     const [loading, setLoading] = useState(true);
+    const [buttonDisabled, setButtonDisabled] = useState(false);
     const { match = {} } = props;
     const { courier_id = {} } = match !== undefined && match.params;
 
+    var mounted = true;
 
 
     useEffect(() => {
@@ -21,6 +23,10 @@ const DeleteCourier  = (props) => {
             setTimeout(() => {
                 history.goBack();
             }, 1000);
+        }
+
+        return () => {
+            mounted = false;
         }
         
     }, []);
@@ -35,33 +41,40 @@ const DeleteCourier  = (props) => {
         }
         else {
             message.success(getCourierResponse.message, 2);
-            const courierData = getCourierResponse.courier[0];  //vvimp
-            setSelectedCourierData(courierData); 
-            setLoading(false);
+            if (mounted) {     //imp if unmounted
+                const courierData = getCourierResponse.courier[0];  //vvimp
+                setSelectedCourierData(courierData);
+                setLoading(false);
+            }
         }
     }
 
 
 
     const handleConfirm = async () => {
+        if (buttonDisabled === false) {
+            setButtonDisabled(true);}
         const hide = message.loading('Saving Changes in progress..', 0);
         const courierDeleteResponse = await  CouriersApiUtil.deleteCourier(courier_id);
         console.log('courierDeleteResponse:', courierDeleteResponse);
 
         if (courierDeleteResponse.hasError) {
             console.log('Cant delete courier -> ', courierDeleteResponse.errorMessage);
-            message.error('Courier deletion UnSuccesfull ', 3);
+            message.error(courierDeleteResponse.errorMessage, 3);
+            setButtonDisabled(false);
             setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', courierDeleteResponse);
-            message.success('Courier deletion Succesfull ', 3);
-            setTimeout(hide, 1500);
-            setTimeout(() => {
-                history.push({
-                  pathname: '/couriers',
-              });
-            }, 2000);
+            if (mounted) {     //imp if unmounted
+                message.success(courierDeleteResponse.message, 3);
+                setTimeout(hide, 1500);
+                setTimeout(() => {
+                    history.push({
+                        pathname: '/couriers',
+                    });
+                }, 2000);
+            }
         }
     };
 
@@ -96,6 +109,7 @@ const DeleteCourier  = (props) => {
                     <br />
                     <div className='form__row--footer'>
                         <Button type='primary' danger
+                            disabled={buttonDisabled}
                             onClick={() => handleConfirm()}>
                             Confirm
                         </Button>

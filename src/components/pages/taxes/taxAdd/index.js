@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Button, InputNumber, message } from "antd";
 import { useHistory } from "react-router-dom";
 import * as TaxApiUtil from "../../../../utils/api/tax-api-utils";
 
 const TaxAdd = () => {
   const history = useHistory();
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
+  var mounted = true;
+
 
   const onFinish = async (values) => {
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     console.log("Success:", values);
+    const hide = message.loading('Saving Changes in progress..', 0);
     const TaxAddResponse = await TaxApiUtil.addTax(
       values.tax_name,
       values.tax_value
@@ -16,17 +23,31 @@ const TaxAdd = () => {
     console.log("TaxAddResponse:", TaxAddResponse);
     if (TaxAddResponse.hasError) {
       console.log("Cant add new Tax-> ", TaxAddResponse.errorMessage);
-      message.error("Tax Cannot Added ", 3);
+      message.error(TaxAddResponse.errorMessage, 3);
+      setButtonDisabled(false);
+      setTimeout(hide, 1500);
+      
     } else {
-      console.log("res -> ", TaxAddResponse);
-      message.success(TaxAddResponse.message, 3);
-      setTimeout(() => {
-        history.push({
-          pathname: "/taxes",
-        });
-      }, 2000);
+      console.log("res -> ", TaxAddResponse.message);
+      if (mounted) {     //imp if unmounted
+        message.success(TaxAddResponse.message, 3);
+        setTimeout(hide, 1500);
+        setTimeout(() => {
+          history.push({
+            pathname: "/taxes",
+          });
+        }, 2000);
+      }
     }
   };
+
+
+  useEffect(() => {
+    return () => {
+      mounted = false;
+    }
+  }, []);
+
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -95,6 +116,7 @@ const TaxAdd = () => {
                     type="primary"
                     htmlType="submit"
                     className="custom-btn custom-btn--primary"
+                    disabled={buttonDisabled}
                   >
                     Add
                   </Button>

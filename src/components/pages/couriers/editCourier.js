@@ -7,9 +7,12 @@ const EditCourier = (props) => {
     const history = useHistory();
     const [courierDataFields, setCourierDataFields] = useState([]);
     const [selectedCourierData, setSelectedCourierData] = useState({});
+    const [buttonDisabled, setButtonDisabled] = useState(false);
     const [loading, setLoading] = useState(true);
     const { match = {} } = props;
     const { courier_id = {} } = match !== undefined && match.params;
+
+    var mounted = true;
 
 
 
@@ -20,6 +23,10 @@ const EditCourier = (props) => {
             setTimeout(() => {
                 history.goBack();
             }, 1000);
+        }
+
+        return () => {
+            mounted = false;
         }
 
     }, []);
@@ -35,27 +42,31 @@ const EditCourier = (props) => {
         }
         else {
             message.success(getCourierResponse.message, 2);
-            const courierData = getCourierResponse.courier[0];  //vvimp
-            setSelectedCourierData(courierData);
-            const fieldsForAntForm = [
-              {
-                name: ['courier_name'],
-                value: courierData.courier_name
-              },
-              {
-                name: ['courier_code'],
-                value: courierData.courier_code
-              },
-            ];
-            
-            setCourierDataFields(fieldsForAntForm); 
-            setLoading(false);
+            if (mounted) {     //imp if unmounted
+                const courierData = getCourierResponse.courier[0];  //vvimp
+                setSelectedCourierData(courierData);
+                const fieldsForAntForm = [
+                    {
+                        name: ['courier_name'],
+                        value: courierData.courier_name
+                    },
+                    {
+                        name: ['courier_code'],
+                        value: courierData.courier_code
+                    },
+                ];
+
+                setCourierDataFields(fieldsForAntForm);
+                setLoading(false);
+            }
             
         }
     }
 
 
     const onFinish = async (values) => {
+        if (buttonDisabled === false) {
+            setButtonDisabled(true);}
         const hide = message.loading('Saving Changes in progress..', 0);
         const courierEditResponse = await CouriersApiUtil.editCourier(courier_id,
             values.courier_name, values.courier_code);
@@ -63,18 +74,21 @@ const EditCourier = (props) => {
         console.log('courierEditResponse:', courierEditResponse);
         if (courierEditResponse.hasError) {
             console.log('Cant Edit Courier -> ', courierEditResponse.errorMessage);
-            message.error('Courier Cant Edit ', 3);
+            message.error(courierEditResponse.errorMessage, 3);
+            setButtonDisabled(false);
             setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', courierEditResponse);
-            message.success('Courier Editing Succesfull ', 3);
-            setTimeout(hide, 1500);
-            setTimeout(() => {
-                history.push({
-                    pathname: '/couriers',
-                });
-            }, 2000);
+            if (mounted) {     //imp if unmounted
+                message.success(courierEditResponse.message, 3);
+                setTimeout(hide, 1500);
+                setTimeout(() => {
+                    history.push({
+                        pathname: '/couriers',
+                    });
+                }, 2000);
+            }
         }
     };
 
@@ -142,7 +156,7 @@ const EditCourier = (props) => {
                         </div>
 
                         <div className='form__row--footer'>
-                            <Button type='primary' htmlType='submit'>
+                            <Button type='primary' htmlType='submit' disabled={buttonDisabled}>
                                 Edit
                             </Button>
                             <Button

@@ -113,6 +113,8 @@ const ProductsInventoryTable = (props) => {
 
       }}
       loading={props.tableDataLoading}
+      rowKey="sku"
+
 
     />
   );

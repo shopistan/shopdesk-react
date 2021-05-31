@@ -11,6 +11,7 @@ const Receipts = () => {
   const [data, setData] = useState([]);
   const [paginationData, setPaginationData] = useState({});
 
+  var mounted = true;
 
 
   const fetchUsersTemplatesData = async (pageLimit = 10, pageNumber = 1) => {
@@ -23,15 +24,22 @@ const Receipts = () => {
     }
     else {
       console.log('res -> ', userTemplatesViewResponse);
-      message.success(userTemplatesViewResponse.message, 3);
-      setData(userTemplatesViewResponse.templates.data || userTemplatesViewResponse.templates);
-      setPaginationData(userTemplatesViewResponse.templates.page || {});
-      setLoading(false);
+      if (mounted) {    //imp if unmounted
+        message.success(userTemplatesViewResponse.message, 3);
+        setData(userTemplatesViewResponse.templates.data || userTemplatesViewResponse.templates);
+        setPaginationData(userTemplatesViewResponse.templates.page || {});
+        setLoading(false);
+      }
     }
   }
 
   useEffect( () => {
     fetchUsersTemplatesData();
+
+    return () => {
+      mounted = false;
+    }
+    
   }, []);
 
 

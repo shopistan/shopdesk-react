@@ -7,9 +7,12 @@ const EditCategory = (props) => {
     const history = useHistory();
     const [categoryDataFields, setCategoryDataFields] = useState([]);
     const [selectedCategoryName, setSelectedCategoryName] = useState("");
+    const [buttonDisabled, setButtonDisabled] = useState(false);
     const [loading, setLoading] = useState(true);
     const { match = {} } = props;
     const { cat_id = {} } = match !== undefined && match.params;
+
+    var mounted = true;
 
     
 
@@ -21,6 +24,10 @@ const EditCategory = (props) => {
             setTimeout(() => {
                 history.goBack();
             }, 1000);
+        }
+
+        return () => {
+            mounted = false;
         }
 
     }, []);
@@ -35,40 +42,47 @@ const EditCategory = (props) => {
         }
         else {
             console.log('res -> ', getCategoryResponse);
-            message.success(getCategoryResponse.message, 2);
-            const categoryName = getCategoryResponse.category_name[0].category_name;  //vvimp
-            setSelectedCategoryName(categoryName);
-            const fieldsForAntForm = [
-                {
-                    name: ['categoryName'],
-                    value: categoryName
-                },
-            ];
-            setCategoryDataFields(fieldsForAntForm);
-            setLoading(false);
+            if (mounted) {     //imp if unmounted
+                message.success(getCategoryResponse.message, 2);
+                const categoryName = getCategoryResponse.category_name[0].category_name;  //vvimp
+                setSelectedCategoryName(categoryName);
+                const fieldsForAntForm = [
+                    {
+                        name: ['categoryName'],
+                        value: categoryName
+                    },
+                ];
+                setCategoryDataFields(fieldsForAntForm);
+                setLoading(false);
+            }
 
         }
     }
 
 
     const onFinish = async (values) => {
+        if (buttonDisabled === false) {
+            setButtonDisabled(true);} 
         const hide = message.loading('Saving Changes in progress..', 0);
         const categoryEditResponse = await CategoriesApiUtil.editCategory(cat_id, values.categoryName);
         console.log('categoryEditResponse:', categoryEditResponse);
         if (categoryEditResponse.hasError) {
             console.log('Cant Edit a Category -> ', categoryEditResponse.errorMessage);
-            message.error('Category Cant Edit ', 3);
+            message.error(categoryEditResponse.errorMessage, 3);
+            setButtonDisabled(false);
             setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', categoryEditResponse);
-            message.success('Category Editing Succesfull ', 3);
-            setTimeout(hide, 1500);
-            setTimeout(() => {
-                history.push({
-                    pathname: '/categories',
-                });
-            }, 2000);
+            if (mounted) {     //imp if unmounted
+                message.success(categoryEditResponse.message, 3);
+                setTimeout(hide, 1500);
+                setTimeout(() => {
+                    history.push({
+                        pathname: '/categories',
+                    });
+                }, 2000);
+            }
         }
     };
 
@@ -117,7 +131,8 @@ const EditCategory = (props) => {
 
                                 <div className='form__col form__col--button'>
                                     <Form.Item className='u-width-100'>
-                                        <Button type='primary' htmlType='submit'>
+                                        <Button type='primary' htmlType='submit'
+                                            disabled={buttonDisabled}>
                                             Edit
                                     </Button>
                                     </Form.Item>

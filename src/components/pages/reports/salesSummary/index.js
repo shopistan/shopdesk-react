@@ -30,7 +30,8 @@ const SalesSummary = () => {
   const [salesMops, setSalesMops] = useState(mops);
 
   const fetchSalesSumaryData = async () => {
-    let ecommerce = user.auth.store_ecommerce;
+    //let ecommerce = user.auth.store_ecommerce; //prev version
+    let ecommerce = false;
     let startDate = selectedDates[0];
     let endDate = selectedDates[1];
 
@@ -237,7 +238,7 @@ const SalesSummary = () => {
                 </Col>
                 <Col xs={24} sm={24} md={12}>
                   <Card className='card-container'>
-                    <div class='card-shade'>
+                    <div className='card-shade'>
                       <h4>Credit Card</h4>
                       <h2 className='card-pull-right'>
                         {salesMops.credit.toFixed(2)}

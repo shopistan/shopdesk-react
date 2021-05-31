@@ -28,6 +28,7 @@ const TransferIn = (props) => {
     const [loading, setLoading] = useState(true);
     const [transferData, setTransferData] = useState({});
     const [productsData, setProductsData] = useState([]);
+    const [buttonDisabled, setButtonDisabled] = useState(false);
     const { match = {} } = props;
     const { transfer_id = {} } =  match !== undefined && match.params;
 
@@ -69,9 +70,12 @@ const TransferIn = (props) => {
 
         var receiveTransferPostData = {};
         receiveTransferPostData.status = 0;
-        receiveTransferPostData.date = moment(new Date()).format("yyyy/MM/DD HH:mm:ss");;
-        receiveTransferPostData.transfer_id = transferData.transfer_id;;
+        receiveTransferPostData.date = moment(new Date()).format("yyyy/MM/DD HH:mm:ss");
+        receiveTransferPostData.transfer_id = transferData.transfer_id;
 
+
+        if (buttonDisabled === false) {
+            setButtonDisabled(true);}
         const hide = message.loading('Saving Changes in progress..', 0);
         const res = await StockApiUtil.addReceiveTransfersStatus(receiveTransferPostData);
         console.log('receiveTransfersStatusResponse:', res);
@@ -79,6 +83,7 @@ const TransferIn = (props) => {
         if (res.hasError) {
             console.log('Cant add Receive transfers status -> ', res.errorMessage);
             message.error(res.errorMessage, 3);
+            setButtonDisabled(false);
             setTimeout(hide, 1500);
         }
         else {
@@ -165,6 +170,7 @@ const TransferIn = (props) => {
                             type='primary'
                             onClick={handleSaveChanges}
                             className='custom-btn custom-btn--primary'
+                            disabled={buttonDisabled}
                         >
                             Receive
                     </Button>

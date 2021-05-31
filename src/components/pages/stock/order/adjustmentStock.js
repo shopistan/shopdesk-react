@@ -46,6 +46,8 @@ const AdjustmentStock = () => {
   const [selectedSearchValue, setSelectedSearchValue] = useState("");
   const [selectedProductId, setSelectedProductId] = useState("");
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
 
   var mounted = true;
 
@@ -293,7 +295,7 @@ const AdjustmentStock = () => {
 
   const handleSaveChanges = async () => {
     var formValues = form.getFieldsValue();
-    console.log("changed", formValues);
+    //console.log("changed", formValues);
 
     if (productsTableData.length === 0) {
       message.error("No Products Added", 4);
@@ -318,6 +320,8 @@ const AdjustmentStock = () => {
 
     //console.log("vvimp-final", addStockAdjustmentPostData);
 
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.addStockAdjustment(addStockAdjustmentPostData);
     console.log('AddAdjustmentResponse:', res);
@@ -325,6 +329,7 @@ const AdjustmentStock = () => {
     if (res.hasError) {
       console.log('Cant Add Stock Adjustment -> ', res.errorMessage);
       message.error(res.errorMessage, 3);
+      setButtonDisabled(false);
       setTimeout(hide, 1500);
     }
     else {
@@ -567,6 +572,7 @@ const AdjustmentStock = () => {
                     type='primary'
                     className='custom-btn custom-btn--primary'
                     htmlType="submit"
+                    disabled={buttonDisabled}
                   >
                     Save
                 </Button>

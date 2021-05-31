@@ -7,6 +7,9 @@ import { Form, Input, Button, message, InputNumber } from "antd";
 
 const SignUp = () => {
   const history = useHistory();
+  const [form] = Form.useForm();
+
+
 
   const onFinish = async (values) => {
     //The values that will be in form data:
@@ -38,7 +41,7 @@ const SignUp = () => {
     if (signUpResponse.hasError) {
       const errorMessage = signUpResponse.errorMessage;
       console.log("Cant SignUP -> ", errorMessage);
-      message.error("SignUP UnSuccesfull ", 3);
+      message.error(errorMessage, 3);
     } else {
       const signedUpUserDetails = signUpResponse;
       saveDataIntoLocalStorage();
@@ -58,6 +61,17 @@ const SignUp = () => {
     console.log("Failed:", errorInfo);
   };
 
+
+  const onEmailChange = async (e) => {
+    let emailValue = e.target.value;
+    console.log(emailValue.toLowerCase());
+    /*form.setFieldsValue({
+      email: emailValue.toLowerCase(),
+    });*/
+  }
+
+
+
   return (
     <div className='page signUp'>
       <div className='page__header'>
@@ -67,6 +81,7 @@ const SignUp = () => {
       <div className='page__content'>
         <div className='page__form'>
           <Form
+            form={form}
             name='basic'
             layout='vertical'
             initialValues={{
@@ -103,7 +118,7 @@ const SignUp = () => {
                     },
                   ]}
                 >
-                  <Input />
+                  <Input onChange={onEmailChange} />
                 </Form.Item>
               </div>
             </div>
@@ -131,7 +146,7 @@ const SignUp = () => {
                   rules={[
                     {
                       required: true,
-                      message: "does not match!",
+                      message: "Passwords does not match!",
                     },
                   ]}
                 >
@@ -144,7 +159,7 @@ const SignUp = () => {
               <div className='form__col'>
                 <Form.Item
                   label='Phone Number'
-                  name='phoneNumber'
+                  name='phone'
                   rules={[
                     {
                       required: true,
@@ -152,7 +167,7 @@ const SignUp = () => {
                     },
                   ]}
                 >
-                  <InputNumber className='u-width-100' />
+                  <Input />
                 </Form.Item>
               </div>
 

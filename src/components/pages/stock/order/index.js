@@ -36,6 +36,7 @@ import {
 
 const { Option } = Select;
 
+const pageLimit = 20;
 
 
 
@@ -53,6 +54,11 @@ const PurchaseOrder = () => {
   const [selectedProductId, setSelectedProductId] = useState("");
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
   const [orderDueDate, setOrderDueDate] = useState("");
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [suppliersPaginationData, setSuppliersPaginationData] = useState({});
+  const [isBusy, setIsBusy] = useState(false);
+  const [suppliersScrollLoading, setSuppliersScrollLoading] = useState(false);
+  
 
   var mounted = true;
 
@@ -60,7 +66,8 @@ const PurchaseOrder = () => {
 
   useEffect(() => {
     fetchRegisteredProductsData();
-    fetchSuppliersData();
+    let pageNumber = 1;
+    fetchSuppliersData(pageLimit, pageNumber);
     /*-----setting template data to fields value------*/
     form.setFieldsValue({
       order_reference_name: `Order - ${moment(new Date()).format("yyyy/MM/DD HH:mm:ss")}`,
@@ -146,9 +153,9 @@ const PurchaseOrder = () => {
 
 
 
-  const fetchSuppliersData = async () => {
+  const fetchSuppliersData = async (pageLimit = 10, pageNumber = 1) => {
 
-    const SuppliersViewResponse = await SuppliersApiUtil.viewAllSuppliers();
+    const SuppliersViewResponse = await SuppliersApiUtil.viewSuppliers(pageLimit, pageNumber);
     console.log("SuppliersViewResponse:", SuppliersViewResponse);
 
     if (SuppliersViewResponse.hasError) {
@@ -160,8 +167,10 @@ const PurchaseOrder = () => {
       console.log("res -> ", SuppliersViewResponse);
       if (mounted) {     //imp if unmounted
         setSuppliersData(SuppliersViewResponse.suppliers.data || SuppliersViewResponse.suppliers);
+        setSuppliersPaginationData(SuppliersViewResponse.suppliers.page || {});
       }
     }
+
   };
 
 
@@ -330,7 +339,7 @@ const PurchaseOrder = () => {
 
   const handleSaveChanges = async (e) => {
     var formValues = form.getFieldsValue();
-    console.log("changed", formValues);
+    //console.log("changed", formValues);
 
     if (productsTableData.length === 0) {
       message.error("No Products Added", 4);
@@ -357,6 +366,8 @@ const PurchaseOrder = () => {
 
     //console.log("vvimp-final", clonedProductsPostData);
 
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.addPurchaseOrder(addPurchaseOrderPostData);
     console.log('AddPoResponse:', res);
@@ -364,6 +375,7 @@ const PurchaseOrder = () => {
     if (res.hasError) {
       console.log('Cant Add Purchase Order -> ', res.errorMessage);
       message.error(res.errorMessage, 3);
+      setButtonDisabled(false);
       setTimeout(hide, 1500);
     }
     else {
@@ -440,6 +452,49 @@ const PurchaseOrder = () => {
 
 
 
+  const handleSuppliersScroll = async (e) => {
+    //console.log("inside-scroll", e);
+    var height = e.target.clientHeight;
+    //console.log(height);
+    //console.log(e.target.clientHeight);
+    height = height * 0.5;
+    //console.log(e.target.scrollTop);
+    //console.log(e.target.scrollHeight);
+    const targetHeight = e.target.scrollHeight - e.target.scrollTop;
+    const clientHeight = e.target.clientHeight + height;
+    //console.log("target-height", targetHeight);
+
+    if (targetHeight < clientHeight && !isBusy) {
+      let pN = Math.ceil(suppliers.length / pageLimit) + 1;
+
+      if (pN <= suppliersPaginationData.totalPages) {
+        setIsBusy(true);
+        setSuppliersScrollLoading(true);
+        const suppliersRes = await SuppliersApiUtil.viewSuppliers(pageLimit, pN);
+        if (suppliersRes.hasError) {
+          console.log("suppliersRes RESPONSE FAILED -> ", suppliersRes.errorMessage);
+        } else {
+          console.log("res -> ", suppliersRes);
+          if (mounted) {     //imp if unmounted
+            let suppliersData = suppliersRes.suppliers.data || suppliersRes.suppliers;
+            var newData = [...suppliers];
+            newData.push(...suppliersData);
+            setSuppliersData(newData);
+            setIsBusy(false);
+            setSuppliersScrollLoading(false);
+          }
+        }
+
+      } /*----------------End Of Inner If------------------------*/
+
+    } /*----------------End Of Outer If------------------------*/
+
+  }
+
+
+
+
+
   return (
     <div className="page stock-add">
       <div className="page__header">
@@ -498,7 +553,10 @@ const PurchaseOrder = () => {
                         },
                       ]}
                     >
-                      <Select>
+                      <Select placeholder="Select Supplier"
+                        onPopupScroll={handleSuppliersScroll}
+                        loading={suppliersScrollLoading}
+                      >
                         {
                           suppliers.map((obj, index) => {
                             return (
@@ -658,6 +716,7 @@ const PurchaseOrder = () => {
                     type='primary'
                     className='custom-btn custom-btn--primary'
                     htmlType="submit"
+                    disabled={buttonDisabled}
                   >
                     Save
                 </Button>

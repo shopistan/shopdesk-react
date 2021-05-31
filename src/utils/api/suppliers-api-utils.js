@@ -43,6 +43,18 @@ export const getSupplier = async (supplierId) => {
 };
 
 
+export const searchSuppliers = async (limit, PageNumber, searchvalue) => {
+
+    const url = UrlConstants.SUPPLIERS.SEARCH + `?name=${searchvalue}&limit=${limit}&page=${PageNumber}`;
+    const callType = GenericConstants.API_CALL_TYPE.GET;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+    );
+};
+
+
 
 export const viewSuppliers = async (limit, PageNumber) => {
     const formDataPair = {

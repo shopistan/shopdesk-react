@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../productStyle.scss";
-import { Table, message, Button } from "antd";
+import { Table, message, } from "antd";
 import * as ProductsApiUtil from '../../../../../utils/api/products-api-utils';
 import { getDataFromLocalStorage, checkUserAuthFromLocalStorage } from "../../../../../utils/local-storage/local-store-utils";
 import Constants from '../../../../../utils/constants/constants';
@@ -137,7 +137,6 @@ const ProductsLookUpTable = (props) => {
             ...col,
             onCell: (record) => ({
                 record,
-
                 dataindex: col.dataIndex,
                 title: col.title,
             }),

@@ -29,6 +29,7 @@ const StockReceive = (props) => {
     const [poData, setPoData] = useState([]);
     const [productsData, setProductsData] = useState([]);
     const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
+    const [buttonDisabled, setButtonDisabled] = useState(false);
     const { match = {} } = props;
     const { po_id = {} } =  match !== undefined && match.params;
 
@@ -100,6 +101,8 @@ const StockReceive = (props) => {
         delete receivePurchaseOrderPostData['purchase_order_status'];
 
 
+        if (buttonDisabled === false) {
+            setButtonDisabled(true);}
         const hide = message.loading('Saving Changes in progress..', 0);
         const res = await StockApiUtil.addReceivePurchaseOrder(receivePurchaseOrderPostData);
         console.log('AddreceivePoResponse:', res);
@@ -107,6 +110,7 @@ const StockReceive = (props) => {
         if (res.hasError) {
             console.log('Cant Add Receive Po -> ', res.errorMessage);
             message.error(res.errorMessage, 3);
+            setButtonDisabled(false);
             setTimeout(hide, 1500);
         }
         else {
@@ -199,6 +203,7 @@ const StockReceive = (props) => {
                             type='primary'
                             onClick={handleSaveChanges}
                             className='custom-btn custom-btn--primary'
+                            disabled={buttonDisabled}
                         >
                             Confirm
                     </Button>

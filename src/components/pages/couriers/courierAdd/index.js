@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Button, message } from "antd";
 import { useHistory } from "react-router-dom";
 import * as CouriersApiUtil from "../../../../utils/api/couriers-api-utils";
 
 const CourierAdd = () => {
   const history = useHistory();
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+
+  var mounted = true;
+
 
   const onFinish = async (values) => {
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
     console.log("Success:", values);
     const courierAddResponse = await CouriersApiUtil.addCourier(
       values.courier_name,
@@ -18,17 +24,28 @@ const CourierAdd = () => {
         "Cant add a new Courier -> ",
         courierAddResponse.errorMessage
       );
-      message.error("New Courier Cannot Added ", 3);
+      message.error(courierAddResponse.errorMessage, 3);
+      setButtonDisabled(false);
     } else {
       console.log("res -> ", courierAddResponse);
-      message.success("New Courier Succesfull Added ", 3);
-      setTimeout(() => {
-        history.push({
-          pathname: "/couriers",
-        });
-      }, 2000);
+      if (mounted) {     //imp if unmounted
+        message.success(courierAddResponse.message, 3);
+        setTimeout(() => {
+          history.push({
+            pathname: "/couriers",
+          });
+        }, 2000);
+      }
     }
   };
+
+
+  useEffect(() => {
+    return () => {
+      mounted = false;
+    }
+  }, []);
+
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -88,6 +105,7 @@ const CourierAdd = () => {
                 type="primary"
                 htmlType="submit"
                 className="custom-btn custom-btn--primary"
+                disabled={buttonDisabled}
               >
                 Add
               </Button>

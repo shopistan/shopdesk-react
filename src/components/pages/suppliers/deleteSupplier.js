@@ -9,8 +9,11 @@ const DeleteSupplier = (props) => {
     const history = useHistory();
     const [SupplierData, setSupplierData] = useState({});
     const [loading, setLoading] = useState(true);
+    const [buttonDisabled, setButtonDisabled] = useState(false);
     const { match = {} } = props;
     const { supplier_id = {} } = match !== undefined && match.params;
+
+    var mounted = true;
 
     
 
@@ -21,6 +24,10 @@ const DeleteSupplier = (props) => {
             setTimeout(() => {
                 history.goBack();
             }, 1000);
+        }
+
+        return () => {
+            mounted = false;
         }
 
     }, []);
@@ -34,32 +41,40 @@ const DeleteSupplier = (props) => {
             setLoading(false);
         }
         else {
-            message.success(getSupplierResponse.message, 2);
-            const supplierData = getSupplierResponse.supplier[0];  //vvimp
-            setSupplierData(supplierData);
-            setLoading(false);
+            console.log("res -> ", getSupplierResponse.message);
+            if (mounted) {     //imp if unmounted
+                message.success(getSupplierResponse.message, 2);
+                const supplierData = getSupplierResponse.supplier[0];  //vvimp
+                setSupplierData(supplierData);
+                setLoading(false);
+            }
         }
     }
 
     const handleConfirm = async () => {
+        if (buttonDisabled === false) {
+            setButtonDisabled(true);}
         const hide = message.loading('Saving Changes in progress..', 0);
         const supplierDeleteResponse = await SuppliersApiUtil.deleteSupplier(SupplierData.supplier_id);
         console.log('supplierDeleteResponse:', supplierDeleteResponse);
 
         if (supplierDeleteResponse.hasError) {
             console.log('Cant delete a Category -> ', supplierDeleteResponse.errorMessage);
-            message.error('Supplier deletion UnSuccesfull ', 3);
+            message.error(supplierDeleteResponse.errorMessage, 3);
+            setButtonDisabled(false);
             setTimeout(hide, 1500);
         }
         else {
-            console.log('res -> ', supplierDeleteResponse);
-            message.success('Supplier deletion Succesfull ', 3);
-            setTimeout(hide, 1500);
-            setTimeout(() => {
-                history.push({
-                    pathname: '/suppliers',
-                });
-            }, 2000);
+            console.log('res -> ', supplierDeleteResponse.message);
+            if (mounted) {     //imp if unmounted
+                message.success(supplierDeleteResponse.message, 3);
+                setTimeout(hide, 1500);
+                setTimeout(() => {
+                    history.push({
+                        pathname: '/suppliers',
+                    });
+                }, 2000);
+            }
         }
     };
 
@@ -92,6 +107,7 @@ const DeleteSupplier = (props) => {
                         <br />
                         <div className='form__row--footer'>
                             <Button type='primary' danger
+                                disabled={buttonDisabled}
                                 onClick={() => handleConfirm()}>
                                 Confirm
                         </Button>
