@@ -9,8 +9,7 @@ phases:
       - IMAGE_TAG=$CODEBUILD_BUILD_NUMBER
       - echo Build started on `date`
       - echo Building the Docker image... 
-      - ls
-      - echo "imageeeeeeeeee" $IMAGE_TAG       
+      - ls     
       - docker build -t $IMAGE_REPO:$IMAGE_TAG .
       - docker tag $IMAGE_REPO:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO:$IMAGE_TAG
   post_build:
