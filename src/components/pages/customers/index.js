@@ -246,7 +246,7 @@ const Customers = () => {
           <div className="action-row__element">
             Show
             <Select
-              defaultValue="10"
+              defaultValue="20"
               style={{ width: 120, margin: "0 5px" }}
               onChange={handleChange}
             >

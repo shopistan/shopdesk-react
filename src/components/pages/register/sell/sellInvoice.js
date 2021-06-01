@@ -17,10 +17,11 @@ const PrintSalesInvoice = (props) => {
 
     if (props.user.template_data) {
         if (props.user.template_data.template_image) {
-            templateImageSrc = `${UrlConstants.IMAGE_UPLOADS_URL}/uploads/${props.user.template_data.template_image}`;
+            //templateImageSrc = `${UrlConstants.IMAGE_UPLOADS_URL}/uploads/${props.user.template_data.template_image}`;    //imp prev
+            templateImageSrc = `${props.user.template_data.template_image}`;    //new one
         }
         if (props.user.template_data.template_header) {
-            templateHeader = props.user.template_data.template_header
+            templateHeader = props.user.template_data.template_header;
         }
     }
 

@@ -103,7 +103,7 @@ function ReceiptEdit(props) {
       message.error(editTemplateResponse.errorMessage, 3);
       setButtonDisabled(false);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1500);
+      setTimeout(hide, 1000);
     }
     else {
       console.log('res -> ', editTemplateResponse);
@@ -129,11 +129,13 @@ function ReceiptEdit(props) {
     console.log('ImageUploadResponse:', ImageUploadResponse);
     if (ImageUploadResponse.hasError) {
       console.log('Product Image Cant Upload -> ', ImageUploadResponse.errorMessage);
+      setTimeout(hide, 1000);
       message.error('Product  Image Cant Upload', 3);
       document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', ImageUploadResponse);
+      setTimeout(hide, 1000);
       message.success(ImageUploadResponse.message, 3);
       setFileList([]);
       setTemplateLastImg(productImagePreviewSource);
