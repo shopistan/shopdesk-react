@@ -176,7 +176,7 @@ const ProductsTable = (props) => {
       },
     },
     {
-      title: "Sale Price",
+      title: <div>Sale Price<small>(Exclusive of GST)</small></div>,
       dataIndex: "product_sale_price",
     },
     {

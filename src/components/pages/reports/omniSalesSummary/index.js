@@ -171,7 +171,7 @@ const OmniSalesSummary = () => {
   const handlePrintOverview = (e) => {
     var previewSalesHtml = document.getElementById("printTable").innerHTML;
     var doc =
-      '<html><head><title>Close Me ~ Shopdesk</title><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print(); window.close();">' +
+      '<html><head><title></title><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print(); window.close();">' +
       previewSalesHtml +
       "</body></html>";
     /* NEW TAB OPEN PRINT */

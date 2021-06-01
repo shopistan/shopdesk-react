@@ -78,13 +78,14 @@ const Categories = () => {
         categoriesViewResponse.errorMessage
       );
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     } else {
       console.log("res -> ", categoriesViewResponse);
       if (mounted) {     //imp if unmounted
         const categoriesData = categoriesViewResponse.categories.data || categoriesViewResponse.categories;
         setData(categoriesData);
         setPaginationData(categoriesViewResponse.categories.page || {});
-        setLoading(false);
+        //setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
 
       }
@@ -141,6 +142,8 @@ const Categories = () => {
       pathname: "/categories/add",
     });
   };
+
+  
 
   return (
     <div className="page categories">

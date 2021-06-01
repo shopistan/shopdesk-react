@@ -120,7 +120,7 @@ const Outlet = () => {
           saveDataIntoLocalStorage("user", userSelectOutletResponse);
           setLoading(false);
           document.getElementById('app-loader-container').style.display = "none";
-          message.success('Store Change Succesfull ', 3);
+          message.success('Store Change Succesfull ', 2);
           setTimeout(() => {
             history.push({
               pathname: '/dashboard',

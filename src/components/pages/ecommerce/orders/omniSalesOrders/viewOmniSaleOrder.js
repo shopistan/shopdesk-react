@@ -174,7 +174,7 @@ const ViewOmniSaleOrder = (props) => {
         var previewSalesHtml = document.getElementById("omni-sales-orders-view").innerHTML;
         var previewSalesHtmlHeading = document.getElementById("omni-sale-order-heading").innerHTML;
         var doc =
-            '<html><head><title>Close Me ~ Shopdesk</title><link rel="stylesheet" type="text/css" /></head><body onload="window.print(); window.close();">' +
+            '<html><head><title></title><link rel="stylesheet" type="text/css" /></head><body onload="window.print(); window.close();">' +
             previewSalesHtmlHeading + previewSalesHtml +
             "</body></html>";
         /* NEW TAB OPEN PRINT */

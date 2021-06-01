@@ -484,6 +484,17 @@ function Sell() {
 
     if (Helpers.var_check(localInvoiceQueue.data)) {
       localInvoiceQueue.data.push(saleInvoiceData); //imp  prev
+
+      if (saleInvoiceData.hasCustomer && saleInvoiceData.method === "Customer Layby" ) {   //if customer selected
+        let invoiceTotal = parseFloat(
+          saleInvoiceData.total - saleInvoiceData.discountAmount
+        ).toFixed(2);
+        if (parseFloat(saleInvoiceData.customer.balance) < invoiceTotal) {
+          message.warning("Insufficient Balance", 3);
+          return;
+        }
+      } //end of inner if (customer selected)
+
       console.log("invoice-queue-insert");
       saveDataIntoLocalStorage(
         Constants.SELL_INVOICE_QUEUE_KEY,
@@ -500,6 +511,7 @@ function Sell() {
     }
 
     setSelectedCutomer("");
+    setSelectedCustomerValue("")   //imp new one
 
     form.setFieldsValue({
       invoiceNote: "",
@@ -510,6 +522,10 @@ function Sell() {
     form.setFieldsValue({
       tax_value:  "",
     }); //imp
+    costForm.setFieldsValue({
+      discounted_value:  0,
+    }); //imp
+    
 
     let newInvoice = createNewInvoice(); //new invoice again
     updateCart(newInvoice);
@@ -520,7 +536,7 @@ function Sell() {
     var previewSalesInvoiceHtml = document.getElementById("printSalesTable")
       .innerHTML;
     var doc =
-      '<html><head><title>Close Me ~ Shopdesk</title><link rel="stylesheet" type="text/css" href="/printInvoice.scss" /></head><body onload="window.print(); window.close();">' +
+      '<html><head><title></title><link rel="stylesheet" type="text/css" href="/printInvoice.scss" /></head><body onload="window.print(); window.close();">' +
       previewSalesInvoiceHtml +
       "</body></html>";
     /* NEW TAB OPEN PRINT */
@@ -1149,6 +1165,7 @@ function Sell() {
                         className='u-width-100 custom-btn custom-btn--primary'
                         style={{ marginBottom: "1rem" }}
                         onClick={() => changeMethodOfPayment("Customer Layby")}
+                        disabled={(saleInvoiceData && saleInvoiceData.hasCustomer == false)}
                       >
                         Customer Layby
                       </Button>

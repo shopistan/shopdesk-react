@@ -30,6 +30,15 @@ html {
   font-size: 16px;
 }
 
+.ant-spin-blur{
+  display: unset;
+}
+
+.ant-spin-nested-loading > div > .ant-spin{
+  display: none;
+}
+
+
 
 div#preloader { 
   position: fixed;

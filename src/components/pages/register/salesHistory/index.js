@@ -335,7 +335,7 @@ const SalesHistory = () => {
     var previewSalesInvoiceHtml = document.getElementById("printSalesTable")
       .innerHTML;
     var doc =
-      '<html><head><title>Close Me ~ Shopdesk</title><link rel="stylesheet" type="text/css" href="/printInvoice.scss" /></head><body onload="window.print(); window.close();">' +
+      '<html><head><title></title><link rel="stylesheet" type="text/css" href="/printInvoice.scss" /></head><body onload="window.print(); window.close();">' +
       previewSalesInvoiceHtml +
       "</body></html>";
     /* NEW TAB OPEN PRINT */
@@ -579,7 +579,7 @@ const SalesHistory = () => {
           <div className="action-row__element">
             Show
             <Select
-              defaultValue="10"
+              defaultValue="20"
               style={{ width: 120, margin: "0 5px" }}
               onChange={handleChange}
             >
