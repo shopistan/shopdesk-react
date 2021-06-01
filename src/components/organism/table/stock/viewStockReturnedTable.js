@@ -24,7 +24,7 @@ const ViewStockReturnedTable = (props) => {
 
     useEffect(async () => {
         setData(props.tableData);
-        //console.log("pro-table-data", props.tableData);
+        console.log("pro-table-data", props.tableData);
         calculateTotalStockRetunedQuantity(props.tableData);
 
 
@@ -50,12 +50,12 @@ const ViewStockReturnedTable = (props) => {
 
     const tableFooter = () => {
         return (
-            <Row >
-                <Col xs={24} sm={24} md={6} >
-                    <span> Total Quantity: </span>
+            <Row className="return-stock-view-footer">
+                <Col xs={24} sm={24} md={12} >
+                    <span> Total Quantity </span>
                 </Col>
-                <Col xs={24} sm={24} md={6} >
-                    <span> {(productsTotalAmount && productsTotalAmount).toFixed(2)} </span>
+                <Col xs={24} sm={24} md={12} >
+                    <span> {parseInt(productsTotalAmount && productsTotalAmount)} </span>
                 </Col>
             </Row>
         )
@@ -87,10 +87,12 @@ const ViewStockReturnedTable = (props) => {
                 bordered={true}
                 columns={mergedColumns}
                 dataSource={data}
+                id={props.tableId} //imp to pass table id here
                 rowClassName='editable-row'
                 loading={props.tableDataLoading}
                 rowKey="product_id"
                 footer={tableFooter}
+                size="small"
             />
 
 

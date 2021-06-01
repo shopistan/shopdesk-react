@@ -87,6 +87,18 @@ const SideMenu = () => {
   };
 
 
+  const stockScopeFilter = (localUserInfo) => {
+    if(!localUserInfo){return;}
+    if(localUserInfo.user_role == 'cashier' || localUserInfo.user_role == 'shop_manager'){
+       return false;
+    }
+    else{
+      return true;
+    }
+
+  };
+
+
   /*const onNavMenuItemClick = (currentMenuItem) => {
 
     //console.log(currentMenuItem);
@@ -234,18 +246,26 @@ const SideMenu = () => {
             </SubMenu>}
           {(userRouteScopes.includes(appRouteScopes.stock) || adminUser) &&
             <SubMenu key="stock" icon={<StockOutlined />} title="Stock Control">
+
+            {stockScopeFilter(readFromLocalStorage.user_info || null) &&
               <Menu.Item key="purchaseOrders">
                 <Link to="/stock-control/purchase-orders" className="nav-menu-item-link"  >Purchase Orders</Link>
-              </Menu.Item>
+              </Menu.Item>}
+
               <Menu.Item key="inventoryTransfers">
                 <Link to="/stock-control/inventory-transfers" className="nav-menu-item-link"  >Inventory Transfers</Link>
               </Menu.Item>
+
+            {stockScopeFilter(readFromLocalStorage.user_info || null) &&
               <Menu.Item key="stockAdjustments">
                 <Link to="/stock-control/stock-adjustments" className="nav-menu-item-link"  >Stock Adjustment</Link>
-              </Menu.Item>
-              {/*<Menu.Item key="stockReturned">
+              </Menu.Item>}
+
+            {stockScopeFilter(readFromLocalStorage.user_info || null) &&
+              <Menu.Item key="stockReturned">
                 <Link to="/stock-control/returned-stock" className="nav-menu-item-link"  >Returned Stock</Link>
-              </Menu.Item>*/}
+              </Menu.Item>}
+
             </SubMenu>}
           {((userRouteScopes.includes(appRouteScopes.ecommerce) || adminUser) && storeEcommerce) &&
             <SubMenu key="ecommerce" icon={<ApartmentOutlined />} title="Ecommerce">
