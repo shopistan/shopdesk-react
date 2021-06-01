@@ -227,8 +227,8 @@ const StockTable = (props) => {
                 title: "View",
                 render: (_, record) => {
                     return (
-                        <div className='action-btns stock-table-delete-item'>
-                            {record.invoice_status === "0" && <EyeOutlined
+                        <div className="sell-history-action-btn-quick-view">
+                            {<EyeOutlined
                                 onClick={() => handleStockReturnView(record)}
                             />}
                         </div>
@@ -348,7 +348,12 @@ const StockTable = (props) => {
                 onChange: (page, pageSize) => handlePageChange(page, pageSize),
             }}
             loading={props.tableDataLoading}
-            rowKey={props.tableType === "purchase_orders" ? "purchase_order_id" : "transfer_id"}
+            rowKey={
+                props.tableType === "purchase_orders" ?
+                    "purchase_order_id" : props.tableType === "inventory_transfers" ? "transfer_id"
+                        : props.tableType === "stock_returned" && "return_id"
+            }
+            
         />
 
     );
