@@ -49,7 +49,7 @@ const EditProduct = (props) => {
     const { product_id = {} } = match !== undefined && match.params;
 
 
-    var mounted = true;
+    let mounted = true;
 
 
     useEffect( () => {
@@ -226,7 +226,7 @@ const EditProduct = (props) => {
                     history.push({
                         pathname: '/products',
                     });
-                }, 2000);
+                }, 1000);
             }
 
         }

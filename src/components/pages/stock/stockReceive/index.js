@@ -99,9 +99,37 @@ const StockReceive = (props) => {
     }
 
 
-    const handleChangeProductsData = (productsData, productsTotalQuantity = 0) => {
-        setProductsData(productsData);
-        setProductsTotalQuantity(productsTotalQuantity);
+    const handleChangeProductsData = (productsData, productsTotalQuantity = 0, editReceiveProductValidationCheck = false) => {
+        if (editReceiveProductValidationCheck) {   //imp to disable upon wrong valiadation
+            message.warning("received quantity can't be negative or more than the ordered quantity ", 4);
+            setProductsData(productsData);  //imp to set products data
+            setProductsTotalQuantity(productsTotalQuantity);   //imp
+            setReeiveButtonDisableCheck(productsData);
+        }
+        else {
+            setProductsData(productsData);
+            setProductsTotalQuantity(productsTotalQuantity);
+            setReeiveButtonDisableCheck(productsData);
+        }
+
+    };
+
+
+    const setReeiveButtonDisableCheck = (productsData) => {
+        let saveButtonDisableCheck = false;
+        productsData.forEach(item => {
+            if((item.qty > item.purchase_order_junction_quantity) || (item.qty < 0)) { 
+                saveButtonDisableCheck = true; 
+            }
+        });
+
+        if(saveButtonDisableCheck){
+            setButtonDisabled(true);
+        }
+        else{
+            setButtonDisabled(false);
+        }
+
     };
 
 
@@ -217,7 +245,7 @@ const StockReceive = (props) => {
                         <Col xs={24} sm={24} md={24} className="stock-item-content">
                             {/* Table */}
                             <div className='table'>
-                                <StockReceiveProductsTable pageLimit={paginationLimit}
+                                <StockReceiveProductsTable pageLimit={paginationLimit} 
                                     tableData={productsData}
                                     tableDataLoading={loading}
                                     onChangeProductsData={handleChangeProductsData}

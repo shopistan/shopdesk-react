@@ -5,6 +5,7 @@ import { ProfileOutlined, DownOutlined } from "@ant-design/icons";
 import PurchaseOrders from "./Po";
 import InventoryTransfers from "./Transfer";
 import StockAdjustment from "./Adjustment";
+import StockReturned from "./ReturnedStock";
 import { useHistory } from "react-router-dom";
 
 const { TabPane } = Tabs;
@@ -105,6 +106,9 @@ function Stock(props) {
           <TabPane tab="Stock Adjustment" key="stock-adjustments">
             <StockAdjustment />
           </TabPane>
+          {/*<TabPane tab="Returned Stock" key="returned-stock">
+            <StockReturned />
+          </TabPane>*/}
         </Tabs>
       </div>
     </div>

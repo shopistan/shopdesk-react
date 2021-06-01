@@ -102,7 +102,7 @@ function ReceiptAdd() {
   const imageUploadProps = {
 
     beforeUpload: file => {
-      console.log("nside");
+      //console.log("inside-upload");
       setFileList([file]);
 
       return false;

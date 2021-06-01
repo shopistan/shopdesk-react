@@ -105,6 +105,11 @@ const StockReceiveTable = (props) => {
         var productsTotalQuantity = 0;
         const newData = [...data];
         const index = newData.findIndex(item => row.product_id === item.product_id);
+        let editReceiveProductValidationCheck = false;
+
+        if((row.qty > row.purchase_order_junction_quantity) || (row.qty < 0) ){
+            editReceiveProductValidationCheck = true;
+        }
 
         if (index > -1) {
             const item = newData[index];
@@ -115,11 +120,15 @@ const StockReceiveTable = (props) => {
 
             newData.forEach(item => {
                 productsTotal = productsTotal + (parseFloat(item.qty || 0) * parseFloat(item.purchase_order_junction_price));
-                productsTotalQuantity = productsTotalQuantity + parseFloat(item.qty || 0);
+
+                if((item.qty <= item.purchase_order_junction_quantity) && (item.qty >= 0) ){
+                    productsTotalQuantity = productsTotalQuantity + parseFloat(item.qty || 0);
+                }
+                
             });
             setProductsTotalAmount(productsTotal);
             //setData(newData); //previous code imp one
-            props.onChangeProductsData(newData, productsTotalQuantity);
+            props.onChangeProductsData(newData, productsTotalQuantity, editReceiveProductValidationCheck);    //imp to call
 
         };
     }
@@ -128,7 +137,6 @@ const StockReceiveTable = (props) => {
 
     useEffect(async () => {
         setData(props.tableData);
-        console.log("pro-table-data", props.tableData);
 
 
     }, [props.tableData, props.tableDataLoading]);  /* imp passing props to re-render */
@@ -242,7 +250,7 @@ const StockReceiveTable = (props) => {
 
         setProductsTotalAmount(productsTotal);
         //setData(newData);  //imp
-        props.onChangeProductsData(newData, productsTotalQuantity);
+        props.onChangeProductsData(newData, productsTotalQuantity, false);   //imp to call
 
     }
 
