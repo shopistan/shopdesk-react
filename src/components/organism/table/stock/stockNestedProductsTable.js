@@ -162,7 +162,6 @@ const StockNestedProductsTable = (props) => {
 
     useEffect(async () => {
         setData(props.tableData);
-        console.log("pro-table-data", props.tableData);
         calculateTotalAmount(props.tableData);
 
     }, [props.tableData, props.tableDataLoading,]);  /* imp passing props to re-render */

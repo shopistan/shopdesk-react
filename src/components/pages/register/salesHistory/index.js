@@ -422,7 +422,7 @@ const SalesHistory = () => {
         }
       }*/
 
-      console.log("print-data", invoiceData);
+      //console.log("print-data", invoiceData);
   
       setQuickViewInvoicePrintData(invoiceData);
       /*---------------------------------------------------*/
@@ -694,7 +694,7 @@ const SalesHistory = () => {
 
 
         {/*--Modal for quick view functionality*/}
-        <Modal title={`Invoice Sale Data ( invoice-id ${quickViewInvoicePrintData && quickViewInvoicePrintData.invoice_show_id} , 
+        <Modal title={`Invoice Sale Data ( invoice-id-${quickViewInvoicePrintData && quickViewInvoicePrintData.invoice_show_id} , 
           ${moment(quickViewInvoicePrintData
           &&
           quickViewInvoicePrintData.invoice_datetime).format("ddd MMM, yyyy HH:mm A")} )`}

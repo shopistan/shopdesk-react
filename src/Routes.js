@@ -63,6 +63,7 @@ import ViewInvoice from "./components/pages/register/invoice/viewInvoice";
 import Stock from "./components/pages/stock";
 import PurchaseOrder from "./components/pages/stock/order";
 import ReceiveStock from "./components/pages/stock/stockReceive";
+import ViewStockReturn from "./components/pages/stock/ReturnedStock/viewStockReturn";
 import ReceiveStockTransfer from "./components/pages/stock/stockReceive/transfer";
 import StockAdjustment from "./components/pages/stock/order/adjustmentStock";
 import ReturnStock from "./components/pages/stock/order/returnStock";
@@ -382,20 +383,27 @@ const Routes = () => {
         <PrivateRoute
           exact
           path="/stock-control/purchase-orders"
-          component={Stock}
           component={() => <Stock  activeKey={'purchase-orders'} />}
         />
         <PrivateRoute
           exact
           path="/stock-control/inventory-transfers"
-          component={Stock}
           component={() => <Stock  activeKey={'inventory-transfers'} />}
         />
         <PrivateRoute
           exact
           path="/stock-control/stock-adjustments"
-          component={Stock}
           component={() => <Stock  activeKey={'stock-adjustments'} />}
+        />
+        <PrivateRoute
+          exact
+          path="/stock-control/returned-stock"
+          component={() => <Stock  activeKey={'returned-stock'} />}
+        />
+        <PrivateRoute
+          exact
+          path="/stock-control/returned-stock/:stock_return_id/view"
+          component={(props) => <ViewStockReturn {...props} />}
         />
         <PrivateRoute
           exact

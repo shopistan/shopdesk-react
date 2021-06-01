@@ -117,6 +117,8 @@ const urls = {
     VIEW_PO: BASE_URL + '/api/stock_control/viewPo',
     VIEW_TRANSFER: BASE_URL + '/api/transfers/viewTransfer',
     VIEW_ADJUSTMENTS: BASE_URL + '/api/stock_control/viewAdjustment',
+    VIEW_RETURNED_STOCK: BASE_URL + '/api/stock_control/viewReturnStock',
+    GET_STOCK_RETURNED: BASE_URL + '/api/stock_control/getReturnStock',
     RECEIVE_PO: BASE_URL + '/api/stock_control/receivePo',
     ADD_RECEIVE_PO: BASE_URL + '/api/stock_control/insertGrn',
     ADD_PURCHASE_ORDER: BASE_URL + '/api/stock_control/addPo',

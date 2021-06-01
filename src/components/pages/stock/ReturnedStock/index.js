@@ -1,36 +1,35 @@
 import React, { useState, useEffect } from "react";
-import { message } from "antd";
+//import { message } from "antd";
 import ViewtableStock from "../../../organism/table/stock/stockTable";
 import * as StockApiUtil from '../../../../utils/api/stock-api-utils';
 
 
-const  StockAdjustment = (props) => {
+const  ReturnedStock = (props) => {
   const [paginationLimit, setPaginationLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [paginationData, setPaginationData] = useState({});
-  //const [activeStoreId, setActiveStoreId] = useState("");
 
-  var mounted = true;
+  let mounted = true;
 
 
-  const fetchStockAdjustmentsData = async (pageLimit = 10, pageNumber = 1) => {
+  const fetchStockReturnedData = async (pageLimit = 10, pageNumber = 1) => {
     document.getElementById('app-loader-container').style.display = "block";
-    const stockAdjustmentsViewResponse = await StockApiUtil.viewStockAdjustments(pageLimit, pageNumber);
-    console.log('stockAdjustmentsViewResponse:', stockAdjustmentsViewResponse);
+    const stockReturnedViewResponse = await StockApiUtil.viewStockReturned(pageLimit, pageNumber);
+    console.log('stockReturnedViewResponse:', stockReturnedViewResponse);
 
-    if (stockAdjustmentsViewResponse.hasError) {
-      console.log('Cant fetch stock adjustments Data -> ', stockAdjustmentsViewResponse.errorMessage);
+    if (stockReturnedViewResponse.hasError) {
+      console.log('Cant fetch stock returned Data -> ', stockReturnedViewResponse.errorMessage);
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
     }
     else {
-      console.log('res -> ', stockAdjustmentsViewResponse);
+      console.log('res -> ', stockReturnedViewResponse);
       if (mounted) {     //imp if unmounted
         //message.success(stockAdjustmentsViewResponse.message, 3);
-        setData(stockAdjustmentsViewResponse.adjustment.data || stockAdjustmentsViewResponse.adjustment);
-        setPaginationData(stockAdjustmentsViewResponse.adjustment.page || {});
+        setData(stockReturnedViewResponse.return.data || stockReturnedViewResponse.return);
+        setPaginationData(stockReturnedViewResponse.return.page || {});
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
       }
@@ -39,7 +38,7 @@ const  StockAdjustment = (props) => {
 
 
   useEffect( () => {
-    fetchStockAdjustmentsData();
+    fetchStockReturnedData();
     
     return () => {
       mounted = false;
@@ -52,18 +51,18 @@ const  StockAdjustment = (props) => {
   function handlePageChange(currentPg) {
     setCurrentPage(currentPg);
     setLoading(true);
-    fetchStockAdjustmentsData(paginationLimit, currentPg);
+    fetchStockReturnedData(paginationLimit, currentPg);
   }
 
 
   return (
-    <div className='stock-po'>
+    <div className='stock-returned'>
 
         {/* Table */}
         <div className='table'>
           <ViewtableStock  pageLimit={paginationLimit} tableData={data} tableDataLoading={loading}
             onClickPageChanger={handlePageChange} paginationData={paginationData} 
-            tableType="stock_adjustments"  />
+            tableType="stock_returned"  />
         </div>
 
         {/* Table */} 
@@ -71,4 +70,4 @@ const  StockAdjustment = (props) => {
   );
 };
 
-export default StockAdjustment;
+export default ReturnedStock;

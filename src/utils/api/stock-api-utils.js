@@ -189,6 +189,44 @@ export const viewStockAdjustments = async (limit, pageNumber) => {
 };
 
 
+export const viewStockReturned = async (limit, pageNumber) => {
+    const formDataPair = {
+        limit: limit,
+        page: pageNumber,
+    };
+
+    const viewStockReturnedFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+    const url = UrlConstants.STOCK.VIEW_RETURNED_STOCK;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        viewStockReturnedFormDataBody, //body
+    );
+};
+
+
+
+export const viewStockReturnedDataByReturnId = async (returnId) => {
+    const formDataPair = {
+        return: returnId,
+    };
+
+    const viewStockReturnedByReturnIdFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+    const url = UrlConstants.STOCK.GET_STOCK_RETURNED;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        viewStockReturnedByReturnIdFormDataBody, //body
+    );
+};
+
+
+
+
 export const addStockAdjustment = async (addStockAdjustmentData) => {
 
     const addStockAdjustmentFormDataBody =  $.param(addStockAdjustmentData);

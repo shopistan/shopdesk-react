@@ -243,6 +243,9 @@ const SideMenu = () => {
               <Menu.Item key="stockAdjustments">
                 <Link to="/stock-control/stock-adjustments" className="nav-menu-item-link"  >Stock Adjustment</Link>
               </Menu.Item>
+              {/*<Menu.Item key="stockReturned">
+                <Link to="/stock-control/returned-stock" className="nav-menu-item-link"  >Returned Stock</Link>
+              </Menu.Item>*/}
             </SubMenu>}
           {((userRouteScopes.includes(appRouteScopes.ecommerce) || adminUser) && storeEcommerce) &&
             <SubMenu key="ecommerce" icon={<ApartmentOutlined />} title="Ecommerce">

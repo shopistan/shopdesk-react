@@ -18,6 +18,18 @@ html {
   font-weight: 600;
 }
 
+.ant-menu-item-active .anticon{
+  background: #1eb488;
+  color: #fff;
+  font-size: 16px;
+}
+
+.ant-menu-submenu-active .anticon {
+  background: #1eb488;
+  color: #fff;
+  font-size: 16px;
+}
+
 
 div#preloader { 
   position: fixed;
