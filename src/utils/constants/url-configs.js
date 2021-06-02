@@ -1,6 +1,6 @@
 
 const {REACT_APP_API_BASE_URL, REACT_APP_IMAGE_UPLOADS_URL} = process.env;
-const BASE_URL = REACT_APP_API_BASE_URL || 'https://shopdeskdev.shopdev.co';
+const BASE_URL = REACT_APP_API_BASE_URL || 'https://stage.shopdesk.co';
 const IMAGE_UPLOADS_URL = REACT_APP_IMAGE_UPLOADS_URL || 'https://storage.googleapis.com/shopdesk-artifacts';
 
 const urls = {
