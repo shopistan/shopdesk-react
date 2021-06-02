@@ -28,9 +28,9 @@ spec:
         ports:
         - containerPort: _APP_PORT
           protocol: TCP
-        # env:
-        # - name: NODE_ENV
-        #   value: _NODE_ENV
+        env:
+        - name: REACT_APP_API_BASE_URL
+          value: _REACT_APP_API_BASE_URL
 
 ---
 
