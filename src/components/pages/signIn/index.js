@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Form, Input, Button, Checkbox, message } from "antd";
+import { Form, Input, Button, Checkbox, message, Spin } from "antd";
 import { login } from "../../../utils/api/auth-api-utils";
 import { saveDataIntoLocalStorage } from "../../../utils/local-storage/local-store-utils";
 import Constants from "../../../utils/constants/constants";
@@ -8,10 +8,16 @@ import Constants from "../../../utils/constants/constants";
 const SignIn = () => {
   const [buttonDisabled, setButtonDisabled] = useState(false);
 
+
   var mounted = true;
 
 
   useEffect(() => {
+
+    document.getElementById('app-loader-container').style.display = "block";
+    setTimeout(() => {
+      document.getElementById('app-loader-container').style.display = "none";
+    }, 1000);
 
     return () => {
       mounted = false;
@@ -27,16 +33,23 @@ const SignIn = () => {
     //{ username: 'a', password: 'a', remember: true };
 
     //todo: show loader here
+    document.getElementById('app-loader-container').style.display = "block";
+    const hide = message.loading('User Signing...', 0);
     const loginResponse = await login(values.username, values.password);
     if (loginResponse.hasError) {
       const errorMessage = loginResponse.errorMessage;
       message.error(errorMessage, 3);
       setButtonDisabled(false);
+      document.getElementById('app-loader-container').style.display = "none";
+      setTimeout(hide, 1000);
     } else {
       const loggedInUserDetails = loginResponse;
       if (mounted) {   //imp if unmounted
         saveDataIntoLocalStorage(Constants.USER_DETAILS_KEY, loggedInUserDetails);
         message.success("Login Succesfull ", 3);
+        document.getElementById('app-loader-container').style.display = "none";
+        setTimeout(hide, 1000);
+        
         setTimeout(() => {
           window.open("/outlets", "_self");
         }, 2000);

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Button, message, Spin } from "antd";
+import { Form, Input, Button, message, Spin, InputNumber } from "antd";
 import * as TaxApiUtil from "../../../utils/api/tax-api-utils";
 import { useHistory } from "react-router-dom";
+import { ArrowLeftOutlined } from "@ant-design/icons";
+
 
 const EditTax = (props) => {
   const history = useHistory();
@@ -34,12 +36,14 @@ const EditTax = (props) => {
 
 
   const getTax = async (taxId) => {
+    document.getElementById('app-loader-container').style.display = "block";
     const gettaxResponse = await TaxApiUtil.getTax(taxId);
     console.log('gettaxResponse:', gettaxResponse);
     if (gettaxResponse.hasError) {
       console.log('getTax Cant Fetched -> ', gettaxResponse.errorMessage);
       message.error(gettaxResponse.errorMessage, 2);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', gettaxResponse.message);
@@ -59,6 +63,7 @@ const EditTax = (props) => {
         ];
         setTaxDataFields(fieldsForAntForm);
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
 
     }
@@ -68,6 +73,8 @@ const EditTax = (props) => {
   const onFinish = async (values) => {
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
+    
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Saving Changes in progress..', 0);
     const taxEditResponse = await TaxApiUtil.editTax(
       selectedTaxData.tax_id,
@@ -79,13 +86,15 @@ const EditTax = (props) => {
     if (taxEditResponse.hasError) {
       console.log("Cant Edit Tax -> ", taxEditResponse.errorMessage);
       message.error(taxEditResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setButtonDisabled(false);
-      setTimeout(hide, 1500);
+      setTimeout(hide, 1000);
     } else {
       console.log("res -> ", taxEditResponse.message);
       if (mounted) {     //imp if unmounted
         message.success(taxEditResponse.message, 3);
-        setTimeout(hide, 1500);
+        document.getElementById('app-loader-container').style.display = "none";
+        setTimeout(hide, 1000);
         setTimeout(() => {
           history.push({
             pathname: "/taxes",
@@ -99,14 +108,22 @@ const EditTax = (props) => {
     console.log("Failed:", errorInfo);
   };
 
+  const handleCancel = () => {
+    history.push({
+      pathname: '/taxes',
+    });
+  }
+
+
+
   return (
     <div className="page categoryAdd">
       <div className="page__header">
-        <h1 className="page__title">Edit Tax</h1>
+        <h1 className="page__title"><Button type="primary" shape="circle" className="back-btn"
+          icon={<ArrowLeftOutlined />}
+          onClick={handleCancel} />Edit Tax</h1>
       </div>
-      <div style={{ textAlign: "center" }}>
-        {loading && <Spin size="large" tip="Loading..." />}
-      </div>
+      
 
       {!loading &&
         <div className="page__content">
@@ -145,7 +162,7 @@ const EditTax = (props) => {
                       },
                     ]}
                   >
-                    <Input />
+                    <InputNumber  className="u-width-100" />
                   </Form.Item>
                 </div>
               </div>
@@ -159,7 +176,7 @@ const EditTax = (props) => {
                       className="custom-btn custom-btn--primary"
                       disabled={buttonDisabled}
                     >
-                      Edit
+                      Save
                   </Button>
                   </Form.Item>
                 </div>

@@ -28,6 +28,9 @@ const SignUp = () => {
       return;
     }
 
+    document.getElementById('app-loader-container').style.display = "block";
+    const hide = message.loading('Creating User...', 0);
+
     const signUpResponse = await signUp(
       values.fullName,
       values.email,
@@ -35,17 +38,21 @@ const SignUp = () => {
       values.confirmPassword,
       values.phone,
       values.businessName,
-      values.businessPassword
+      values.businessAddress
     );
 
     if (signUpResponse.hasError) {
       const errorMessage = signUpResponse.errorMessage;
       console.log("Cant SignUP -> ", errorMessage);
       message.error(errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
+      setTimeout(hide, 1500);
     } else {
       const signedUpUserDetails = signUpResponse;
       saveDataIntoLocalStorage();
       message.success("SignUp Succesfull ", 3);
+      document.getElementById('app-loader-container').style.display = "none";
+      setTimeout(hide, 1500);
       console.log("res -> ", signedUpUserDetails);
       setTimeout(() => {
         history.push({
@@ -65,9 +72,23 @@ const SignUp = () => {
   const onEmailChange = async (e) => {
     let emailValue = e.target.value;
     console.log(emailValue.toLowerCase());
-    /*form.setFieldsValue({
+    form.setFieldsValue({
       email: emailValue.toLowerCase(),
-    });*/
+    });
+  }
+
+
+  const onPhoneChange = (e) => {
+    let phoneNumber = e.target.value;
+    const re = /^[0-9\b]+$/;
+    //console.log(re.test(e.target.value));
+    if (!e.target.value === '' || !re.test(e.target.value)) {  //if contains alphabets in string
+      form.setFieldsValue({
+        phone: phoneNumber.replace(/[^\d.-]/g, '')
+      });
+
+    }
+
   }
 
 
@@ -167,7 +188,7 @@ const SignUp = () => {
                     },
                   ]}
                 >
-                  <Input />
+                  <Input   onChange={onPhoneChange}  />
                 </Form.Item>
               </div>
 

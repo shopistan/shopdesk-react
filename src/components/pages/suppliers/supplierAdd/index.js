@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, Button, message } from "antd";
+import { Form, Input, InputNumber, Button, message } from "antd";
 import { useHistory } from "react-router-dom";
 import * as SuppliersApiUtil from "../../../../utils/api/suppliers-api-utils";
+import { ArrowLeftOutlined } from "@ant-design/icons";
+
 
 const SupplierAdd = () => {
   const history = useHistory();
+  const [form] = Form.useForm();
   const [buttonDisabled, setButtonDisabled] = useState(false);
 
   var mounted = true;
@@ -14,6 +17,7 @@ const SupplierAdd = () => {
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
     console.log("Success:", values);
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Saving Changes in progress..', 0);
     const supplierAddResponse = await SuppliersApiUtil.addSupplier(
       values.supplier_name,
@@ -30,12 +34,14 @@ const SupplierAdd = () => {
         supplierAddResponse.errorMessage
       );
       message.error(supplierAddResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setButtonDisabled(false);
       setTimeout(hide, 1500);
     } else {
       console.log("res -> ", supplierAddResponse.message);
       if (mounted) {     //imp if unmounted
         message.success(supplierAddResponse.message, 3);
+        document.getElementById('app-loader-container').style.display = "none";
         setTimeout(hide, 1500);
         setTimeout(() => {
           history.push({
@@ -45,6 +51,7 @@ const SupplierAdd = () => {
       }
     }
   };
+  
 
 
   useEffect(() => {
@@ -53,20 +60,59 @@ const SupplierAdd = () => {
     }
   }, []);
 
+  
+
+  const onPhoneChange = (e) => {
+    let phoneNumber = e.target.value;
+    const re = /^[0-9\b]+$/;
+    //console.log(re.test(e.target.value));
+    if (!e.target.value === '' || !re.test(e.target.value)) {  //if contains alphabets in string
+      form.setFieldsValue({
+        phone: phoneNumber.replace(/[^\d.-]/g, '')
+      });
+
+    }
+
+  }
+
+
+  const onTaxChange = (e) => {
+    let taxValue = e.target.value;
+    const re = /^[0-9\b]+$/;
+    //console.log(re.test(e.target.value));
+    if (!taxValue=== '' || !re.test(taxValue)) {  //if contains alphabets in string
+      form.setFieldsValue({
+        tax: taxValue.replace(/[^\d.-]/g, '')
+      });
+    }
+
+  }
+
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 
+
+  const handleCancel = () => {
+    history.push({
+      pathname: '/suppliers',
+    });
+  }
+
+
   return (
     <div className="page dashboard">
       <div className="page__header">
-        <h1>New Supplier</h1>
+        <h1><Button type="primary" shape="circle" className="back-btn"
+          icon={<ArrowLeftOutlined />}
+          onClick={handleCancel} />New Supplier</h1>
       </div>
 
       <div className="page__content">
         <div className="page__form">
           <Form
+            form={form}
             name="basic"
             layout="vertical"
             initialValues={{
@@ -135,7 +181,7 @@ const SupplierAdd = () => {
                     },
                   ]}
                 >
-                  <Input />
+                  <Input onChange={onPhoneChange} />
                 </Form.Item>
               </div>
             </div>
@@ -145,14 +191,14 @@ const SupplierAdd = () => {
                 <Form.Item
                   label="Tax ID"
                   name="tax"
-                  rules={[
+                  /*rules={[
                     {
-                      required: true,
-                      message: "Please input valid tax ID",
+                      //required: true,
+                      //message: "Please input valid tax ID",
                     },
-                  ]}
+                  ]}*/
                 >
-                  <Input />
+                  <Input  className="u-width-100"  onChange={onTaxChange}  />
                 </Form.Item>
               </div>
 

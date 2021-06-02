@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./productStyle.scss";
-import { Table, Form, Typography } from "antd";
+import { Table, Typography } from "antd";
 import { useHistory } from "react-router-dom";
 import ProductsNestedTable from "./productsViewNestedTable";
 import {
@@ -11,10 +11,10 @@ import Constants from "../../../../utils/constants/constants";
 
 import { BarcodeOutlined } from "@ant-design/icons";
 
-import { result } from "lodash";
+
 
 const ProductsTable = (props) => {
-  const [form] = Form.useForm();
+  const { selectedOutletData =  null } = props;
   const [data, setData] = useState([]);
   const [currentPageNumber, setcurrentPageNumber] = useState(1);
   const [tableExpandedRows, setTableExpandedRows] = useState([]);
@@ -65,7 +65,8 @@ const ProductsTable = (props) => {
       ? readFromLocalStorage.data
       : null;
     if (readFromLocalStorage) {
-      symbol = readFromLocalStorage.currency.symbol;
+      //symbol = readFromLocalStorage.currency.symbol;     //imp prev
+      symbol = selectedOutletData.currency_symbol;     //imp new one
       if (
         checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
       ) {
@@ -99,7 +100,9 @@ const ProductsTable = (props) => {
   };
 
   const toggleVariants = (record) => {
-    toggleExpandByproductId(record.product_id);
+    if (record.variant > 1) {
+      toggleExpandByproductId(record.product_id);
+    }
   };
 
   const tableExpandedRowRender = (record, index, indent, expanded) => {
@@ -135,6 +138,7 @@ const ProductsTable = (props) => {
     props.tableData,
     props.tableDataLoading,
     props.paginationData,
+    props.selectedOutletData,
     tableExpandedRows,
   ]); /* imp passing props to re-render */
 
@@ -176,7 +180,7 @@ const ProductsTable = (props) => {
       },
     },
     {
-      title: "Sale Price",
+      title: <div>Sale Price<small>(Exclusive of GST)</small></div>,
       dataIndex: "product_sale_price",
     },
     {

@@ -65,6 +65,8 @@ const Suppliers = () => {
 
 
   const fetchSuppliersData = async (pageLimit = 10, pageNumber = 1) => {
+    
+    document.getElementById('app-loader-container').style.display = "block";
     const suppliersViewResponse = await SuppliersApiUtil.viewSuppliers(
       pageLimit,
       pageNumber
@@ -76,16 +78,18 @@ const Suppliers = () => {
         "Cant fetch suppliers -> ",
         suppliersViewResponse.errorMessage
       );
-      message.error(suppliersViewResponse.errorMessage, 3);
+      //message.error(suppliersViewResponse.errorMessage, 3);   //imp not to show on Ui
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     } else {
       console.log("res -> ", suppliersViewResponse);
       if (mounted) {     //imp if unmounted
         const suppliersData = suppliersViewResponse.suppliers.data || suppliersViewResponse.suppliers;
         setData(suppliersData);
-        message.success(suppliersViewResponse.message, 3);
+        //message.success(suppliersViewResponse.message, 3);
         setPaginationData(suppliersViewResponse.suppliers.page || {});
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   };

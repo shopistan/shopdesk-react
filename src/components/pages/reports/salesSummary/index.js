@@ -35,6 +35,7 @@ const SalesSummary = () => {
     let startDate = selectedDates[0];
     let endDate = selectedDates[1];
 
+    document.getElementById('app-loader-container').style.display = "block";
     const salesSummaryResponse = await ReportsApiUtil.viewSalesSummery(
       startDate,
       endDate,
@@ -47,11 +48,12 @@ const SalesSummary = () => {
         "Cant fetch Omni Sales Data -> ",
         salesSummaryResponse.errorMessage
       );
-      message.error(salesSummaryResponse.errorMessage, 3);
+      message.warning(salesSummaryResponse.errorMessage, 3);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     } else {
       console.log("res -> ", salesSummaryResponse);
-      message.success(salesSummaryResponse.message, 3);
+      //message.success(salesSummaryResponse.message, 3);
       setSalesSummaryData(salesSummaryResponse.sales_summary);
       setLoading(false);
       setShowSummaryTable(true); //imp to show
@@ -78,6 +80,7 @@ const SalesSummary = () => {
       );
 
       setSalesMops(salesDataMops); //setting sales mops
+      document.getElementById('app-loader-container').style.display = "none";
 
       /*--setting sales Mops--*/
     }
@@ -163,14 +166,14 @@ const SalesSummary = () => {
 
       export_table_to_csv(html, "sales_summary.csv");
     } else {
-      message.error("No Sales Data Found", 3);
+      message.warning("No Sales Data Found", 3);
     }
   };
 
   const handlePrintOverview = (e) => {
     var previewSalesHtml = document.getElementById("printTable").innerHTML;
     var doc =
-      '<html><head><title>Close Me ~ Shopdesk</title><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print(); window.close();">' +
+      '<html><head><title></title><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print(); window.close();">' +
       previewSalesHtml +
       "</body></html>";
     /* NEW TAB OPEN PRINT */

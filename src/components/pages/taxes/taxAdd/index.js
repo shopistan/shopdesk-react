@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Form, Input, Button, InputNumber, message } from "antd";
 import { useHistory } from "react-router-dom";
 import * as TaxApiUtil from "../../../../utils/api/tax-api-utils";
+import { ArrowLeftOutlined } from "@ant-design/icons";
+
 
 const TaxAdd = () => {
   const history = useHistory();
@@ -13,6 +15,8 @@ const TaxAdd = () => {
   const onFinish = async (values) => {
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
+
+    document.getElementById('app-loader-container').style.display = "block";
     console.log("Success:", values);
     const hide = message.loading('Saving Changes in progress..', 0);
     const TaxAddResponse = await TaxApiUtil.addTax(
@@ -24,6 +28,7 @@ const TaxAdd = () => {
     if (TaxAddResponse.hasError) {
       console.log("Cant add new Tax-> ", TaxAddResponse.errorMessage);
       message.error(TaxAddResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setButtonDisabled(false);
       setTimeout(hide, 1500);
       
@@ -31,6 +36,7 @@ const TaxAdd = () => {
       console.log("res -> ", TaxAddResponse.message);
       if (mounted) {     //imp if unmounted
         message.success(TaxAddResponse.message, 3);
+        document.getElementById('app-loader-container').style.display = "none";
         setTimeout(hide, 1500);
         setTimeout(() => {
           history.push({
@@ -53,10 +59,20 @@ const TaxAdd = () => {
     console.log("Failed:", errorInfo);
   };
 
+
+  const handleCancel = () => {
+    history.push({
+      pathname: '/taxes',
+    });
+  }
+
+
   return (
     <div className="page dashboard">
       <div className="page__header">
-        <h1>New Tax</h1>
+        <h1><Button type="primary" shape="circle" className="back-btn"
+          icon={<ArrowLeftOutlined />}
+          onClick={handleCancel} />New Tax</h1>
       </div>
 
       <div className="page__content">

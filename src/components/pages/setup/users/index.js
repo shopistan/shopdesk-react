@@ -15,20 +15,23 @@ const Users = () => {
 
 
   const fetchUsersData = async (pageLimit = 10, pageNumber = 1) => {
+    document.getElementById('app-loader-container').style.display = "block";
     const usersViewResponse = await SetupApiUtil.viewUsers(pageLimit, pageNumber);
     console.log('usersViewResponse:', usersViewResponse);
 
     if (usersViewResponse.hasError) {
       console.log('Cant fetch Users Data -> ', usersViewResponse.errorMessage);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', usersViewResponse);
       if (mounted) {    //imp if unmounted
-        message.success(usersViewResponse.message, 3);
+        //message.success(usersViewResponse.message, 3);
         setData(usersViewResponse.Users.data || usersViewResponse.Users);
         setPaginationData(usersViewResponse.Users.page || {});
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   }

@@ -4,6 +4,10 @@ import { useHistory } from "react-router-dom";
 import * as ProductsApiUtil from '../../../../utils/api/products-api-utils';
 import * as StockApiUtil from '../../../../utils/api/stock-api-utils';
 import * as Helpers from "../../../../utils/helpers/scripts";
+import Constants from '../../../../utils/constants/constants';
+import {
+  getDataFromLocalStorage,
+} from "../../../../utils/local-storage/local-store-utils";
 import StockNestedProductsTable from "../../../organism/table/stock/stockNestedProductsTable";
 
 
@@ -24,10 +28,11 @@ import {
 } from "antd";
 
 import {
-  CloseOutlined,
-  CheckOutlined,
+  //CloseOutlined,
+  //CheckOutlined,
   UploadOutlined,
   DownloadOutlined,
+  ArrowLeftOutlined,
 } from "@ant-design/icons";
 
 const { Option } = Select;
@@ -47,6 +52,8 @@ const AdjustmentStock = () => {
   const [selectedProductId, setSelectedProductId] = useState("");
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
   const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [userLocalStorageData, setUserLocalStorageData] = useState(null);
+
 
 
   var mounted = true;
@@ -54,7 +61,13 @@ const AdjustmentStock = () => {
 
   useEffect(() => {
     fetchRegisteredProductsData();
-    
+
+    /*--------------set user local data-------------------------------*/
+    var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+    readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
+    setUserLocalStorageData(readFromLocalStorage);
+    /*--------------set user local data-------------------------------*/
+
     return () => {
       mounted = false;
     }
@@ -92,19 +105,21 @@ const AdjustmentStock = () => {
 
 
   const fetchRegisteredProductsData = async () => {
+    document.getElementById('app-loader-container').style.display = "block";
     const productsDiscountsViewResponse = await ProductsApiUtil.getFullRegisteredProducts();
     console.log(' productsDiscountsViewResponse:', productsDiscountsViewResponse);
 
     if (productsDiscountsViewResponse.hasError) {
       console.log('Cant fetch registered products Data -> ', productsDiscountsViewResponse.errorMessage);
-      message.error(productsDiscountsViewResponse.errorMessage, 3);
+      message.warning(productsDiscountsViewResponse.errorMessage, 3);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', productsDiscountsViewResponse);
 
       if (mounted) {     //imp if unmounted
-        message.success(productsDiscountsViewResponse.message, 3);
+        //message.success(productsDiscountsViewResponse.message, 3);
         /*-------for filtering products--------*/
         var products = productsDiscountsViewResponse.products.data
           || productsDiscountsViewResponse.products;
@@ -125,6 +140,7 @@ const AdjustmentStock = () => {
 
         /*-------for filtering products--------*/
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
 
     }
@@ -322,6 +338,8 @@ const AdjustmentStock = () => {
 
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
+
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.addStockAdjustment(addStockAdjustmentPostData);
     console.log('AddAdjustmentResponse:', res);
@@ -329,12 +347,14 @@ const AdjustmentStock = () => {
     if (res.hasError) {
       console.log('Cant Add Stock Adjustment -> ', res.errorMessage);
       message.error(res.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setButtonDisabled(false);
       setTimeout(hide, 1500);
     }
     else {
       console.log('res -> ', res);
       message.success(res.message, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1000);
       setTimeout(() => {
         history.push({
@@ -350,6 +370,7 @@ const AdjustmentStock = () => {
 
   const handleDownloadPoForm = async () => {
 
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Downloading in progress..', 0);
     const downloadPoResponse = await StockApiUtil.downloadPoForm();
     console.log("downloadPoResponse:", downloadPoResponse);
@@ -359,11 +380,13 @@ const AdjustmentStock = () => {
         "Cant Download PO Form -> ",
         downloadPoResponse.errorMessage
       );
+      document.getElementById('app-loader-container').style.display = "none";
 
       setTimeout(hide, 1500);
 
     } else {
       console.log("res -> ", downloadPoResponse);
+      document.getElementById('app-loader-container').style.display = "none";
       var csv = "SKU,Quantity\n";
       var arr = downloadPoResponse.product;
       arr.forEach(function (row) {
@@ -404,12 +427,11 @@ const AdjustmentStock = () => {
   return (
     <div className="page stock-add">
       <div className="page__header">
-        <h1>New Stock Adjustment</h1>
+        <h1><Button type="primary" shape="circle" className="back-btn"
+          icon={<ArrowLeftOutlined />}
+          onClick={handleCancel} />New Stock Adjustment</h1>
       </div>
-      <div style={{ textAlign: "center" }}>
-        {loading && <Spin size="large" tip="Loading..." />}
-      </div>
-
+      
 
       {!loading &&
         <div className="page__content">
@@ -480,7 +502,7 @@ const AdjustmentStock = () => {
                           style={{ width: "100%" }}
                           id="download_csv"
                           onClick={handleDownloadPoForm}>
-                          Download SKU CSV
+                          {/*Download SKU CSV*/} Download sample File
                     </Button>
                       </Form.Item>
                     </div>
@@ -558,7 +580,9 @@ const AdjustmentStock = () => {
                     tableData={productsTableData}
                     tableDataLoading={loading}
                     onChangeProductsData={handleChangeProductsData}
-                    tableType="order_adjustment" />
+                    tableType="order_adjustment"
+                    currency={userLocalStorageData.currency.symbol}
+                  />
                 </div>
                 {/* Table */}
                 <Divider />

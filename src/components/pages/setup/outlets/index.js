@@ -15,20 +15,23 @@ const Outlets = () => {
 
 
   const fetchOutletsData = async (pageLimit = 10, pageNumber = 1) => {
+    document.getElementById('app-loader-container').style.display = "block";
     const outletsViewResponse = await SetupApiUtil.viewOutlets(pageLimit, pageNumber);
     console.log('outletsViewResponse:', outletsViewResponse);
 
     if (outletsViewResponse.hasError) {
       console.log('Cant fetch Outlets Data -> ', outletsViewResponse.errorMessage);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', outletsViewResponse);
       if (mounted) {     //imp if unmounted
-        message.success(outletsViewResponse.message, 3);
+        //message.success(outletsViewResponse.message, 3);
         setData(outletsViewResponse.outlets.data || outletsViewResponse.outlets);
         setPaginationData(outletsViewResponse.outlets.page || {});
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   }

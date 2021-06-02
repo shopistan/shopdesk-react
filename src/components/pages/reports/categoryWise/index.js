@@ -22,6 +22,7 @@ const CategoryWiseSummary = () => {
     let startDate = selectedDates[0];
     let endDate = selectedDates[1];
 
+    document.getElementById('app-loader-container').style.display = "block";
     const categoryWiseSalesSummaryResponse = await ReportsApiUtil.viewCategoryWiseSalesSummery(
       startDate,
       endDate
@@ -36,11 +37,13 @@ const CategoryWiseSummary = () => {
         "Cant fetch Sales Summary -> ",
         categoryWiseSalesSummaryResponse.errorMessage
       );
-      message.error(categoryWiseSalesSummaryResponse.errorMessage, 3);
+      message.warning(categoryWiseSalesSummaryResponse.errorMessage, 3);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
+
     } else {
       console.log("res -> ", categoryWiseSalesSummaryResponse);
-      message.success(categoryWiseSalesSummaryResponse.message, 3);
+      //message.success(categoryWiseSalesSummaryResponse.message, 3);
       /*--setting sales Mops--*/
       var categoryWiseSalesData = categoryWiseSalesSummaryResponse.sales;
       categoryWiseSalesData.forEach((salesItem, i) => {
@@ -66,6 +69,7 @@ const CategoryWiseSummary = () => {
       setCategoryWiseSalesSummaryData(categoryWiseSalesData);
       setLoading(false);
       setShowSummaryTable(true); //imp to show
+      document.getElementById('app-loader-container').style.display = "none";
       ////////////////////////////////
     }
   };
@@ -138,7 +142,7 @@ const CategoryWiseSummary = () => {
 
       export_table_to_csv(html, "category_wise_sales_summary.csv");
     } else {
-      message.error("No Category Wise Sales Data Found", 3);
+      message.warning("No Category Wise Sales Data Found", 3);
     }
   };
 

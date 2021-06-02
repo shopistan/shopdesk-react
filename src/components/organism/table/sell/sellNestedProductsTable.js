@@ -290,7 +290,7 @@ const SellNestedProductsTable = (props) => {
                 dataindex: col.dataIndex,
                 title: col.title,
                 handleSave: handleSave,
-                inputtype: col.dataIndex === 'qty' ? 'number' : 'text',
+                inputtype: col.dataIndex === 'qty' || col.dataIndex === 'product_sale_price'  ? 'number' : 'text',
                 editable: col.editable,
             }),
         };

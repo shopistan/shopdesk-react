@@ -34,6 +34,7 @@ const OmniSalesSummary = () => {
     let startDate = selectedDates[0];
     let endDate = selectedDates[1];
 
+    document.getElementById('app-loader-container').style.display = "block";
     const omnisalesSummaryResponse = await ReportsApiUtil.viewSalesSummery(
       startDate,
       endDate,
@@ -46,11 +47,12 @@ const OmniSalesSummary = () => {
         "Cant fetch omni Sales Data -> ",
         omnisalesSummaryResponse.errorMessage
       );
-      message.error(omnisalesSummaryResponse.errorMessage, 3);
+      message.warning(omnisalesSummaryResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setLoading(false);
     } else {
       console.log("res -> ", omnisalesSummaryResponse);
-      message.success(omnisalesSummaryResponse.message, 3);
+      //message.success(omnisalesSummaryResponse.message, 3);
       setOmniSalesSummaryData(omnisalesSummaryResponse.sales_summary);
       setLoading(false);
       setShowSummaryTable(true); //imp to show
@@ -77,6 +79,7 @@ const OmniSalesSummary = () => {
       );
 
       setSalesMops(salesDataMops); //setting sales mops
+      document.getElementById('app-loader-container').style.display = "none";
 
       /*--setting sales Mops--*/
     }
@@ -161,14 +164,14 @@ const OmniSalesSummary = () => {
 
       export_table_to_csv(html, "omni_sales_summary.csv");
     } else {
-      message.error("No Omni Sales Data Found", 3);
+      message.warning("No Omni Sales Data Found", 3);
     }
   };
 
   const handlePrintOverview = (e) => {
     var previewSalesHtml = document.getElementById("printTable").innerHTML;
     var doc =
-      '<html><head><title>Close Me ~ Shopdesk</title><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print(); window.close();">' +
+      '<html><head><title></title><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print(); window.close();">' +
       previewSalesHtml +
       "</body></html>";
     /* NEW TAB OPEN PRINT */

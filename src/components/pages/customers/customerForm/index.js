@@ -6,10 +6,12 @@ import {
   updateUserDetails,
   addCustomer,
 } from '../../../../utils/api/customer-api-utils';
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useEffect } from 'react';
 
 const CustomerForm = (props) => {
   const history = useHistory();
+  const [form] = Form.useForm();
   const { Option } = Select;
   //console.log(props);
   //console.log("hsitory-object",history);
@@ -35,9 +37,11 @@ const CustomerForm = (props) => {
     if (!customerId) {
       return popPage();
     }
+    document.getElementById('app-loader-container').style.display = "block";
     const singleCustomerDataResponse = await getSingleCustomer(customerId);
 
     if (singleCustomerDataResponse.hasError) {
+      document.getElementById('app-loader-container').style.display = "none";
       return popPage();
     }
     const customerData = singleCustomerDataResponse.customer;
@@ -68,7 +72,7 @@ const CustomerForm = (props) => {
       },
       {
         name: ['code'],
-        value: mappedCustomerResponse.code
+        value: mappedCustomerResponse.code || " "
       },
       {
         name: ['phone'],
@@ -77,6 +81,7 @@ const CustomerForm = (props) => {
     ];
 
     setCustomerDataFields(fieldsForAntForm);
+    document.getElementById('app-loader-container').style.display = "none";
   };
 
   const popPage = () => {
@@ -103,6 +108,7 @@ const CustomerForm = (props) => {
     try {
 
       if (isEditMode) {
+        document.getElementById('app-loader-container').style.display = "block";
         const hide = message.loading('Saving Changes in progress..', 0);
         const userDataUpdateResponse = await updateUserDetails(
           updatedCustomerData
@@ -112,12 +118,14 @@ const CustomerForm = (props) => {
           console.log('Cant Edit Customer -> ', userDataUpdateResponse.errorMessage);
           message.error(userDataUpdateResponse.errorMessage, 3);
           setButtonDisabled(false);
+          document.getElementById('app-loader-container').style.display = "none";
           setTimeout(hide, 1000);
         }
         else {
           setTimeout(hide, 1000);
           console.log('res -> ', userDataUpdateResponse);
           message.success(userDataUpdateResponse.message, 3);
+          document.getElementById('app-loader-container').style.display = "none";
           setTimeout(() => {
             history.push({
               pathname: `/customers/${customer_id}/view`,
@@ -135,12 +143,14 @@ const CustomerForm = (props) => {
           code: values.code,
           balance: values.balance,
         };
+        document.getElementById('app-loader-container').style.display = "block";
         const hide = message.loading('Saving Changes in progress..', 0);
         const userDataAddResponse = await addCustomer(addCustomerData);
         //console.log(userDataAddResponse);
         if (userDataAddResponse.hasError) {
           console.log('Cant Edit Customer -> ', userDataAddResponse.errorMessage);
           message.error(userDataAddResponse.errorMessage, 3);
+          document.getElementById('app-loader-container').style.display = "none";
           setButtonDisabled(false);
           setTimeout(hide, 1000);
         }
@@ -148,6 +158,7 @@ const CustomerForm = (props) => {
           setTimeout(hide, 1000);
           console.log('res -> ', userDataAddResponse);
           message.success(userDataAddResponse.message, 3);
+          document.getElementById('app-loader-container').style.display = "none";
           setTimeout(() => {
             history.push({
               pathname: '/customers',
@@ -170,15 +181,40 @@ const CustomerForm = (props) => {
     console.log(`selected ${value}`);
   }
 
+  
+  const onPhoneChange = (e) => {
+    let phoneNumber = e.target.value;
+    const re = /^[0-9\b]+$/;
+    console.log(e.target.value);
+    if (!e.target.value === '' || !re.test(e.target.value)) {  //if contains alphabets in string
+      form.setFieldsValue({
+        phone: phoneNumber.replace(/[^\d.-]/g, '')
+      });
+    }
+
+  }
+
+  const handleCancel = () => {
+    history.push({
+      pathname: '/customers',
+    });
+  };
+
+
+
   return (
     <div className='page dashboard'>
       <div className='page__header'>
-        <h1> {isEditMode ? 'Edit' : 'New'} Customer</h1>
+        <h1>
+          <Button type="primary" shape="circle" className="back-btn"
+            icon={<ArrowLeftOutlined />}
+            onClick={handleCancel} />{isEditMode ? 'Edit' : 'New'} Customer</h1>
       </div>
 
       <div className='page__content'>
         <div className='page__form'>
           <Form
+            form={form}
             name='basic'
             layout='vertical'
             fields={customerDataFields}
@@ -215,7 +251,7 @@ const CustomerForm = (props) => {
                     }
                   ]}
                 >
-                  <Input />
+                  <Input  onChange={onPhoneChange} />
                 </Form.Item>
               </div>
             </div>
@@ -284,7 +320,7 @@ const CustomerForm = (props) => {
                   name='code'
                   rules={[
                     {
-                      required: true,
+                      required: false,
                       message: 'Please input Code!'
                     }
                   ]}
@@ -296,12 +332,13 @@ const CustomerForm = (props) => {
               {isEditMode ? <div className='form__col'></div> : ''}
             </div>
             <div className='form__row--footer'>
-              <Button type='secondary' onClick={history.goBack}>
+              {/*<Button type='secondary' onClick={history.goBack}>
                 Cancel
-              </Button>
+                </Button>*/}
 
-              <Button type='primary' htmlType='submit' disabled={buttonDisabled}>
-                Confirm
+              <Button type='primary' className="custom-btn--primary"
+                htmlType='submit' disabled={buttonDisabled}>
+                Save
               </Button>
             </div>
           </Form>

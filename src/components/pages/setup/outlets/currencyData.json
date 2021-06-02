@@ -565,16 +565,6 @@
         "symbol": "₫"
     },
     {
-        "code": "XAF",
-        "name": "CFA Franc BEAC",
-        "symbol": "FCFA"
-    },
-    {
-        "code": "XOF",
-        "name": "CFA Franc BCEAO",
-        "symbol": "CFA"
-    },
-    {
         "code": "YER",
         "name": "Yemeni Rial",
         "symbol": "YR"

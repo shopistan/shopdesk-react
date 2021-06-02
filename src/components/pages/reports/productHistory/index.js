@@ -52,6 +52,7 @@ const ProductHistory = () => {
   };
 
   const fetchProductMovementReport = async (productId) => {
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading("Getting Product Data..", 0);
     const productMovementReportResponse = await ProductsApiUtil.getProductMovementReport(
       productId
@@ -65,15 +66,18 @@ const ProductHistory = () => {
         "Cant fetch productMovementReport Data -> ",
         productMovementReportResponse.errorMessage
       );
+      message.warning(productMovementReportResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1000);
     } else {
       console.log("res -> ", productMovementReportResponse);
       setTimeout(hide, 1000);
-      message.success(productMovementReportResponse.message, 3);
+      //message.success(productMovementReportResponse.message, 3);
       setProductMovementReportData(
         productMovementReportResponse.product_movement
       );
       setProductMovementTableCheck(true);
+      document.getElementById('app-loader-container').style.display = "none";
     }
   };
 
@@ -139,7 +143,7 @@ const ProductHistory = () => {
 
       export_table_to_csv(html, "product_movement_report.csv");
     } else {
-      message.error("No Product History Data Found", 3);
+      message.warning("No Product History Data Found", 3);
     }
   };
 

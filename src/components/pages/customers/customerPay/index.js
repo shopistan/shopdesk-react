@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { Button, Form, Input, Select, message, Row, Col } from "antd";
 import { useHistory } from "react-router-dom";
-import { } from "@ant-design/icons";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
 import {
   getSingleCustomer,
@@ -13,6 +13,7 @@ import {
 
 const CustomerPay = (props) => {
   const { Option } = Select;
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
   const { match = {} } = props;
   const { customer_id = {} } = match.params;
@@ -34,9 +35,12 @@ const CustomerPay = (props) => {
     if (!customerId) {
       return popPage();
     }
+
+    document.getElementById('app-loader-container').style.display = "block";
     const singleCustomerDataResponse = await getSingleCustomer(customerId);
     console.log("singleCustomerDataResponse:  ", singleCustomerDataResponse);
     if (singleCustomerDataResponse.hasError) {
+      document.getElementById('app-loader-container').style.display = "none";
       return popPage();
     }
     const customerData = singleCustomerDataResponse.customer;
@@ -51,6 +55,7 @@ const CustomerPay = (props) => {
       id: customerData.id,
     };
     setCustomerData(mappedCustomerResponse);
+    document.getElementById('app-loader-container').style.display = "none";
   };
 
   function handleChange(value) {
@@ -59,27 +64,38 @@ const CustomerPay = (props) => {
 
   const onNewBalanceSubmitted = async (values) => {
     //console.log("onNewBalanceSubmitted: ", values);
+    if (buttonDisabled === false) {
+      setButtonDisabled(true);}
+
     const paymentInfo = {
       type: values.payment_type,
       amount: values.payment_amount,
     };
 
+    document.getElementById('app-loader-container').style.display = "block";
     const customerRechargeResponse = await rechargeCustomerAccount(
       customerData,
       paymentInfo
     );
 
     if (customerRechargeResponse.hasError) {
+      document.getElementById('app-loader-container').style.display = "none";
+      setButtonDisabled(false);
       return message.error("Cannot recharge user account!", 3);
     }
 
-    message.success(
+    /*message.success(
       customerRechargeResponse.message
         ? customerRechargeResponse.message
         : "Balance successfully updated!",
       3
-    );
+    );*/
+
+    message.success("Customer Amount Addded!", 3);
+
+    document.getElementById('app-loader-container').style.display = "none";
     history.push(`/customers/${customer_id}/view`);
+
   };
 
 
@@ -90,7 +106,9 @@ const CustomerPay = (props) => {
   return (
     <div className="page customer-profile">
       <div className="page__header">
-        <h1>Pay Account Balance</h1>
+        <h1><Button type="primary" shape="circle" className="back-btn"
+            icon={<ArrowLeftOutlined />}
+            onClick={handleCancel} />Pay Account Balance</h1>
       </div>
 
       <div className="page__content">
@@ -150,7 +168,9 @@ const CustomerPay = (props) => {
                         },
                       ]}
                     >
-                      <Select defaultValue="Cash" onChange={handleChange}>
+                      <Select //defaultValue="Cash"
+                      placeholder="Select Payment Method"
+                        onChange={handleChange}>
                         <Option value="cash">Cash</Option>
                         <Option value="credit card">Credit Card</Option>
                       </Select>
@@ -184,8 +204,9 @@ const CustomerPay = (props) => {
                     type="primary"
                     htmlType="submit"
                     className="custom-btn custom-btn--primary"
+                    disabled={buttonDisabled}
                   >
-                    Confirm
+                    Save
               </Button>
                 </div>
               </Form>

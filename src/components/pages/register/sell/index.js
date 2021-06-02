@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./style.scss";
 import moment from "moment";
-import $ from "jquery";
+//import $ from "jquery";
 
 import {
   Form,
@@ -12,9 +12,9 @@ import {
   AutoComplete,
   message,
   Divider,
-  Spin,
   InputNumber,
   Collapse,
+  DatePicker,
 } from "antd";
 
 import {
@@ -33,14 +33,17 @@ import {
 } from "../../../../utils/local-storage/local-store-utils";
 import { useHistory } from "react-router-dom";
 import Constants from "../../../../utils/constants/constants";
-import UrlConstants from "../../../../utils/constants/url-configs";
+//import UrlConstants from "../../../../utils/constants/url-configs";
 import * as ProductsApiUtil from "../../../../utils/api/products-api-utils";
 import * as CustomersApiUtil from "../../../../utils/api/customer-api-utils";
 import * as CouriersApiUtil from "../../../../utils/api/couriers-api-utils";
 import * as SalesApiUtil from "../../../../utils/api/sales-api-utils";
+import * as SetupApiUtil from "../../../../utils/api/setup-api-utils";
 import * as Helpers from "../../../../utils/helpers/scripts";
 import SellNestedProductsTable from "../../../organism/table/sell/sellNestedProductsTable";
 import PrintSalesInvoiceTable from "./sellInvoice";
+
+ 
 
 function Sell() {
   const history = useHistory();
@@ -62,11 +65,20 @@ function Sell() {
   const [productsTotalAmount, setProductsTotalAmount] = useState(0);
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
   const [syncStatus, setSyncStatus] = useState(false);
+  const [templateData, setTemplateData] = useState(null);
+
+
+
 
   var clearSync = false;
 
   const { Search } = Input;
   const { Option } = Select;
+
+  const todayDate = moment();
+  const dateFormat = "yyyy/MM/DD";
+  const timeFormat = "hh:mm:ss A";  
+
 
   var mounted = true;
 
@@ -74,6 +86,7 @@ function Sell() {
   useEffect(() => {
     if (history.location.selected_invoice_data !== undefined) {
       var selectedViewedInvoice = history.location.selected_invoice_data;
+      //console.log("invoice-imp", selectedViewedInvoice );
       var tmpInvoice = createNewInvoice();
       var rt = false;
       if (selectedViewedInvoice.status_invoice == 0) {
@@ -92,6 +105,9 @@ function Sell() {
     fetchRegisteredProductsData();
     fetchCouriersData();
     startInvoice();
+
+    
+
 
     return () => {
       console.log("unmount");
@@ -112,7 +128,7 @@ function Sell() {
     } else {
       console.log("res -> ", couriersViewResponse);
       if (mounted) {     //imp if unmounted
-        message.success(couriersViewResponse.message, 3);
+        //message.success(couriersViewResponse.message, 3);
         setCouriersData(
           couriersViewResponse.courier.data || couriersViewResponse.courier
         );
@@ -121,6 +137,7 @@ function Sell() {
   };
 
   const fetchRegisteredProductsData = async () => {
+    document.getElementById('app-loader-container').style.display = "block";
     const productsDiscountsViewResponse = await ProductsApiUtil.getFullRegisteredProducts();
     console.log(
       " productsDiscountsViewResponse:",
@@ -132,13 +149,14 @@ function Sell() {
         "Cant fetch registered products Data -> ",
         productsDiscountsViewResponse.errorMessage
       );
-      message.error(productsDiscountsViewResponse.errorMessage, 3);
+      message.warning(productsDiscountsViewResponse.errorMessage, 3);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     } else {
       console.log("res -> ", productsDiscountsViewResponse);
 
       if (mounted) {     //imp if unmounted
-        message.success(productsDiscountsViewResponse.message, 3);
+        //message.success(productsDiscountsViewResponse.message, 3);
         /*-------for filtering products--------*/
         var products =
           productsDiscountsViewResponse.products.data ||
@@ -168,12 +186,17 @@ function Sell() {
         //setRegistereProductsData(productsDiscountsViewResponse.products);
 
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
+
       }
 
     }
   };
 
   const handleCustomerSearch = async (searchValue) => {
+
+    setSelectedCustomerValue(searchValue);      //imp  working correctly
+
     const customersSearchResponse = await CustomersApiUtil.searchCustomer(
       searchValue
     );
@@ -251,6 +274,9 @@ function Sell() {
 
   const handleDeleteSale = (e) => {
     saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, null);
+    form.setFieldsValue({
+      tax_value:  "",
+    }); //imp
     let newInvoice = createNewInvoice();
     updateCart(newInvoice);
   };
@@ -298,6 +324,25 @@ function Sell() {
     saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, clonedInvoice); //imp
     setSaleInvoiceData(clonedInvoice);
   };
+  
+
+  const onInvoiceDateChange = (value, dateString) => {
+    //console.log(value+"-"+dateString);
+    //let today = moment(new Date()).format(dateFormat);  //current date
+    let currentTime = moment().format(timeFormat);  //current time
+    if (value) {
+      const clonedSaleInvoiceData = { ...saleInvoiceData };
+      clonedSaleInvoiceData.dateTime = dateString + " " + currentTime;
+      setSaleInvoiceData(clonedSaleInvoiceData);
+    }
+  };
+
+
+  function disabledDate(current) {
+    // Can not select days after today
+    return current && current > moment().endOf('day');
+  }
+
 
   const handleInvoiceNoteChange = (e) => {
     //console.log(e.target.value);
@@ -307,10 +352,9 @@ function Sell() {
     setSaleInvoiceData(clonedInvoice);
   };
 
-
   const handlePaidChange = (value) => {
     var inputValue = parseFloat(value);
-    var costFormValues = costForm.getFieldsValue();
+    //var costFormValues = costForm.getFieldsValue();
     //console.log(costFormValues);
     let paidAmount;
     if (Helpers.var_check(inputValue) && !isNaN(inputValue)) {
@@ -338,7 +382,7 @@ function Sell() {
   };
 
   const handleAddProduct = () => {
-    var formValues = form.getFieldsValue();
+    //var formValues = form.getFieldsValue();
 
     var productExistsCheck = false;
     var newData = [...productsTableData];
@@ -376,7 +420,7 @@ function Sell() {
       if (!productExistsCheck) {
         selectedItem.qty = 1;
         newData.push(selectedItem);
-        console.log("imp1-table", newData);
+        //console.log("imp1-table", newData);
         calculateProductsTotalQuantityAndAmount(newData);
         //setProductsTableData(newData);  // callng in updatecart now imppp
         //update cart  imp
@@ -409,8 +453,7 @@ function Sell() {
   };
 
   const handlePayBill = (status, check = false) => {
-    var formValues = form.getFieldsValue();
-    console.log("changed", formValues);
+    //console.log("changed", formData);
     //console.log(status);
 
     if (productsTableData.length === 0) {
@@ -421,7 +464,7 @@ function Sell() {
     var localInvoiceQueue = getSellInvoiceDataFromLocalStorage(
       Constants.SELL_INVOICE_QUEUE_KEY
     );
-    console.log(localInvoiceQueue);
+    //console.log(localInvoiceQueue);
 
     var readFromLocalStorage = getDataFromLocalStorage(
       Constants.SELL_CURRENT_INVOICE_KEY
@@ -430,20 +473,35 @@ function Sell() {
       ? readFromLocalStorage.data
       : null;
 
-    var currentInvoice;
+    //var currentInvoice;
 
     /*if (check) {
       currentInvoice = readFromLocalStorage;
     }*/
 
-    var clonedInvoiceData = { ...saleInvoiceData }; //impp here
-    console.log(clonedInvoiceData);
 
-    clonedInvoiceData.status = status; //imp
-    updateCart(clonedInvoiceData); // impppp
+    //var clonedInvoiceData = saleInvoiceData ; //impp here
+    //var clonedInvoiceData1 = JSON.parse(JSON.stringify(saleInvoiceData)); //imp to make adeep copy
+    //console.log(clonedInvoiceData);
+
+    saleInvoiceData.status = status; //imp
+    //console.log(saleInvoiceData);
+    //updateCart(clonedInvoiceData); // impppp  prev but no need here
+
 
     if (Helpers.var_check(localInvoiceQueue.data)) {
-      localInvoiceQueue.data.push(saleInvoiceData); //imp
+      localInvoiceQueue.data.push(saleInvoiceData); //imp  prev
+
+      if (saleInvoiceData.hasCustomer && saleInvoiceData.method === "Customer Layby" ) {   //if customer selected
+        let invoiceTotal = parseFloat(
+          saleInvoiceData.total - saleInvoiceData.discountAmount
+        ).toFixed(2);
+        if (parseFloat(saleInvoiceData.customer.balance) < invoiceTotal) {
+          message.warning("Insufficient Balance", 3);
+          return;
+        }
+      } //end of inner if (customer selected)
+
       console.log("invoice-queue-insert");
       saveDataIntoLocalStorage(
         Constants.SELL_INVOICE_QUEUE_KEY,
@@ -460,15 +518,32 @@ function Sell() {
     }
 
     setSelectedCutomer("");
+    setSelectedCustomerValue("")   //imp new one
+
+    form.setFieldsValue({
+      invoiceNote: "",
+    }); //imp
+    form.setFieldsValue({
+      invoiceDate:  todayDate,
+    }); //imp  
+    form.setFieldsValue({
+      tax_value:  "",
+    }); //imp
+    costForm.setFieldsValue({
+      discounted_value:  0,
+    }); //imp
+    
+
     let newInvoice = createNewInvoice(); //new invoice again
     updateCart(newInvoice);
+
   };
 
   const printSalesOverview = () => {
     var previewSalesInvoiceHtml = document.getElementById("printSalesTable")
       .innerHTML;
     var doc =
-      '<html><head><title>Close Me ~ Shopdesk</title><link rel="stylesheet" type="text/css" href="/printInvoice.scss" /></head><body onload="window.print(); window.close();">' +
+      '<html><head><title></title><link rel="stylesheet" type="text/css" href="/printInvoice.scss" /></head><body onload="window.print(); window.close();">' +
       previewSalesInvoiceHtml +
       "</body></html>";
     /* NEW TAB OPEN PRINT */
@@ -489,7 +564,9 @@ function Sell() {
       ? readFromLocalStorage.data
       : null;
 
-    var currentInvoice;
+    //console.log("local-inoice-data-before", readFromLocalStorage);
+
+    let currentInvoice = {};
     var localInvoiceQueue = getSellInvoiceDataFromLocalStorage(
       Constants.SELL_INVOICE_QUEUE_KEY
     );
@@ -504,12 +581,23 @@ function Sell() {
         checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
       ) {
         setLocalStorageData(userData);
+        getUserStoreData(userData.auth.current_store);  //imp to get user outlet data
       }
     }
 
+
     if (readFromLocalStorage) {
-      currentInvoice = readFromLocalStorage;
+      //currentInvoice = readFromLocalStorage;   //imp prev version
+      /*-------------------------new version-------------------------*/
+      for (var key in readFromLocalStorage) {
+        if (readFromLocalStorage.hasOwnProperty(key)) {
+          //console.log(key + "-" + readFromLocalStorage[key]);
+          currentInvoice[key] = readFromLocalStorage[key];
+        }
+      }
+      /*-------------------------new version-------------------------*/
       updateCart(currentInvoice);
+
     } else {
       currentInvoice = createNewInvoice();
       //console.log("see1", currentInvoice);
@@ -582,6 +670,7 @@ function Sell() {
             }
           }
           if (index != -1) {
+            //console.log("imp-sync-queue-inserted-val", localInvoiceQueue[index]);
             localInvoiceQueue.splice(index, 1);
             saveDataIntoLocalStorage(Constants.SELL_INVOICE_QUEUE_KEY, localInvoiceQueue);
             console.log(index);
@@ -589,7 +678,7 @@ function Sell() {
         }
 
 
-        console.log(invoicesData);
+        //console.log(invoicesData);
         setTimeout(sync, 3000);
 
       }
@@ -600,7 +689,7 @@ function Sell() {
       if (clearSync === false) {
         setTimeout(sync, 3000);
       }
-      console.log("-- syncing --");
+      //console.log("-- syncing --");
     }
 
   }
@@ -630,7 +719,7 @@ function Sell() {
     // $scope.invoice
     var data = {};
     data.isDiscount = false;
-    data.dateTime = moment(new Date()).format("yyyy/MM/DD hh:mm:ss");
+    data.dateTime = moment(new Date()).format("yyyy/MM/DD hh:mm:ss A");      //imp prev ver
     data.invoiceNo = Helpers.uniqid();
     data.store_id = readFromLocalStorage.auth.store_random;
     data.user_id = readFromLocalStorage.user_info.user_random;
@@ -648,6 +737,7 @@ function Sell() {
     data.discountAmount = 0;
     data.courier_code = "";
 
+
     setSaleInvoiceData(data);
 
     return data;
@@ -661,7 +751,16 @@ function Sell() {
     //console.log(costFormValues);
 
     //var clonedInvoiceData = JSON.parse(JSON.stringify(invoiceData));
-    var clonedInvoiceData = { ...invoiceData };
+    //var clonedInvoiceData = { ...invoiceData };   //imp prev version
+    let clonedInvoiceData = {};
+    /*-------------------new version----------------*/
+    for (var key in invoiceData) {
+      if (invoiceData.hasOwnProperty(key)) {
+          //console.log(key + "-" + invoiceData[key]);
+          clonedInvoiceData[key] = invoiceData[key];
+      }
+   }
+    /*-------------------new version---------------*/
 
     for (var key in invoiceData) {
       delete invoiceData[key];
@@ -709,13 +808,23 @@ function Sell() {
       parseFloat(clonedInvoiceData.total).toFixed(2)
     );
 
-    var discountedInputValue = Helpers.var_check(
-      costFormValues.discounted_value
-    )
-      ? costFormValues.discounted_value
-      : 0;
+   
+    /*-------------------new version----------------------------------------*/
+    let discountedInputValue = 0 ;
+    if(costFormValues.discounted_value){
+      discountedInputValue = costFormValues.discounted_value;
+    }
+    else if(clonedInvoiceData.discountVal){
+      discountedInputValue = clonedInvoiceData.discountVal;
+    }
+    /*-------------------new version----------------------------------------*/
+
+    /*let discountedInputValue = (Helpers.var_check(costFormValues.discounted_value)) ? costFormValues.discounted_value
+      : (clonedInvoiceData.discountVal) ? clonedInvoiceData.discountVal : 0;   imp prev version */ 
+    
+
     discountedInputValue = parseInt(discountedInputValue).toFixed(2);
-    console.log(discountedInputValue);
+    //console.log(discountedInputValue);
     discountedInputValue = parseFloat(discountedInputValue);
 
     clonedInvoiceData.discountVal = discountedInputValue;
@@ -732,7 +841,12 @@ function Sell() {
     setSaleInvoiceData(clonedInvoiceData); //imp
     console.log(clonedInvoiceData);
 
-    costForm.setFieldsValue({ paid: clonedInvoiceData && clonedInvoiceData.payed }); //imp
+
+    costForm.setFieldsValue({
+      paid: clonedInvoiceData && clonedInvoiceData.payed,
+      discounted_value: clonedInvoiceData && clonedInvoiceData.discountVal
+    }); //imp
+
 
     if (tableProducsData.length > 0) {
       saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, clonedInvoiceData);  //imp
@@ -740,6 +854,51 @@ function Sell() {
 
     //saveDataIntoLocalStorage("current_invoice", clonedInvoiceData);   //imp
   }
+
+
+
+  const getUserStoreData = async (storeId) => {
+    document.getElementById('app-loader-container').style.display = "block";
+    const getOutletViewResponse = await SetupApiUtil.getOutlet(storeId);
+    console.log('getOutletViewResponse:', getOutletViewResponse);
+
+    if (getOutletViewResponse.hasError) {
+      console.log('Cant fetch Store Data -> ', getOutletViewResponse.errorMessage);
+      //message.warning(getOutletViewResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
+    }
+    else {
+      console.log('res -> ', getOutletViewResponse);
+      let selectedStore = getOutletViewResponse.outlet;
+      //message.success(getOutletViewResponse.message, 3);
+      getTemplateData(selectedStore.template_id);   //imp to get template data
+
+    }
+  }
+
+
+
+  const getTemplateData = async (templateId) => {
+    
+    const getTepmlateResponse = await SetupApiUtil.getTemplate(templateId);
+    console.log('getTepmlateResponse:', getTepmlateResponse);
+
+    if (getTepmlateResponse.hasError) {
+      console.log('Cant get template Data -> ', getTepmlateResponse.errorMessage);
+      //message.warning(getTepmlateResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
+    }
+    else {
+      console.log('res -> ', getTepmlateResponse);
+      var receivedTemplateData = getTepmlateResponse.template;
+      //message.success(getTepmlateResponse.message, 3);
+      setTemplateData(receivedTemplateData);
+      document.getElementById('app-loader-container').style.display = "none";
+
+    }
+  }
+
+
 
   const onFinish = (values) => {
     console.log("Success:", values);
@@ -751,11 +910,7 @@ function Sell() {
 
   console.log(saleInvoiceData);
 
-  const { Panel } = Collapse;
-
-  function callback(key) {
-    console.log(key);
-  }
+ 
 
   return (
     <>
@@ -768,13 +923,12 @@ function Sell() {
             layout='vertical'
             initialValues={{
               remember: true,
+              invoiceDate: todayDate,    //imp to set
+              
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
           >
-            <div style={{ textAlign: "center" }}>
-              {loading && <Spin size='large' tip='Loading Products...' />}
-            </div>
 
             <Form.Item label='Search for products'>
               <AutoComplete
@@ -803,7 +957,21 @@ function Sell() {
             </Button>
 
             <Form.Item label='Courier' name='courier_code'>
-              <Select onChange={handleCourierChange}>
+              <Select 
+                onChange={handleCourierChange}
+                placeholder="Select Courier"
+                showSearch    //vimpp to seach
+                optionFilterProp="children"
+                filterOption={(input, option) => {
+                  //console.log(option);
+                  return (
+                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0)
+                }}
+                filterSort={(optionA, optionB) =>
+                  optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                }
+
+              >
                 {couriersData.map((obj, index) => {
                   return (
                     <Option key={obj.courier_id} value={obj.courier_code}>
@@ -814,6 +982,17 @@ function Sell() {
               </Select>
             </Form.Item>
             <Form.Item
+              label='Invoice Back Date'
+              name='invoiceDate'
+            >
+              <DatePicker  className='select-w-100'
+               onChange={onInvoiceDateChange}
+               format={"yyyy/MM/DD"}
+               disabledDate={disabledDate}
+
+              />
+            </Form.Item>
+            <Form.Item
               label='Invoice Note'
               name='invoiceNote'
               onChange={handleInvoiceNoteChange}
@@ -821,7 +1000,21 @@ function Sell() {
               <Input placeholder='input Invoice Note' />
             </Form.Item>
             <Form.Item label='Tax Category' name='tax_value'>
-              <Select onChange={handleTaxCategoryChange}>
+              <Select
+                onChange={handleTaxCategoryChange}
+                placeholder="Select Tax"
+                showSearch    //vimpp to seach
+                optionFilterProp="children"
+                filterOption={(input, option) => {
+                  //console.log(option);
+                  return (
+                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0)
+                }}
+                filterSort={(optionA, optionB) =>
+                  optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                }
+
+              >
                 <Option key='1' value={16}>
                   Simple
                 </Option>
@@ -944,7 +1137,7 @@ function Sell() {
             <div className='cost'>
               <div className='cost__wrapper'>
                 <div className='cost__left'>
-                  <div className='cost__box'>
+                  <div className='cost__box cost__text-border'>
                     <h3>Subtotal</h3>
                     <span>{saleInvoiceData && saleInvoiceData.sub_total}</span>
                   </div>
@@ -958,7 +1151,7 @@ function Sell() {
                     />
                   </Form.Item>
 
-                  <div className='cost__box'>
+                  <div className='cost__box cost__text-border'>
                     <h3>Tax</h3>
                     <span>{saleInvoiceData && saleInvoiceData.tax}</span>
                   </div>
@@ -1021,6 +1214,7 @@ function Sell() {
                         className='u-width-100 custom-btn custom-btn--primary'
                         style={{ marginBottom: "1rem" }}
                         onClick={() => changeMethodOfPayment("Customer Layby")}
+                        disabled={(saleInvoiceData && saleInvoiceData.hasCustomer == false)}
                       >
                         Customer Layby
                       </Button>
@@ -1040,7 +1234,7 @@ function Sell() {
                     />
                   </Form.Item>
 
-                  <div className='cost__box'>
+                  <div className='cost__box cost__text-border'>
                     <h3>Change</h3>
                     <span>
                       {saleInvoiceData &&
@@ -1051,6 +1245,17 @@ function Sell() {
                         ).toFixed(2)}
                     </span>
                   </div>
+                  
+                  <div className='cost__box cost__text-border'>
+                    <h3>Discounted Amount</h3>
+                    <span>
+                      {saleInvoiceData &&
+                        (
+                          saleInvoiceData.discountAmount && saleInvoiceData.discountAmount.toFixed(2)
+                        )}
+                    </span>
+                  </div>
+
                 </div>
               </div>
               <Form.Item>
@@ -1064,10 +1269,12 @@ function Sell() {
                     saleInvoiceData.products.length < 1
                   }
                 >
+                  Enter Sale Amount(
                   {saleInvoiceData &&
                     (
                       saleInvoiceData.total - saleInvoiceData.discountAmount
                     ).toFixed(2)}
+                  )
                 </Button>
               </Form.Item>
             </div>
@@ -1081,6 +1288,7 @@ function Sell() {
         <PrintSalesInvoiceTable
           user={localStorageData}
           invoice={saleInvoiceData}
+          selectedOutletTemplateData={templateData}
         />
       )}
     </>

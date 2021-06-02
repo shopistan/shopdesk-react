@@ -67,16 +67,16 @@ const AppShell = (props) => {
   }
 
   const menu = (
-    <Menu>
-      <Menu.Item key='0'>
-        <a href="https://github.com/Shopdesk/Shopdesk-Bugs-and-Issues/issues" target="_BLANK"> Report Bugs</a>
+    <Menu >
+      <Menu.Item  key='0' >
+        <a className='logo-dropdown-item' href="https://github.com/Shopdesk/Shopdesk-Bugs-and-Issues/issues" target="_BLANK"> Report Bugs</a>
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key='1' onClick={toggleOutlet}>
+      <Menu.Item key='1' className='logo-dropdown-item' onClick={toggleOutlet}>
         Switch Outlet
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key='2' onClick={toggleLogout}>
+      <Menu.Item key='2' className='logo-dropdown-item' onClick={toggleLogout}>
         Logout
       </Menu.Item>
     </Menu>
@@ -130,8 +130,10 @@ const AppShell = (props) => {
               </div>
 
               <h2 className='heading'>
-                {storeObj ? storeObj.store_name : "N/A - "}
+                {storeObj ? storeObj.store_name : "N/A"}
               </h2>
+              <small> - <a className='switch-outlet-heading' onClick={toggleOutlet} > Switch outlet</a></small>
+
             </div>
 
             <div className='header__right'>

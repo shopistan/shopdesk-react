@@ -37,6 +37,12 @@
   transition: all 0.3s;
 }
 
+
+.logo-dropdown-item:hover{
+  color: $color-logo-dropdown-item !important;
+}
+
+
 // Header
 .header {
   display: flex;
@@ -62,6 +68,17 @@
       color: $color-black;
       margin-left: 2rem;
     }
+
+    .switch-outlet-heading {
+      color: $color-black !important;
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    .switch-outlet-heading:hover {
+      text-decoration: underline;
+    }
+
   }
 
   &__right {

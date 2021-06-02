@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import "./sellHistory.scss";
 import { Table, Form } from "antd";
-import { HistoryOutlined, RollbackOutlined } from "@ant-design/icons";
+import { HistoryOutlined, RollbackOutlined, EyeOutlined } from "@ant-design/icons";
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 
@@ -20,6 +20,11 @@ const SellHistoryProductsTable = (props) => {
 
     };
 
+
+    const handleInvoiceQuickView = (record) => {
+        props.onInvoiceQuickViewSelection(record);
+
+    };
 
 
     useEffect(async () => {
@@ -80,6 +85,20 @@ const SellHistoryProductsTable = (props) => {
             }
         },
         {
+            title: "Discounted Amount",
+            render: (_, record) => {
+                return (
+                    <div>
+                        { parseFloat(record.discounted_amount).toFixed(2)}
+                    </div>
+                );
+            }
+        },
+        {
+            title: "Invoice Note",
+            dataIndex: "invoice_note",
+        },
+        {
             title: "Mop",
             dataIndex: "invoice_method",
             render: (_, record) => {
@@ -127,6 +146,24 @@ const SellHistoryProductsTable = (props) => {
         },
     ];
 
+
+    if (props.tableType === "process-returns" || props.tableType === "all-sales") {
+        let item = {
+            title: "Quick View",
+            render: (_, record) => {
+                return (
+                    <div className='action-btns stock-table-delete-item'>
+                        {record.invoice_status === "0" && <EyeOutlined
+                            onClick={() => handleInvoiceQuickView(record)}
+                            className="sell-history-action-btn-quick-view"
+                        />}
+                    </div>
+                );
+            },
+        };
+
+        columns.push(item);
+    }
 
 
 

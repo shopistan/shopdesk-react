@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Table, Menu, Dropdown, Button } from "antd";
-import { ProfileOutlined, DownOutlined, MinusCircleOutlined, SendOutlined } from "@ant-design/icons";
+import { ProfileOutlined, DownOutlined, MinusCircleOutlined, SendOutlined, EyeOutlined } from "@ant-design/icons";
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 
@@ -64,6 +64,15 @@ const StockTable = (props) => {
     
     const handleForceClose = (record) => {
        props.onForceCloseOrderHandler(record);
+    };
+
+
+    const handleStockReturnView = (record) => {
+        history.push({ 
+            pathname: `/stock-control/returned-stock/${record.return_id}/view`,
+            data: record,
+        })
+
     };
 
 
@@ -190,6 +199,48 @@ const StockTable = (props) => {
     } 
 
 
+    
+    if (props.tableType === 'stock_returned') {
+
+        columns = [
+            {
+                title: "Return #",
+                dataIndex: "return_show_id",
+            },
+            {
+                title: "Name",
+                dataIndex: "return_name",
+            },
+            {
+                title: "Return Date",
+                dataIndex: "return_date",
+            },
+            {
+                title: "Supplier",
+                dataIndex: 'supplier_name',
+            },
+            {
+                title: "Sync Status",
+                dataIndex: 'return_sync',
+            },
+            {
+                title: "View",
+                render: (_, record) => {
+                    return (
+                        <div className="sell-history-action-btn-quick-view">
+                            {<EyeOutlined
+                                onClick={() => handleStockReturnView(record)}
+                            />}
+                        </div>
+                    );
+                },
+            },
+           
+        ];
+
+    } 
+
+
     if (props.tableType === 'purchase_orders') {
 
         columns = [
@@ -297,7 +348,12 @@ const StockTable = (props) => {
                 onChange: (page, pageSize) => handlePageChange(page, pageSize),
             }}
             loading={props.tableDataLoading}
-            rowKey={props.tableType === "purchase_orders" ? "purchase_order_id" : props.tableType === "users" ? "user_id" : "template_id"}
+            rowKey={
+                props.tableType === "purchase_orders" ?
+                    "purchase_order_id" : props.tableType === "inventory_transfers" ? "transfer_id"
+                        : props.tableType === "stock_returned" && "return_id"
+            }
+            
         />
 
     );

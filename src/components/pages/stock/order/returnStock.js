@@ -5,6 +5,10 @@ import * as ProductsApiUtil from '../../../../utils/api/products-api-utils';
 import * as SuppliersApiUtil from "../../../../utils/api/suppliers-api-utils";
 import * as StockApiUtil from '../../../../utils/api/stock-api-utils';
 import * as Helpers from "../../../../utils/helpers/scripts";
+import Constants from '../../../../utils/constants/constants';
+import {
+  getDataFromLocalStorage,
+} from "../../../../utils/local-storage/local-store-utils";
 import StockNestedProductsTable from "../../../organism/table/stock/stockNestedProductsTable";
 import moment from 'moment';
 
@@ -22,6 +26,10 @@ import {
   Divider,
   InputNumber,
 } from "antd";
+
+import {
+  ArrowLeftOutlined,
+} from "@ant-design/icons";
 
 const { Option } = Select;
 
@@ -41,9 +49,9 @@ const ReturnStock = () => {
   const [selectedProductId, setSelectedProductId] = useState("");
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
   const [buttonDisabled, setButtonDisabled] = useState(false);
-  const [suppliersPaginationData, setSuppliersPaginationData] = useState({});
-  const [isBusy, setIsBusy] = useState(false);
-  const [suppliersScrollLoading, setSuppliersScrollLoading] = useState(false);
+  const [userLocalStorageData, setUserLocalStorageData] = useState(null);
+  //const [suppliersPaginationData, setSuppliersPaginationData] = useState({});
+  
 
 
 
@@ -62,6 +70,12 @@ const ReturnStock = () => {
       order_reference_name: `Return - ${moment(new Date()).format("yyyy/MM/DD HH:mm:ss")}`,
     });
     /*-----setting template data to fields value------*/
+
+    /*--------------set user local data-------------------------------*/
+    var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+    readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
+    setUserLocalStorageData(readFromLocalStorage);
+    /*--------------set user local data-------------------------------*/
 
     return () => {
       mounted = false;
@@ -100,19 +114,21 @@ const ReturnStock = () => {
 
 
   const fetchRegisteredProductsData = async () => {
+    document.getElementById('app-loader-container').style.display = "block";
     const productsDiscountsViewResponse = await ProductsApiUtil.getFullRegisteredProducts();
     console.log(' productsDiscountsViewResponse:', productsDiscountsViewResponse);
 
     if (productsDiscountsViewResponse.hasError) {
       console.log('Cant fetch registered products Data -> ', productsDiscountsViewResponse.errorMessage);
-      message.error(productsDiscountsViewResponse.errorMessage, 3);
+      message.warning(productsDiscountsViewResponse.errorMessage, 3);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', productsDiscountsViewResponse);
 
       if (mounted) {     //imp if unmounted
-        message.success(productsDiscountsViewResponse.message, 3);
+        //message.success(productsDiscountsViewResponse.message, 3);
         /*-------for filtering products--------*/
         var products = productsDiscountsViewResponse.products.data
           || productsDiscountsViewResponse.products;
@@ -133,6 +149,7 @@ const ReturnStock = () => {
 
         /*-------for filtering products--------*/
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
 
     }
@@ -142,7 +159,7 @@ const ReturnStock = () => {
 
   const fetchSuppliersData = async (pageLimit = 10, pageNumber = 1) => {
 
-    const SuppliersViewResponse = await SuppliersApiUtil.viewSuppliers(pageLimit, pageNumber);
+    const SuppliersViewResponse = await SuppliersApiUtil.viewAllSuppliers();
     console.log("SuppliersViewResponse:", SuppliersViewResponse);
 
     if (SuppliersViewResponse.hasError) {
@@ -154,7 +171,7 @@ const ReturnStock = () => {
       console.log("res -> ", SuppliersViewResponse);
       if (mounted) {     //imp if unmounted
         setSuppliersData(SuppliersViewResponse.suppliers.data || SuppliersViewResponse.suppliers);
-        setSuppliersPaginationData(SuppliersViewResponse.suppliers.page || {});
+        //setSuppliersPaginationData(SuppliersViewResponse.suppliers.page || {});
       }
     }
   };
@@ -252,6 +269,8 @@ const ReturnStock = () => {
 
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
+
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.returnStock(returnStockPostData);
     console.log('ReturnStockResponse:', res);
@@ -259,12 +278,14 @@ const ReturnStock = () => {
     if (res.hasError) {
       console.log('Cant Return Stock  -> ', res.errorMessage);
       message.error(res.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setButtonDisabled(false);
       setTimeout(hide, 1500);
     }
     else {
       console.log('res -> ', res);
       message.success(res.message, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1000);
       setTimeout(() => {
         history.push({
@@ -291,7 +312,7 @@ const ReturnStock = () => {
 
 
 
-  const handleSuppliersScroll = async (e) => {
+  /*const handleSuppliersScroll = async (e) => {
     //console.log("inside-scroll", e);
     var height = e.target.clientHeight;
     //console.log(height);
@@ -324,11 +345,11 @@ const ReturnStock = () => {
           }
         }
 
-      } /*----------------End Of Inner If------------------------*/
+      } 
 
-    } /*----------------End Of Outer If------------------------*/
+    } 
 
-  }
+  }*/   
 
 
 
@@ -337,12 +358,11 @@ const ReturnStock = () => {
   return (
     <div className="page stock-add">
       <div className="page__header">
-        <h1>New Return Stock</h1>
+        <h1><Button type="primary" shape="circle" className="back-btn"
+          icon={<ArrowLeftOutlined />}
+          onClick={handleCancel} />New Return Stock</h1>
       </div>
-      <div style={{ textAlign: "center" }}>
-        {loading && <Spin size="large" tip="Loading..." />}
-      </div>
-
+      
 
       {!loading &&
         <div className="page__content">
@@ -392,10 +412,17 @@ const ReturnStock = () => {
                         },
                       ]}
                     >
-                      <Select placeholder="Select Supplier"
-                        onPopupScroll={handleSuppliersScroll}
-                        loading={suppliersScrollLoading}
-                      >
+
+                    <Select placeholder="Select Supplier"
+                      showSearch    //vimpp to seach
+                      optionFilterProp="children"
+                      filterOption={(input, option) =>
+                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                      }
+                      filterSort={(optionA, optionB) =>
+                        optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                      }
+                    >
                         {
                           suppliers.map((obj, index) => {
                             return (
@@ -486,7 +513,9 @@ const ReturnStock = () => {
                     tableData={productsTableData}
                     tableDataLoading={loading}
                     onChangeProductsData={handleChangeProductsData}
-                    tableType="order_return" />
+                    tableType="order_return"
+                    currency={userLocalStorageData.currency.symbol}
+                  />
                 </div>
                 {/* Table */}
                 <Divider />

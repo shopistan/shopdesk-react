@@ -4,6 +4,13 @@ import { ProfileOutlined, DownOutlined  } from "@ant-design/icons";
 import EdiTableProducts from "../../organism/table/productsNestedTable/productsTable";
 import { useHistory } from "react-router-dom";
 import * as ProductsApiUtil from '../../../utils/api/products-api-utils';
+import * as SetupApiUtil from '../../../utils/api/setup-api-utils';
+import Constants from '../../../utils/constants/constants';
+import {
+  getDataFromLocalStorage,
+  checkUserAuthFromLocalStorage,
+} from "../../../utils/local-storage/local-store-utils";
+
 
 
 const Products = () => {
@@ -14,6 +21,8 @@ const Products = () => {
   const [data, setData] = useState([]);
   const [searchedData, setSearchedData] = useState(null);
   const [currentPageSearched, setCurrentPageSearched] = useState(1);
+  const [userOutletData, setUserOutletData] = useState(null);
+
   
 
   var mounted = true;
@@ -53,7 +62,7 @@ const Products = () => {
     }
     else {
       console.log('res -> ', productsSearchResponse);
-      message.success(productsSearchResponse.message, 2);
+      //message.success(productsSearchResponse.message, 2);
       setData(productsSearchResponse.products.data);
       setPaginationData(productsSearchResponse.products.page);
       setLoading(false);
@@ -65,27 +74,65 @@ const Products = () => {
 
   const fetchProductsData = async (pageLimit = 20, pageNumber = 1) => {
 
+    document.getElementById('app-loader-container').style.display = "block";
     const productsViewResponse = await ProductsApiUtil.viewProducts(pageLimit, pageNumber);
     console.log('productsViewResponse:', productsViewResponse);
 
     if (productsViewResponse.hasError) {
       console.log('Cant fetch products -> ', productsViewResponse.errorMessage);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', productsViewResponse);
       if (mounted) {     //imp if unmounted
-        message.success(productsViewResponse.message, 3);
+        //message.success(productsViewResponse.message, 3);
         setData(productsViewResponse.products.data);
         setPaginationData(productsViewResponse.products.page);
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   }
 
 
+
+  const getUserStoreData = async (storeId) => {
+    document.getElementById('app-loader-container').style.display = "block";
+    const getOutletViewResponse = await SetupApiUtil.getOutlet(storeId);
+    console.log('getOutletViewResponse:', getOutletViewResponse);
+
+    if (getOutletViewResponse.hasError) {
+      console.log('Cant fetch Store Data -> ', getOutletViewResponse.errorMessage);
+      //message.warning(getOutletViewResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
+    }
+    else {
+      console.log('res -> ', getOutletViewResponse);
+      let selectedStore = getOutletViewResponse.outlet;
+      //message.success(getOutletViewResponse.message, 3);
+      setUserOutletData(selectedStore);
+      document.getElementById('app-loader-container').style.display = "none";
+
+    }
+  }
+
+
+
   useEffect( () => {
     fetchProductsData();
+
+    /*--------------set user local data-------------------------------*/
+    let readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+    readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
+    if (readFromLocalStorage) {
+      if (
+        checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
+      ) {
+        getUserStoreData(readFromLocalStorage.auth.current_store);
+      } 
+    }
+    /*--------------set user local data-------------------------------*/
 
     return () => {
       mounted = false;
@@ -179,7 +226,7 @@ const Products = () => {
           <div className='action-row__element'>
             Show
             <Select
-              defaultValue='10'
+              defaultValue='20'
               style={{ width: 120, margin: "0 5px" }}
               onChange={handleChange}
             >
@@ -207,6 +254,7 @@ const Products = () => {
           <EdiTableProducts pageLimit={paginationLimit} tableData={data} tableDataLoading={loading}
             paginationData={paginationData}
             onClickPageChanger={handleSearchedDataPageChange}
+            selectedOutletData={userOutletData}
           />
         </div>}
 
@@ -215,6 +263,7 @@ const Products = () => {
           <EdiTableProducts pageLimit={paginationLimit} tableData={data} tableDataLoading={loading}
             paginationData={paginationData}
             onClickPageChanger={handlePageChange}
+            selectedOutletData={userOutletData}
           />
         </div>}
 

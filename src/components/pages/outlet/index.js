@@ -19,23 +19,79 @@ const Outlet = () => {
   const [activeOutlet, setActiveOutlet] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  var mounted = true;
 
-  useEffect(async () => {
-    var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+
+  useEffect( () => {
+    
+    let readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
     readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
-    if (readFromLocalStorage) {
-      setLoginCacheData(readFromLocalStorage);
-      if (checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication) {
-        setStoreInfo(readFromLocalStorage.auth.storeInfo);
-        setActiveOutlet(readFromLocalStorage.auth.current_store);
-      }
-      else {
-        setStoreInfo(readFromLocalStorage.store_info);
-        setActiveOutlet(null);
-      }
+    fetchAllOutletsData(readFromLocalStorage);   //imp
+    
+    return () => {
+      mounted = false;
     }
 
   }, []);
+
+
+
+  /*const fetchOutlets =  (localStorageData) => {
+
+    if (localStorageData) {
+      setLoginCacheData(localStorageData);
+      if (checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication) {
+        setStoreInfo(localStorageData.auth.storeInfo);
+        setActiveOutlet(localStorageData.auth.current_store);
+        document.getElementById('app-loader-container').style.display = "none";
+      }
+      else {
+        setStoreInfo(localStorageData.store_info);
+        setActiveOutlet(null);
+        document.getElementById('app-loader-container').style.display = "none";
+      }
+    }
+
+  }*/
+
+
+
+  const fetchAllOutletsData = async (localStorageData) => {
+
+    document.getElementById('app-loader-container').style.display = "block";
+    const outletsViewResponse = await OutletsApiUtil.viewAllOutlets();
+    console.log('outletsViewResponse:', outletsViewResponse);
+
+    if (outletsViewResponse.hasError) {
+      console.log('Cant fetch Outlets Data -> ', outletsViewResponse.errorMessage);
+      setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
+    }
+    else {
+      console.log('res -> ', outletsViewResponse);
+
+      if (mounted) {     //imp if unmounted
+        //message.success(outletsViewResponse.message, 3);
+        if (localStorageData) {
+          setLoginCacheData(localStorageData);
+          if (checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication) {
+            setStoreInfo(outletsViewResponse && outletsViewResponse.outlets);
+            setActiveOutlet(localStorageData.auth.current_store);
+            document.getElementById('app-loader-container').style.display = "none";
+          }
+          else {
+            setStoreInfo(outletsViewResponse && outletsViewResponse.outlets);
+            setActiveOutlet(null);
+            document.getElementById('app-loader-container').style.display = "none";
+          }
+        }
+        
+      }
+
+    }
+
+  }
+
 
 
   const onSelectOutlet = async (e) => {
@@ -46,39 +102,44 @@ const Outlet = () => {
     setLoading(true);
 
     if (foundStoreObj) {
+      document.getElementById('app-loader-container').style.display = "block";
       const userSelectOutletResponse = await OutletsApiUtil.selectOutlet(foundStoreObj.store_random);
       console.log('userSelectOutletResponse:', userSelectOutletResponse)
       if (userSelectOutletResponse.hasError) {
         console.log('Cant Select Outlet -> ', userSelectOutletResponse.errorMessage);
         message.error('Store Change UnSuccesfull ', 3);
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
       else {
         console.log('res -> ', userSelectOutletResponse);
-        userSelectOutletResponse.refresh_token = loginCacheData.refresh_token; 
-        userSelectOutletResponse.user_info = loginCacheData.user_info; 
-        clearLocalUserData();
-        saveDataIntoLocalStorage("user", userSelectOutletResponse);
-        setLoading(false);
-        message.success('Store Change Succesfull ', 3);
-        setTimeout(() => {
-          history.push({
-            pathname: '/dashboard',
-        });
-        }, 2000);
+        if (mounted) {     //imp if unmounted
+          userSelectOutletResponse.refresh_token = loginCacheData.refresh_token;
+          userSelectOutletResponse.user_info = loginCacheData.user_info;
+          clearLocalUserData();
+          saveDataIntoLocalStorage("user", userSelectOutletResponse);
+          setLoading(false);
+          document.getElementById('app-loader-container').style.display = "none";
+          message.success('Store Change Succesfull ', 2);
+          setTimeout(() => {
+            history.push({
+              pathname: '/dashboard',
+            });
+          }, 2000);
+        }
+
       }
+
     }
     else { console.log("store not found"); setLoading(false); }
 
-  }
+  } 
 
 
 
   return (
     <div className='page outlet'>
-      <div className="loading-container">
-        {loading && <Spin size="large" />}
-      </div>
+      
       <div className='page__header'>
         <h1>Select an Outlet</h1>
       </div>

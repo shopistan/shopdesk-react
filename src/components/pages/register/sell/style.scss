@@ -19,6 +19,15 @@
 
   .info {
     flex: 1;
+    overflow: auto;
+
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
   }
 
   // Checkout
@@ -89,6 +98,14 @@
         width: 100%;
         margin-top: 2rem;
       }
+
+      &__text-border{
+        border: 2px solid #d9d9d9;
+        border-radius: 2px;
+        padding: 3px;
+        margin-bottom: 1rem;
+      }
+
     }
   }
 
@@ -152,4 +169,34 @@
     margin-bottom: 5rem;
 
   }
+}
+
+
+.quick-view-modal-dailog{
+  margin-top: -2rem;
+  
+  .table{
+    overflow: auto;
+  }
+
+  .text-border{
+    border: 2px solid #d9d9d9;
+    border-radius: 2px;
+    padding: 3px;
+    margin-bottom: 1rem;
+  }
+
+  .ant-modal-content{
+    overflow-y: scroll;
+    height: 400px;
+  }
+
+  .ant-col{
+    @include respond(mobile) {
+      margin-left: 0px !important;
+    }
+  }
+
+
+
 }

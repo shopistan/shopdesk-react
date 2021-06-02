@@ -68,6 +68,7 @@ const Couriers = () => {
 
 
   const fetchCouriersData = async (pageLimit = 10, pageNumber = 1) => {
+    document.getElementById('app-loader-container').style.display = "block";
     const couriersViewResponse = await CouriersApiUtil.viewCouriers(
       pageLimit,
       pageNumber
@@ -77,14 +78,16 @@ const Couriers = () => {
     if (couriersViewResponse.hasError) {
       console.log("Cant fetch couriers -> ", couriersViewResponse.errorMessage);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     } else {
       console.log("res -> ", couriersViewResponse);
       if (mounted) {     //imp if unmounted
-        message.success(couriersViewResponse.message, 3);
+        //message.success(couriersViewResponse.message, 3);
         const couriersData = couriersViewResponse.courier.data || couriersViewResponse.courier;
         setData(couriersData);
         setPaginationData(couriersViewResponse.courier.page || {});
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   };

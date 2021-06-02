@@ -48,7 +48,7 @@ const Categories = () => {
     console.log('categoriesSearchResponse:', categoriesSearchResponse);
     if (categoriesSearchResponse.hasError) {
       console.log('Cant Search Categories -> ', categoriesSearchResponse.errorMessage);
-      message.warning(categoriesSearchResponse.errorMessage, 2);
+      //message.error(categoriesSearchResponse.errorMessage, 2);     //imp not to show on Ui
       setLoading(false);
     }
     else {
@@ -64,6 +64,8 @@ const Categories = () => {
 
 
   const fetchCategoriesData = async (pageLimit = 10, pageNumber = 1) => {
+   
+    document.getElementById('app-loader-container').style.display = "block";
     const categoriesViewResponse = await CategoriesApiUtil.viewCategories(
       pageLimit,
       pageNumber
@@ -76,13 +78,16 @@ const Categories = () => {
         categoriesViewResponse.errorMessage
       );
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     } else {
       console.log("res -> ", categoriesViewResponse);
       if (mounted) {     //imp if unmounted
         const categoriesData = categoriesViewResponse.categories.data || categoriesViewResponse.categories;
         setData(categoriesData);
         setPaginationData(categoriesViewResponse.categories.page || {});
-        setLoading(false);
+        //setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
+
       }
     }
   };
@@ -137,6 +142,8 @@ const Categories = () => {
       pathname: "/categories/add",
     });
   };
+
+  
 
   return (
     <div className="page categories">

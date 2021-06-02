@@ -85,7 +85,7 @@ function OutletEdit(props) {
     }
     else {
       console.log('res -> ', getWebHooksViewResponse);
-      message.success(getWebHooksViewResponse.message, 3);
+      //message.success(getWebHooksViewResponse.message, 3);
       setWebHooksData(getWebHooksViewResponse.webhooks);
     }
   }
@@ -101,7 +101,7 @@ function OutletEdit(props) {
     else {
       console.log('res -> ', getOutletViewResponse);
       var selectedStore = getOutletViewResponse.outlet;
-      message.success(getOutletViewResponse.message, 3);
+      //message.success(getOutletViewResponse.message, 3);
       setSelectedStoreObj(getOutletViewResponse.outlet);
       setSelectedCurrencyObj({
         code: selectedStore.currency_code,
@@ -130,18 +130,21 @@ function OutletEdit(props) {
 
 
   const fetchUsersTemplatesData = async () => {
+    document.getElementById('app-loader-container').style.display = "block";
     const userTemplatesViewResponse = await SetupApiUtil.viewAllTemplates();
     console.log('userTemplatesViewResponse:', userTemplatesViewResponse);
 
     if (userTemplatesViewResponse.hasError) {
       console.log('Cant fetch Users templates Data -> ', userTemplatesViewResponse.errorMessage);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', userTemplatesViewResponse);
-      message.success(userTemplatesViewResponse.message, 3);
+      //message.success(userTemplatesViewResponse.message, 3);
       setTemplatesData(userTemplatesViewResponse.templates.data || userTemplatesViewResponse.templates);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
   }
 
@@ -236,7 +239,8 @@ function OutletEdit(props) {
 
 
   const postAddWebHookData = async (webHookUrlName) => {
-
+    
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Saving Changes in progress..', 0);
     const addWebHookResponse = await SetupApiUtil.addWebHook(webHookUrlName);
     console.log('addWebHookResponse:', addWebHookResponse);
@@ -246,6 +250,7 @@ function OutletEdit(props) {
       console.log('Cant add webhook -> ', addWebHookResponse.errorMessage);
       setTimeout(hide, 1500);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', addWebHookResponse);
@@ -253,11 +258,13 @@ function OutletEdit(props) {
       setTimeout(hide, 1500);
       fetchOutletWebHooks();
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
   }
 
   const postDeleteWebHookData = async (webHookId) => {
 
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Saving Changes in progress..', 0);
     const deleteWebHookResponse = await SetupApiUtil.deleteWebHook(webHookId);
     console.log('deleteWebHookResponse:', deleteWebHookResponse);
@@ -266,12 +273,14 @@ function OutletEdit(props) {
     if (deleteWebHookResponse.hasError) {
       console.log('Cant add webhook -> ', deleteWebHookResponse.errorMessage);
       setLoading(false);
-      setTimeout(hide, 1500);
+      document.getElementById('app-loader-container').style.display = "none";
+      setTimeout(hide, 1000);
     }
     else {
       console.log('res -> ', deleteWebHookResponse);
       message.success(deleteWebHookResponse.message, 3);
-      setTimeout(hide, 1500);
+      document.getElementById('app-loader-container').style.display = "none";
+      setTimeout(hide, 1000);
       fetchOutletWebHooks();
       setLoading(false);
     }
@@ -306,6 +315,8 @@ function OutletEdit(props) {
     
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
+    
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Saving Changes in progress..', 0);
     const addOeKeyDataResponse = await SetupApiUtil.addOeKey(editOeKeyPostData);
     console.log('editOeKeyDataResponse:', addOeKeyDataResponse);
@@ -313,12 +324,14 @@ function OutletEdit(props) {
     if (addOeKeyDataResponse.hasError) {
       console.log('Cant Add Oe Keys Data -> ', addOeKeyDataResponse.errorMessage);
       message.error(addOeKeyDataResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setButtonDisabled(false);
       setTimeout(hide, 1500);
     }
     else {
       console.log('res -> ', addOeKeyDataResponse);
       message.success(addOeKeyDataResponse.message, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1000);
       setTimeout(() => {
         history.push({
@@ -349,6 +362,8 @@ function OutletEdit(props) {
 
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
+
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Saving Changes in progress..', 0);
     const editOutletResponse = await SetupApiUtil.editOutlet(editOutletPostData);
     console.log('editOutletResponse:', editOutletResponse);
@@ -356,12 +371,14 @@ function OutletEdit(props) {
     if (editOutletResponse.hasError) {
       console.log('Cant Edit Template -> ', editOutletResponse.errorMessage);
       message.error(editOutletResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setButtonDisabled(false);
       setTimeout(hide, 1500);
     }
     else {
       console.log('res -> ', editOutletResponse);
       message.success(editOutletResponse.message, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1000);
       setTimeout(() => {
         history.push({
@@ -459,9 +476,7 @@ function OutletEdit(props) {
 
   return (
     <div className='page dashboard'>
-      <div style={{ textAlign: "center" }}>
-        {loading && <Spin size="large" tip="Loading..." />}
-      </div>
+      
       <div className='page__header'>
         <h1><Button type="primary" shape="circle" className="back-btn"
           icon={<ArrowLeftOutlined />}
@@ -510,7 +525,20 @@ function OutletEdit(props) {
                       },
                     ]}
                   >
-                    <Select onChange={handleCurrencyChange}>
+                    <Select onChange={handleCurrencyChange}
+                      placeholder="Select Currency"
+                      showSearch    //vimpp to seach
+                      optionFilterProp="children"
+                      filterOption={(input, option) => {
+                        //console.log(option);
+                        return (
+                          option.children[1].toLowerCase().indexOf(input.toLowerCase()) >= 0)
+                      }}
+                      filterSort={(optionA, optionB) =>
+                        optionA.children[1].toLowerCase().localeCompare(optionB.children[1].toLowerCase())
+                      }
+
+                    >
                       {
                         currenciesData.map((obj, index) => {
                           return (
@@ -540,7 +568,21 @@ function OutletEdit(props) {
                       },
                     ]}
                   >
-                    <Select>
+
+                    <Select
+                      placeholder="Select Template"
+                      showSearch    //vimpp to seach
+                      optionFilterProp="children"
+                      filterOption={(input, option) => {
+                        //console.log(option);
+                        return (
+                          option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0)
+                      }}
+                      filterSort={(optionA, optionB) =>
+                        optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                      }
+
+                    >
                       {
                         templatesData.map((obj, index) => {
                           return (
@@ -581,7 +623,7 @@ function OutletEdit(props) {
                   className='custom-btn custom-btn--primary'
                   disabled={buttonDisabled}
                 >
-                  Confirm
+                  Save
                 </Button>
               </div>
             </div>
@@ -640,7 +682,7 @@ function OutletEdit(props) {
             {/* table Section */}
             <div className='form__row'>
               {/* Table */}
-              <div className='table'>
+              <div className='table' style={{width: "100%"}}>
                 <WebHooksTable pageLimit={paginationLimit} tableData={webHooksData}
                   tableDataLoading={loading}
                   onClickDeleteWebHook={onHandleWebHookDelete} />
@@ -702,7 +744,7 @@ function OutletEdit(props) {
                 className='custom-btn custom-btn--primary'
                 disabled={buttonDisabled}
               >
-                Confirm
+                Save
               </Button>
             </div>
             {/* Form Section */}

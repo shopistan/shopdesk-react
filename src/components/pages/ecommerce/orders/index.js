@@ -62,6 +62,8 @@ function EcommerceOrders() {
 
 
   const fetchSalesOrdersData = async (pageLimit = 100, pageNumber = 1) => {
+
+    document.getElementById('app-loader-container').style.display = "block";
     const omniSalesOrdersViewResponse = await EcommerceApiUtil.getAllOmniSales(
       pageLimit,
       pageNumber,
@@ -70,14 +72,15 @@ function EcommerceOrders() {
 
     if (omniSalesOrdersViewResponse.hasError) {
       console.log('Cant fetch Omni Sales Orders Data -> ', omniSalesOrdersViewResponse.errorMessage);
-      message.error(omniSalesOrdersViewResponse.errorMessage, 3);
+      //message.error(omniSalesOrdersViewResponse.errorMessage, 3);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', omniSalesOrdersViewResponse);
       if (mounted) {     //imp if unmounted
         var omniSalesData = omniSalesOrdersViewResponse.invoices.data || omniSalesOrdersViewResponse.invoices;
-        message.success(omniSalesOrdersViewResponse.message, 3);
+        //message.success(omniSalesOrdersViewResponse.message, 3);
         setOmniSalesOrdersData(omniSalesData);
         setPaginationData(omniSalesOrdersViewResponse.invoices.page || {});
         /*-------setting sales data selection---------*/
@@ -87,6 +90,7 @@ function EcommerceOrders() {
         handledSearchedDataResponse(omniSalesData);
         /*-----------handle data serching response-----------*/
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   }
@@ -226,6 +230,8 @@ function EcommerceOrders() {
 
 
   const confirmOeSalesOrders = async (selectedOeSalesOrders) => {
+
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Saving Changes in progress..', 0);
     const confirmOeSalesOrdersResponse = await EcommerceApiUtil.confirmOeSalesOrders(selectedOeSalesOrders);
     console.log('confirmOeSalesOrdersResponse:', confirmOeSalesOrdersResponse);
@@ -233,12 +239,14 @@ function EcommerceOrders() {
     if (confirmOeSalesOrdersResponse.hasError) {
       console.log('Cant Confirm Oe Sales Orders Data -> ', confirmOeSalesOrdersResponse.errorMessage);
       message.error(confirmOeSalesOrdersResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1000);
     }
     else {
       console.log('res -> ', confirmOeSalesOrdersResponse);
       if (mounted) {     //imp if unmounted
         message.success(confirmOeSalesOrdersResponse.message, 3);
+        document.getElementById('app-loader-container').style.display = "none";
         setTimeout(hide, 1000);
         setLoading(true);
         fetchSalesOrdersData(paginationLimit, currentPage);
@@ -250,25 +258,33 @@ function EcommerceOrders() {
 
 
 
-  /*const fetchOeSalesOrdersRequest = async () => {
-    const hide = message.loading('Saving Changes in progress..', 0);
-    const fetchOeSalesOrdersResponse = await EcommerceApiUtil.fetchOeSalesOrders(selectedOeSalesOrders);
+  const fetchOeSalesOrdersRequest = async () => {
+
+    document.getElementById('app-loader-container').style.display = "block";
+    const hide = message.loading('Fetching Oe orders in progress..', 0);
+    const fetchOeSalesOrdersResponse = await EcommerceApiUtil.fetchOeSalesOrders();
     console.log('fetchOeSalesOrdersResponse:', fetchOeSalesOrdersResponse);
 
     if (fetchOeSalesOrdersResponse.hasError) {
       console.log('Cant Confirm Oe Sales Orders Data -> ', fetchOeSalesOrdersResponse.errorMessage);
-      message.error(fetchOeSalesOrdersResponse.errorMessage, 3);
       setTimeout(hide, 1000);
+      message.warning(fetchOeSalesOrdersResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
+      
     }
     else {
       console.log('res -> ', fetchOeSalesOrdersResponse);
+
       if (mounted) {     //imp if unmounted
         message.success(fetchOeSalesOrdersResponse.message, 3);
         setTimeout(hide, 1000);
-  
+        setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
+        fetchSalesOrdersData();   //imp to fetch again
+        
       }
     }
-  }*/
+  }
 
 
 
@@ -300,7 +316,7 @@ function EcommerceOrders() {
   const saleOrdrsMenu = (
     <Menu>
       <Menu.Item key="0"
-      //onClick={fetchOeSalesOrdersRequest}
+        onClick={fetchOeSalesOrdersRequest}
       >
         Fetch Orders
       </Menu.Item>

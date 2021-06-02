@@ -40,19 +40,22 @@ const ReceiptDelete = (props) => {
 
 
     const getTemplateData = async (templateId) => {
+        document.getElementById('app-loader-container').style.display = "block";
         const getTepmlateResponse = await SetupApiUtil.getTemplate(templateId);
         console.log('getTepmlateResponse:', getTepmlateResponse);
 
         if (getTepmlateResponse.hasError) {
             console.log('Cant get template Data -> ', getTepmlateResponse.errorMessage);
             setLoading(false);
+            document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             console.log('res -> ', getTepmlateResponse);
             var receivedTemplateData = getTepmlateResponse.template;
-            message.success(getTepmlateResponse.message, 3);
+            //message.success(getTepmlateResponse.message, 3);
             setTemplateData(receivedTemplateData);
             setLoading(false);
+            document.getElementById('app-loader-container').style.display = "none";
 
         }
     }
@@ -62,6 +65,8 @@ const ReceiptDelete = (props) => {
     const handleConfirm = async () => {
         if (buttonDisabled === false) {
             setButtonDisabled(true);}
+            
+        document.getElementById('app-loader-container').style.display = "block";
         const hide = message.loading('Saving Changes in progress..', 0);
         const receiptDeleteResponse = await SetupApiUtil.deleteTemplate(templateData.template_id);
         console.log('receiptDeleteResponse:', receiptDeleteResponse);
@@ -70,11 +75,13 @@ const ReceiptDelete = (props) => {
             console.log('Cant delete Receipt -> ', receiptDeleteResponse.errorMessage);
             message.error(receiptDeleteResponse.errorMessage, 3);
             setButtonDisabled(false);
+            document.getElementById('app-loader-container').style.display = "none";
             setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', receiptDeleteResponse);
             message.success('Receipt deletion Succesfull ', 3);
+            document.getElementById('app-loader-container').style.display = "none";
             setTimeout(hide, 1500);
             setTimeout(() => {
                 history.push({
@@ -96,9 +103,7 @@ const ReceiptDelete = (props) => {
 
     return (
         <div className='page categoryDel'>
-            <div style={{ textAlign: "center" }}>
-                {loading && <Spin size="large" tip="Loading..." />}
-            </div>
+            
             <div className='page__header'>
                 <h1 className='page__title'>
                     <Button type="primary" shape="circle" className="back-btn"

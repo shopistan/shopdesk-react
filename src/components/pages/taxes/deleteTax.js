@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Button, Typography, message, Spin } from 'antd';
 import { useHistory } from 'react-router-dom';
 import * as TaxApiUtil from '../../../utils/api/tax-api-utils';
+import { ArrowLeftOutlined } from "@ant-design/icons";
+
 
 const { Text } = Typography;
 
@@ -34,12 +36,14 @@ const DeleteTax = (props) => {
 
 
     const getTax = async (taxId) => {
+        document.getElementById('app-loader-container').style.display = "block";
         const gettaxResponse = await TaxApiUtil.getTax(taxId);
         console.log('gettaxResponse:', gettaxResponse);
         if (gettaxResponse.hasError) {
             console.log('getTax Cant Fetched -> ', gettaxResponse.errorMessage);
             message.error(gettaxResponse.errorMessage, 2);
             setLoading(false);
+            document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             console.log('res -> ', gettaxResponse.message);
@@ -48,6 +52,7 @@ const DeleteTax = (props) => {
                 const taxData = gettaxResponse.tax[0];  //vvimp
                 setSelectedTaxData(taxData);
                 setLoading(false);
+                document.getElementById('app-loader-container').style.display = "none";
             }
 
         }
@@ -58,21 +63,25 @@ const DeleteTax = (props) => {
         if (buttonDisabled === false) {
             setButtonDisabled(true);
         }
+
+        document.getElementById('app-loader-container').style.display = "block";
         const hide = message.loading('Saving Changes in progress..', 0);
         const taxDeleteResponse = await TaxApiUtil.deleteTax(selectedTaxData.tax_id);
         console.log('taxDeleteResponse:', taxDeleteResponse);
-        setTimeout(hide, 1500);
 
         if (taxDeleteResponse.hasError) {
             console.log('Cant delete Tax -> ', taxDeleteResponse.errorMessage);
             message.error(taxDeleteResponse.errorMessage, 3);
+            setTimeout(hide, 1000);
             setButtonDisabled(false);
+            document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             console.log('res -> ', taxDeleteResponse.message);
             if (mounted) {     //imp if unmounted
                 message.success(taxDeleteResponse.message, 3);
-                setTimeout(hide, 1500);
+                document.getElementById('app-loader-container').style.display = "none";
+                setTimeout(hide, 1000);
                 setTimeout(() => {
                     history.push({
                         pathname: '/taxes',
@@ -95,10 +104,9 @@ const DeleteTax = (props) => {
     return (
         <div className='page categoryDel'>
             <div className='page__header'>
-                <h1 className='page__title'>Delete Tax</h1>
-            </div>
-            <div style={{ textAlign: "center" }}>
-                {loading && <Spin size="large" tip="Loading..." />}
+                <h1 className='page__title'><Button type="primary" shape="circle" className="back-btn"
+                    icon={<ArrowLeftOutlined />}
+                    onClick={handleCancel} />Delete Tax</h1>
             </div>
 
             {!loading &&

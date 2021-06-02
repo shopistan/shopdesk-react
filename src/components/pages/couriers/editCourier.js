@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, message, Spin } from 'antd';
 import { useHistory } from 'react-router-dom';
 import * as CouriersApiUtil from '../../../utils/api/couriers-api-utils';
+import { ArrowLeftOutlined } from "@ant-design/icons";
+
 
 const EditCourier = (props) => {
     const history = useHistory();
@@ -34,11 +36,13 @@ const EditCourier = (props) => {
 
 
     const getCourier = async (courierId) => {
+        document.getElementById('app-loader-container').style.display = "block";
         const getCourierResponse = await CouriersApiUtil.getCourier(courierId);
         console.log('getCourierResponse:', getCourierResponse);
         if (getCourierResponse.hasError) {
             console.log('Courier Cant Fetched -> ', getCourierResponse.errorMessage);
             setLoading(false);
+            document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             message.success(getCourierResponse.message, 2);
@@ -58,6 +62,7 @@ const EditCourier = (props) => {
 
                 setCourierDataFields(fieldsForAntForm);
                 setLoading(false);
+                document.getElementById('app-loader-container').style.display = "none";
             }
             
         }
@@ -67,6 +72,8 @@ const EditCourier = (props) => {
     const onFinish = async (values) => {
         if (buttonDisabled === false) {
             setButtonDisabled(true);}
+
+        document.getElementById('app-loader-container').style.display = "block";
         const hide = message.loading('Saving Changes in progress..', 0);
         const courierEditResponse = await CouriersApiUtil.editCourier(courier_id,
             values.courier_name, values.courier_code);
@@ -77,12 +84,14 @@ const EditCourier = (props) => {
             message.error(courierEditResponse.errorMessage, 3);
             setButtonDisabled(false);
             setTimeout(hide, 1500);
+            document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             console.log('res -> ', courierEditResponse);
             if (mounted) {     //imp if unmounted
                 message.success(courierEditResponse.message, 3);
                 setTimeout(hide, 1500);
+                document.getElementById('app-loader-container').style.display = "none";
                 setTimeout(() => {
                     history.push({
                         pathname: '/couriers',
@@ -105,12 +114,10 @@ const EditCourier = (props) => {
     return (
         <div className='page categoryAdd'>
             <div className='page__header'>
-                <h1 className='page__title'>Edit Couriers</h1>
+                <h1 className='page__title'><Button type="primary" shape="circle" className="back-btn"
+                    icon={<ArrowLeftOutlined />}
+                    onClick={handleCancel} />Edit Couriers</h1>
             </div>
-            <div style={{ textAlign: "center" }}>
-                {loading && <Spin size="large" tip="Loading..." />}
-            </div>
-
 
             {!loading &&
             <div className='page__content'>
@@ -156,8 +163,9 @@ const EditCourier = (props) => {
                         </div>
 
                         <div className='form__row--footer'>
-                            <Button type='primary' htmlType='submit' disabled={buttonDisabled}>
-                                Edit
+                            <Button type='primary'
+                                className="custom-btn--primary" htmlType='submit' disabled={buttonDisabled}>
+                                Save
                             </Button>
                             <Button
                                 onClick={() => handleCancel()}>

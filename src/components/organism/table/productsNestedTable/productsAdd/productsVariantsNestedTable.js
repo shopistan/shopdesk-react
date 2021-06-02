@@ -117,7 +117,6 @@ const ProductsVariantsNestedTable = (props) => {
     }
 
 
-
     const onChangeSelectTax = (value, currentRowId) => {
         var selectTaxData = {...selectedInputTaxVal};
         selectTaxData[currentRowId] = value;
@@ -127,12 +126,11 @@ const ProductsVariantsNestedTable = (props) => {
     }
 
 
-
     const setSelectedTaxChange = (tableData, currentRowId) => {
         var selectTaxData = {...selectedInputTaxVal};
         tableData.forEach(item => {
             let selectInputId = item.store_id;
-            selectTaxData[selectInputId] = item.tax;
+            selectTaxData[selectInputId] = item.tax_id;
 
         });
 
@@ -146,7 +144,7 @@ const ProductsVariantsNestedTable = (props) => {
         var newData = [...tableData];
         newData.forEach(item => {
             let taxValue =  taxData[item.store_id] && taxData[item.store_id];
-            item.tax = taxValue;
+            item.tax_id = taxValue;
         });
 
         setData(newData);   //imp
@@ -161,7 +159,6 @@ const ProductsVariantsNestedTable = (props) => {
         //console.log(props.tableData);
         setCurrentExpandedRow(props.currentExpandedRow);
         setSelectedTaxChange(props.tableData, props.currentExpandedRow);
-    
 
     }, [props.userStores,props.tableData, props.taxes, props.currentExpandedRow]);  /* imp passing props to re-render */
 
@@ -205,7 +202,15 @@ const ProductsVariantsNestedTable = (props) => {
                             className='select-w-100'
                             value={selectedInputTaxVal[selectInputRowId]}
                             onChange={(value) => onChangeSelectTax(value, selectInputRowId)}
-                        
+                            //placeholder="Select Tax"
+                            showSearch    //vimpp to seach
+                            optionFilterProp="children"
+                            filterOption={(input, option) =>
+                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            }
+                            filterSort={(optionA, optionB) =>
+                                optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                            }
                         >
                             {
                                 props.taxes.map((obj, index) => {

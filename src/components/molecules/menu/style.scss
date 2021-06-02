@@ -9,8 +9,16 @@
     color: $color-black !important;
   }
 
+  li .nav-menu-item-link {
+    color: $color-black !important;
+  }
+
   .ant-menu-item-selected {
     background-color: $color-primary !important;
+  }
+
+  .ant-menu-item-selected .nav-menu-item-link {
+    color: $color-white !important;
   }
 
   .ant-menu-submenu-title {
@@ -23,6 +31,11 @@
     .ant-menu-item {
       color: $color-white !important;
     }
+
+    .ant-menu-item .nav-menu-item-link  {
+      color: $color-white !important;
+    }
+
   }
 
   .ant-menu-submenu-arrow::before, .ant-menu-submenu-arrow::after {

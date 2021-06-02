@@ -32,7 +32,7 @@ function UserAdd() {
     else {
       console.log('res -> ', outletsViewResponse);
       if (mounted) {     //imp if unmounted
-        message.success(outletsViewResponse.message, 3);
+        //message.success(outletsViewResponse.message, 3);
         setStoresData(outletsViewResponse.outlets.data || outletsViewResponse.outlets);
         setLoading(false);
       }
@@ -95,6 +95,8 @@ function UserAdd() {
     
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
+    
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Saving Changes in progress..', 0);
     const addUserResponse = await SetupApiUtil.addUser(addUserPostData);
     console.log('addUserResponse:', addUserResponse);
@@ -103,11 +105,13 @@ function UserAdd() {
       console.log('Cant Add User -> ', addUserResponse.errorMessage);
       message.error(addUserResponse.errorMessage, 3);
       setButtonDisabled(false);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1500);
     }
     else {
       console.log('res -> ', addUserResponse);
       message.success(addUserResponse.message, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1000);
       setTimeout(() => {
         history.push({
@@ -150,12 +154,23 @@ function UserAdd() {
   };
 
 
+  const onPhoneChange = (e) => {
+    let phoneNumber = e.target.value;
+    const re = /^[0-9\b]+$/;
+    console.log(e.target.value);
+    if (!e.target.value === '' || !re.test(e.target.value)) {  //if contains alphabets in string
+      form.setFieldsValue({
+        phone: phoneNumber.replace(/[^\d.-]/g, '')
+      });
+    }
+
+  }
+
+
 
   return (
     <div className="page dashboard">
-      <div style={{ textAlign: "center" }}>
-        {loading && <Spin size="large" tip="Loading..." />}
-      </div>
+      
       <div className="page__header">
         <h1><Button type="primary" shape="circle" className="back-btn"
           style={{ marginRight: "2rem" }}
@@ -251,7 +266,7 @@ function UserAdd() {
                     },
                   ]}
                 >
-                  <InputNumber className='u-width-100' />
+                  <Input  onChange={onPhoneChange} />
 
                 </Form.Item>
               </div>
@@ -311,8 +326,9 @@ function UserAdd() {
               <Button type="primary"
                 htmlType="submit"
                 disabled={buttonDisabled}
+                className='custom-btn custom-btn--primary'
               >
-                Confirm
+                Add
               </Button>
             </div>
           </Form>

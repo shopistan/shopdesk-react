@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { Button, message, Select, Input } from "antd";
-import { PlusCircleOutlined } from "@ant-design/icons";
+import { PlusCircleOutlined, DownloadOutlined } from "@ant-design/icons";
 import CustomerTable from "../../organism/table/customerTable";
 import { useHistory } from "react-router-dom";
 import * as CustomersApiUtil from "../../../utils/api/customer-api-utils";
@@ -31,7 +31,7 @@ const Customers = () => {
 
 
   const onSearch = async (e) => {
-    let searchValue = e.target.value;;
+    let searchValue = e.target.value;
     if(searchValue === ""){ // if empty value
       setSearchedData(null);
       setLoading(true);
@@ -72,6 +72,7 @@ const Customers = () => {
 
 
   const fetchCustomersData = async (pageLimit = 20, pageNumber = 1) => {
+    document.getElementById('app-loader-container').style.display = "block";
     const customersViewResponse = await CustomersApiUtil.viewCustomers(
       pageLimit,
       pageNumber
@@ -84,13 +85,15 @@ const Customers = () => {
         customersViewResponse.errorMessage
       );
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     } else {
       console.log("res -> ", customersViewResponse);
       if (mounted) {     //imp if unmounted
-        message.success(customersViewResponse.message, 3);
+        //message.success(customersViewResponse.message, 3);
         setData(customersViewResponse.Customer.data || customersViewResponse.Customer);
         setPaginationData(customersViewResponse.Customer.page || {});
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   };
@@ -148,6 +151,7 @@ const Customers = () => {
 
   const ExportToCsv = async (e) => {
     if (data.length > 0) {
+      document.getElementById('app-loader-container').style.display = "block";
       const hide = message.loading('Exporting Customers Is In Progress..', 0);
       const getuserResponse = await CustomersApiUtil.getUserId();
       console.log("customers export response:", getuserResponse);
@@ -155,6 +159,7 @@ const Customers = () => {
         const errorMessage = getuserResponse.errorMessage;
         console.log('Cant get User Id -> ', errorMessage);
         message.error(errorMessage, 3);
+        document.getElementById('app-loader-container').style.display = "none";
         setTimeout(hide, 1500);
       } else {
         console.log("Success:", getuserResponse.message);
@@ -178,9 +183,11 @@ const Customers = () => {
         "Cant Export customers -> ",
         customersExportResponse.errorMessage
       );
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1500);
     } else {
       console.log("res -> ", customersExportResponse.data);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(hide, 1500);
       /*---------------csv download--------------------------------*/
       if (mounted) {     //imp if unmounted
@@ -227,7 +234,7 @@ const Customers = () => {
           </Button>*/}
 
           <Button type="primary" className="custom-btn custom-btn--primary"
-            onClick={ExportToCsv}
+            onClick={ExportToCsv}  icon={<DownloadOutlined />}
           >
             Export CSV
           </Button>
@@ -239,7 +246,7 @@ const Customers = () => {
           <div className="action-row__element">
             Show
             <Select
-              defaultValue="10"
+              defaultValue="20"
               style={{ width: 120, margin: "0 5px" }}
               onChange={handleChange}
             >

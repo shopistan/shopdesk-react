@@ -66,21 +66,24 @@ const Taxes = () => {
 
 
   const fetchTaxesData = async (pageLimit = 10, pageNumber = 1) => {
+    document.getElementById('app-loader-container').style.display = "block";
     const taxesViewResponse = await TaxApiUtil.viewTaxes(pageLimit, pageNumber);
     console.log("taxesViewResponse:", taxesViewResponse);
 
     if (taxesViewResponse.hasError) {
       console.log("Cant fetch taxes -> ", taxesViewResponse.errorMessage);
-      message.error(taxesViewResponse.errorMessage, 3);
+      //message.error(taxesViewResponse.errorMessage, 3);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     } else {
       console.log("res -> ", taxesViewResponse);
       if (mounted) {     //imp if unmounted
         const taxesData = taxesViewResponse.taxes.data || taxesViewResponse.taxes;
         setData(taxesData);
-        message.success(taxesViewResponse.message, 3);
+        //message.success(taxesViewResponse.message, 3);
         setPaginationData(taxesViewResponse.taxes.page || {});
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   };
@@ -156,7 +159,7 @@ const Taxes = () => {
           <div className="action-row__element">
             Show
             <Select
-              defaultValue="10"
+              defaultValue="20"
               style={{ width: 120, margin: "0 5px" }}
               onChange={handleChange}
             >

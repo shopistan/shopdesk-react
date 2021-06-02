@@ -28,6 +28,10 @@ import {
   InputNumber,
 } from "antd";
 
+import {
+  ArrowLeftOutlined,
+} from "@ant-design/icons";
+
 const { Option } = Select;
 
 
@@ -45,6 +49,8 @@ const TransferInventory = () => {
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
   const [currentStoreId, setCurrentStoreId] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [userLocalStorageData, setUserLocalStorageData] = useState(null);
+
 
 
   var mounted = true;
@@ -67,6 +73,9 @@ const TransferInventory = () => {
         ? readFromLocalStorage.data
         : null;
       if (readFromLocalStorage) {
+
+        setUserLocalStorageData(readFromLocalStorage);
+
         if (
           checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
         ) {
@@ -113,19 +122,21 @@ const TransferInventory = () => {
 
 
   const fetchRegisteredProductsData = async () => {
+    document.getElementById('app-loader-container').style.display = "block";
     const productsDiscountsViewResponse = await ProductsApiUtil.getFullRegisteredProducts();
     console.log(' productsDiscountsViewResponse:', productsDiscountsViewResponse);
 
     if (productsDiscountsViewResponse.hasError) {
       console.log('Cant fetch registered products Data -> ', productsDiscountsViewResponse.errorMessage);
-      message.error(productsDiscountsViewResponse.errorMessage, 3);
+      message.warning(productsDiscountsViewResponse.errorMessage, 3);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', productsDiscountsViewResponse);
 
       if (mounted) {     //imp if unmounted
-        message.success(productsDiscountsViewResponse.message, 3);
+        //message.success(productsDiscountsViewResponse.message, 3);
         /*-------for filtering products--------*/
         var products = productsDiscountsViewResponse.products.data
           || productsDiscountsViewResponse.products;
@@ -146,6 +157,7 @@ const TransferInventory = () => {
 
         /*-------for filtering products--------*/
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   }
@@ -160,7 +172,7 @@ const TransferInventory = () => {
     else {
       console.log('res -> ', outletsViewResponse);
       if (mounted) {     //imp if unmounted
-        message.success(outletsViewResponse.message, 3);
+        //message.success(outletsViewResponse.message, 3);
         let outletsData = outletsViewResponse.outlets.data || outletsViewResponse.outlets;
         const filteredOutletsData = outletsData.filter((outlet) => {
           return outlet.store_id !== activeStoreId;
@@ -265,6 +277,8 @@ const TransferInventory = () => {
 
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
+     
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.transferInventory(transferInventoryPostData);
     console.log('TransferOutResponse:', res);
@@ -272,19 +286,21 @@ const TransferInventory = () => {
     if (res.hasError) {
       console.log('Cant Transfer Inventory Stock  -> ', res.errorMessage);
       message.error(res.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setButtonDisabled(false);
-      setTimeout(hide, 1500);
+      setTimeout(hide, 500);
     }
     else {
       console.log('res -> ', res);
       message.success(res.message, 3);
-      setTimeout(hide, 1000);
+      document.getElementById('app-loader-container').style.display = "none";
+      setTimeout(hide, 500);
       setTimeout(() => {
         history.push({
           pathname: '/stock-control/inventory-transfers',
           activeKey: 'inventory-transfers'
         });
-      }, 2000);
+      }, 1000);
     }
 
   }
@@ -307,10 +323,9 @@ const TransferInventory = () => {
   return (
     <div className="page stock-add">
       <div className="page__header">
-        <h1>Transfer Out</h1>
-      </div>
-      <div style={{ textAlign: "center" }}>
-        {loading && <Spin size="large" tip="Loading..." />}
+        <h1><Button type="primary" shape="circle" className="back-btn"
+          icon={<ArrowLeftOutlined />}
+          onClick={handleCancel} />Transfer Out</h1>
       </div>
 
 
@@ -435,7 +450,10 @@ const TransferInventory = () => {
                     tableData={productsTableData}
                     tableDataLoading={loading}
                     onChangeProductsData={handleChangeProductsData}
-                    tableType="order_transfer" />
+                    tableType="order_transfer" 
+                    currency={userLocalStorageData.currency.symbol}
+                    
+                  />
                 </div>
                 {/* Table */}
                 <Divider />

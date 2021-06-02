@@ -20,12 +20,14 @@ import {
     UploadOutlined,
     MinusCircleOutlined,
     PlusOutlined,
+    ArrowLeftOutlined,
 } from "@ant-design/icons";
 
 import * as ProductsApiUtil from '../../../utils/api/products-api-utils';
 import * as TaxexApiUtil from '../../../utils/api/tax-api-utils';
 import * as CategoriesApiUtil from '../../../utils/api/categories-api-utils';
 //import UrlConstants from '../../../utils/constants/url-configs';
+import * as Helpers from "../../../utils/helpers/scripts";
 
 
 const { TextArea } = Input;
@@ -46,7 +48,8 @@ const EditProduct = (props) => {
     const { match = {} } = props;
     const { product_id = {} } = match !== undefined && match.params;
 
-    var mounted = true;
+
+    let mounted = true;
 
 
     useEffect( () => {
@@ -66,12 +69,13 @@ const EditProduct = (props) => {
 
 
     const fetchProductData = async (productId) => {
-
+        document.getElementById('app-loader-container').style.display = "block";
         const getProductsResponse = await ProductsApiUtil.getProduct(productId);
         console.log('getProductsResponse:', getProductsResponse);
         if (getProductsResponse.hasError) {
             console.log('Product Cant Fetched -> ', getProductsResponse.errorMessage);
             message.error('Product Cant Fetched', 3);
+            document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             console.log('res -> ', getProductsResponse);
@@ -79,13 +83,16 @@ const EditProduct = (props) => {
             var productsData = getProductsResponse.product;
             setproductData(productsData);
 
+            //delete productsData['product_purchase_price'];
+
             /*-----setting products data to fields value------*/
             form.setFieldsValue({
                 sku: productsData.product_sku,
                 product_name: productsData.product_name,
                 product_description: removeHTML(productsData.product_description),
                 sale_price: productsData.product_sale_price,
-                purchase_price: productsData.product_purchase_price,
+                purchase_price: Helpers.var_check(productsData.product_purchase_price) ?
+                    productsData.product_purchase_price  === "0" ? 'N/A': productsData.product_purchase_price : 'N/A',
                 product_variant1_key: productsData.product_variant1_name,
                 product_variant1_value: productsData.product_variant1_value,
                 product_variant2_key: productsData.product_variant2_name,
@@ -159,6 +166,7 @@ const EditProduct = (props) => {
 
             /*  taxes response  */
             setLoading(false);
+            document.getElementById('app-loader-container').style.display = "none";
 
         }
     };
@@ -196,6 +204,8 @@ const EditProduct = (props) => {
         
         if (buttonDisabled === false) {
             setButtonDisabled(true);}
+
+        document.getElementById('app-loader-container').style.display = "block";
         const hide = message.loading('Saving changes in progress..', 0);
         const EditProductResponse = await ProductsApiUtil.editProduct(productDataDeepClone);
         console.log('getProductsResponse:', EditProductResponse);
@@ -203,18 +213,20 @@ const EditProduct = (props) => {
             console.log('product Editing UnSuccesfully -> ', EditProductResponse.errorMessage);
             message.error(EditProductResponse.errorMessage, 3);
             setButtonDisabled(false);
+            document.getElementById('app-loader-container').style.display = "none";
             setTimeout(hide, 1000);
         }
         else {
             console.log('res -> ', EditProductResponse);
             setTimeout(hide, 1000);
+            document.getElementById('app-loader-container').style.display = "none";
             if (mounted) {     //imp if unmounted
                 message.success(EditProductResponse.message, 3);
                 setTimeout(() => {
                     history.push({
                         pathname: '/products',
                     });
-                }, 2000);
+                }, 1000);
             }
 
         }
@@ -229,15 +241,21 @@ const EditProduct = (props) => {
 
     const handleUpload = async () => {
         //console.log(fileList[0]);   //imp
+        document.getElementById('app-loader-container').style.display = "block";
+        const hide = message.loading('Image Uploading Is In Progress...', 0);
         const ImageUploadResponse = await ProductsApiUtil.imageUpload(fileList[0]);
         console.log('ImageUploadResponse:', ImageUploadResponse);
         if (ImageUploadResponse.hasError) {
             console.log('Product Image Cant Upload -> ', ImageUploadResponse.errorMessage);
             message.error('Product  Image Cant Upload', 3);
+            document.getElementById('app-loader-container').style.display = "none";
+            setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', ImageUploadResponse);
             message.success(ImageUploadResponse.message, 3);
+            document.getElementById('app-loader-container').style.display = "none";
+            setTimeout(hide, 1500);
             setFileList([]);
             setproductImagePreviewSource(ImageUploadResponse.upload_data);
             setIsImageUpload(true);
@@ -265,6 +283,13 @@ const EditProduct = (props) => {
     };
 
 
+    const handleCancel = () => {
+        history.push({
+            pathname: '/products',
+        });
+    };
+
+
     var ProductImageSrc = `${productImagePreviewSource}`;  //imp to set image source
 
 
@@ -272,12 +297,11 @@ const EditProduct = (props) => {
 
         <div className='page dashboard'>
             <div className='page__header'>
-                <h1>Edit Products</h1>
+                <h1><Button type="primary" shape="circle" className="back-btn"
+                    icon={<ArrowLeftOutlined />}
+                    onClick={handleCancel} />Edit Products</h1>
             </div>
 
-            <div className="loading-container">
-                {loading && <Spin tip="Products Loading..." size="large" ></Spin>}
-            </div>
 
             {!loading &&
                 <div className='page__content'>
@@ -293,7 +317,7 @@ const EditProduct = (props) => {
 
                             <div className='form__row--footer'>
                                 <Button type='primary'
-                                    className='product-btn-edit'
+                                    className='custom-btn--primary'
                                     htmlType='submit'
                                     disabled={buttonDisabled} >
                                     Edit Product
@@ -362,7 +386,17 @@ const EditProduct = (props) => {
                                                 },
                                             ]}
                                         >
-                                            <Select>
+                                            <Select
+                                                showSearch    //vimpp to seach
+                                                placeholder="Select Tax"
+                                                optionFilterProp="children"
+                                                filterOption={(input, option) =>
+                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                                }
+                                                filterSort={(optionA, optionB) =>
+                                                optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                                                }
+                                            >
                                                 {
                                                     taxes.map((obj, index) => {
                                                         return (
@@ -387,7 +421,18 @@ const EditProduct = (props) => {
                                                 },
                                             ]}
                                         >
-                                            <Select>
+                                            <Select
+                                                showSearch    //vimpp to seach
+                                                placeholder="Select Category"
+                                                optionFilterProp="children"
+                                                filterOption={(input, option) =>
+                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                                }
+                                                filterSort={(optionA, optionB) =>
+                                                optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                                                }
+                                            
+                                            >
                                                 {
                                                     categories.map((obj, index) => {
                                                         return (

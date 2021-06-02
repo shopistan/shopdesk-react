@@ -38,7 +38,8 @@ const urls = {
     GET_SUPPLIER: BASE_URL + '/api/suppliers/get',
   },
   OULETS: {
-    SELECT_OUTLET: BASE_URL + '/api/users/selectStore'
+    SELECT_OUTLET: BASE_URL + '/api/users/selectStore',
+    VIEW_ALL: BASE_URL + '/api/stores/viewAll',
   },
   COURIERS: {
     VIEW: BASE_URL + '/api/couriers/view',
@@ -116,6 +117,8 @@ const urls = {
     VIEW_PO: BASE_URL + '/api/stock_control/viewPo',
     VIEW_TRANSFER: BASE_URL + '/api/transfers/viewTransfer',
     VIEW_ADJUSTMENTS: BASE_URL + '/api/stock_control/viewAdjustment',
+    VIEW_RETURNED_STOCK: BASE_URL + '/api/stock_control/viewReturnStock',
+    GET_STOCK_RETURNED: BASE_URL + '/api/stock_control/getReturnStock',
     RECEIVE_PO: BASE_URL + '/api/stock_control/receivePo',
     ADD_RECEIVE_PO: BASE_URL + '/api/stock_control/insertGrn',
     ADD_PURCHASE_ORDER: BASE_URL + '/api/stock_control/addPo',
@@ -132,6 +135,8 @@ const urls = {
     VIEW_HISTORY: BASE_URL + '/api/register/view',
     GET_SALE_HISTORY: BASE_URL + '/api/register/get',
     REGISTER_INVOICE: BASE_URL + '/api/register/add',
+    GET_STORE: BASE_URL + '/api/register/get_store_id',
+    EXPORT_INVENTORY_DUMP: BASE_URL + '/api/register/parkedSaleReportCsv',
 
   },
   DASHBOARD:{

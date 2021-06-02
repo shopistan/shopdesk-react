@@ -6,6 +6,10 @@ import * as SuppliersApiUtil from "../../../../utils/api/suppliers-api-utils";
 import * as StockApiUtil from '../../../../utils/api/stock-api-utils';
 import * as Helpers from "../../../../utils/helpers/scripts";
 import StockNestedProductsTable from "../../../organism/table/stock/stockNestedProductsTable";
+import Constants from '../../../../utils/constants/constants';
+import {
+  getDataFromLocalStorage,
+} from "../../../../utils/local-storage/local-store-utils";
 import moment from 'moment';
 
 
@@ -28,10 +32,9 @@ import {
 } from "antd";
 
 import {
-  CloseOutlined,
-  CheckOutlined,
   UploadOutlined,
   DownloadOutlined,
+  ArrowLeftOutlined,
 } from "@ant-design/icons";
 
 const { Option } = Select;
@@ -55,9 +58,10 @@ const PurchaseOrder = () => {
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
   const [orderDueDate, setOrderDueDate] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
-  const [suppliersPaginationData, setSuppliersPaginationData] = useState({});
-  const [isBusy, setIsBusy] = useState(false);
-  const [suppliersScrollLoading, setSuppliersScrollLoading] = useState(false);
+  const [userLocalStorageData, setUserLocalStorageData] = useState(null);
+  //const [suppliersPaginationData, setSuppliersPaginationData] = useState({});
+  //const [isBusy, setIsBusy] = useState(false);
+  //const [suppliersScrollLoading, setSuppliersScrollLoading] = useState(false);
   
 
   var mounted = true;
@@ -73,6 +77,12 @@ const PurchaseOrder = () => {
       order_reference_name: `Order - ${moment(new Date()).format("yyyy/MM/DD HH:mm:ss")}`,
     });
     /*-----setting template data to fields value------*/
+
+    /*--------------set user local data-------------------------------*/
+    var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+    readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
+    setUserLocalStorageData(readFromLocalStorage);
+    /*--------------set user local data-------------------------------*/
 
     return () => {
       mounted = false;
@@ -113,19 +123,22 @@ const PurchaseOrder = () => {
 
 
   const fetchRegisteredProductsData = async () => {
+    
+    document.getElementById('app-loader-container').style.display = "block";
     const productsDiscountsViewResponse = await ProductsApiUtil.getFullRegisteredProducts();
     console.log(' productsDiscountsViewResponse:', productsDiscountsViewResponse);
 
     if (productsDiscountsViewResponse.hasError) {
       console.log('Cant fetch registered products Data -> ', productsDiscountsViewResponse.errorMessage);
-      message.error(productsDiscountsViewResponse.errorMessage, 3);
+      message.warning(productsDiscountsViewResponse.errorMessage, 3);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', productsDiscountsViewResponse);
 
       if (mounted) {     //imp if unmounted
-        message.success(productsDiscountsViewResponse.message, 3);
+        //message.success(productsDiscountsViewResponse.message, 3);
         /*-------for filtering products--------*/
         var products = productsDiscountsViewResponse.products.data
           || productsDiscountsViewResponse.products;
@@ -146,6 +159,7 @@ const PurchaseOrder = () => {
 
         /*-------for filtering products--------*/
         setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
       }
 
     }
@@ -155,7 +169,8 @@ const PurchaseOrder = () => {
 
   const fetchSuppliersData = async (pageLimit = 10, pageNumber = 1) => {
 
-    const SuppliersViewResponse = await SuppliersApiUtil.viewSuppliers(pageLimit, pageNumber);
+    //const SuppliersViewResponse = await SuppliersApiUtil.viewSuppliers(pageLimit, pageNumber);
+    const SuppliersViewResponse = await SuppliersApiUtil.viewAllSuppliers();
     console.log("SuppliersViewResponse:", SuppliersViewResponse);
 
     if (SuppliersViewResponse.hasError) {
@@ -167,7 +182,7 @@ const PurchaseOrder = () => {
       console.log("res -> ", SuppliersViewResponse);
       if (mounted) {     //imp if unmounted
         setSuppliersData(SuppliersViewResponse.suppliers.data || SuppliersViewResponse.suppliers);
-        setSuppliersPaginationData(SuppliersViewResponse.suppliers.page || {});
+        //setSuppliersPaginationData(SuppliersViewResponse.suppliers.page || {});
       }
     }
 
@@ -364,10 +379,12 @@ const PurchaseOrder = () => {
     addPurchaseOrderPostData.ordered_date = moment(new Date()).format("yyyy/MM/DD HH:mm:ss");
     addPurchaseOrderPostData.supplier_id = formValues.supplier;
 
-    //console.log("vvimp-final", clonedProductsPostData);
+    console.log("vvimp-final", clonedProductsPostData);
 
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
+
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.addPurchaseOrder(addPurchaseOrderPostData);
     console.log('AddPoResponse:', res);
@@ -375,19 +392,21 @@ const PurchaseOrder = () => {
     if (res.hasError) {
       console.log('Cant Add Purchase Order -> ', res.errorMessage);
       message.error(res.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
       setButtonDisabled(false);
-      setTimeout(hide, 1500);
+      setTimeout(hide, 500);
     }
     else {
       console.log('res -> ', res);
       message.success(res.message, 3);
-      setTimeout(hide, 1000);
+      setTimeout(hide, 500);
+      document.getElementById('app-loader-container').style.display = "none";
       setTimeout(() => {
         history.push({
           pathname: '/stock-control/purchase-orders',
           activeKey: 'purchase-orders'
         });
-      }, 2000);
+      }, 500);
     }
 
   }
@@ -395,7 +414,7 @@ const PurchaseOrder = () => {
 
 
   const handleDownloadPoForm = async () => {
-
+    document.getElementById('app-loader-container').style.display = "block";
     const hide = message.loading('Downloading in progress..', 0);
     const downloadPoResponse = await StockApiUtil.downloadPoForm();
     console.log("downloadPoResponse:", downloadPoResponse);
@@ -405,11 +424,13 @@ const PurchaseOrder = () => {
         "Cant Download PO Form -> ",
         downloadPoResponse.errorMessage
       );
+      document.getElementById('app-loader-container').style.display = "none";
 
       setTimeout(hide, 1500);
 
     } else {
       console.log("res -> ", downloadPoResponse);
+      document.getElementById('app-loader-container').style.display = "none";
       var csv = "SKU,Quantity\n";
       var arr = downloadPoResponse.product;
       arr.forEach(function (row) {
@@ -452,7 +473,7 @@ const PurchaseOrder = () => {
 
 
 
-  const handleSuppliersScroll = async (e) => {
+  /*const handleSuppliersScroll = async (e) => {
     //console.log("inside-scroll", e);
     var height = e.target.clientHeight;
     //console.log(height);
@@ -485,11 +506,11 @@ const PurchaseOrder = () => {
           }
         }
 
-      } /*----------------End Of Inner If------------------------*/
+      } 
 
-    } /*----------------End Of Outer If------------------------*/
+    } 
 
-  }
+  }  */
 
 
 
@@ -498,12 +519,11 @@ const PurchaseOrder = () => {
   return (
     <div className="page stock-add">
       <div className="page__header">
-        <h1>New Purchase Order</h1>
+        <h1><Button type="primary" shape="circle" className="back-btn"
+          icon={<ArrowLeftOutlined />}
+          onClick={handleCancel} />New Purchase Order</h1>
       </div>
-      <div style={{ textAlign: "center" }}>
-        {loading && <Spin size="large" tip="Loading..." />}
-      </div>
-
+      
 
       {!loading &&
         <div className="page__content">
@@ -554,8 +574,16 @@ const PurchaseOrder = () => {
                       ]}
                     >
                       <Select placeholder="Select Supplier"
-                        onPopupScroll={handleSuppliersScroll}
-                        loading={suppliersScrollLoading}
+                        //onPopupScroll={handleSuppliersScroll}
+                        //loading={suppliersScrollLoading}
+                        showSearch    //vimpp to seach
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                          option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
+                        filterSort={(optionA, optionB) =>
+                          optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
+                        }
                       >
                         {
                           suppliers.map((obj, index) => {
@@ -622,7 +650,7 @@ const PurchaseOrder = () => {
                           style={{ width: "100%" }}
                           id="download_csv"
                           onClick={handleDownloadPoForm}>
-                          Download SKU CSV
+                          Download sample File
                     </Button>
                       </Form.Item>
                     </div>
@@ -702,7 +730,9 @@ const PurchaseOrder = () => {
                     tableData={productsTableData}
                     tableDataLoading={loading}
                     onChangeProductsData={handleChangeProductsData}
-                    tableType="order_stock" />
+                    tableType="order_stock"
+                    currency={userLocalStorageData.currency.symbol}
+                  />
                 </div>
                 {/* Table */}
                 <Divider />

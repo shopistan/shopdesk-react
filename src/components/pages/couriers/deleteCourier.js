@@ -2,6 +2,8 @@ import React, {  useEffect, useState } from 'react';
 import { Button, Typography, message, Spin } from 'antd';
 import { useHistory } from 'react-router-dom';
 import * as CouriersApiUtil from '../../../utils/api/couriers-api-utils';
+import { ArrowLeftOutlined } from "@ant-design/icons";
+
 
 const { Text } = Typography;
 
@@ -33,11 +35,13 @@ const DeleteCourier  = (props) => {
 
 
     const getCourier = async (courierId) => {
+        document.getElementById('app-loader-container').style.display = "block";
         const getCourierResponse = await CouriersApiUtil.getCourier(courierId);
         console.log('getCourierResponse:', getCourierResponse);
         if (getCourierResponse.hasError) {
             console.log('Courier Cant Fetched -> ', getCourierResponse.errorMessage);
             setLoading(false);
+            document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             message.success(getCourierResponse.message, 2);
@@ -45,6 +49,7 @@ const DeleteCourier  = (props) => {
                 const courierData = getCourierResponse.courier[0];  //vvimp
                 setSelectedCourierData(courierData);
                 setLoading(false);
+                document.getElementById('app-loader-container').style.display = "none";
             }
         }
     }
@@ -54,6 +59,8 @@ const DeleteCourier  = (props) => {
     const handleConfirm = async () => {
         if (buttonDisabled === false) {
             setButtonDisabled(true);}
+
+        document.getElementById('app-loader-container').style.display = "block";
         const hide = message.loading('Saving Changes in progress..', 0);
         const courierDeleteResponse = await  CouriersApiUtil.deleteCourier(courier_id);
         console.log('courierDeleteResponse:', courierDeleteResponse);
@@ -62,12 +69,15 @@ const DeleteCourier  = (props) => {
             console.log('Cant delete courier -> ', courierDeleteResponse.errorMessage);
             message.error(courierDeleteResponse.errorMessage, 3);
             setButtonDisabled(false);
+            document.getElementById('app-loader-container').style.display = "none";
             setTimeout(hide, 1500);
+            
         }
         else {
             console.log('res -> ', courierDeleteResponse);
             if (mounted) {     //imp if unmounted
                 message.success(courierDeleteResponse.message, 3);
+                document.getElementById('app-loader-container').style.display = "none";
                 setTimeout(hide, 1500);
                 setTimeout(() => {
                     history.push({
@@ -85,15 +95,16 @@ const DeleteCourier  = (props) => {
     };
 
 
+
+
+
     return (
         <div className='page categoryDel'>
             <div className='page__header'>
-                <h1 className='page__title'>Delete Couriers</h1>
+                <h1 className='page__title'><Button type="primary" shape="circle" className="back-btn"
+                    icon={<ArrowLeftOutlined />}
+                    onClick={handleCancel} />Delete Couriers</h1>
             </div>
-            <div style={{ textAlign: "center" }}>
-                {loading && <Spin size="large" tip="Loading..." />}
-            </div>
-
 
             {!loading &&
             <div className='page__content'>
