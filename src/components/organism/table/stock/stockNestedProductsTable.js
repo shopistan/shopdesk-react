@@ -65,8 +65,22 @@ const EditableCell = ({
     };
 
 
+    const onQuantityInputChange = (e) => {
+        let orderQty = e.target.value;
+        //console.log("qty", orderQty);
+        const re = /^[0-9\b]+$/;
+        //console.log(re.test(e.target.value));
+        if (!orderQty === '' || !re.test(orderQty)) {  //if contains alphabets in string
+            form.setFieldsValue({
+                qty: orderQty.replace(/[^\d.]/g, '')
+            });
+        }
+
+    }
+
+
     const inputNode = inputType === 'number' ?
-        <InputNumber ref={inputRef} onPressEnter={save} onBlur={save} />
+        <Input ref={inputRef} onChange={onQuantityInputChange} onPressEnter={save} onBlur={save} />
         : <Input ref={inputRef} onPressEnter={save} onBlur={save} />;
 
 
@@ -82,7 +96,9 @@ const EditableCell = ({
 
             </Form.Item>
         ) : (
-                <div className="editable-cell-value-wrap" style={{ paddingRight: 24 }} onClick={toggleEdit}>
+                <div className="editable-cell-value-wrap"
+                    //style={{ paddingRight: 24 }}
+                    onClick={toggleEdit}>
                     {children}
                 </div>
             );
@@ -228,7 +244,7 @@ const StockNestedProductsTable = (props) => {
                 return (
                     <div>
                         <Tooltip title={props.tableType ==='order_adjustment' && "Adjusted quantity"}>
-                            <InputNumber value={record.qty || 0} />
+                            <Input className='u-width-100' value={record.qty || 0} />
                         </Tooltip>
                         
                     </div>
@@ -249,7 +265,7 @@ const StockNestedProductsTable = (props) => {
         {
             title: "Sale Price",
             dataIndex: "product_sale_price",
-            editable: true,    //imp new one
+            editable: props.tableType === 'order_stock' ? true : false,    //imp new one
             render: (_, record) => {
                 return (
                     <div>

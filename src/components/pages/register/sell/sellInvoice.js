@@ -57,7 +57,7 @@ const PrintSalesInvoice = (props) => {
 
             <div id="printSalesTable">
                 <center>
-                    <img src={templateImageSrc}  style={{width: "70"}} /><br/> 
+                    <img src={templateImageSrc}  style={{width: "10rem"}} /><br/> 
                     <b>{removeHTML(templateHeader)}</b><br />
                     <b>{removeHTML(templateFooter)}</b><br />
                     <div style={{ fontSize: "10px", marginTop: "7px" }}></div>

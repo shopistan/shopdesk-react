@@ -407,6 +407,22 @@ const AdjustmentStock = () => {
   };
 
 
+
+  const onQuantityInputChange = (e) => {
+    let orderQty = e.target.value;
+    //console.log("qty", orderQty);
+    const re = /^[0-9\b]+$/;
+    //console.log(re.test(e.target.value));
+    if (!orderQty === '' || !re.test(orderQty)) {  //if contains alphabets in string
+      form.setFieldsValue({
+        product_qty: orderQty.replace(/[^\d.]/g, '')
+      });
+    }
+
+  }
+
+
+
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
@@ -563,7 +579,7 @@ const AdjustmentStock = () => {
                       label="QTY"
                       name="product_qty"
                     >
-                      <InputNumber />
+                      <Input  onChange={onQuantityInputChange} />
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={24} md={6} className="stock-item-content">

@@ -132,7 +132,6 @@ const Couriers = () => {
   
 
   function handleSearchedDataPageChange(currentPg) {
-    console.log("sechedpage");
     setCurrentPageSearched(currentPg);
     setLoading(true);
     fetchSearchCouriers(paginationLimit, currentPg, searchedData);
