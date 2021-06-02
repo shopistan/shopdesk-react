@@ -71,19 +71,22 @@ const ProductsViewNestedTable = (props) => {
 
     }
 
-    const fetchProductsVariantsData = async (productUniqueId) => {
+    const fetchProductsVariantsData = async (productUniqueId) => { 
 
+        document.getElementById('app-loader-container').style.display = "block";
         const productsVariantsResponse = await ProductsApiUtil.viewVariants(productUniqueId);
         console.log('productsVariantsResponse:', productsVariantsResponse);
         if (productsVariantsResponse.hasError) {
             console.log('Cant fetch product Variants -> ', productsVariantsResponse.errorMessage);
             setLoading(false);
+            document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             console.log('res -> ', productsVariantsResponse);
-            message.success(productsVariantsResponse.message, 3);
+            //message.success(productsVariantsResponse.message, 3);
             setData(productsVariantsResponse.products);
             setLoading(false);
+            document.getElementById('app-loader-container').style.display = "none";
         }
     }
 

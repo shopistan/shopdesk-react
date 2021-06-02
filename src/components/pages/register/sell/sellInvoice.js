@@ -5,6 +5,7 @@ import UrlConstants from '../../../../utils/constants/url-configs';
 
 
 const PrintSalesInvoice = (props) => {
+    const { selectedOutletTemplateData =  null } = props;
 
 
     useEffect(async () => {
@@ -12,10 +13,11 @@ const PrintSalesInvoice = (props) => {
     }, []);
 
 
-    var templateImageSrc = '';
-    var templateHeader = '';
+    let templateImageSrc = '';
+    let templateHeader = '';
+    let templateFooter = '';
 
-    if (props.user.template_data) {
+    /*if (props.user.template_data) {
         if (props.user.template_data.template_image) {
             //templateImageSrc = `${UrlConstants.IMAGE_UPLOADS_URL}/uploads/${props.user.template_data.template_image}`;    //imp prev
             templateImageSrc = `${props.user.template_data.template_image}`;    //new one
@@ -23,7 +25,14 @@ const PrintSalesInvoice = (props) => {
         if (props.user.template_data.template_header) {
             templateHeader = props.user.template_data.template_header;
         }
+    }*/
+
+    if (selectedOutletTemplateData) {
+        templateImageSrc = `${selectedOutletTemplateData.template_image}`;    //new one
+        templateHeader = `${selectedOutletTemplateData.template_header}`;    //new one
+        templateFooter = `${selectedOutletTemplateData.template_footer}`;    //new one
     }
+
 
     function removeHTML(str) {
         var tmp = document.createElement("DIV");
@@ -44,13 +53,13 @@ const PrintSalesInvoice = (props) => {
     
 
 
-
     return (
 
             <div id="printSalesTable">
                 <center>
                     <img src={templateImageSrc}  style={{width: "70"}} /><br/> 
                     <b>{removeHTML(templateHeader)}</b><br />
+                    <b>{removeHTML(templateFooter)}</b><br />
                     <div style={{ fontSize: "10px", marginTop: "7px" }}></div>
 
                     <span>Receipt / Tax Invoice</span><br /><br />

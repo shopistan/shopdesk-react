@@ -38,6 +38,7 @@ import * as ProductsApiUtil from "../../../../utils/api/products-api-utils";
 import * as CustomersApiUtil from "../../../../utils/api/customer-api-utils";
 import * as CouriersApiUtil from "../../../../utils/api/couriers-api-utils";
 import * as SalesApiUtil from "../../../../utils/api/sales-api-utils";
+import * as SetupApiUtil from "../../../../utils/api/setup-api-utils";
 import * as Helpers from "../../../../utils/helpers/scripts";
 import SellNestedProductsTable from "../../../organism/table/sell/sellNestedProductsTable";
 import PrintSalesInvoiceTable from "./sellInvoice";
@@ -64,6 +65,10 @@ function Sell() {
   const [productsTotalAmount, setProductsTotalAmount] = useState(0);
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
   const [syncStatus, setSyncStatus] = useState(false);
+  const [templateData, setTemplateData] = useState(null);
+
+
+
 
   var clearSync = false;
 
@@ -100,6 +105,8 @@ function Sell() {
     fetchRegisteredProductsData();
     fetchCouriersData();
     startInvoice();
+
+    
 
 
     return () => {
@@ -466,7 +473,7 @@ function Sell() {
       ? readFromLocalStorage.data
       : null;
 
-    var currentInvoice;
+    //var currentInvoice;
 
     /*if (check) {
       currentInvoice = readFromLocalStorage;
@@ -574,6 +581,7 @@ function Sell() {
         checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
       ) {
         setLocalStorageData(userData);
+        getUserStoreData(userData.auth.current_store);  //imp to get user outlet data
       }
     }
 
@@ -847,6 +855,51 @@ function Sell() {
     //saveDataIntoLocalStorage("current_invoice", clonedInvoiceData);   //imp
   }
 
+
+
+  const getUserStoreData = async (storeId) => {
+    document.getElementById('app-loader-container').style.display = "block";
+    const getOutletViewResponse = await SetupApiUtil.getOutlet(storeId);
+    console.log('getOutletViewResponse:', getOutletViewResponse);
+
+    if (getOutletViewResponse.hasError) {
+      console.log('Cant fetch Store Data -> ', getOutletViewResponse.errorMessage);
+      //message.warning(getOutletViewResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
+    }
+    else {
+      console.log('res -> ', getOutletViewResponse);
+      let selectedStore = getOutletViewResponse.outlet;
+      //message.success(getOutletViewResponse.message, 3);
+      getTemplateData(selectedStore.template_id);   //imp to get template data
+
+    }
+  }
+
+
+
+  const getTemplateData = async (templateId) => {
+    
+    const getTepmlateResponse = await SetupApiUtil.getTemplate(templateId);
+    console.log('getTepmlateResponse:', getTepmlateResponse);
+
+    if (getTepmlateResponse.hasError) {
+      console.log('Cant get template Data -> ', getTepmlateResponse.errorMessage);
+      //message.warning(getTepmlateResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
+    }
+    else {
+      console.log('res -> ', getTepmlateResponse);
+      var receivedTemplateData = getTepmlateResponse.template;
+      //message.success(getTepmlateResponse.message, 3);
+      setTemplateData(receivedTemplateData);
+      document.getElementById('app-loader-container').style.display = "none";
+
+    }
+  }
+
+
+
   const onFinish = (values) => {
     console.log("Success:", values);
   };
@@ -857,11 +910,7 @@ function Sell() {
 
   console.log(saleInvoiceData);
 
-  const { Panel } = Collapse;
-
-  function callback(key) {
-    console.log(key);
-  }
+ 
 
   return (
     <>
@@ -1239,6 +1288,7 @@ function Sell() {
         <PrintSalesInvoiceTable
           user={localStorageData}
           invoice={saleInvoiceData}
+          selectedOutletTemplateData={templateData}
         />
       )}
     </>
