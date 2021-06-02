@@ -85,7 +85,7 @@ const Categories = () => {
         const categoriesData = categoriesViewResponse.categories.data || categoriesViewResponse.categories;
         setData(categoriesData);
         setPaginationData(categoriesViewResponse.categories.page || {});
-        //setLoading(false);
+        setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
 
       }
