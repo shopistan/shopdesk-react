@@ -62,7 +62,7 @@ const DeleteCategory = (props) => {
             setButtonDisabled(true);}
 
         document.getElementById('app-loader-container').style.display = "block";
-        const hide = message.loading('Saving Changes in progress..', 0);
+        //const hide = message.loading('Saving Changes in progress..', 0);
         const categoryDeleteResponse = await CategoriesApiUtil.deleteCategory(cat_id);
         console.log('categoryDeleteResponse:', categoryDeleteResponse);
 
@@ -70,14 +70,14 @@ const DeleteCategory = (props) => {
             console.log('Cant delete a Category -> ', categoryDeleteResponse.errorMessage);
             message.error(categoryDeleteResponse.errorMessage, 3);
             setButtonDisabled(false);
-            setTimeout(hide, 1500);
+            //setTimeout(hide, 1500);
             document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             console.log('res -> ', categoryDeleteResponse);
             if (mounted) {     //imp if unmounted
                 message.success(categoryDeleteResponse.message, 3);
-                setTimeout(hide, 1500);
+                //setTimeout(hide, 1500);
                 document.getElementById('app-loader-container').style.display = "none";
                 setTimeout(() => {
                     history.push({

@@ -109,7 +109,6 @@ const CustomerForm = (props) => {
 
       if (isEditMode) {
         document.getElementById('app-loader-container').style.display = "block";
-        const hide = message.loading('Saving Changes in progress..', 0);
         const userDataUpdateResponse = await updateUserDetails(
           updatedCustomerData
         );
@@ -119,10 +118,8 @@ const CustomerForm = (props) => {
           message.error(userDataUpdateResponse.errorMessage, 3);
           setButtonDisabled(false);
           document.getElementById('app-loader-container').style.display = "none";
-          setTimeout(hide, 1000);
         }
         else {
-          setTimeout(hide, 1000);
           console.log('res -> ', userDataUpdateResponse);
           message.success(userDataUpdateResponse.message, 3);
           document.getElementById('app-loader-container').style.display = "none";
@@ -144,7 +141,6 @@ const CustomerForm = (props) => {
           balance: values.balance,
         };
         document.getElementById('app-loader-container').style.display = "block";
-        const hide = message.loading('Saving Changes in progress..', 0);
         const userDataAddResponse = await addCustomer(addCustomerData);
         //console.log(userDataAddResponse);
         if (userDataAddResponse.hasError) {
@@ -152,10 +148,8 @@ const CustomerForm = (props) => {
           message.error(userDataAddResponse.errorMessage, 3);
           document.getElementById('app-loader-container').style.display = "none";
           setButtonDisabled(false);
-          setTimeout(hide, 1000);
         }
         else {
-          setTimeout(hide, 1000);
           console.log('res -> ', userDataAddResponse);
           message.success(userDataAddResponse.message, 3);
           document.getElementById('app-loader-container').style.display = "none";

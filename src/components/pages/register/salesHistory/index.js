@@ -348,20 +348,17 @@ const SalesHistory = () => {
 
 
   const getSelectedInvoiceHistory = async (invoiceId) => {
-    const hide = message.loading('Getting Invoice in progress..', 0);
     const getSaleHistoryResponse = await SalesApiUtil.getSalesInvoiceHistory(invoiceId);
     console.log('getSaleHistoryResponse:', getSaleHistoryResponse);
 
     if (getSaleHistoryResponse.hasError) {
       console.log('Cant fetch registered products Data -> ', getSaleHistoryResponse.errorMessage);
       message.error(getSaleHistoryResponse.errorMessage, 3);
-      setTimeout(hide, 1000);
     }
     else {
       console.log('res -> ', getSaleHistoryResponse);
       message.success(getSaleHistoryResponse.message, 2);
       setSelectedInvoiceData(getSaleHistoryResponse);
-      setTimeout(hide, 1000);
       history.push({
         pathname: "/register/sell",
         selected_invoice_data: getSaleHistoryResponse,
@@ -375,7 +372,6 @@ const SalesHistory = () => {
 
   const getSelectedQuickViewInvoiceHistory = async (invoiceId, tableRecord) => {
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Getting Invoice in progress..', 0);
     const getSaleHistoryResponse = await SalesApiUtil.getSalesInvoiceHistory(invoiceId);
     console.log('getSaleHistoryResponse:', getSaleHistoryResponse);
 
@@ -383,12 +379,10 @@ const SalesHistory = () => {
       console.log('Cant fetch registered products Data -> ', getSaleHistoryResponse.errorMessage);
       message.error(getSaleHistoryResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 500);
     }
     else {
       console.log('res -> ', getSaleHistoryResponse);
       //message.success(getSaleHistoryResponse.message, 2);
-      setTimeout(hide, 500);
       document.getElementById('app-loader-container').style.display = "none";
       let tableProducsData = getSaleHistoryResponse.invoices;
       /*---------------------------------------------------*/
@@ -473,17 +467,15 @@ const SalesHistory = () => {
 
     if (salesHistoryData.length > 0) {
       document.getElementById('app-loader-container').style.display = "block";
-      const hide = message.loading('Exporting Parked Sales Is In Progress..', 0);
       const getStoreResponse = await SalesApiUtil.getStoreId();
       if (getStoreResponse.hasError) {
         const errorMessage = getStoreResponse.errorMessage;
         console.log('Cant get Store Id -> ', errorMessage);
         message.error(errorMessage, 3);
         document.getElementById('app-loader-container').style.display = "none";
-        setTimeout(hide, 1500);
       } else {
         console.log("Success:", getStoreResponse.message);
-        downloadParkedSalesInvoices(hide, getStoreResponse || null);
+        downloadParkedSalesInvoices(getStoreResponse || null);
       }
     }
     else { message.warning("Sales History Data Not Found", 3) } 
@@ -491,7 +483,7 @@ const SalesHistory = () => {
   }
 
 
-  const downloadParkedSalesInvoices = async (hide, fetchedStore) => {
+  const downloadParkedSalesInvoices = async (fetchedStore) => {
     //console.log("fetchedStore", fetchedStore);
     const parkedSalesInvoicesExportResponse = await SalesApiUtil.exportParkedSalesInvoices(
       fetchedStore.store_id
@@ -505,10 +497,8 @@ const SalesHistory = () => {
       );
       message.error(parkedSalesInvoicesExportResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1500);
     } else {
       console.log("res -> ", parkedSalesInvoicesExportResponse.data);
-      setTimeout(hide, 1500);
       /*---------------csv download--------------------------------*/
       if (mounted) {     //imp if unmounted
         // CSV FILE

@@ -54,7 +54,6 @@ const DeleteProduct = (props) => {
             setButtonDisabled(true);}
 
         document.getElementById('app-loader-container').style.display = "block";
-        const hide = message.loading('Saving changes in progress..', 0);
         const productDeleteResponse = await ProductsApiUtil.deleteProduct(productData.product_id);
         console.log('productDeleteResponse:', productDeleteResponse);
 
@@ -63,13 +62,11 @@ const DeleteProduct = (props) => {
             message.error(productDeleteResponse.errorMessage, 3);
             setButtonDisabled(false);
             document.getElementById('app-loader-container').style.display = "none";
-            setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', productDeleteResponse);
             message.success(productDeleteResponse.message, 3);
             document.getElementById('app-loader-container').style.display = "none";
-            setTimeout(hide, 1500);
             setTimeout(() => {
                 history.push({
                   pathname: '/products',

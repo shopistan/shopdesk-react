@@ -53,7 +53,6 @@ const ProductHistory = () => {
 
   const fetchProductMovementReport = async (productId) => {
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading("Getting Product Data..", 0);
     const productMovementReportResponse = await ProductsApiUtil.getProductMovementReport(
       productId
     );
@@ -68,10 +67,8 @@ const ProductHistory = () => {
       );
       message.warning(productMovementReportResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1000);
     } else {
       console.log("res -> ", productMovementReportResponse);
-      setTimeout(hide, 1000);
       //message.success(productMovementReportResponse.message, 3);
       setProductMovementReportData(
         productMovementReportResponse.product_movement

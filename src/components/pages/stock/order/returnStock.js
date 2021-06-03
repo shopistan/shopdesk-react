@@ -271,7 +271,6 @@ const ReturnStock = () => {
       setButtonDisabled(true);}
 
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.returnStock(returnStockPostData);
     console.log('ReturnStockResponse:', res);
 
@@ -280,13 +279,11 @@ const ReturnStock = () => {
       message.error(res.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
       setButtonDisabled(false);
-      setTimeout(hide, 1500);
     }
     else {
       console.log('res -> ', res);
       message.success(res.message, 3);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1000);
       setTimeout(() => {
         history.push({
           pathname: '/stock-control/purchase-orders',

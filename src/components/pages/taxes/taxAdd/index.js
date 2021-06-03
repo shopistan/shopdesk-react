@@ -19,7 +19,6 @@ const TaxAdd = () => {
 
     document.getElementById('app-loader-container').style.display = "block";
     console.log("Success:", values);
-    const hide = message.loading('Saving Changes in progress..', 0);
     const TaxAddResponse = await TaxApiUtil.addTax(
       values.tax_name,
       values.tax_value
@@ -31,14 +30,12 @@ const TaxAdd = () => {
       message.error(TaxAddResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
       setButtonDisabled(false);
-      setTimeout(hide, 1500);
       
     } else {
       console.log("res -> ", TaxAddResponse.message);
       if (mounted) {     //imp if unmounted
         message.success(TaxAddResponse.message, 3);
         document.getElementById('app-loader-container').style.display = "none";
-        setTimeout(hide, 1500);
         setTimeout(() => {
           history.push({
             pathname: "/taxes",
@@ -94,7 +91,7 @@ const TaxAdd = () => {
       <div className="page__content">
         <div className="page__form">
           <Form
-             form={form}
+            form={form}
             name="basic"
             layout="vertical"
             initialValues={{

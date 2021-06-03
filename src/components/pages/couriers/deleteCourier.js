@@ -61,7 +61,6 @@ const DeleteCourier  = (props) => {
             setButtonDisabled(true);}
 
         document.getElementById('app-loader-container').style.display = "block";
-        const hide = message.loading('Saving Changes in progress..', 0);
         const courierDeleteResponse = await  CouriersApiUtil.deleteCourier(courier_id);
         console.log('courierDeleteResponse:', courierDeleteResponse);
 
@@ -70,7 +69,6 @@ const DeleteCourier  = (props) => {
             message.error(courierDeleteResponse.errorMessage, 3);
             setButtonDisabled(false);
             document.getElementById('app-loader-container').style.display = "none";
-            setTimeout(hide, 1500);
             
         }
         else {
@@ -78,7 +76,6 @@ const DeleteCourier  = (props) => {
             if (mounted) {     //imp if unmounted
                 message.success(courierDeleteResponse.message, 3);
                 document.getElementById('app-loader-container').style.display = "none";
-                setTimeout(hide, 1500);
                 setTimeout(() => {
                     history.push({
                         pathname: '/couriers',

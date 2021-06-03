@@ -151,7 +151,6 @@ const AdjustmentStock = () => {
     console.log(fileList[0]);   //imp
     var file = fileList[0];
 
-    //const hide = message.loading('Products Bulk Import in progress..', 0);
 
     if (file && fileExtention(file.name) === 'csv') {
       var reader = new FileReader();
@@ -340,7 +339,6 @@ const AdjustmentStock = () => {
       setButtonDisabled(true);}
 
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.addStockAdjustment(addStockAdjustmentPostData);
     console.log('AddAdjustmentResponse:', res);
 
@@ -349,13 +347,11 @@ const AdjustmentStock = () => {
       message.error(res.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
       setButtonDisabled(false);
-      setTimeout(hide, 1500);
     }
     else {
       console.log('res -> ', res);
       message.success(res.message, 3);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1000);
       setTimeout(() => {
         history.push({
           pathname: '/stock-control/stock-adjustments',
@@ -371,7 +367,6 @@ const AdjustmentStock = () => {
   const handleDownloadPoForm = async () => {
 
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Downloading in progress..', 0);
     const downloadPoResponse = await StockApiUtil.downloadPoForm();
     console.log("downloadPoResponse:", downloadPoResponse);
 
@@ -382,7 +377,6 @@ const AdjustmentStock = () => {
       );
       document.getElementById('app-loader-container').style.display = "none";
 
-      setTimeout(hide, 1500);
 
     } else {
       console.log("res -> ", downloadPoResponse);
@@ -401,7 +395,7 @@ const AdjustmentStock = () => {
       hiddenElement.download = new Date().toUTCString() + "-Product-SKU.csv";
       hiddenElement.click();
       //parent.removeChild(hiddenElement); 
-      setTimeout(hide, 1500);
+      
     }
 
   };

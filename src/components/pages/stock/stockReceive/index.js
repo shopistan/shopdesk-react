@@ -160,7 +160,6 @@ const StockReceive = (props) => {
             setButtonDisabled(true);}
         
         document.getElementById('app-loader-container').style.display = "block";
-        const hide = message.loading('Saving Changes in progress..', 0);
         const res = await StockApiUtil.addReceivePurchaseOrder(receivePurchaseOrderPostData);
         console.log('AddreceivePoResponse:', res);
 
@@ -169,14 +168,12 @@ const StockReceive = (props) => {
             message.error(res.errorMessage, 3);
             document.getElementById('app-loader-container').style.display = "none";
             setButtonDisabled(false);
-            setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', res);
             if (mounted) {     //imp if unmounted
                 message.success(res.message, 3);
                 document.getElementById('app-loader-container').style.display = "none";
-                setTimeout(hide, 1000);
                 setTimeout(() => {
                     history.push({
                         pathname: '/stock-control/purchase-orders',

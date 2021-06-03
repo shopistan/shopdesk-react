@@ -67,7 +67,6 @@ const ReceiptDelete = (props) => {
             setButtonDisabled(true);}
             
         document.getElementById('app-loader-container').style.display = "block";
-        const hide = message.loading('Saving Changes in progress..', 0);
         const receiptDeleteResponse = await SetupApiUtil.deleteTemplate(templateData.template_id);
         console.log('receiptDeleteResponse:', receiptDeleteResponse);
 
@@ -76,19 +75,17 @@ const ReceiptDelete = (props) => {
             message.error(receiptDeleteResponse.errorMessage, 3);
             setButtonDisabled(false);
             document.getElementById('app-loader-container').style.display = "none";
-            setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', receiptDeleteResponse);
             message.success('Receipt deletion Succesfull ', 3);
             document.getElementById('app-loader-container').style.display = "none";
-            setTimeout(hide, 1500);
             setTimeout(() => {
                 history.push({
                     pathname: '/setup/receipts-templates',
                     activeKey: 'receipts-templates',
                 });
-            }, 2000);
+            }, 1000);
         }
     };
 

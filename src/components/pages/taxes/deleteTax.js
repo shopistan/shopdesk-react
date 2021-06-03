@@ -65,14 +65,12 @@ const DeleteTax = (props) => {
         }
 
         document.getElementById('app-loader-container').style.display = "block";
-        const hide = message.loading('Saving Changes in progress..', 0);
         const taxDeleteResponse = await TaxApiUtil.deleteTax(selectedTaxData.tax_id);
         console.log('taxDeleteResponse:', taxDeleteResponse);
 
         if (taxDeleteResponse.hasError) {
             console.log('Cant delete Tax -> ', taxDeleteResponse.errorMessage);
             message.error(taxDeleteResponse.errorMessage, 3);
-            setTimeout(hide, 1000);
             setButtonDisabled(false);
             document.getElementById('app-loader-container').style.display = "none";
         }
@@ -81,7 +79,6 @@ const DeleteTax = (props) => {
             if (mounted) {     //imp if unmounted
                 message.success(taxDeleteResponse.message, 3);
                 document.getElementById('app-loader-container').style.display = "none";
-                setTimeout(hide, 1000);
                 setTimeout(() => {
                     history.push({
                         pathname: '/taxes',

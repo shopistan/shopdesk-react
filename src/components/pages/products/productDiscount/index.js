@@ -81,14 +81,12 @@ const ProductDiscount = () => {
   const saveProductsDiscountedData = async (ProductDiscountedData) => {
     //console.log(ProductDiscountedData);
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Saving changes in progress..', 0);
     const saveproductsDiscountedDataResponse = await ProductsApiUtil.saveProductsDiscountedData(ProductDiscountedData);
     console.log('saveproductsDiscountedDataResponse:', saveproductsDiscountedDataResponse);
 
     if (saveproductsDiscountedDataResponse.hasError) {
       console.log('Cant save products Discounted Data -> ', saveproductsDiscountedDataResponse.errorMessage);
       message.error(saveproductsDiscountedDataResponse.errorMessage, 3);
-      setTimeout(hide, 1000);
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
     }
@@ -96,7 +94,6 @@ const ProductDiscount = () => {
       console.log('res -> ', saveproductsDiscountedDataResponse);
       if (mounted) {     //imp if unmounted
         message.success(saveproductsDiscountedDataResponse.message, 3);
-        setTimeout(hide, 1000);
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
         setTimeout(() => {
