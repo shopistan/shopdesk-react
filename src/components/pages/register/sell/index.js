@@ -575,7 +575,7 @@ function Sell() {
     popupWin.document.open();
     // window.print(); window.close(); 'width: 80%, height=80%'
     popupWin.document.write(doc);
-    //popupWin.document.close();  //vvimp for autoprint
+    popupWin.document.close();  //vvimp for autoprint
   };
 
   ////////////////imp funcyionality////////////////////
@@ -1020,7 +1020,7 @@ function Sell() {
               </Select>
             </Form.Item>
             <Form.Item
-              label='Invoice Back Date'
+              label='Invoice Date'
               name='invoiceDate'
             >
               <DatePicker  className='select-w-100'
