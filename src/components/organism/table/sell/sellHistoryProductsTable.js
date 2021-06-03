@@ -126,7 +126,7 @@ const SellHistoryProductsTable = (props) => {
             },
         },
         {
-            title: "Action",
+            title: "Return",
             render: (_, record) => {
                 return (
                     <div className='action-btns stock-table-delete-item'>

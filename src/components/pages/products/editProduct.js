@@ -663,6 +663,16 @@ const EditProduct = (props) => {
                             {/* Form Section */}
                             {/*    products-variants-edit    */}
 
+                            <div className="form__row--footer">
+                                <Button type='primary'
+                                    className='custom-btn--primary'
+                                    htmlType='submit'
+                                    disabled={buttonDisabled} >
+                                    Edit Product
+                                    </Button>
+                            </div>
+                            
+
                         </Form>
                     </div>
                 </div>
