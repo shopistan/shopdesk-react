@@ -24,6 +24,7 @@ const InventoryDump = () => {
 
   const fetchProductsInventoryData = async () => {
 
+    document.getElementById('app-loader-container').style.display = "block";
     const productsInventoryResponse = await ReportsApiUtil.viewPrductsInventory();
     console.log('productsInventoryResponse Response:', productsInventoryResponse);
 
@@ -31,6 +32,7 @@ const InventoryDump = () => {
       console.log('Cant fetch Products Inventory Data -> ', productsInventoryResponse.errorMessage);
       message.warning(productsInventoryResponse.errorMessage, 3);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', productsInventoryResponse);
@@ -39,6 +41,7 @@ const InventoryDump = () => {
         setInventoryData(productsInventoryResponse.inventory_report);
         setLoading(false);
         SetinventoryCount((productsInventoryResponse.inventory_report).length);
+        document.getElementById('app-loader-container').style.display = "none";
       }
     }
   }
