@@ -18,6 +18,7 @@ import {
   from "antd";
 import { ProfileOutlined, DownOutlined, DownloadOutlined } from "@ant-design/icons";
 import * as SalesApiUtil from '../../../../utils/api/sales-api-utils';
+import * as SetupApiUtil from "../../../../utils/api/setup-api-utils";
 import { useHistory } from "react-router-dom";
 import * as Helpers from "../../../../utils/helpers/scripts";
 import SellHistoryNestedProductsTable from "../../../organism/table/sell/sellHistoryProductsTable";
@@ -62,6 +63,7 @@ const SalesHistory = () => {
   const [loading, setLoading] = useState(true);
   const [dataSearched, setDataSearched] = useState([]);
   const [dataSearchedAccumulate, setDataSearchedAccumulate] = useState([]);
+  const [templateData, setTemplateData] = useState(null);
 
 
   var mounted = true;
@@ -83,6 +85,7 @@ const SalesHistory = () => {
         checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
       ) {
         setLocalStorageData(userData);
+        getUserStoreData(userData.auth.current_store);  //imp to get user outlet data
       }
     }
 
@@ -519,6 +522,51 @@ const SalesHistory = () => {
 
   }
 
+
+
+  const getUserStoreData = async (storeId) => {
+    document.getElementById('app-loader-container').style.display = "block";
+    const getOutletViewResponse = await SetupApiUtil.getOutlet(storeId);
+    console.log('getOutletViewResponse:', getOutletViewResponse);
+
+    if (getOutletViewResponse.hasError) {
+      console.log('Cant fetch Store Data -> ', getOutletViewResponse.errorMessage);
+      //message.warning(getOutletViewResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
+    }
+    else {
+      console.log('res -> ', getOutletViewResponse);
+      let selectedStore = getOutletViewResponse.outlet;
+      //message.success(getOutletViewResponse.message, 3);
+      getTemplateData(selectedStore.template_id);   //imp to get template data
+
+    }
+  }
+
+
+
+  const getTemplateData = async (templateId) => {
+    
+    const getTepmlateResponse = await SetupApiUtil.getTemplate(templateId);
+    console.log('getTepmlateResponse:', getTepmlateResponse);
+
+    if (getTepmlateResponse.hasError) {
+      console.log('Cant get template Data -> ', getTepmlateResponse.errorMessage);
+      //message.warning(getTepmlateResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
+    }
+    else {
+      console.log('res -> ', getTepmlateResponse);
+      var receivedTemplateData = getTepmlateResponse.template;
+      //message.success(getTepmlateResponse.message, 3);
+      setTemplateData(receivedTemplateData);
+      document.getElementById('app-loader-container').style.display = "none";
+
+    }
+  }
+
+
+
  
 
 
@@ -766,6 +814,7 @@ const SalesHistory = () => {
       {quickViewInvoicePrintData && (
         <PrintSalesInvoiceTable
           user={localStorageData}
+          selectedOutletTemplateData={templateData}
           invoice={quickViewInvoicePrintData}
           invoiceType={"quick_view"}
         />
