@@ -66,6 +66,7 @@ function Sell() {
   const [productsTotalQuantity, setProductsTotalQuantity] = useState(0);
   const [syncStatus, setSyncStatus] = useState(false);
   const [templateData, setTemplateData] = useState(null);
+  const [currentInvoiceNumber, setCurrentInvoiceNumber] = useState("");
 
 
 
@@ -102,12 +103,12 @@ function Sell() {
       //console.log(tmpInvoice);
     }
 
+   
     fetchRegisteredProductsData();
     fetchCouriersData();
     startInvoice();
 
     
-
 
     return () => {
       console.log("unmount");
@@ -192,6 +193,26 @@ function Sell() {
 
     }
   };
+
+
+
+  const getCurrentInvoiceNumber = async () => {
+    const getInvoieNumberResponse = await SalesApiUtil.getCurrentInvoiceNumber();
+    console.log("getInvoieNumberResponse:", getInvoieNumberResponse);
+
+    if (getInvoieNumberResponse.hasError) {
+      console.log("Cant getInvoieNumber -> ", getInvoieNumberResponse.errorMessage);
+    } else {
+      console.log("res -> ", getInvoieNumberResponse);
+      if (mounted) {     //imp if unmounted
+        //message.success(couriersViewResponse.message, 3);
+        setCurrentInvoiceNumber(getInvoieNumberResponse.invoice_number);
+
+      }
+    }
+
+  }
+
 
   const handleCustomerSearch = async (searchValue) => {
 
@@ -353,7 +374,7 @@ function Sell() {
   };
 
   const handlePaidChange = (value) => {
-    var inputValue = parseFloat(value);
+    let inputValue = (value);
     //var costFormValues = costForm.getFieldsValue();
     //console.log(costFormValues);
     let paidAmount;
@@ -364,9 +385,10 @@ function Sell() {
     }
 
     const clonedInvoice = { ...saleInvoiceData };
-    clonedInvoice.payed = paidAmount.toFixed(2);
+    clonedInvoice.payed = paidAmount;
     
     //costForm.setFieldsValue({ paid: clonedInvoiceData && clonedInvoiceData.payed }); //imp
+    saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, clonedInvoice);    //imp
     setSaleInvoiceData(clonedInvoice);
 
   };
@@ -532,7 +554,9 @@ function Sell() {
     costForm.setFieldsValue({
       discounted_value:  0,
     }); //imp
+
     
+    //await getCurrentInvoiceNumber();     //imp new one working but no off right now
 
     let newInvoice = createNewInvoice(); //new invoice again
     updateCart(newInvoice);
@@ -582,6 +606,8 @@ function Sell() {
       ) {
         setLocalStorageData(userData);
         getUserStoreData(userData.auth.current_store);  //imp to get user outlet data
+        getCurrentInvoiceNumber();                      //imp new one working correctly
+
       }
     }
 
@@ -596,7 +622,8 @@ function Sell() {
         }
       }
       /*-------------------------new version-------------------------*/
-      updateCart(currentInvoice);
+      //console.log("imp-here-local-storage");
+      updateCart(currentInvoice, true);         //imp to pass true in case of loacal invoice total paid value 
 
     } else {
       currentInvoice = createNewInvoice();
@@ -673,6 +700,7 @@ function Sell() {
             //console.log("imp-sync-queue-inserted-val", localInvoiceQueue[index]);
             localInvoiceQueue.splice(index, 1);
             saveDataIntoLocalStorage(Constants.SELL_INVOICE_QUEUE_KEY, localInvoiceQueue);
+            await getCurrentInvoiceNumber();     //imp new one working correctly
             console.log(index);
           }
         }
@@ -699,7 +727,7 @@ function Sell() {
     ////////////////imp functionality////////////////////
 
   function createNewInvoice() {
-    ///////////////
+    ///////////////////
     /*-----------set user store id-------------*/
     var readFromLocalStorage = getDataFromLocalStorage(
       Constants.USER_DETAILS_KEY
@@ -743,7 +771,7 @@ function Sell() {
     return data;
   }
 
-  function updateCart(invoiceData) {
+  function updateCart(invoiceData, localStorageInvoiceTotalPayedCheck = false) {
     var formValues = form.getFieldsValue();
     var costFormValues = costForm.getFieldsValue();
 
@@ -832,14 +860,21 @@ function Sell() {
     clonedInvoiceData.discountAmount = parseFloat(
       ((discountedInputValue * clonedInvoiceData.total) / 100).toFixed(2)
     );
-    clonedInvoiceData.payed = parseFloat(
-      parseFloat(
-        clonedInvoiceData.total - clonedInvoiceData.discountAmount
-      ).toFixed(2)
-    );
+
+
+
+    if (!localStorageInvoiceTotalPayedCheck) {   //imp check for local
+      clonedInvoiceData.payed = parseFloat(
+        parseFloat(
+          clonedInvoiceData.total - clonedInvoiceData.discountAmount
+        ).toFixed(2)
+      );
+    }
+
 
     setSaleInvoiceData(clonedInvoiceData); //imp
     console.log(clonedInvoiceData);
+    //console.log(clonedInvoiceData.payed);
 
 
     costForm.setFieldsValue({
@@ -853,6 +888,7 @@ function Sell() {
     }
 
     //saveDataIntoLocalStorage("current_invoice", clonedInvoiceData);   //imp
+
   }
 
 
@@ -909,6 +945,8 @@ function Sell() {
   };
 
   console.log(saleInvoiceData);
+
+  console.log("currentInvoiceNumber", currentInvoiceNumber);
 
  
 
@@ -1284,11 +1322,12 @@ function Sell() {
       </div>
 
       {/* print sales overview */}
-      {saleInvoiceData && saleInvoiceData.products && (
+      {(saleInvoiceData && currentInvoiceNumber && saleInvoiceData.products) && (
         <PrintSalesInvoiceTable
           user={localStorageData}
           invoice={saleInvoiceData}
           selectedOutletTemplateData={templateData}
+          currentInvoiceNo={currentInvoiceNumber}
         />
       )}
     </>

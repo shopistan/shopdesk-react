@@ -152,7 +152,6 @@ const Customers = () => {
   const ExportToCsv = async (e) => {
     if (data.length > 0) {
       document.getElementById('app-loader-container').style.display = "block";
-      const hide = message.loading('Exporting Customers Is In Progress..', 0);
       const getuserResponse = await CustomersApiUtil.getUserId();
       console.log("customers export response:", getuserResponse);
       if (getuserResponse.hasError) {
@@ -160,10 +159,9 @@ const Customers = () => {
         console.log('Cant get User Id -> ', errorMessage);
         message.error(errorMessage, 3);
         document.getElementById('app-loader-container').style.display = "none";
-        setTimeout(hide, 1500);
       } else {
         console.log("Success:", getuserResponse.message);
-        exportCustomersData(hide, getuserResponse.user_id || null);
+        exportCustomersData(getuserResponse.user_id || null);
       }
     }
     else { 
@@ -173,7 +171,7 @@ const Customers = () => {
   }
 
 
-  const exportCustomersData = async (hide, currentUserId) => {
+  const exportCustomersData = async (currentUserId) => {
     console.log("currentUserId", currentUserId);
     const customersExportResponse = await CustomersApiUtil.exportCustomers(currentUserId);
     console.log("customers export response:", customersExportResponse);
@@ -184,11 +182,9 @@ const Customers = () => {
         customersExportResponse.errorMessage
       );
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1500);
     } else {
       console.log("res -> ", customersExportResponse.data);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1500);
       /*---------------csv download--------------------------------*/
       if (mounted) {     //imp if unmounted
         // CSV FILE

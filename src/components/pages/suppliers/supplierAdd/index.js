@@ -18,7 +18,6 @@ const SupplierAdd = () => {
       setButtonDisabled(true);}
     console.log("Success:", values);
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Saving Changes in progress..', 0);
     const supplierAddResponse = await SuppliersApiUtil.addSupplier(
       values.supplier_name,
       values.contact_person,
@@ -36,13 +35,11 @@ const SupplierAdd = () => {
       message.error(supplierAddResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
       setButtonDisabled(false);
-      setTimeout(hide, 1500);
     } else {
       console.log("res -> ", supplierAddResponse.message);
       if (mounted) {     //imp if unmounted
         message.success(supplierAddResponse.message, 3);
         document.getElementById('app-loader-container').style.display = "none";
-        setTimeout(hide, 1500);
         setTimeout(() => {
           history.push({
             pathname: "/suppliers",

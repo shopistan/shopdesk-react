@@ -279,7 +279,6 @@ const TransferInventory = () => {
       setButtonDisabled(true);}
      
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.transferInventory(transferInventoryPostData);
     console.log('TransferOutResponse:', res);
 
@@ -288,13 +287,11 @@ const TransferInventory = () => {
       message.error(res.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
       setButtonDisabled(false);
-      setTimeout(hide, 500);
     }
     else {
       console.log('res -> ', res);
       message.success(res.message, 3);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 500);
       setTimeout(() => {
         history.push({
           pathname: '/stock-control/inventory-transfers',

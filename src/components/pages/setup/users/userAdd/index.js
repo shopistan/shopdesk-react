@@ -97,7 +97,6 @@ function UserAdd() {
       setButtonDisabled(true);}
     
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Saving Changes in progress..', 0);
     const addUserResponse = await SetupApiUtil.addUser(addUserPostData);
     console.log('addUserResponse:', addUserResponse);
 
@@ -106,13 +105,11 @@ function UserAdd() {
       message.error(addUserResponse.errorMessage, 3);
       setButtonDisabled(false);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1500);
     }
     else {
       console.log('res -> ', addUserResponse);
       message.success(addUserResponse.message, 3);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1000);
       setTimeout(() => {
         history.push({
           pathname: '/setup/users',

@@ -61,7 +61,6 @@ const DeleteSupplier = (props) => {
             setButtonDisabled(true);}
 
         document.getElementById('app-loader-container').style.display = "block";
-        const hide = message.loading('Saving Changes in progress..', 0);
         const supplierDeleteResponse = await SuppliersApiUtil.deleteSupplier(SupplierData.supplier_id);
         console.log('supplierDeleteResponse:', supplierDeleteResponse);
 
@@ -70,14 +69,12 @@ const DeleteSupplier = (props) => {
             message.error(supplierDeleteResponse.errorMessage, 3);
             document.getElementById('app-loader-container').style.display = "none";
             setButtonDisabled(false);
-            setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', supplierDeleteResponse.message);
             if (mounted) {     //imp if unmounted
                 message.success(supplierDeleteResponse.message, 3);
                 document.getElementById('app-loader-container').style.display = "none";
-                setTimeout(hide, 1500);
                 setTimeout(() => {
                     history.push({
                         pathname: '/suppliers',

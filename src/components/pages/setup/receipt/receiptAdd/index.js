@@ -47,7 +47,6 @@ function ReceiptAdd() {
       setButtonDisabled(true);}
 
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Saving Changes in progress..', 0);
     const addTemplateResponse = await SetupApiUtil.addTemplate(addTemplatePostData);
     console.log('addTemplateResponse:', addTemplateResponse);
 
@@ -56,13 +55,11 @@ function ReceiptAdd() {
       message.error(addTemplateResponse.errorMessage, 3);
       setButtonDisabled(false);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1500);
     }
     else {
       console.log('res -> ', addTemplateResponse);
       message.success(addTemplateResponse.message, 3);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1000);
       setTimeout(() => {
         history.push({
           pathname: '/setup/receipts-templates',
@@ -77,20 +74,17 @@ function ReceiptAdd() {
   const handleUpload = async () => {
     //console.log(fileList[0]);   //imp
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Image Uploading Is In Progress...', 0);
     const ImageUploadResponse = await ProductsApiUtil.imageUpload(fileList[0]);
     console.log('ImageUploadResponse:', ImageUploadResponse);
     if (ImageUploadResponse.hasError) {
       console.log('Product Image Cant Upload -> ', ImageUploadResponse.errorMessage);
       message.error('Product  Image Cant Upload', 3);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1000);
     }
     else {
       console.log('res -> ', ImageUploadResponse);
       message.success(ImageUploadResponse.message, 3);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1000);
       setFileList([]);
       setproductImagePreviewSource(ImageUploadResponse.upload_data);
       setIsImageUpload(true);

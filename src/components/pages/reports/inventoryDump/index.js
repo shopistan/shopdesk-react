@@ -125,17 +125,15 @@ const InventoryDump = () => {
 
     if (inventoryData.length > 0) {
       document.getElementById('app-loader-container').style.display = "block";
-      const hide = message.loading('Inventory Dump Is In Progress..', 0);
       const getStoreResponse = await ReportsApiUtil.getStoreId();
       if (getStoreResponse.hasError) {
         const errorMessage = getStoreResponse.errorMessage;
         console.log('Cant get Store Id -> ', errorMessage);
         message.error(errorMessage, 3);
         document.getElementById('app-loader-container').style.display = "none";
-        setTimeout(hide, 1500);
       } else {
         console.log("Success:", getStoreResponse.message);
-        downloadInventoryDump(hide, getStoreResponse.store_id || null);
+        downloadInventoryDump(getStoreResponse.store_id || null);
       }
     }
     else { message.warning("No Inventory Data Found", 3) }
@@ -144,7 +142,7 @@ const InventoryDump = () => {
 
 
 
-  const downloadInventoryDump = async (hide, currentStoreId) => {
+  const downloadInventoryDump = async (currentStoreId) => {
     console.log("currentStoreId", currentStoreId);
     const inventoryDumpExportResponse = await ReportsApiUtil.exportInventory(currentStoreId);
     console.log("Inventory Dump export response:", inventoryDumpExportResponse);
@@ -156,10 +154,8 @@ const InventoryDump = () => {
       );
       message.error(inventoryDumpExportResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1500);
     } else {
       console.log("res -> ", inventoryDumpExportResponse.data);
-      setTimeout(hide, 1500);
       /*---------------csv download--------------------------------*/
       if (mounted) {     //imp if unmounted
         // CSV FILE

@@ -34,21 +34,18 @@ const SignIn = () => {
 
     //todo: show loader here
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('User Signing...', 0);
     const loginResponse = await login(values.username, values.password);
     if (loginResponse.hasError) {
       const errorMessage = loginResponse.errorMessage;
       message.error(errorMessage, 3);
       setButtonDisabled(false);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1000);
     } else {
       const loggedInUserDetails = loginResponse;
       if (mounted) {   //imp if unmounted
         saveDataIntoLocalStorage(Constants.USER_DETAILS_KEY, loggedInUserDetails);
         message.success("Login Succesfull ", 3);
         document.getElementById('app-loader-container').style.display = "none";
-        setTimeout(hide, 1000);
         
         setTimeout(() => {
           window.open("/outlets", "_self");

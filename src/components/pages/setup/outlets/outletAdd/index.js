@@ -74,7 +74,6 @@ function OutletAdd() {
       setButtonDisabled(true);}
 
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Saving Changes in progress..', 0);
     const addOutletResponse = await SetupApiUtil.addOutlet(addOutletPostData);
     console.log('addOutletResponse:', addOutletResponse);
 
@@ -83,12 +82,10 @@ function OutletAdd() {
       message.error(addOutletResponse.errorMessage, 3);
       setButtonDisabled(false);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1000);
     }
     else {
       console.log('res -> ', addOutletResponse);
       message.success(addOutletResponse.message, 3);
-      setTimeout(hide, 1000);
       document.getElementById('app-loader-container').style.display = "none";
       setTimeout(() => {
         history.push({

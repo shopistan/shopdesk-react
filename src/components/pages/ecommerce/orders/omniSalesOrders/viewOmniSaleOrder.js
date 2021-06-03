@@ -118,7 +118,6 @@ const ViewOmniSaleOrder = (props) => {
         let invoices = [invoice_id];
         //console.log(invoices);
         document.getElementById('app-loader-container').style.display = "block";
-        const hide = message.loading('Saving Changes in progress..', 0);
         const cancelOeSalesOrdersResponse = await EcommerceApiUtil.cancelOeSalesOrders(invoices);
         console.log('cancelOeSalesOrdersResponse:', cancelOeSalesOrdersResponse);
     
@@ -126,14 +125,12 @@ const ViewOmniSaleOrder = (props) => {
           console.log('Cant Confirm Oe Sales Orders Data -> ', cancelOeSalesOrdersResponse.errorMessage);
           message.error(cancelOeSalesOrdersResponse.errorMessage, 2);
           document.getElementById('app-loader-container').style.display = "none";
-          setTimeout(hide, 1000);
         }
         else {
           console.log('res -> ', cancelOeSalesOrdersResponse);
           if (mounted) {     //imp if unmounted
             message.success(cancelOeSalesOrdersResponse.message, 2);
             document.getElementById('app-loader-container').style.display = "none";
-            setTimeout(hide, 1000);
             setLoading(true);
             fetchOeSaleOrderData(invoice_id);
     
@@ -146,7 +143,6 @@ const ViewOmniSaleOrder = (props) => {
     const confirmOeSalesOrders = async () => {
         let invoices = [invoice_id];
         document.getElementById('app-loader-container').style.display = "block";
-        const hide = message.loading('Saving Changes in progress..', 0);
         const confirmOeSalesOrdersResponse = await EcommerceApiUtil.confirmOeSalesOrders(invoices);
         console.log('confirmOeSalesOrdersResponse:', confirmOeSalesOrdersResponse);
     
@@ -154,14 +150,12 @@ const ViewOmniSaleOrder = (props) => {
           console.log('Cant Confirm Oe Sales Orders Data -> ', confirmOeSalesOrdersResponse.errorMessage);
           message.error(confirmOeSalesOrdersResponse.errorMessage, 2);
           document.getElementById('app-loader-container').style.display = "none";
-          setTimeout(hide, 1000);
         }
         else {
           console.log('res -> ', confirmOeSalesOrdersResponse);
           if (mounted) {     //imp if unmounted
             message.success(confirmOeSalesOrdersResponse.message, 2);
             document.getElementById('app-loader-container').style.display = "none";
-            setTimeout(hide, 1000);
             setLoading(true);
             fetchOeSaleOrderData(invoice_id);
           }

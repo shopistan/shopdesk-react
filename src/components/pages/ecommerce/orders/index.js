@@ -232,7 +232,6 @@ function EcommerceOrders() {
   const confirmOeSalesOrders = async (selectedOeSalesOrders) => {
 
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Saving Changes in progress..', 0);
     const confirmOeSalesOrdersResponse = await EcommerceApiUtil.confirmOeSalesOrders(selectedOeSalesOrders);
     console.log('confirmOeSalesOrdersResponse:', confirmOeSalesOrdersResponse);
 
@@ -240,14 +239,12 @@ function EcommerceOrders() {
       console.log('Cant Confirm Oe Sales Orders Data -> ', confirmOeSalesOrdersResponse.errorMessage);
       message.error(confirmOeSalesOrdersResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1000);
     }
     else {
       console.log('res -> ', confirmOeSalesOrdersResponse);
       if (mounted) {     //imp if unmounted
         message.success(confirmOeSalesOrdersResponse.message, 3);
         document.getElementById('app-loader-container').style.display = "none";
-        setTimeout(hide, 1000);
         setLoading(true);
         fetchSalesOrdersData(paginationLimit, currentPage);
 
@@ -261,13 +258,11 @@ function EcommerceOrders() {
   const fetchOeSalesOrdersRequest = async () => {
 
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Fetching Oe orders in progress..', 0);
     const fetchOeSalesOrdersResponse = await EcommerceApiUtil.fetchOeSalesOrders();
     console.log('fetchOeSalesOrdersResponse:', fetchOeSalesOrdersResponse);
 
     if (fetchOeSalesOrdersResponse.hasError) {
       console.log('Cant Confirm Oe Sales Orders Data -> ', fetchOeSalesOrdersResponse.errorMessage);
-      setTimeout(hide, 1000);
       message.warning(fetchOeSalesOrdersResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
       
@@ -277,7 +272,6 @@ function EcommerceOrders() {
 
       if (mounted) {     //imp if unmounted
         message.success(fetchOeSalesOrdersResponse.message, 3);
-        setTimeout(hide, 1000);
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
         fetchSalesOrdersData();   //imp to fetch again

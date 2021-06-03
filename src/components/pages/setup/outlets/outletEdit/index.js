@@ -152,13 +152,11 @@ function OutletEdit(props) {
   const requestUserLoginForNewApiKey = async () => {
     let refreshToken = userLocalStorageData.refresh_token;
     let never_expire = true;
-    //const hide = message.loading('Generating Key in progress..', 0);
     const loginResponse = await  SetupApiUtil.userLoginForNewApiKey(refreshToken, never_expire);
     if (loginResponse.hasError) {
       const errorMessage = loginResponse.errorMessage;
       console.log('Cant login -> ', errorMessage);
       message.error(errorMessage, 3);
-      //setTimeout(hide, 1500);
     } else {
       const loggedInUserDetails = loginResponse;
       console.log("Success:", loggedInUserDetails);
@@ -182,7 +180,7 @@ function OutletEdit(props) {
         type:  Constants.X_API_KEY,
       };
       const selectOutletFormDataBody = ApiCallUtil.constructFormData(formDataPair);
-      const hide = message.loading('Generating Key in progress..', 0);
+      document.getElementById('app-loader-container').style.display = "block";
       await axios.post(UrlConstants.OULETS.SELECT_OUTLET, selectOutletFormDataBody, {
         headers: headers
       })
@@ -192,13 +190,13 @@ function OutletEdit(props) {
           if (userSelectOutletResponse.hasError) {
             console.log('Cant Select Outlet -> ', userSelectOutletResponse.errorMessage);
             message.error(userSelectOutletResponse.errorMessage, 3);
-            setTimeout(hide, 1500);
+            document.getElementById('app-loader-container').style.display = "none";
           }
           else {
             console.log('res -> ', userSelectOutletResponse);
-            setTimeout(hide, 1500);
             setGeneratedSecretKey(userSelectOutletResponse.api_key);
             message.success("Secret Key Successfully Generated", 3);
+            document.getElementById('app-loader-container').style.display = "none";
 
           }
 
@@ -206,7 +204,6 @@ function OutletEdit(props) {
         .catch((error) => {
           console.log("AXIOS ERROR: ", error);
           message.error(error, 3);
-          setTimeout(hide, 1500);
         })
 
       /*
@@ -241,21 +238,18 @@ function OutletEdit(props) {
   const postAddWebHookData = async (webHookUrlName) => {
     
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Saving Changes in progress..', 0);
     const addWebHookResponse = await SetupApiUtil.addWebHook(webHookUrlName);
     console.log('addWebHookResponse:', addWebHookResponse);
     setLoading(true);
 
     if (addWebHookResponse.hasError) {
       console.log('Cant add webhook -> ', addWebHookResponse.errorMessage);
-      setTimeout(hide, 1500);
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
     }
     else {
       console.log('res -> ', addWebHookResponse);
       message.success(addWebHookResponse.message, 3);
-      setTimeout(hide, 1500);
       fetchOutletWebHooks();
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
@@ -265,7 +259,6 @@ function OutletEdit(props) {
   const postDeleteWebHookData = async (webHookId) => {
 
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Saving Changes in progress..', 0);
     const deleteWebHookResponse = await SetupApiUtil.deleteWebHook(webHookId);
     console.log('deleteWebHookResponse:', deleteWebHookResponse);
     setLoading(true);
@@ -274,13 +267,11 @@ function OutletEdit(props) {
       console.log('Cant add webhook -> ', deleteWebHookResponse.errorMessage);
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1000);
     }
     else {
       console.log('res -> ', deleteWebHookResponse);
       message.success(deleteWebHookResponse.message, 3);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1000);
       fetchOutletWebHooks();
       setLoading(false);
     }
@@ -317,7 +308,6 @@ function OutletEdit(props) {
       setButtonDisabled(true);}
     
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Saving Changes in progress..', 0);
     const addOeKeyDataResponse = await SetupApiUtil.addOeKey(editOeKeyPostData);
     console.log('editOeKeyDataResponse:', addOeKeyDataResponse);
 
@@ -326,13 +316,11 @@ function OutletEdit(props) {
       message.error(addOeKeyDataResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
       setButtonDisabled(false);
-      setTimeout(hide, 1500);
     }
     else {
       console.log('res -> ', addOeKeyDataResponse);
       message.success(addOeKeyDataResponse.message, 3);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1000);
       setTimeout(() => {
         history.push({
           pathname: '/outlets',
@@ -364,7 +352,6 @@ function OutletEdit(props) {
       setButtonDisabled(true);}
 
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Saving Changes in progress..', 0);
     const editOutletResponse = await SetupApiUtil.editOutlet(editOutletPostData);
     console.log('editOutletResponse:', editOutletResponse);
 
@@ -373,13 +360,11 @@ function OutletEdit(props) {
       message.error(editOutletResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
       setButtonDisabled(false);
-      setTimeout(hide, 1500);
     }
     else {
       console.log('res -> ', editOutletResponse);
       message.success(editOutletResponse.message, 3);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1000);
       setTimeout(() => {
         history.push({
           pathname: '/setup/outlets',

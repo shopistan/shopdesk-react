@@ -40,7 +40,6 @@ const DeleteCustomer = (props) => {
             setButtonDisabled(true);}
         
         document.getElementById('app-loader-container').style.display = "block";
-        const hide = message.loading('Saving Changes in progress..', 0);
         const customerDeleteResponse = await deleteCustomer(customerId);
         console.log('customerDeleteResponse:', customerDeleteResponse);
 
@@ -49,10 +48,8 @@ const DeleteCustomer = (props) => {
             message.error( customerDeleteResponse.errorMessage, 3);
             setButtonDisabled(false);
             document.getElementById('app-loader-container').style.display = "none";
-            setTimeout(hide, 1000);
         }
         else {
-            setTimeout(hide, 1000);
             console.log('res -> ', customerDeleteResponse);
             if (mounted) {     //imp if unmounted
                 message.success(customerDeleteResponse.message, 3);
