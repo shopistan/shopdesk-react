@@ -51,7 +51,9 @@ const PrintSalesInvoice = (props) => {
         userName = invoice.user_name;
     }
 
-    //console.log("print-data", props);
+    console.log("print-data", props);
+
+    
 
 
     return (
@@ -64,7 +66,7 @@ const PrintSalesInvoice = (props) => {
                     <div style={{ fontSize: "10px", marginTop: "7px" }}></div>
 
                     <span>Receipt / Tax Invoice</span><br /><br />
-                    <b style={{fontSize: "10px"}}>Recipt #: </b> <span>{currentInvoiceNo || invoice.invoice_unique}</span><br /> 
+                    <b style={{fontSize: "10px"}}>Recipt #: </b> <span>{currentInvoiceNo || invoice.invoice_show_id}</span><br /> 
                     <b style={{fontSize: "10px"}}>Invoice Note: </b> <span>{invoice.reference || invoice.invoice_note}</span><br />
                     <b style={{fontSize: "10px"}}>Date: </b> <span>{today}</span><br />
                     <b style={{fontSize: "10px"}}>Sales Person: </b><span>{userName}</span><br />
