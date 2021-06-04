@@ -37,15 +37,15 @@ const SignIn = () => {
     const loginResponse = await login(values.username, values.password);
     if (loginResponse.hasError) {
       const errorMessage = loginResponse.errorMessage;
-      message.error(errorMessage, 3);
       setButtonDisabled(false);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(errorMessage, 3);
     } else {
       const loggedInUserDetails = loginResponse;
       if (mounted) {   //imp if unmounted
         saveDataIntoLocalStorage(Constants.USER_DETAILS_KEY, loggedInUserDetails);
-        message.success("Login Succesfull ", 3);
         document.getElementById('app-loader-container').style.display = "none";
+        message.success("Login Succesfull ", 2);
         
         setTimeout(() => {
           window.open("/outlets", "_self");

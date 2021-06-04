@@ -237,14 +237,14 @@ function EcommerceOrders() {
 
     if (confirmOeSalesOrdersResponse.hasError) {
       console.log('Cant Confirm Oe Sales Orders Data -> ', confirmOeSalesOrdersResponse.errorMessage);
-      message.error(confirmOeSalesOrdersResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(confirmOeSalesOrdersResponse.errorMessage, 3);
     }
     else {
       console.log('res -> ', confirmOeSalesOrdersResponse);
       if (mounted) {     //imp if unmounted
-        message.success(confirmOeSalesOrdersResponse.message, 3);
         document.getElementById('app-loader-container').style.display = "none";
+        message.success(confirmOeSalesOrdersResponse.message, 3);
         setLoading(true);
         fetchSalesOrdersData(paginationLimit, currentPage);
 

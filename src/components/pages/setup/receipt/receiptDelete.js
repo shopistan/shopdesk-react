@@ -72,14 +72,14 @@ const ReceiptDelete = (props) => {
 
         if (receiptDeleteResponse.hasError) {
             console.log('Cant delete Receipt -> ', receiptDeleteResponse.errorMessage);
-            message.error(receiptDeleteResponse.errorMessage, 3);
             setButtonDisabled(false);
             document.getElementById('app-loader-container').style.display = "none";
+            message.error(receiptDeleteResponse.errorMessage, 3);
         }
         else {
             console.log('res -> ', receiptDeleteResponse);
-            message.success('Receipt deletion Succesfull ', 3);
             document.getElementById('app-loader-container').style.display = "none";
+            message.success('Receipt deletion Succesfull ', 3);
             setTimeout(() => {
                 history.push({
                     pathname: '/setup/receipts-templates',

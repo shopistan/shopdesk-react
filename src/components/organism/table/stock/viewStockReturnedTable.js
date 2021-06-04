@@ -89,7 +89,7 @@ const ViewStockReturnedTable = (props) => {
                 dataSource={data}
                 id={props.tableId} //imp to pass table id here
                 rowClassName='editable-row'
-                loading={props.tableDataLoading}
+                //loading={props.tableDataLoading}
                 rowKey="product_id"
                 footer={tableFooter}
                 size="small"

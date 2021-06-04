@@ -74,11 +74,11 @@ const TransferIn = (props) => {
         else {
             console.log('res -> ', receivetransferResponse);
             if (mounted) {     //imp if unmounted
-                message.success(receivetransferResponse.message, 3);
                 setTransferData(receivetransferResponse.transfer);
                 setProductsData(receivetransferResponse.products);
                 setLoading(false);
                 document.getElementById('app-loader-container').style.display = "none";
+                message.success(receivetransferResponse.message, 3);
             }
         }
     }
@@ -101,20 +101,21 @@ const TransferIn = (props) => {
 
         if (res.hasError) {
             console.log('Cant add Receive transfers status -> ', res.errorMessage);
-            message.error(res.errorMessage, 3);
             document.getElementById('app-loader-container').style.display = "none";
+            message.error(res.errorMessage, 3);
             setButtonDisabled(false);
         }
         else {
             console.log('res -> ', res);
             if (mounted) {     //imp if unmounted
+                document.getElementById('app-loader-container').style.display = "none";
                 message.success(res.message, 3);
                 setTimeout(() => {
                     history.push({
                         pathname: '/stock-control/inventory-transfers',
                         activeKey: 'inventory-transfers'
                     });
-                }, 2000);
+                }, 1500);
             }
 
         }

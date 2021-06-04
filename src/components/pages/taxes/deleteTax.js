@@ -41,18 +41,18 @@ const DeleteTax = (props) => {
         console.log('gettaxResponse:', gettaxResponse);
         if (gettaxResponse.hasError) {
             console.log('getTax Cant Fetched -> ', gettaxResponse.errorMessage);
-            message.error(gettaxResponse.errorMessage, 2);
             setLoading(false);
             document.getElementById('app-loader-container').style.display = "none";
+            message.error(gettaxResponse.errorMessage, 2);
         }
         else {
             console.log('res -> ', gettaxResponse.message);
             if (mounted) {     //imp if unmounted
-                message.success(gettaxResponse.message, 2);
                 const taxData = gettaxResponse.tax[0];  //vvimp
                 setSelectedTaxData(taxData);
                 setLoading(false);
                 document.getElementById('app-loader-container').style.display = "none";
+                message.success(gettaxResponse.message, 2);
             }
 
         }
@@ -70,15 +70,15 @@ const DeleteTax = (props) => {
 
         if (taxDeleteResponse.hasError) {
             console.log('Cant delete Tax -> ', taxDeleteResponse.errorMessage);
-            message.error(taxDeleteResponse.errorMessage, 3);
             setButtonDisabled(false);
             document.getElementById('app-loader-container').style.display = "none";
+            message.error(taxDeleteResponse.errorMessage, 3);
         }
         else {
             console.log('res -> ', taxDeleteResponse.message);
             if (mounted) {     //imp if unmounted
-                message.success(taxDeleteResponse.message, 3);
                 document.getElementById('app-loader-container').style.display = "none";
+                message.success(taxDeleteResponse.message, 3);
                 setTimeout(() => {
                     history.push({
                         pathname: '/taxes',

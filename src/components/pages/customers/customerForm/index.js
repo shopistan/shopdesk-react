@@ -115,14 +115,14 @@ const CustomerForm = (props) => {
         //console.log(userDataUpdateResponse);
         if (userDataUpdateResponse.hasError) {
           console.log('Cant Edit Customer -> ', userDataUpdateResponse.errorMessage);
-          message.error(userDataUpdateResponse.errorMessage, 3);
           setButtonDisabled(false);
           document.getElementById('app-loader-container').style.display = "none";
+          message.error(userDataUpdateResponse.errorMessage, 3);
         }
         else {
           console.log('res -> ', userDataUpdateResponse);
-          message.success(userDataUpdateResponse.message, 3);
           document.getElementById('app-loader-container').style.display = "none";
+          message.success(userDataUpdateResponse.message, 3);
           setTimeout(() => {
             history.push({
               pathname: `/customers/${customer_id}/view`,
@@ -145,14 +145,14 @@ const CustomerForm = (props) => {
         //console.log(userDataAddResponse);
         if (userDataAddResponse.hasError) {
           console.log('Cant Edit Customer -> ', userDataAddResponse.errorMessage);
-          message.error(userDataAddResponse.errorMessage, 3);
           document.getElementById('app-loader-container').style.display = "none";
+          message.error(userDataAddResponse.errorMessage, 3);
           setButtonDisabled(false);
         }
         else {
           console.log('res -> ', userDataAddResponse);
-          message.success(userDataAddResponse.message, 3);
           document.getElementById('app-loader-container').style.display = "none";
+          message.success(userDataAddResponse.message, 3);
           setTimeout(() => {
             history.push({
               pathname: '/customers',

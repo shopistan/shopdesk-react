@@ -107,9 +107,10 @@ const Outlet = () => {
       console.log('userSelectOutletResponse:', userSelectOutletResponse)
       if (userSelectOutletResponse.hasError) {
         console.log('Cant Select Outlet -> ', userSelectOutletResponse.errorMessage);
-        message.error('Store Change UnSuccesfull ', 3);
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
+        message.error('Store Change UnSuccesfull ', 3);
+        
       }
       else {
         console.log('res -> ', userSelectOutletResponse);

@@ -36,15 +36,15 @@ const DeleteProduct = (props) => {
         console.log('getProductsResponse:', getProductsResponse);
         if (getProductsResponse.hasError) {
             console.log('Product Cant Fetched -> ', getProductsResponse.errorMessage);
-            message.error(getProductsResponse.message, 3);
             document.getElementById('app-loader-container').style.display = "none";
+            message.error(getProductsResponse.message, 3);
         }
         else {
             console.log('res -> ', getProductsResponse);
-            message.success('product fetched Succesfully ', 3);
             setproductData(getProductsResponse.product);
             setLoading(false);
             document.getElementById('app-loader-container').style.display = "none";
+            message.success('product fetched Succesfully ', 3);
         }
     }
     

@@ -474,8 +474,8 @@ const SalesHistory = () => {
       if (getStoreResponse.hasError) {
         const errorMessage = getStoreResponse.errorMessage;
         console.log('Cant get Store Id -> ', errorMessage);
-        message.error(errorMessage, 3);
         document.getElementById('app-loader-container').style.display = "none";
+        message.error(errorMessage, 3);
       } else {
         console.log("Success:", getStoreResponse.message);
         downloadParkedSalesInvoices(getStoreResponse || null);
@@ -498,8 +498,10 @@ const SalesHistory = () => {
         "Cant Export Parked Sales Invoices -> ",
         parkedSalesInvoicesExportResponse.errorMessage
       );
-      message.error(parkedSalesInvoicesExportResponse.errorMessage, 3);
+      
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(parkedSalesInvoicesExportResponse.errorMessage, 3);
+      
     } else {
       console.log("res -> ", parkedSalesInvoicesExportResponse.data);
       /*---------------csv download--------------------------------*/
@@ -514,8 +516,9 @@ const SalesHistory = () => {
         a.click();
         a.remove();  //afterwards we remove the element again
         /*---------------csv download--------------------------------*/
-        message.success(parkedSalesInvoicesExportResponse.message, 3);
         document.getElementById('app-loader-container').style.display = "none";
+        message.success(parkedSalesInvoicesExportResponse.message, 3);
+
       }
 
     }

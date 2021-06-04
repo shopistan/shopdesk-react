@@ -190,7 +190,7 @@ const OmniSalesOrdersTable = (props) => {
                 bordered={true}
                 columns={mergedColumns}
                 dataSource={data}
-                loading={props.tableDataLoading}
+                //loading={props.tableDataLoading}
                 rowKey="invoice_id"
                 pagination={false}
                 rowSelection={{

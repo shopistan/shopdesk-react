@@ -305,7 +305,7 @@ const SellNestedProductsTable = (props) => {
                 dataSource={data}
                 rowClassName='editable-row'
                 components={components}
-                loading={props.tableDataLoading}
+                //loading={props.tableDataLoading}
                 rowKey="product_id"
                 pagination={{
                     total: props.tableData && props.tableData.length,

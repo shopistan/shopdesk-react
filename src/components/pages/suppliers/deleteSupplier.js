@@ -47,11 +47,11 @@ const DeleteSupplier = (props) => {
         else {
             console.log("res -> ", getSupplierResponse.message);
             if (mounted) {     //imp if unmounted
-                message.success(getSupplierResponse.message, 2);
                 const supplierData = getSupplierResponse.supplier[0];  //vvimp
                 setSupplierData(supplierData);
                 setLoading(false);
                 document.getElementById('app-loader-container').style.display = "none";
+                message.success(getSupplierResponse.message, 2);
             }
         }
     }
@@ -66,15 +66,15 @@ const DeleteSupplier = (props) => {
 
         if (supplierDeleteResponse.hasError) {
             console.log('Cant delete a Category -> ', supplierDeleteResponse.errorMessage);
-            message.error(supplierDeleteResponse.errorMessage, 3);
             document.getElementById('app-loader-container').style.display = "none";
+            message.error(supplierDeleteResponse.errorMessage, 3);
             setButtonDisabled(false);
         }
         else {
             console.log('res -> ', supplierDeleteResponse.message);
             if (mounted) {     //imp if unmounted
-                message.success(supplierDeleteResponse.message, 3);
                 document.getElementById('app-loader-container').style.display = "none";
+                message.success(supplierDeleteResponse.message, 3);
                 setTimeout(() => {
                     history.push({
                         pathname: '/suppliers',

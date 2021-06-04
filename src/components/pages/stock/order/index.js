@@ -388,14 +388,14 @@ const PurchaseOrder = () => {
 
     if (res.hasError) {
       console.log('Cant Add Purchase Order -> ', res.errorMessage);
-      message.error(res.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(res.errorMessage, 3);
       setButtonDisabled(false);
     }
     else {
       console.log('res -> ', res);
-      message.success(res.message, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.success(res.message, 3);
       setTimeout(() => {
         history.push({
           pathname: '/stock-control/purchase-orders',

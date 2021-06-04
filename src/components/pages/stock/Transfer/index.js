@@ -40,6 +40,11 @@ const TransferInventory = (props) => {
       let inventoryTransfersData =  inventoryTransfersViewResponse.transfer.data || inventoryTransfersViewResponse.transfer;
       if (mounted) {     //imp if unmounted
         //message.success(inventoryTransfersViewResponse.message, 3);
+        setData(inventoryTransfersData);
+        setPaginationData(inventoryTransfersViewResponse.transfer.page || {});
+        setLoading(false);
+        document.getElementById('app-loader-container').style.display = "none";
+        
         for (let i in inventoryTransfersData) {
           if (
             inventoryTransfersData[i].transfer_status === "1"
@@ -48,10 +53,7 @@ const TransferInventory = (props) => {
             break;
           }
         }
-        setData(inventoryTransfersData);
-        setPaginationData(inventoryTransfersViewResponse.transfer.page || {});
-        setLoading(false);
-        document.getElementById('app-loader-container').style.display = "none";
+
       }
     }
   }

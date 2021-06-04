@@ -257,14 +257,16 @@ const ProductAdd = () => {
         "product Added UnSuccesfully -> ",
         AddProductResponse.errorMessage
       );
-      message.error(AddProductResponse.errorMessage, 3);
+
       setButtonDisabled(false);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(AddProductResponse.errorMessage, 3);
+
     } else {
       console.log("res -> ", AddProductResponse);
       if (mounted) {     //imp if unmounted
-        message.success(AddProductResponse.message, 3);
         document.getElementById('app-loader-container').style.display = "none";
+        message.success(AddProductResponse.message, 3);
         setTimeout(() => {
           history.push({
             pathname: "/products",
@@ -293,12 +295,12 @@ const ProductAdd = () => {
         "Product Image Cant Upload -> ",
         ImageUploadResponse.errorMessage
       );
-      message.error("Product  Image Cant Upload", 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error("Product  Image Cant Upload", 3);
     } else {
       console.log("res -> ", ImageUploadResponse);
-      message.success(ImageUploadResponse.message, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.success(ImageUploadResponse.message, 3);
       setFileList([]);
       setproductImagePreviewSource(ImageUploadResponse.upload_data);
       setIsImageUpload(true);

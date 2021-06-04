@@ -104,7 +104,7 @@ const EditableTable = (props) => {
           current: currentPageNumber,
           onChange: (page, pageSize) => handlePageChange(page, pageSize),
         }}
-        loading={props.tableDataLoading}
+        //loading={props.tableDataLoading}
         rowKey="category_id"
       />
     </Form>

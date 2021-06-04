@@ -86,16 +86,16 @@ const ProductDiscount = () => {
 
     if (saveproductsDiscountedDataResponse.hasError) {
       console.log('Cant save products Discounted Data -> ', saveproductsDiscountedDataResponse.errorMessage);
-      message.error(saveproductsDiscountedDataResponse.errorMessage, 3);
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(saveproductsDiscountedDataResponse.errorMessage, 3);
     }
     else {
       console.log('res -> ', saveproductsDiscountedDataResponse);
-      if (mounted) {     //imp if unmounted
-        message.success(saveproductsDiscountedDataResponse.message, 3);
+      if (mounted) {     //imp if unmounted  
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
+        message.success(saveproductsDiscountedDataResponse.message, 3);
         setTimeout(() => {
           history.push({
             pathname: '/products',

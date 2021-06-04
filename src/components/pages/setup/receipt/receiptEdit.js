@@ -99,14 +99,14 @@ function ReceiptEdit(props) {
 
     if (editTemplateResponse.hasError) {
       console.log('Cant Edit Template -> ', editTemplateResponse.errorMessage);
-      message.error(editTemplateResponse.errorMessage, 3);
       setButtonDisabled(false);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(editTemplateResponse.errorMessage, 3);
     }
     else {
       console.log('res -> ', editTemplateResponse);
-      message.success(editTemplateResponse.message, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.success(editTemplateResponse.message, 3);
       setTimeout(() => {
         history.push({
           pathname: '/setup/receipts-templates',
@@ -125,17 +125,17 @@ function ReceiptEdit(props) {
     console.log('ImageUploadResponse:', ImageUploadResponse);
     if (ImageUploadResponse.hasError) {
       console.log('Product Image Cant Upload -> ', ImageUploadResponse.errorMessage);
-      message.error('Product  Image Cant Upload', 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error('Product  Image Cant Upload', 3);
     }
     else {
       console.log('res -> ', ImageUploadResponse);
-      message.success(ImageUploadResponse.message, 3);
       setFileList([]);
       setTemplateLastImg(productImagePreviewSource);
       setproductImagePreviewSource(ImageUploadResponse.upload_data);
       setIsImageUpload(true);
       document.getElementById('app-loader-container').style.display = "none";
+      message.success(ImageUploadResponse.message, 3);
     }
 
   };

@@ -102,14 +102,14 @@ function UserAdd() {
 
     if (addUserResponse.hasError) {
       console.log('Cant Add User -> ', addUserResponse.errorMessage);
-      message.error(addUserResponse.errorMessage, 3);
       setButtonDisabled(false);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(addUserResponse.errorMessage, 3);
     }
     else {
       console.log('res -> ', addUserResponse);
-      message.success(addUserResponse.message, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.success(addUserResponse.message, 3);
       setTimeout(() => {
         history.push({
           pathname: '/setup/users',

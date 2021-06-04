@@ -84,7 +84,6 @@ const StockReceive = (props) => {
         else {
             console.log('res -> ', receivePurchaseOrdersResponse);
             if (mounted) {     //imp if unmounted
-                message.success(receivePurchaseOrdersResponse.message, 3);
                 setPoData(receivePurchaseOrdersResponse.purchase_order_info);
                 var receiveProducts = [...receivePurchaseOrdersResponse.products];
                 receiveProducts.forEach((item,) => {
@@ -93,6 +92,7 @@ const StockReceive = (props) => {
                 setProductsData(receiveProducts);
                 setLoading(false);
                 document.getElementById('app-loader-container').style.display = "none";
+                message.success(receivePurchaseOrdersResponse.message, 3);
             }
             
         }
@@ -165,15 +165,15 @@ const StockReceive = (props) => {
 
         if (res.hasError) {
             console.log('Cant Add Receive Po -> ', res.errorMessage);
-            message.error(res.errorMessage, 3);
             document.getElementById('app-loader-container').style.display = "none";
+            message.error(res.errorMessage, 3);
             setButtonDisabled(false);
         }
         else {
             console.log('res -> ', res);
             if (mounted) {     //imp if unmounted
-                message.success(res.message, 3);
                 document.getElementById('app-loader-container').style.display = "none";
+                message.success(res.message, 3);
                 setTimeout(() => {
                     history.push({
                         pathname: '/stock-control/purchase-orders',

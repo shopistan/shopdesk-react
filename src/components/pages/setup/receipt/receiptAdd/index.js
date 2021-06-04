@@ -52,14 +52,14 @@ function ReceiptAdd() {
 
     if (addTemplateResponse.hasError) {
       console.log('Cant Add Template -> ', addTemplateResponse.errorMessage);
-      message.error(addTemplateResponse.errorMessage, 3);
       setButtonDisabled(false);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(addTemplateResponse.errorMessage, 3);
     }
     else {
       console.log('res -> ', addTemplateResponse);
-      message.success(addTemplateResponse.message, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.success(addTemplateResponse.message, 3);
       setTimeout(() => {
         history.push({
           pathname: '/setup/receipts-templates',
@@ -78,13 +78,13 @@ function ReceiptAdd() {
     console.log('ImageUploadResponse:', ImageUploadResponse);
     if (ImageUploadResponse.hasError) {
       console.log('Product Image Cant Upload -> ', ImageUploadResponse.errorMessage);
-      message.error('Product  Image Cant Upload', 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error('Product  Image Cant Upload', 3);
     }
     else {
       console.log('res -> ', ImageUploadResponse);
-      message.success(ImageUploadResponse.message, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.success(ImageUploadResponse.message, 3);
       setFileList([]);
       setproductImagePreviewSource(ImageUploadResponse.upload_data);
       setIsImageUpload(true);

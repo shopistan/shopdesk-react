@@ -30,9 +30,10 @@ const InventoryDump = () => {
 
     if (productsInventoryResponse.hasError) {
       console.log('Cant fetch Products Inventory Data -> ', productsInventoryResponse.errorMessage);
-      message.warning(productsInventoryResponse.errorMessage, 3);
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
+      message.warning(productsInventoryResponse.errorMessage, 3);
+
     }
     else {
       console.log('res -> ', productsInventoryResponse);
@@ -132,8 +133,8 @@ const InventoryDump = () => {
       if (getStoreResponse.hasError) {
         const errorMessage = getStoreResponse.errorMessage;
         console.log('Cant get Store Id -> ', errorMessage);
-        message.error(errorMessage, 3);
         document.getElementById('app-loader-container').style.display = "none";
+        message.error(errorMessage, 3);
       } else {
         console.log("Success:", getStoreResponse.message);
         downloadInventoryDump(getStoreResponse.store_id || null);
@@ -155,8 +156,9 @@ const InventoryDump = () => {
         "Cant Export Inventory -> ",
         inventoryDumpExportResponse.errorMessage
       );
-      message.error(inventoryDumpExportResponse.errorMessage, 3);
+      
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(inventoryDumpExportResponse.errorMessage, 3);
     } else {
       console.log("res -> ", inventoryDumpExportResponse.data);
       /*---------------csv download--------------------------------*/
@@ -171,8 +173,10 @@ const InventoryDump = () => {
         a.click();
         a.remove();  //afterwards we remove the element again
         /*---------------csv download--------------------------------*/
-        message.success(inventoryDumpExportResponse.message, 3);
+        
         document.getElementById('app-loader-container').style.display = "none";
+        message.success(inventoryDumpExportResponse.message, 3);
+        
       }
 
     }

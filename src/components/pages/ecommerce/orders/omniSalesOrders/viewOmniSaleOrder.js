@@ -80,14 +80,14 @@ const ViewOmniSaleOrder = (props) => {
 
         if (fetchOeSaleOrderViewResponse.hasError) {
             console.log('Cant fetch Oe Sales Orders Data -> ', fetchOeSaleOrderViewResponse.errorMessage);
-            message.error(fetchOeSaleOrderViewResponse.errorMessage, 3);
             setLoading(false);
             document.getElementById('app-loader-container').style.display = "none";
+            message.error(fetchOeSaleOrderViewResponse.errorMessage, 3);
+
         }
         else {
             console.log('res -> ', fetchOeSaleOrderViewResponse);
             if (mounted) {     //imp if unmounted
-                message.success(fetchOeSaleOrderViewResponse.message, 3);
                 setSaleOrdercustomerInfo(fetchOeSaleOrderViewResponse.customer_info);
                 setSaleOrderInvoiceData(fetchOeSaleOrderViewResponse.invoice_data);
                 setSaleOrderProducts(fetchOeSaleOrderViewResponse.invoice_products);
@@ -107,6 +107,8 @@ const ViewOmniSaleOrder = (props) => {
                 setSaleOrdersInvoiceTotal(total);
                 setLoading(false);
                 document.getElementById('app-loader-container').style.display = "none";
+                message.success(fetchOeSaleOrderViewResponse.message, 3);
+
             }
         }
 
@@ -123,14 +125,14 @@ const ViewOmniSaleOrder = (props) => {
     
         if (cancelOeSalesOrdersResponse.hasError) {
           console.log('Cant Confirm Oe Sales Orders Data -> ', cancelOeSalesOrdersResponse.errorMessage);
-          message.error(cancelOeSalesOrdersResponse.errorMessage, 2);
           document.getElementById('app-loader-container').style.display = "none";
+          message.error(cancelOeSalesOrdersResponse.errorMessage, 2);
         }
         else {
           console.log('res -> ', cancelOeSalesOrdersResponse);
           if (mounted) {     //imp if unmounted
-            message.success(cancelOeSalesOrdersResponse.message, 2);
             document.getElementById('app-loader-container').style.display = "none";
+            message.success(cancelOeSalesOrdersResponse.message, 2);
             setLoading(true);
             fetchOeSaleOrderData(invoice_id);
     
@@ -148,14 +150,14 @@ const ViewOmniSaleOrder = (props) => {
     
         if (confirmOeSalesOrdersResponse.hasError) {
           console.log('Cant Confirm Oe Sales Orders Data -> ', confirmOeSalesOrdersResponse.errorMessage);
-          message.error(confirmOeSalesOrdersResponse.errorMessage, 2);
           document.getElementById('app-loader-container').style.display = "none";
+          message.error(confirmOeSalesOrdersResponse.errorMessage, 2);
         }
         else {
           console.log('res -> ', confirmOeSalesOrdersResponse);
           if (mounted) {     //imp if unmounted
-            message.success(confirmOeSalesOrdersResponse.message, 2);
             document.getElementById('app-loader-container').style.display = "none";
+            message.success(confirmOeSalesOrdersResponse.message, 2);
             setLoading(true);
             fetchOeSaleOrderData(invoice_id);
           }

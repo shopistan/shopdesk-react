@@ -61,14 +61,14 @@ const ViewInvoice = (props) => {
 
         if (getSaleHistoryResponse.hasError) {
             console.log('Cant fetch registered products Data -> ', getSaleHistoryResponse.errorMessage);
-            message.warning(getSaleHistoryResponse.errorMessage, 3);
             document.getElementById('app-loader-container').style.display = "none";
+            message.warning(getSaleHistoryResponse.errorMessage, 3);
             setLoading(false);
         }
         else {
             console.log('res -> ', getSaleHistoryResponse);
-            message.success(getSaleHistoryResponse.message, 2);
             document.getElementById('app-loader-container').style.display = "none";
+            message.success(getSaleHistoryResponse.message, 2);
             setSelectedInvoiceData(getSaleHistoryResponse.invoices);
             setCustomerData(getSaleHistoryResponse.customer);
             setInvoiceDetails(getSaleHistoryResponse.invoice_details);

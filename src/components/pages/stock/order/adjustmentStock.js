@@ -155,6 +155,9 @@ const AdjustmentStock = () => {
     if (file && fileExtention(file.name) === 'csv') {
       var reader = new FileReader();
       reader.readAsText(file);
+
+      document.getElementById('app-loader-container').style.display = "block";
+
       reader.onload = function (evt) {
         // code to convert file data and render in json format
         var json = JSON.parse(Helpers.CSV2JSON(evt.target.result));
@@ -175,11 +178,13 @@ const AdjustmentStock = () => {
 
         //setProductsTableData(bulkProducts);   //imp 
         handleCombineProductsTableData(bulkProducts, productsTableData);
+        document.getElementById('app-loader-container').style.display = "none";
         message.success("Products Imported", 3);
         /*-------------------------------*/
 
       }
       reader.onerror = function (evt) {
+        document.getElementById('app-loader-container').style.display = "none";
         message.error('error reading file');
       }
     }
@@ -344,14 +349,14 @@ const AdjustmentStock = () => {
 
     if (res.hasError) {
       console.log('Cant Add Stock Adjustment -> ', res.errorMessage);
-      message.error(res.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(res.errorMessage, 3);
       setButtonDisabled(false);
     }
     else {
       console.log('res -> ', res);
-      message.success(res.message, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.success(res.message, 3);
       setTimeout(() => {
         history.push({
           pathname: '/stock-control/stock-adjustments',

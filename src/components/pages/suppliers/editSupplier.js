@@ -46,7 +46,6 @@ const EditSupplier = (props) => {
     else {
       console.log("res -> ", getSupplierResponse.message);
       if (mounted) {     //imp if unmounted
-        message.success(getSupplierResponse.message, 2);
         const supplierData = getSupplierResponse.supplier[0];  //vvimp
         setSupplierData(supplierData);
         const fieldsForAntForm = [
@@ -75,6 +74,7 @@ const EditSupplier = (props) => {
         setSupplierDataFields(fieldsForAntForm);
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
+        message.success(getSupplierResponse.message, 2);
       }
 
     }
@@ -100,14 +100,14 @@ const EditSupplier = (props) => {
     console.log("supplierEditResponse:", supplierEditResponse);
     if (supplierEditResponse.hasError) {
       console.log("Cant Edit Supplier -> ", supplierEditResponse.errorMessage);
-      message.error(supplierEditResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(supplierEditResponse.errorMessage, 3);
       setButtonDisabled(false);
     } else {
       console.log("res -> ", supplierEditResponse.message);
       if (mounted) {     //imp if unmounted
-        message.success(supplierEditResponse.message, 3);
         document.getElementById('app-loader-container').style.display = "none";
+        message.success(supplierEditResponse.message, 3);
         setTimeout(() => {
           history.push({
             pathname: "/suppliers",

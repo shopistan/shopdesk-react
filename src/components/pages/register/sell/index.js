@@ -261,6 +261,7 @@ function Sell() {
     //console.log("imp", option);
     setSelectedValue(option.children); //working correctly
     setSelectedProductId(value); //passes productuinqId
+    handleAddProduct(value);          //imp new one 
   };
 
   const handleCustomerDelete = () => {
@@ -403,14 +404,14 @@ function Sell() {
     updateCart(saleInvoiceData); //imp
   };
 
-  const handleAddProduct = () => {
+  const handleAddProduct = (selectedProdId = selectedProductId) => {
     //var formValues = form.getFieldsValue();
 
     var productExistsCheck = false;
     var newData = [...productsTableData];
     //productsTableData
     const index = registereProductsData.findIndex(
-      (item) => selectedProductId == item.product_id
+      (item) => selectedProdId == item.product_id
     );
 
     if (index > -1) {
@@ -986,13 +987,13 @@ function Sell() {
               </AutoComplete>
             </Form.Item>
 
-            <Button
+            {/* <Button
               type='default'
               className='add-product-btn'
               onClick={handleAddProduct}
             >
               Add
-            </Button>
+            </Button> */}
 
             <Form.Item label='Courier' name='courier_code'>
               <Select 

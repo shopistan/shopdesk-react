@@ -45,15 +45,15 @@ const DeleteCustomer = (props) => {
 
         if (customerDeleteResponse.hasError) {
             console.log('Cant delete Customer -> ', customerDeleteResponse.errorMessage);
-            message.error( customerDeleteResponse.errorMessage, 3);
             setButtonDisabled(false);
             document.getElementById('app-loader-container').style.display = "none";
+            message.error( customerDeleteResponse.errorMessage, 3);
         }
         else {
             console.log('res -> ', customerDeleteResponse);
             if (mounted) {     //imp if unmounted
-                message.success(customerDeleteResponse.message, 3);
                 document.getElementById('app-loader-container').style.display = "none";
+                message.success(customerDeleteResponse.message, 3);
                 setTimeout(() => {
                     history.push({
                         pathname: '/customers',

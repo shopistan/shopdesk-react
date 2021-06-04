@@ -32,14 +32,14 @@ const SupplierAdd = () => {
         "Cant add new Supplier -> ",
         supplierAddResponse.errorMessage
       );
-      message.error(supplierAddResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(supplierAddResponse.errorMessage, 3);
       setButtonDisabled(false);
     } else {
       console.log("res -> ", supplierAddResponse.message);
       if (mounted) {     //imp if unmounted
-        message.success(supplierAddResponse.message, 3);
         document.getElementById('app-loader-container').style.display = "none";
+        message.success(supplierAddResponse.message, 3);
         setTimeout(() => {
           history.push({
             pathname: "/suppliers",

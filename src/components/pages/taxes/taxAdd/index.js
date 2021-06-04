@@ -27,15 +27,15 @@ const TaxAdd = () => {
     console.log("TaxAddResponse:", TaxAddResponse);
     if (TaxAddResponse.hasError) {
       console.log("Cant add new Tax-> ", TaxAddResponse.errorMessage);
-      message.error(TaxAddResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(TaxAddResponse.errorMessage, 3);
       setButtonDisabled(false);
       
     } else {
       console.log("res -> ", TaxAddResponse.message);
       if (mounted) {     //imp if unmounted
-        message.success(TaxAddResponse.message, 3);
         document.getElementById('app-loader-container').style.display = "none";
+        message.success(TaxAddResponse.message, 3);
         setTimeout(() => {
           history.push({
             pathname: "/taxes",

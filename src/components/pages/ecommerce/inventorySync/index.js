@@ -80,15 +80,15 @@ const InventorySync = () => {
 
     if (fetchOmniInventoryDumpViewResponse.hasError) {
       console.log('Cant fetch Omni Inventory Sync Data -> ', fetchOmniInventoryDumpViewResponse.errorMessage);
-      message.error(fetchOmniInventoryDumpViewResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(fetchOmniInventoryDumpViewResponse.errorMessage, 3);
 
     }
     else {
       console.log('res -> ', fetchOmniInventoryDumpViewResponse);
       if (mounted) {     //imp if unmounted
-        message.success(fetchOmniInventoryDumpViewResponse.message, 3);
         document.getElementById('app-loader-container').style.display = "none";
+        message.success(fetchOmniInventoryDumpViewResponse.message, 3);
         fetchOmniAlInventorySync();
 
       }

@@ -42,14 +42,13 @@ const EditTax = (props) => {
     console.log('gettaxResponse:', gettaxResponse);
     if (gettaxResponse.hasError) {
       console.log('getTax Cant Fetched -> ', gettaxResponse.errorMessage);
-      message.error(gettaxResponse.errorMessage, 2);
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(gettaxResponse.errorMessage, 2);
     }
     else {
       console.log('res -> ', gettaxResponse.message);
       if (mounted) {     //imp if unmounted
-        message.success(gettaxResponse.message, 2);
         const taxData = gettaxResponse.tax[0];  //vvimp
         setSelectedTaxData(taxData);
         const fieldsForAntForm = [
@@ -65,6 +64,8 @@ const EditTax = (props) => {
         setTaxDataFields(fieldsForAntForm);
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
+        message.success(gettaxResponse.message, 2);
+
       }
 
     }
@@ -85,14 +86,14 @@ const EditTax = (props) => {
     console.log("taxEditResponse:", taxEditResponse);
     if (taxEditResponse.hasError) {
       console.log("Cant Edit Tax -> ", taxEditResponse.errorMessage);
-      message.error(taxEditResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(taxEditResponse.errorMessage, 3);
       setButtonDisabled(false);
     } else {
       console.log("res -> ", taxEditResponse.message);
       if (mounted) {     //imp if unmounted
-        message.success(taxEditResponse.message, 3);
         document.getElementById('app-loader-container').style.display = "none";
+        message.success(taxEditResponse.message, 3);
         setTimeout(() => {
           history.push({
             pathname: "/taxes",

@@ -154,14 +154,14 @@ function EditUser(props) {
 
         if (editUserResponse.hasError) {
             console.log('Cant Edit User -> ', editUserResponse.errorMessage);
-            message.error(editUserResponse.errorMessage, 3);
             document.getElementById('app-loader-container').style.display = "none";
+            message.error(editUserResponse.errorMessage, 3);
             setButtonDisabled(false);
         }
         else {
             console.log('res -> ', editUserResponse);
-            message.success(editUserResponse.message, 3);
             document.getElementById('app-loader-container').style.display = "none";
+            message.success(editUserResponse.message, 3);
             setTimeout(() => {
                 history.push({
                     pathname: '/setup/users',

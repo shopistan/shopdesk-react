@@ -79,7 +79,7 @@ const EditProduct = (props) => {
         }
         else {
             console.log('res -> ', getProductsResponse);
-            message.success('product fetched Succesfully ', 3);
+            //message.success('product fetched Succesfully ', 3);
             var productsData = getProductsResponse.product;
             setproductData(productsData);
 
@@ -167,6 +167,7 @@ const EditProduct = (props) => {
             /*  taxes response  */
             setLoading(false);
             document.getElementById('app-loader-container').style.display = "none";
+            message.success(getProductsResponse.message, 3);
 
         }
     };
@@ -210,9 +211,9 @@ const EditProduct = (props) => {
         console.log('getProductsResponse:', EditProductResponse);
         if (EditProductResponse.hasError) {
             console.log('product Editing UnSuccesfully -> ', EditProductResponse.errorMessage);
-            message.error(EditProductResponse.errorMessage, 3);
             setButtonDisabled(false);
             document.getElementById('app-loader-container').style.display = "none";
+            message.error(EditProductResponse.errorMessage, 3);
         }
         else {
             console.log('res -> ', EditProductResponse);
@@ -243,13 +244,13 @@ const EditProduct = (props) => {
         console.log('ImageUploadResponse:', ImageUploadResponse);
         if (ImageUploadResponse.hasError) {
             console.log('Product Image Cant Upload -> ', ImageUploadResponse.errorMessage);
-            message.error('Product  Image Cant Upload', 3);
             document.getElementById('app-loader-container').style.display = "none";
+            message.error('Product  Image Cant Upload', 3);
         }
         else {
             console.log('res -> ', ImageUploadResponse);
-            message.success(ImageUploadResponse.message, 3);
             document.getElementById('app-loader-container').style.display = "none";
+            message.success(ImageUploadResponse.message, 3);
             setFileList([]);
             setproductImagePreviewSource(ImageUploadResponse.upload_data);
             setIsImageUpload(true);

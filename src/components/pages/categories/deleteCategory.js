@@ -46,11 +46,12 @@ const DeleteCategory = (props) => {
         else {
             console.log('res -> ', getCategoryResponse);
             if (mounted) {     //imp if unmounted
-                message.success(getCategoryResponse.message, 2);
+                //message.success(getCategoryResponse.message, 2);
                 const categoryName = getCategoryResponse.category_name[0].category_name;  //vvimp
                 setSelectedCategoryName(categoryName);
                 setLoading(false);
                 document.getElementById('app-loader-container').style.display = "none";
+                message.success(getCategoryResponse.message, 2);
             }
 
         }
@@ -76,9 +77,9 @@ const DeleteCategory = (props) => {
         else {
             console.log('res -> ', categoryDeleteResponse);
             if (mounted) {     //imp if unmounted
-                message.success(categoryDeleteResponse.message, 3);
                 //setTimeout(hide, 1500);
                 document.getElementById('app-loader-container').style.display = "none";
+                message.success(categoryDeleteResponse.message, 3);
                 setTimeout(() => {
                     history.push({
                         pathname: '/categories',

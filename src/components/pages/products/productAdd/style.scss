@@ -24,11 +24,13 @@
 }
 
 .inventory-tracking {
-  display: grid;
+  /* display: grid; */
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
   column-gap: 2rem;
   row-gap: 2rem;
+
+  width: 50%;     //new one
 
   label {
     font-weight: bold;
