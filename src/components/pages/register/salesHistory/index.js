@@ -77,7 +77,7 @@ const SalesHistory = () => {
 
     fetchSalesHistoryData();
 
-    var userData = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+    let userData = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
     userData = userData.data ? userData.data : null;
 
     if (userData) {
@@ -563,7 +563,7 @@ const SalesHistory = () => {
       document.getElementById('app-loader-container').style.display = "none";
 
     }
-  }
+  } 
 
 
 
