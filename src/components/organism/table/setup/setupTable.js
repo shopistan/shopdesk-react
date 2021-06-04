@@ -197,7 +197,7 @@ const SetupTable = (props) => {
                 current: currentPageNumber,
                 onChange: (page, pageSize) => handlePageChange(page, pageSize),
             }}
-            loading={props.tableDataLoading}
+            //loading={props.tableDataLoading}
             rowKey={props.tableType === "outlets" ? "store_id" : props.tableType === "users" ? "user_id" : "template_id"}
         />
 

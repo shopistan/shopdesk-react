@@ -1,9 +1,17 @@
 
 import React, { useState, useEffect, useContext, useRef } from "react";
 import "./style.scss";
-import { Table, Input, Form, InputNumber, Row, Col, Tooltip, } from "antd";
+import { Table, Input, Form, Row, Col, Tooltip, } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useHistory } from 'react-router-dom';
+import * as SetupApiUtil from "../../../../utils/api/setup-api-utils";
+import Constants from '../../../../utils/constants/constants';
+import {
+    getDataFromLocalStorage,
+    checkUserAuthFromLocalStorage,
+  } from "../../../../utils/local-storage/local-store-utils";
+
+
 
 
 const EditableContext = React.createContext(null);
@@ -65,8 +73,22 @@ const EditableCell = ({
     };
 
 
+    const onQuantityInputChange = (e) => {
+        let orderQty = e.target.value;
+        //console.log("qty", orderQty);
+        const re = /^[0-9\b]+$/;
+        //console.log(re.test(e.target.value));
+        if (!orderQty === '' || !re.test(orderQty)) {  //if contains alphabets in string
+            form.setFieldsValue({
+                qty: orderQty.replace(/[^\d.]/g, '')
+            });
+        }
+
+    }
+
+
     const inputNode = inputType === 'number' ?
-        <InputNumber ref={inputRef} onPressEnter={save} onBlur={save} />
+        <Input ref={inputRef} onChange={onQuantityInputChange} onPressEnter={save} onBlur={save} />
         : <Input ref={inputRef} onPressEnter={save} onBlur={save} />;
 
 
@@ -82,7 +104,9 @@ const EditableCell = ({
 
             </Form.Item>
         ) : (
-                <div className="editable-cell-value-wrap" style={{ paddingRight: 24 }} onClick={toggleEdit}>
+                <div className="editable-cell-value-wrap"
+                    //style={{ paddingRight: 24 }}
+                    onClick={toggleEdit}>
                     {children}
                 </div>
             );
@@ -96,10 +120,12 @@ const EditableCell = ({
 
 const StockNestedProductsTable = (props) => {
     const history = useHistory();
-    const {currency = "" } = props;
+    //const {currency = "" } = props;
+    const [outletData, setOutletData] = useState(null);
     const [form] = Form.useForm();
     const [data, setData] = useState([]);
     const [productsTotalAmount, setProductsTotalAmount] = useState(0);
+
 
 
     const handleDelete = (record) => {
@@ -157,12 +183,45 @@ const StockNestedProductsTable = (props) => {
         });
         setProductsTotalAmount(productsTotal);
     }
+    
+
+
+    const getUserStoreData = async (storeId) => {
+        document.getElementById('app-loader-container').style.display = "block";
+        const getOutletViewResponse = await SetupApiUtil.getOutlet(storeId);
+        console.log('getOutletViewResponse:', getOutletViewResponse);
+
+        if (getOutletViewResponse.hasError) {
+            console.log('Cant fetch Store Data -> ', getOutletViewResponse.errorMessage);
+            //message.warning(getOutletViewResponse.errorMessage, 3);
+            document.getElementById('app-loader-container').style.display = "none";
+        }
+        else {
+            console.log('res -> ', getOutletViewResponse);
+            let selectedStore = getOutletViewResponse.outlet;
+            //message.success(getOutletViewResponse.message, 3);
+            setOutletData(selectedStore);   //imp to get template data
+            document.getElementById('app-loader-container').style.display = "none";
+
+        }
+    }
 
 
 
     useEffect(async () => {
         setData(props.tableData);
         calculateTotalAmount(props.tableData);
+
+        let userData = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+        userData = userData.data ? userData.data : null;
+        if (userData) {
+            if (
+                checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
+            ) {
+                getUserStoreData(userData.auth.current_store);  //imp to get user outlet data
+            }
+        }
+        
 
     }, [props.tableData, props.tableDataLoading,]);  /* imp passing props to re-render */
 
@@ -228,7 +287,7 @@ const StockNestedProductsTable = (props) => {
                 return (
                     <div>
                         <Tooltip title={props.tableType ==='order_adjustment' && "Adjusted quantity"}>
-                            <InputNumber value={record.qty || 0} />
+                            <Input className='u-width-100' value={record.qty || 0} />
                         </Tooltip>
                         
                     </div>
@@ -239,9 +298,10 @@ const StockNestedProductsTable = (props) => {
             title: "Purchase Price",
             dataIndex: "product_purchase_price",
             render: (_, record) => {
+                let currency = outletData && outletData.currency_symbol;
                 return (
                     <div>
-                        {currency+record.product_purchase_price}
+                        {(currency || "") + record.product_purchase_price}
                     </div>
                 );
             }
@@ -249,11 +309,12 @@ const StockNestedProductsTable = (props) => {
         {
             title: "Sale Price",
             dataIndex: "product_sale_price",
-            editable: true,    //imp new one
+            editable: props.tableType === 'order_stock' ? true : false,    //imp new one
             render: (_, record) => {
+                let currency = outletData && outletData.currency_symbol;
                 return (
                     <div>
-                        {currency+record.product_sale_price}
+                        {(currency || "") + record.product_sale_price}
                     </div>
                 );
             }
@@ -261,10 +322,11 @@ const StockNestedProductsTable = (props) => {
         {
             title: "Total",
             render: (_, record) => {
+                let currency = outletData && outletData.currency_symbol;
                 return (
                     <div>
-                        {record.qty ? (parseFloat(record.qty) * parseFloat(record.product_purchase_price)).toFixed(2)
-                            : parseFloat(0)
+                        {record.qty ? (currency || "") + (parseFloat(record.qty) * parseFloat(record.product_purchase_price)).toFixed(2)
+                            : (currency || "") +  parseFloat(0)
                         }
                     </div>
                 );
@@ -339,7 +401,7 @@ const StockNestedProductsTable = (props) => {
                 dataSource={data}
                 rowClassName='editable-row'
                 components={components}
-                loading={props.tableDataLoading}
+                //loading={props.tableDataLoading}
                 rowKey="product_id"
                 pagination={{
                     total: props.tableData && props.tableData.length,

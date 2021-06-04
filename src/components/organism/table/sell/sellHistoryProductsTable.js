@@ -126,7 +126,7 @@ const SellHistoryProductsTable = (props) => {
             },
         },
         {
-            title: "Action",
+            title: "Return",
             render: (_, record) => {
                 return (
                     <div className='action-btns stock-table-delete-item'>
@@ -190,7 +190,7 @@ const SellHistoryProductsTable = (props) => {
                 bordered={true}
                 columns={mergedColumns}
                 dataSource={data}
-                loading={props.tableDataLoading}
+                //loading={props.tableDataLoading}
                 rowKey="invoice_id"
                 pagination={false}
                 /*pagination={{

@@ -13,7 +13,6 @@ import Constants from "../../../../utils/constants/constants";
 
 import {
     Form,
-    Spin,
     Button,
     Select,
     message,
@@ -21,8 +20,6 @@ import {
     Col,
     Divider,
 } from "antd";
-
-const { Option } = Select;
 
 
 
@@ -58,23 +55,23 @@ const ViewInvoice = (props) => {
 
 
     const getSelectedInvoiceHistory = async (invoiceId) => {
-        const hide = message.loading('Getting Invoice in progress..', 0);
+        document.getElementById('app-loader-container').style.display = "block";
         const getSaleHistoryResponse = await SalesApiUtil.getSalesInvoiceHistory(invoiceId);
         console.log('getSaleHistoryResponse:', getSaleHistoryResponse);
 
         if (getSaleHistoryResponse.hasError) {
             console.log('Cant fetch registered products Data -> ', getSaleHistoryResponse.errorMessage);
-            message.error(getSaleHistoryResponse.errorMessage, 3);
-            setTimeout(hide, 1000);
+            document.getElementById('app-loader-container').style.display = "none";
+            message.warning(getSaleHistoryResponse.errorMessage, 3);
             setLoading(false);
         }
         else {
             console.log('res -> ', getSaleHistoryResponse);
+            document.getElementById('app-loader-container').style.display = "none";
             message.success(getSaleHistoryResponse.message, 2);
             setSelectedInvoiceData(getSaleHistoryResponse.invoices);
             setCustomerData(getSaleHistoryResponse.customer);
             setInvoiceDetails(getSaleHistoryResponse.invoice_details);
-            setTimeout(hide, 1000);
             setLoading(false);
 
         }
@@ -88,9 +85,6 @@ const ViewInvoice = (props) => {
 
     return (
         <div className="page stock-add">
-            <div style={{ textAlign: "center" }}>
-                {loading && <Spin size="large" tip="Loading..." />}
-            </div>
 
             {!loading &&
             <div className="page__header">

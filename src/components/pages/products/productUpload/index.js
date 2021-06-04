@@ -119,8 +119,9 @@ const ProductUpload = () => {
         "Cant Upload Bulk products -> ",
         productsBulkUploadResponse.errorMessage
       );
-      message.error(productsBulkUploadResponse.errorMessage, 3);
+      
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(productsBulkUploadResponse.errorMessage, 3);
       
     } else {
       console.log("res -> ", productsBulkUploadResponse);
@@ -128,8 +129,9 @@ const ProductUpload = () => {
       if (bulkProcess.queue.length > 0) {
         uploadChunk(bulkProcess.queue.splice(0, bulkProcess.chunk));
       } else {
-        message.success(productsBulkUploadResponse.message, 2);
+        
         document.getElementById('app-loader-container').style.display = "none";
+        message.success(productsBulkUploadResponse.message, 2);
         setTimeout(() => {
           history.push({
             pathname: '/products',

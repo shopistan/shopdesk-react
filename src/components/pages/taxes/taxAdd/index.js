@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, Button, InputNumber, message } from "antd";
+import { Form, Input, Button, message } from "antd";
 import { useHistory } from "react-router-dom";
 import * as TaxApiUtil from "../../../../utils/api/tax-api-utils";
 import { ArrowLeftOutlined } from "@ant-design/icons";
@@ -7,6 +7,7 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 
 const TaxAdd = () => {
   const history = useHistory();
+  const [form] = Form.useForm();
   const [buttonDisabled, setButtonDisabled] = useState(false);
 
   var mounted = true;
@@ -18,7 +19,6 @@ const TaxAdd = () => {
 
     document.getElementById('app-loader-container').style.display = "block";
     console.log("Success:", values);
-    const hide = message.loading('Saving Changes in progress..', 0);
     const TaxAddResponse = await TaxApiUtil.addTax(
       values.tax_name,
       values.tax_value
@@ -27,17 +27,15 @@ const TaxAdd = () => {
     console.log("TaxAddResponse:", TaxAddResponse);
     if (TaxAddResponse.hasError) {
       console.log("Cant add new Tax-> ", TaxAddResponse.errorMessage);
-      message.error(TaxAddResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(TaxAddResponse.errorMessage, 3);
       setButtonDisabled(false);
-      setTimeout(hide, 1500);
       
     } else {
       console.log("res -> ", TaxAddResponse.message);
       if (mounted) {     //imp if unmounted
-        message.success(TaxAddResponse.message, 3);
         document.getElementById('app-loader-container').style.display = "none";
-        setTimeout(hide, 1500);
+        message.success(TaxAddResponse.message, 3);
         setTimeout(() => {
           history.push({
             pathname: "/taxes",
@@ -53,6 +51,21 @@ const TaxAdd = () => {
       mounted = false;
     }
   }, []);
+
+
+
+  const onTaxInputChange = (e) => {
+    let inputTaxValue = e.target.value;
+    //console.log("qty", orderQty);
+    const re = /^[0-9\b]+$/;
+    //console.log(re.test(e.target.value));
+    if (!inputTaxValue === '' || !re.test(inputTaxValue)) {  //if contains alphabets in string
+      form.setFieldsValue({
+        tax_value: inputTaxValue.replace(/[^\d.]/g, '')
+      });
+    }
+
+  }
 
 
   const onFinishFailed = (errorInfo) => {
@@ -78,6 +91,7 @@ const TaxAdd = () => {
       <div className="page__content">
         <div className="page__form">
           <Form
+            form={form}
             name="basic"
             layout="vertical"
             initialValues={{
@@ -113,13 +127,12 @@ const TaxAdd = () => {
                     },
                   ]}
                 >
-                  <InputNumber
-                    initialValues={100}
-                    min={0}
-                    max={100}
-                    formatter={(value) => `${value}%`}
-                    parser={(value) => value.replace("%", "")}
+                  <Input
+                    //formatter={(e) => `${e.target.value}%`}
+                    //parser={(e) => e.target.value.replace("%", "")}
+                    addonAfter="%"
                     className="u-width-100"
+                    onChange={onTaxInputChange}
                   />
                 </Form.Item>
               </div>

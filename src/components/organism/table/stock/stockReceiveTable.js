@@ -318,7 +318,7 @@ const StockReceiveTable = (props) => {
                 dataSource={data}
                 rowClassName='editable-row'
                 components={components}
-                loading={props.tableDataLoading}
+                //loading={props.tableDataLoading}
                 rowKey="product_id"
                 footer={tableFooter}
             />}
@@ -330,7 +330,7 @@ const StockReceiveTable = (props) => {
                 columns={mergedColumns}
                 dataSource={data}
                 rowClassName='editable-row'
-                loading={props.tableDataLoading}
+                //loading={props.tableDataLoading}
                 rowKey="product_id"
             />}
 

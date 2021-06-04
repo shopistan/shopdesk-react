@@ -237,7 +237,7 @@ const ProductsViewNestedTable = (props) => {
             columns={mergedColumns}
             dataSource={data}
             pagination={false}
-            loading={loading}
+            //loading={loading}
             rowKey="product_id"
         />
 

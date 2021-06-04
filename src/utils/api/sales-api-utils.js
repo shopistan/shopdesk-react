@@ -45,6 +45,19 @@ export const getSalesInvoiceHistory = async (invoiceId) => {
 };
 
 
+export const getCurrentInvoiceNumber = async () => {
+
+    const url = UrlConstants.SALES.GET_INVOICE_NUMBER;
+    const callType = GenericConstants.API_CALL_TYPE.GET;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+      
+    );
+
+};
+
 
 export const registerInvoice = async (invoiceQueue) => {
     const registerInvoiceDataBody = {

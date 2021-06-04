@@ -264,7 +264,7 @@ const ProductsVariantsTable = (props) => {
       dataSource={data}
       rowClassName="editable-row"
       components={components}
-      loading={props.tableDataLoading}
+      //loading={props.tableDataLoading}
       rowKey="variant_row_id" //must be string and unique
       expandedRowKeys={tableExpandedRows}
       expandedRowRender={tableExpandedRowRender}

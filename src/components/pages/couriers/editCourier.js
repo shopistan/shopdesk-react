@@ -74,7 +74,6 @@ const EditCourier = (props) => {
             setButtonDisabled(true);}
 
         document.getElementById('app-loader-container').style.display = "block";
-        const hide = message.loading('Saving Changes in progress..', 0);
         const courierEditResponse = await CouriersApiUtil.editCourier(courier_id,
             values.courier_name, values.courier_code);
 
@@ -83,14 +82,12 @@ const EditCourier = (props) => {
             console.log('Cant Edit Courier -> ', courierEditResponse.errorMessage);
             message.error(courierEditResponse.errorMessage, 3);
             setButtonDisabled(false);
-            setTimeout(hide, 1500);
             document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             console.log('res -> ', courierEditResponse);
             if (mounted) {     //imp if unmounted
                 message.success(courierEditResponse.message, 3);
-                setTimeout(hide, 1500);
                 document.getElementById('app-loader-container').style.display = "none";
                 setTimeout(() => {
                     history.push({

@@ -102,7 +102,7 @@ const InvoiceView = (props) => {
                 columns={mergedColumns}
                 dataSource={data}
                 rowClassName='editable-row'
-                loading={props.tableDataLoading}
+                //loading={props.tableDataLoading}
                 rowKey="product_id"
                 pagination={{
                     total: props.tableData && props.tableData.length,

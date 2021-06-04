@@ -36,15 +36,15 @@ const DeleteProduct = (props) => {
         console.log('getProductsResponse:', getProductsResponse);
         if (getProductsResponse.hasError) {
             console.log('Product Cant Fetched -> ', getProductsResponse.errorMessage);
-            message.error(getProductsResponse.message, 3);
             document.getElementById('app-loader-container').style.display = "none";
+            message.error(getProductsResponse.message, 3);
         }
         else {
             console.log('res -> ', getProductsResponse);
-            message.success('product fetched Succesfully ', 3);
             setproductData(getProductsResponse.product);
             setLoading(false);
             document.getElementById('app-loader-container').style.display = "none";
+            message.success('product fetched Succesfully ', 3);
         }
     }
     
@@ -54,7 +54,6 @@ const DeleteProduct = (props) => {
             setButtonDisabled(true);}
 
         document.getElementById('app-loader-container').style.display = "block";
-        const hide = message.loading('Saving changes in progress..', 0);
         const productDeleteResponse = await ProductsApiUtil.deleteProduct(productData.product_id);
         console.log('productDeleteResponse:', productDeleteResponse);
 
@@ -63,13 +62,11 @@ const DeleteProduct = (props) => {
             message.error(productDeleteResponse.errorMessage, 3);
             setButtonDisabled(false);
             document.getElementById('app-loader-container').style.display = "none";
-            setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', productDeleteResponse);
             message.success(productDeleteResponse.message, 3);
             document.getElementById('app-loader-container').style.display = "none";
-            setTimeout(hide, 1500);
             setTimeout(() => {
                 history.push({
                   pathname: '/products',

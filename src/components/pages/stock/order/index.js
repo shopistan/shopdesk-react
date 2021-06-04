@@ -193,7 +193,6 @@ const PurchaseOrder = () => {
     console.log(fileList[0]);   //imp
     var file = fileList[0];
 
-    //const hide = message.loading('Products Bulk Import in progress..', 0);
 
     if (file && fileExtention(file.name) === 'csv') {
       var reader = new FileReader();
@@ -218,7 +217,6 @@ const PurchaseOrder = () => {
 
         //setProductsTableData(bulkProducts);   //imp 
         handleCombineProductsTableData(bulkProducts, [...productsTableData]);
-        //setTimeout(hide, 1500);
         message.success("Products Imported", 3);
         /*-------------------------------*/
 
@@ -379,28 +377,25 @@ const PurchaseOrder = () => {
     addPurchaseOrderPostData.ordered_date = moment(new Date()).format("yyyy/MM/DD HH:mm:ss");
     addPurchaseOrderPostData.supplier_id = formValues.supplier;
 
-    console.log("vvimp-final", clonedProductsPostData);
+    //console.log("vvimp-final", clonedProductsPostData);
 
     if (buttonDisabled === false) {
       setButtonDisabled(true);}
 
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.addPurchaseOrder(addPurchaseOrderPostData);
     console.log('AddPoResponse:', res);
 
     if (res.hasError) {
       console.log('Cant Add Purchase Order -> ', res.errorMessage);
-      message.error(res.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(res.errorMessage, 3);
       setButtonDisabled(false);
-      setTimeout(hide, 500);
     }
     else {
       console.log('res -> ', res);
-      message.success(res.message, 3);
-      setTimeout(hide, 500);
       document.getElementById('app-loader-container').style.display = "none";
+      message.success(res.message, 3);
       setTimeout(() => {
         history.push({
           pathname: '/stock-control/purchase-orders',
@@ -415,7 +410,6 @@ const PurchaseOrder = () => {
 
   const handleDownloadPoForm = async () => {
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Downloading in progress..', 0);
     const downloadPoResponse = await StockApiUtil.downloadPoForm();
     console.log("downloadPoResponse:", downloadPoResponse);
 
@@ -426,7 +420,6 @@ const PurchaseOrder = () => {
       );
       document.getElementById('app-loader-container').style.display = "none";
 
-      setTimeout(hide, 1500);
 
     } else {
       console.log("res -> ", downloadPoResponse);
@@ -445,7 +438,6 @@ const PurchaseOrder = () => {
       hiddenElement.download = new Date().toUTCString() + "-Product-SKU.csv";
       hiddenElement.click();
       //parent.removeChild(hiddenElement); 
-      setTimeout(hide, 1500);
     }
 
 
@@ -513,6 +505,18 @@ const PurchaseOrder = () => {
   }  */
 
 
+  const onQuantityInputChange = (e) => {
+    let orderQty = e.target.value;
+    const re = /^[0-9\b]+$/;
+    //console.log(re.test(e.target.value));
+    if (!orderQty === '' || !re.test(orderQty)) {  //if contains alphabets in string
+      form.setFieldsValue({
+        product_qty: orderQty.replace(/[^\d.]/g, '')
+      });
+
+    }
+
+  }
 
 
 
@@ -713,7 +717,7 @@ const PurchaseOrder = () => {
                       label="QTY"
                       name="product_qty"
                     >
-                      <InputNumber />
+                      <Input onChange={onQuantityInputChange}  />
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={24} md={6} className="stock-item-content">

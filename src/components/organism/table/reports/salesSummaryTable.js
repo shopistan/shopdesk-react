@@ -362,7 +362,7 @@ const SalesSummaryTable = (props) => {
         showSizeChanger: false,
 
       }}
-      loading={props.tableDataLoading}
+      //loading={props.tableDataLoading}
       rowKey="invoice_no"
       
     />

@@ -46,11 +46,12 @@ const DeleteCategory = (props) => {
         else {
             console.log('res -> ', getCategoryResponse);
             if (mounted) {     //imp if unmounted
-                message.success(getCategoryResponse.message, 2);
+                //message.success(getCategoryResponse.message, 2);
                 const categoryName = getCategoryResponse.category_name[0].category_name;  //vvimp
                 setSelectedCategoryName(categoryName);
                 setLoading(false);
                 document.getElementById('app-loader-container').style.display = "none";
+                message.success(getCategoryResponse.message, 2);
             }
 
         }
@@ -62,7 +63,7 @@ const DeleteCategory = (props) => {
             setButtonDisabled(true);}
 
         document.getElementById('app-loader-container').style.display = "block";
-        const hide = message.loading('Saving Changes in progress..', 0);
+        //const hide = message.loading('Saving Changes in progress..', 0);
         const categoryDeleteResponse = await CategoriesApiUtil.deleteCategory(cat_id);
         console.log('categoryDeleteResponse:', categoryDeleteResponse);
 
@@ -70,15 +71,15 @@ const DeleteCategory = (props) => {
             console.log('Cant delete a Category -> ', categoryDeleteResponse.errorMessage);
             message.error(categoryDeleteResponse.errorMessage, 3);
             setButtonDisabled(false);
-            setTimeout(hide, 1500);
+            //setTimeout(hide, 1500);
             document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             console.log('res -> ', categoryDeleteResponse);
             if (mounted) {     //imp if unmounted
-                message.success(categoryDeleteResponse.message, 3);
-                setTimeout(hide, 1500);
+                //setTimeout(hide, 1500);
                 document.getElementById('app-loader-container').style.display = "none";
+                message.success(categoryDeleteResponse.message, 3);
                 setTimeout(() => {
                     history.push({
                         pathname: '/categories',

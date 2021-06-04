@@ -97,22 +97,19 @@ function UserAdd() {
       setButtonDisabled(true);}
     
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Saving Changes in progress..', 0);
     const addUserResponse = await SetupApiUtil.addUser(addUserPostData);
     console.log('addUserResponse:', addUserResponse);
 
     if (addUserResponse.hasError) {
       console.log('Cant Add User -> ', addUserResponse.errorMessage);
-      message.error(addUserResponse.errorMessage, 3);
       setButtonDisabled(false);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1500);
+      message.error(addUserResponse.errorMessage, 3);
     }
     else {
       console.log('res -> ', addUserResponse);
-      message.success(addUserResponse.message, 3);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1000);
+      message.success(addUserResponse.message, 3);
       setTimeout(() => {
         history.push({
           pathname: '/setup/users',

@@ -75,23 +75,20 @@ const InventorySync = () => {
   const fetchOmniInventoryDump = async () => {
 
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Sync Is In Progress..', 0);
     const fetchOmniInventoryDumpViewResponse = await EcommerceApiUtil.getOmniInventoryDump();
     console.log('fetchOmniInventoryDumpViewResponse:', fetchOmniInventoryDumpViewResponse);
 
     if (fetchOmniInventoryDumpViewResponse.hasError) {
       console.log('Cant fetch Omni Inventory Sync Data -> ', fetchOmniInventoryDumpViewResponse.errorMessage);
-      message.error(fetchOmniInventoryDumpViewResponse.errorMessage, 3);
-      setTimeout(hide, 1000);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(fetchOmniInventoryDumpViewResponse.errorMessage, 3);
 
     }
     else {
       console.log('res -> ', fetchOmniInventoryDumpViewResponse);
       if (mounted) {     //imp if unmounted
-        message.success(fetchOmniInventoryDumpViewResponse.message, 3);
-        setTimeout(hide, 1000);
         document.getElementById('app-loader-container').style.display = "none";
+        message.success(fetchOmniInventoryDumpViewResponse.message, 3);
         fetchOmniAlInventorySync();
 
       }

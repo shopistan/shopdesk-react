@@ -17,7 +17,6 @@ const CategoryAdd = () => {
       setButtonDisabled(true);}
     console.log("Success:", values);
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Saving Changes in progress..', 0);
     const categoryAddResponse = await CategoriesApiUtil.addCategory(
       values.category_name
     );
@@ -29,14 +28,12 @@ const CategoryAdd = () => {
       );
       message.error(categoryAddResponse.errorMessage, 3);
       setButtonDisabled(false);
-      setTimeout(hide, 1500);
       document.getElementById('app-loader-container').style.display = "none";
     } else {
       console.log("res -> ", categoryAddResponse);
       if (mounted) {     //imp if unmounted
-        message.success(categoryAddResponse.message, 3);
-        setTimeout(hide, 1500);
         document.getElementById('app-loader-container').style.display = "none";
+        message.success(categoryAddResponse.message, 3);
         setTimeout(() => {
           history.push({
             pathname: "/categories",

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Button, message, Spin, InputNumber } from "antd";
+import { Form, Input, Button, message, } from "antd";
 import * as TaxApiUtil from "../../../utils/api/tax-api-utils";
 import { useHistory } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
@@ -7,6 +7,7 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 
 const EditTax = (props) => {
   const history = useHistory();
+  const [form] = Form.useForm()
   const [taxDataFields, setTaxDataFields] = useState([]);
   const [selectedTaxData, setSelectedTaxData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -41,14 +42,13 @@ const EditTax = (props) => {
     console.log('gettaxResponse:', gettaxResponse);
     if (gettaxResponse.hasError) {
       console.log('getTax Cant Fetched -> ', gettaxResponse.errorMessage);
-      message.error(gettaxResponse.errorMessage, 2);
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(gettaxResponse.errorMessage, 2);
     }
     else {
       console.log('res -> ', gettaxResponse.message);
       if (mounted) {     //imp if unmounted
-        message.success(gettaxResponse.message, 2);
         const taxData = gettaxResponse.tax[0];  //vvimp
         setSelectedTaxData(taxData);
         const fieldsForAntForm = [
@@ -64,6 +64,8 @@ const EditTax = (props) => {
         setTaxDataFields(fieldsForAntForm);
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
+        message.success(gettaxResponse.message, 2);
+
       }
 
     }
@@ -75,7 +77,6 @@ const EditTax = (props) => {
       setButtonDisabled(true);}
     
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Saving Changes in progress..', 0);
     const taxEditResponse = await TaxApiUtil.editTax(
       selectedTaxData.tax_id,
       values.tax_name,
@@ -85,16 +86,14 @@ const EditTax = (props) => {
     console.log("taxEditResponse:", taxEditResponse);
     if (taxEditResponse.hasError) {
       console.log("Cant Edit Tax -> ", taxEditResponse.errorMessage);
-      message.error(taxEditResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(taxEditResponse.errorMessage, 3);
       setButtonDisabled(false);
-      setTimeout(hide, 1000);
     } else {
       console.log("res -> ", taxEditResponse.message);
       if (mounted) {     //imp if unmounted
-        message.success(taxEditResponse.message, 3);
         document.getElementById('app-loader-container').style.display = "none";
-        setTimeout(hide, 1000);
+        message.success(taxEditResponse.message, 3);
         setTimeout(() => {
           history.push({
             pathname: "/taxes",
@@ -103,6 +102,22 @@ const EditTax = (props) => {
       }
     }
   };
+
+
+  const onTaxInputChange = (e) => {
+    let inputTaxValue = e.target.value;
+    //console.log("qty", orderQty);
+    const re = /^[0-9\b]+$/;
+    //console.log(re.test(e.target.value));
+    if (!inputTaxValue === '' || !re.test(inputTaxValue)) {  //if contains alphabets in string
+      form.setFieldsValue({
+        tax_value: inputTaxValue.replace(/[^\d.]/g, '')
+      });
+    }
+
+  }
+
+
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -129,6 +144,7 @@ const EditTax = (props) => {
         <div className="page__content">
           <div className="page__form">
             <Form
+              form={form}
               name="basic"
               fields={taxDataFields}
               layout="vertical"
@@ -162,7 +178,11 @@ const EditTax = (props) => {
                       },
                     ]}
                   >
-                    <InputNumber  className="u-width-100" />
+                  <Input
+                    className="u-width-100"
+                    addonAfter="%"
+                    onChange={onTaxInputChange}
+                  />
                   </Form.Item>
                 </div>
               </div>

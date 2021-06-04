@@ -279,22 +279,19 @@ const TransferInventory = () => {
       setButtonDisabled(true);}
      
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.transferInventory(transferInventoryPostData);
     console.log('TransferOutResponse:', res);
 
     if (res.hasError) {
       console.log('Cant Transfer Inventory Stock  -> ', res.errorMessage);
-      message.error(res.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(res.errorMessage, 3);
       setButtonDisabled(false);
-      setTimeout(hide, 500);
     }
     else {
       console.log('res -> ', res);
-      message.success(res.message, 3);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 500);
+      message.success(res.message, 3);
       setTimeout(() => {
         history.push({
           pathname: '/stock-control/inventory-transfers',
@@ -304,6 +301,22 @@ const TransferInventory = () => {
     }
 
   }
+
+
+
+  const onQuantityInputChange = (e) => {
+    let orderQty = e.target.value;
+    const re = /^[0-9\b]+$/;
+    //console.log(re.test(e.target.value));
+    if (!orderQty === '' || !re.test(orderQty)) {  //if contains alphabets in string
+      form.setFieldsValue({
+        product_qty: orderQty.replace(/[^\d.]/g, '')
+      });
+
+    }
+
+  }
+
 
 
   const onFinishFailed = (errorInfo) => {
@@ -433,7 +446,7 @@ const TransferInventory = () => {
                       label="QTY"
                       name="product_qty"
                     >
-                      <InputNumber />
+                      <Input  onChange={onQuantityInputChange} />
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={24} md={6} className="stock-item-content">

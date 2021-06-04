@@ -151,11 +151,13 @@ const AdjustmentStock = () => {
     console.log(fileList[0]);   //imp
     var file = fileList[0];
 
-    //const hide = message.loading('Products Bulk Import in progress..', 0);
 
     if (file && fileExtention(file.name) === 'csv') {
       var reader = new FileReader();
       reader.readAsText(file);
+
+      document.getElementById('app-loader-container').style.display = "block";
+
       reader.onload = function (evt) {
         // code to convert file data and render in json format
         var json = JSON.parse(Helpers.CSV2JSON(evt.target.result));
@@ -176,11 +178,13 @@ const AdjustmentStock = () => {
 
         //setProductsTableData(bulkProducts);   //imp 
         handleCombineProductsTableData(bulkProducts, productsTableData);
+        document.getElementById('app-loader-container').style.display = "none";
         message.success("Products Imported", 3);
         /*-------------------------------*/
 
       }
       reader.onerror = function (evt) {
+        document.getElementById('app-loader-container').style.display = "none";
         message.error('error reading file');
       }
     }
@@ -340,22 +344,19 @@ const AdjustmentStock = () => {
       setButtonDisabled(true);}
 
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Saving Changes in progress..', 0);
     const res = await StockApiUtil.addStockAdjustment(addStockAdjustmentPostData);
     console.log('AddAdjustmentResponse:', res);
 
     if (res.hasError) {
       console.log('Cant Add Stock Adjustment -> ', res.errorMessage);
-      message.error(res.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(res.errorMessage, 3);
       setButtonDisabled(false);
-      setTimeout(hide, 1500);
     }
     else {
       console.log('res -> ', res);
-      message.success(res.message, 3);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1000);
+      message.success(res.message, 3);
       setTimeout(() => {
         history.push({
           pathname: '/stock-control/stock-adjustments',
@@ -371,7 +372,6 @@ const AdjustmentStock = () => {
   const handleDownloadPoForm = async () => {
 
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Downloading in progress..', 0);
     const downloadPoResponse = await StockApiUtil.downloadPoForm();
     console.log("downloadPoResponse:", downloadPoResponse);
 
@@ -382,7 +382,6 @@ const AdjustmentStock = () => {
       );
       document.getElementById('app-loader-container').style.display = "none";
 
-      setTimeout(hide, 1500);
 
     } else {
       console.log("res -> ", downloadPoResponse);
@@ -401,10 +400,26 @@ const AdjustmentStock = () => {
       hiddenElement.download = new Date().toUTCString() + "-Product-SKU.csv";
       hiddenElement.click();
       //parent.removeChild(hiddenElement); 
-      setTimeout(hide, 1500);
+      
     }
 
   };
+
+
+
+  const onQuantityInputChange = (e) => {
+    let orderQty = e.target.value;
+    //console.log("qty", orderQty);
+    const re = /^[0-9\b]+$/;
+    //console.log(re.test(e.target.value));
+    if (!orderQty === '' || !re.test(orderQty)) {  //if contains alphabets in string
+      form.setFieldsValue({
+        product_qty: orderQty.replace(/[^\d.]/g, '')
+      });
+    }
+
+  }
+
 
 
   const onFinishFailed = (errorInfo) => {
@@ -563,7 +578,7 @@ const AdjustmentStock = () => {
                       label="QTY"
                       name="product_qty"
                     >
-                      <InputNumber />
+                      <Input  onChange={onQuantityInputChange} />
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={24} md={6} className="stock-item-content">

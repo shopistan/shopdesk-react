@@ -6,9 +6,11 @@ import UrlConstants from '../../../../utils/constants/url-configs';
 
 const PrintSalesInvoice = (props) => {
     const { selectedOutletTemplateData =  null } = props;
+    //console.log(props);
 
 
-    useEffect(async () => {
+
+    useEffect( () => {
 
     }, []);
 
@@ -41,7 +43,7 @@ const PrintSalesInvoice = (props) => {
     }
 
     let today = moment(props.invoice.dateTime).format("ddd MMM, yyyy HH:mm A");  
-    let { invoice = "",  invoiceType = ""} = props;
+    let { invoice = "",  invoiceType = "", currentInvoiceNo = "" } = props;
     let userName = "";
     if(props.user){
         userName = props.user.user_info.user_name;
@@ -50,6 +52,7 @@ const PrintSalesInvoice = (props) => {
     }
 
     //console.log("print-data", props);
+
     
 
 
@@ -57,13 +60,13 @@ const PrintSalesInvoice = (props) => {
 
             <div id="printSalesTable">
                 <center>
-                    <img src={templateImageSrc}  style={{width: "70"}} /><br/> 
+                    <img src={templateImageSrc}  style={{width: "6rem"}} /><br/> 
                     <b>{removeHTML(templateHeader)}</b><br />
                     <b>{removeHTML(templateFooter)}</b><br />
                     <div style={{ fontSize: "10px", marginTop: "7px" }}></div>
 
                     <span>Receipt / Tax Invoice</span><br /><br />
-                    <b style={{fontSize: "10px"}}>Recipt #: </b> <span>{invoice.invoiceNo || invoice.invoice_unique}</span><br /> 
+                    <b style={{fontSize: "10px"}}>Recipt #: </b> <span>{currentInvoiceNo || invoice.invoice_show_id}</span><br /> 
                     <b style={{fontSize: "10px"}}>Invoice Note: </b> <span>{invoice.reference || invoice.invoice_note}</span><br />
                     <b style={{fontSize: "10px"}}>Date: </b> <span>{today}</span><br />
                     <b style={{fontSize: "10px"}}>Sales Person: </b><span>{userName}</span><br />
@@ -116,7 +119,7 @@ const PrintSalesInvoice = (props) => {
                 </div>}
 
                 <center style={{ borderBottom: "2px dotted #000", marginBottom: "5px; padding: 10px" }}>
-                    <img src={`${UrlConstants.BASE_URL}/api/open/barcode/${invoice.invoiceNo || invoice.invoice_unique}`} style={{ width: "35%" }} />
+                    <img src={`${UrlConstants.BASE_URL}/api/open/barcode/${invoice.invoiceNo || invoice.invoice_unique}`} style={{ width: "20%" }} />
 
                 </center>
                 <div style={{fontSize: "10px"}}>

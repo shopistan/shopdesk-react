@@ -79,7 +79,7 @@ const EditProduct = (props) => {
         }
         else {
             console.log('res -> ', getProductsResponse);
-            message.success('product fetched Succesfully ', 3);
+            //message.success('product fetched Succesfully ', 3);
             var productsData = getProductsResponse.product;
             setproductData(productsData);
 
@@ -167,6 +167,7 @@ const EditProduct = (props) => {
             /*  taxes response  */
             setLoading(false);
             document.getElementById('app-loader-container').style.display = "none";
+            message.success(getProductsResponse.message, 3);
 
         }
     };
@@ -206,19 +207,16 @@ const EditProduct = (props) => {
             setButtonDisabled(true);}
 
         document.getElementById('app-loader-container').style.display = "block";
-        const hide = message.loading('Saving changes in progress..', 0);
         const EditProductResponse = await ProductsApiUtil.editProduct(productDataDeepClone);
         console.log('getProductsResponse:', EditProductResponse);
         if (EditProductResponse.hasError) {
             console.log('product Editing UnSuccesfully -> ', EditProductResponse.errorMessage);
-            message.error(EditProductResponse.errorMessage, 3);
             setButtonDisabled(false);
             document.getElementById('app-loader-container').style.display = "none";
-            setTimeout(hide, 1000);
+            message.error(EditProductResponse.errorMessage, 3);
         }
         else {
             console.log('res -> ', EditProductResponse);
-            setTimeout(hide, 1000);
             document.getElementById('app-loader-container').style.display = "none";
             if (mounted) {     //imp if unmounted
                 message.success(EditProductResponse.message, 3);
@@ -242,20 +240,17 @@ const EditProduct = (props) => {
     const handleUpload = async () => {
         //console.log(fileList[0]);   //imp
         document.getElementById('app-loader-container').style.display = "block";
-        const hide = message.loading('Image Uploading Is In Progress...', 0);
         const ImageUploadResponse = await ProductsApiUtil.imageUpload(fileList[0]);
         console.log('ImageUploadResponse:', ImageUploadResponse);
         if (ImageUploadResponse.hasError) {
             console.log('Product Image Cant Upload -> ', ImageUploadResponse.errorMessage);
-            message.error('Product  Image Cant Upload', 3);
             document.getElementById('app-loader-container').style.display = "none";
-            setTimeout(hide, 1500);
+            message.error('Product  Image Cant Upload', 3);
         }
         else {
             console.log('res -> ', ImageUploadResponse);
-            message.success(ImageUploadResponse.message, 3);
             document.getElementById('app-loader-container').style.display = "none";
-            setTimeout(hide, 1500);
+            message.success(ImageUploadResponse.message, 3);
             setFileList([]);
             setproductImagePreviewSource(ImageUploadResponse.upload_data);
             setIsImageUpload(true);
@@ -668,6 +663,16 @@ const EditProduct = (props) => {
 
                             {/* Form Section */}
                             {/*    products-variants-edit    */}
+
+                            <div className="form__row--footer">
+                                <Button type='primary'
+                                    className='custom-btn--primary'
+                                    htmlType='submit'
+                                    disabled={buttonDisabled} >
+                                    Edit Product
+                                    </Button>
+                            </div>
+                            
 
                         </Form>
                     </div>

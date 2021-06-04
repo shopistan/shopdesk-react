@@ -137,6 +137,7 @@ const urls = {
     REGISTER_INVOICE: BASE_URL + '/api/register/add',
     GET_STORE: BASE_URL + '/api/register/get_store_id',
     EXPORT_INVENTORY_DUMP: BASE_URL + '/api/register/parkedSaleReportCsv',
+    GET_INVOICE_NUMBER: BASE_URL + '/api/register/getInvoiceNumber',
 
   },
   DASHBOARD:{

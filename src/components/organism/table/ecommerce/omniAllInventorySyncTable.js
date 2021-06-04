@@ -101,7 +101,7 @@ const OmniAllInventorySyncTable = (props) => {
                 bordered={true}
                 columns={mergedColumns}
                 dataSource={data}
-                loading={props.tableDataLoading}
+                //loading={props.tableDataLoading}
                 rowKey="product_sku"
                 pagination={{
                     total: props.paginationData && props.paginationData.totalElements,

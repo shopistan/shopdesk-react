@@ -27,14 +27,14 @@ const CourierAdd = () => {
         "Cant add a new Courier -> ",
         courierAddResponse.errorMessage
       );
-      message.error(courierAddResponse.errorMessage, 3);
       setButtonDisabled(false);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(courierAddResponse.errorMessage, 3);
     } else {
       console.log("res -> ", courierAddResponse);
       if (mounted) {     //imp if unmounted
-        message.success(courierAddResponse.message, 3);
         document.getElementById('app-loader-container').style.display = "none";
+        message.success(courierAddResponse.message, 3);
         setTimeout(() => {
           history.push({
             pathname: "/couriers",

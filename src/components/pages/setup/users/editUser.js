@@ -149,22 +149,19 @@ function EditUser(props) {
             setButtonDisabled(true);}
         
         document.getElementById('app-loader-container').style.display = "block";
-        const hide = message.loading('Saving Changes in progress..', 0);
         const editUserResponse = await SetupApiUtil.editUser(editUserPostData);
         console.log('addUserResponse:', editUserResponse);
 
         if (editUserResponse.hasError) {
             console.log('Cant Edit User -> ', editUserResponse.errorMessage);
-            message.error(editUserResponse.errorMessage, 3);
             document.getElementById('app-loader-container').style.display = "none";
+            message.error(editUserResponse.errorMessage, 3);
             setButtonDisabled(false);
-            setTimeout(hide, 1500);
         }
         else {
             console.log('res -> ', editUserResponse);
-            message.success(editUserResponse.message, 3);
             document.getElementById('app-loader-container').style.display = "none";
-            setTimeout(hide, 1000);
+            message.success(editUserResponse.message, 3);
             setTimeout(() => {
                 history.push({
                     pathname: '/setup/users',

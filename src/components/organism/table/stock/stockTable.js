@@ -347,7 +347,7 @@ const StockTable = (props) => {
                 current: currentPageNumber,
                 onChange: (page, pageSize) => handlePageChange(page, pageSize),
             }}
-            loading={props.tableDataLoading}
+            //loading={props.tableDataLoading}
             rowKey={
                 props.tableType === "purchase_orders" ?
                     "purchase_order_id" : props.tableType === "inventory_transfers" ? "transfer_id"

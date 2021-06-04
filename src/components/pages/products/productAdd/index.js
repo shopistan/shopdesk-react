@@ -250,7 +250,6 @@ const ProductAdd = () => {
       setButtonDisabled(true);}
 
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Adding a Product Is In Progress..', 0);
     const AddProductResponse = await ProductsApiUtil.addProduct(addProductData);
     console.log("AddProductResponse :", AddProductResponse);
     if (AddProductResponse.hasError) {
@@ -258,16 +257,16 @@ const ProductAdd = () => {
         "product Added UnSuccesfully -> ",
         AddProductResponse.errorMessage
       );
-      message.error(AddProductResponse.errorMessage, 3);
+
       setButtonDisabled(false);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1000);
+      message.error(AddProductResponse.errorMessage, 3);
+
     } else {
       console.log("res -> ", AddProductResponse);
-      setTimeout(hide, 1000);
       if (mounted) {     //imp if unmounted
-        message.success(AddProductResponse.message, 3);
         document.getElementById('app-loader-container').style.display = "none";
+        message.success(AddProductResponse.message, 3);
         setTimeout(() => {
           history.push({
             pathname: "/products",
@@ -289,7 +288,6 @@ const ProductAdd = () => {
   const handleUpload = async () => {
     //console.log(fileList[0]);   //imp
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Image Uploading Is In Progress...', 0);
     const ImageUploadResponse = await ProductsApiUtil.imageUpload(fileList[0]);
     console.log("ImageUploadResponse:", ImageUploadResponse);
     if (ImageUploadResponse.hasError) {
@@ -297,14 +295,12 @@ const ProductAdd = () => {
         "Product Image Cant Upload -> ",
         ImageUploadResponse.errorMessage
       );
-      message.error("Product  Image Cant Upload", 3);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1500);
+      message.error("Product  Image Cant Upload", 3);
     } else {
       console.log("res -> ", ImageUploadResponse);
-      message.success(ImageUploadResponse.message, 3);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1500);
+      message.success(ImageUploadResponse.message, 3);
       setFileList([]);
       setproductImagePreviewSource(ImageUploadResponse.upload_data);
       setIsImageUpload(true);

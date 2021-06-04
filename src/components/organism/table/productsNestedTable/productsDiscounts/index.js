@@ -261,7 +261,7 @@ const ProductsDiscountsTable = (props) => {
                     //onChange: (page, pageSize) => handlePageChange(page, pageSize),
                     //position: ["topRight"]
                 }}
-                loading={props.tableDataLoading}
+                //loading={props.tableDataLoading}
                 rowKey="product_id"
                 rowSelection={{
                     ...rowSelection,

@@ -34,10 +34,12 @@ const ProductsTable = (props) => {
     if (record.variant > 1) {
       return toggleExpandByproductId(record.product_id);
     }
+
     history.push({
       pathname: `/products/${record.product_id}/edit`,
       data: record, // your data array of objects
     });
+    
   };
 
   const showTotalItemsBar = (total, range) => {
@@ -51,6 +53,10 @@ const ProductsTable = (props) => {
   };
 
   const barcodeGenerator = (record) => {
+    if (record.variant > 1) {
+      return toggleExpandByproductId(record.product_id);
+    }
+
     let count = window.prompt(
       `No. of barcodes for SKU: ${record.product_sku}`,
       0
@@ -245,7 +251,7 @@ const ProductsTable = (props) => {
         onChange: (page, pageSize) => handlePageChange(page, pageSize),
         position: ["topRight"],
       }}
-      loading={props.tableDataLoading}
+      //loading={props.tableDataLoading}
       rowKey="product_id"
       expandedRowKeys={tableExpandedRows}
       expandedRowRender={tableExpandedRowRender}

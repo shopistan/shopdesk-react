@@ -42,11 +42,11 @@ const EditCategory = (props) => {
         if (getCategoryResponse.hasError) {
             console.log('getCategory Cant Fetched -> ', getCategoryResponse.errorMessage);
             setLoading(false);
+            document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             console.log('res -> ', getCategoryResponse);
             if (mounted) {     //imp if unmounted
-                message.success(getCategoryResponse.message, 2);
                 const categoryName = getCategoryResponse.category_name[0].category_name;  //vvimp
                 setSelectedCategoryName(categoryName);
                 const fieldsForAntForm = [
@@ -58,6 +58,7 @@ const EditCategory = (props) => {
                 setCategoryDataFields(fieldsForAntForm);
                 setLoading(false);
                 document.getElementById('app-loader-container').style.display = "none";
+                message.success(getCategoryResponse.message, 2);
             }
 
         }
@@ -69,21 +70,21 @@ const EditCategory = (props) => {
             setButtonDisabled(true);} 
 
         document.getElementById('app-loader-container').style.display = "block";
-        const hide = message.loading('Saving Changes in progress..', 0);
+        //const hide = message.loading('Saving Changes in progress..', 0);
         const categoryEditResponse = await CategoriesApiUtil.editCategory(cat_id, values.categoryName);
         console.log('categoryEditResponse:', categoryEditResponse);
         if (categoryEditResponse.hasError) {
             console.log('Cant Edit a Category -> ', categoryEditResponse.errorMessage);
             message.error(categoryEditResponse.errorMessage, 3);
             setButtonDisabled(false);
-            setTimeout(hide, 1500);
+            //setTimeout(hide, 1500);
             document.getElementById('app-loader-container').style.display = "none";
         }
         else {
             console.log('res -> ', categoryEditResponse);
             if (mounted) {     //imp if unmounted
                 message.success(categoryEditResponse.message, 3);
-                setTimeout(hide, 1500);
+                //setTimeout(hide, 1500);
                 document.getElementById('app-loader-container').style.display = "none";
                 setTimeout(() => {
                     history.push({

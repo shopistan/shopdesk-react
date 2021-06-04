@@ -18,6 +18,7 @@ import {
   from "antd";
 import { ProfileOutlined, DownOutlined, DownloadOutlined } from "@ant-design/icons";
 import * as SalesApiUtil from '../../../../utils/api/sales-api-utils';
+import * as SetupApiUtil from "../../../../utils/api/setup-api-utils";
 import { useHistory } from "react-router-dom";
 import * as Helpers from "../../../../utils/helpers/scripts";
 import SellHistoryNestedProductsTable from "../../../organism/table/sell/sellHistoryProductsTable";
@@ -62,6 +63,7 @@ const SalesHistory = () => {
   const [loading, setLoading] = useState(true);
   const [dataSearched, setDataSearched] = useState([]);
   const [dataSearchedAccumulate, setDataSearchedAccumulate] = useState([]);
+  const [templateData, setTemplateData] = useState(null);
 
 
   var mounted = true;
@@ -75,7 +77,7 @@ const SalesHistory = () => {
 
     fetchSalesHistoryData();
 
-    var userData = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+    let userData = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
     userData = userData.data ? userData.data : null;
 
     if (userData) {
@@ -83,6 +85,7 @@ const SalesHistory = () => {
         checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
       ) {
         setLocalStorageData(userData);
+        getUserStoreData(userData.auth.current_store);  //imp to get user outlet data
       }
     }
 
@@ -348,20 +351,17 @@ const SalesHistory = () => {
 
 
   const getSelectedInvoiceHistory = async (invoiceId) => {
-    const hide = message.loading('Getting Invoice in progress..', 0);
     const getSaleHistoryResponse = await SalesApiUtil.getSalesInvoiceHistory(invoiceId);
     console.log('getSaleHistoryResponse:', getSaleHistoryResponse);
 
     if (getSaleHistoryResponse.hasError) {
       console.log('Cant fetch registered products Data -> ', getSaleHistoryResponse.errorMessage);
       message.error(getSaleHistoryResponse.errorMessage, 3);
-      setTimeout(hide, 1000);
     }
     else {
       console.log('res -> ', getSaleHistoryResponse);
       message.success(getSaleHistoryResponse.message, 2);
       setSelectedInvoiceData(getSaleHistoryResponse);
-      setTimeout(hide, 1000);
       history.push({
         pathname: "/register/sell",
         selected_invoice_data: getSaleHistoryResponse,
@@ -375,7 +375,6 @@ const SalesHistory = () => {
 
   const getSelectedQuickViewInvoiceHistory = async (invoiceId, tableRecord) => {
     document.getElementById('app-loader-container').style.display = "block";
-    const hide = message.loading('Getting Invoice in progress..', 0);
     const getSaleHistoryResponse = await SalesApiUtil.getSalesInvoiceHistory(invoiceId);
     console.log('getSaleHistoryResponse:', getSaleHistoryResponse);
 
@@ -383,12 +382,10 @@ const SalesHistory = () => {
       console.log('Cant fetch registered products Data -> ', getSaleHistoryResponse.errorMessage);
       message.error(getSaleHistoryResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 500);
     }
     else {
       console.log('res -> ', getSaleHistoryResponse);
       //message.success(getSaleHistoryResponse.message, 2);
-      setTimeout(hide, 500);
       document.getElementById('app-loader-container').style.display = "none";
       let tableProducsData = getSaleHistoryResponse.invoices;
       /*---------------------------------------------------*/
@@ -473,17 +470,15 @@ const SalesHistory = () => {
 
     if (salesHistoryData.length > 0) {
       document.getElementById('app-loader-container').style.display = "block";
-      const hide = message.loading('Exporting Parked Sales Is In Progress..', 0);
       const getStoreResponse = await SalesApiUtil.getStoreId();
       if (getStoreResponse.hasError) {
         const errorMessage = getStoreResponse.errorMessage;
         console.log('Cant get Store Id -> ', errorMessage);
-        message.error(errorMessage, 3);
         document.getElementById('app-loader-container').style.display = "none";
-        setTimeout(hide, 1500);
+        message.error(errorMessage, 3);
       } else {
         console.log("Success:", getStoreResponse.message);
-        downloadParkedSalesInvoices(hide, getStoreResponse || null);
+        downloadParkedSalesInvoices(getStoreResponse || null);
       }
     }
     else { message.warning("Sales History Data Not Found", 3) } 
@@ -491,7 +486,7 @@ const SalesHistory = () => {
   }
 
 
-  const downloadParkedSalesInvoices = async (hide, fetchedStore) => {
+  const downloadParkedSalesInvoices = async (fetchedStore) => {
     //console.log("fetchedStore", fetchedStore);
     const parkedSalesInvoicesExportResponse = await SalesApiUtil.exportParkedSalesInvoices(
       fetchedStore.store_id
@@ -503,12 +498,12 @@ const SalesHistory = () => {
         "Cant Export Parked Sales Invoices -> ",
         parkedSalesInvoicesExportResponse.errorMessage
       );
-      message.error(parkedSalesInvoicesExportResponse.errorMessage, 3);
+      
       document.getElementById('app-loader-container').style.display = "none";
-      setTimeout(hide, 1500);
+      message.error(parkedSalesInvoicesExportResponse.errorMessage, 3);
+      
     } else {
       console.log("res -> ", parkedSalesInvoicesExportResponse.data);
-      setTimeout(hide, 1500);
       /*---------------csv download--------------------------------*/
       if (mounted) {     //imp if unmounted
         // CSV FILE
@@ -521,13 +516,59 @@ const SalesHistory = () => {
         a.click();
         a.remove();  //afterwards we remove the element again
         /*---------------csv download--------------------------------*/
-        message.success(parkedSalesInvoicesExportResponse.message, 3);
         document.getElementById('app-loader-container').style.display = "none";
+        message.success(parkedSalesInvoicesExportResponse.message, 3);
+
       }
 
     }
 
   }
+
+
+
+  const getUserStoreData = async (storeId) => {
+    document.getElementById('app-loader-container').style.display = "block";
+    const getOutletViewResponse = await SetupApiUtil.getOutlet(storeId);
+    console.log('getOutletViewResponse:', getOutletViewResponse);
+
+    if (getOutletViewResponse.hasError) {
+      console.log('Cant fetch Store Data -> ', getOutletViewResponse.errorMessage);
+      //message.warning(getOutletViewResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
+    }
+    else {
+      console.log('res -> ', getOutletViewResponse);
+      let selectedStore = getOutletViewResponse.outlet;
+      //message.success(getOutletViewResponse.message, 3);
+      getTemplateData(selectedStore.template_id);   //imp to get template data
+
+    }
+  }
+
+
+
+  const getTemplateData = async (templateId) => {
+    
+    const getTepmlateResponse = await SetupApiUtil.getTemplate(templateId);
+    console.log('getTepmlateResponse:', getTepmlateResponse);
+
+    if (getTepmlateResponse.hasError) {
+      console.log('Cant get template Data -> ', getTepmlateResponse.errorMessage);
+      //message.warning(getTepmlateResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
+    }
+    else {
+      console.log('res -> ', getTepmlateResponse);
+      var receivedTemplateData = getTepmlateResponse.template;
+      //message.success(getTepmlateResponse.message, 3);
+      setTemplateData(receivedTemplateData);
+      document.getElementById('app-loader-container').style.display = "none";
+
+    }
+  } 
+
+
 
  
 
@@ -776,6 +817,7 @@ const SalesHistory = () => {
       {quickViewInvoicePrintData && (
         <PrintSalesInvoiceTable
           user={localStorageData}
+          selectedOutletTemplateData={templateData}
           invoice={quickViewInvoicePrintData}
           invoiceType={"quick_view"}
         />
