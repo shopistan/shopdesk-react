@@ -123,9 +123,10 @@ const OmniSalesOrdersTable = (props) => {
             title: "Shipping Cost",
             //dataIndex: "invoice_shipping_price",
             render: (_, record) => {
+                //{currency + parseFloat(record.invoice_shipping_price).toFixed(2)}    //imp prev
                 return (
                     <span>
-                        {currency + parseFloat(record.invoice_shipping_price).toFixed(2)}
+                        {(record.invoice_currency || "") + parseFloat(record.invoice_shipping_price).toFixed(2)}
                     </span>
                 );
             },
@@ -136,7 +137,7 @@ const OmniSalesOrdersTable = (props) => {
             render: (_, record) => {
                 return (
                     <span>
-                        {record.invoice_currency + parseFloat(record.sale_total_currency).toFixed(2)}
+                        {(record.invoice_currency || "") + parseFloat(record.sale_total_currency).toFixed(2)}
                     </span>
                 );
             },
@@ -147,7 +148,7 @@ const OmniSalesOrdersTable = (props) => {
             render: (_, record) => {
                 return (
                     <span>
-                        {currency + parseFloat(record.sale_total_pkr).toFixed(2)}
+                        {(record.invoice_currency || "")  + parseFloat(record.sale_total_pkr).toFixed(2)}
                     </span>
                 );
             },
@@ -158,7 +159,7 @@ const OmniSalesOrdersTable = (props) => {
             render: (_, record) => {
                 return (
                     <span>
-                        { currency + parseFloat(record.invoice_discount).toFixed(2)}
+                        {(record.invoice_currency || "")  + parseFloat(record.invoice_discount).toFixed(2)}
                     </span>
                 );
             },
