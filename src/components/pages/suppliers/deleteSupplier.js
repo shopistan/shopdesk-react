@@ -25,7 +25,7 @@ const DeleteSupplier = (props) => {
             message.error("Supplier Id cannot be null", 2);
             setTimeout(() => {
                 history.goBack();
-            }, 1000);
+            }, 2000);
         }
 
         return () => {
@@ -67,19 +67,19 @@ const DeleteSupplier = (props) => {
         if (supplierDeleteResponse.hasError) {
             console.log('Cant delete a Category -> ', supplierDeleteResponse.errorMessage);
             document.getElementById('app-loader-container').style.display = "none";
-            message.error(supplierDeleteResponse.errorMessage, 3);
+            message.error(supplierDeleteResponse.errorMessage, 2);
             setButtonDisabled(false);
         }
         else {
             console.log('res -> ', supplierDeleteResponse.message);
             if (mounted) {     //imp if unmounted
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(supplierDeleteResponse.message, 3);
+                message.success(supplierDeleteResponse.message, 1);
                 setTimeout(() => {
                     history.push({
                         pathname: '/suppliers',
                     });
-                }, 2000);
+                }, 1200);
             }
         }
     };

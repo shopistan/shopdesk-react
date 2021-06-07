@@ -277,19 +277,19 @@ const ReturnStock = () => {
     if (res.hasError) {
       console.log('Cant Return Stock  -> ', res.errorMessage);
       document.getElementById('app-loader-container').style.display = "none";
-      message.error(res.errorMessage, 3);
+      message.error(res.errorMessage, 2);
       setButtonDisabled(false);
     }
     else {
       console.log('res -> ', res);
       document.getElementById('app-loader-container').style.display = "none";
-      message.success(res.message, 3);
+      message.success(res.message, 1);
       setTimeout(() => {
         history.push({
           pathname: '/stock-control/purchase-orders',
           activeKey: 'purchase-orders'
         });
-      }, 2000);
+      }, 1200);
     }
 
   }

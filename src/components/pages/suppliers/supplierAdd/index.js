@@ -33,18 +33,18 @@ const SupplierAdd = () => {
         supplierAddResponse.errorMessage
       );
       document.getElementById('app-loader-container').style.display = "none";
-      message.error(supplierAddResponse.errorMessage, 3);
+      message.error(supplierAddResponse.errorMessage, 2);
       setButtonDisabled(false);
     } else {
       console.log("res -> ", supplierAddResponse.message);
       if (mounted) {     //imp if unmounted
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(supplierAddResponse.message, 3);
+        message.success(supplierAddResponse.message, 1);
         setTimeout(() => {
           history.push({
             pathname: "/suppliers",
           });
-        }, 2000);
+        }, 1200);
       }
     }
   };

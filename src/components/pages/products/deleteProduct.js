@@ -24,7 +24,7 @@ const DeleteProduct = (props) => {
             message.error("Product Id cannot be null", 2);
             setTimeout(() => {
                 history.goBack();
-            }, 1000);
+            }, 2000);
         }
 
     }, []);
@@ -37,14 +37,14 @@ const DeleteProduct = (props) => {
         if (getProductsResponse.hasError) {
             console.log('Product Cant Fetched -> ', getProductsResponse.errorMessage);
             document.getElementById('app-loader-container').style.display = "none";
-            message.error(getProductsResponse.message, 3);
+            message.error(getProductsResponse.message, 2);
         }
         else {
             console.log('res -> ', getProductsResponse);
             setproductData(getProductsResponse.product);
             setLoading(false);
             document.getElementById('app-loader-container').style.display = "none";
-            message.success('product fetched Succesfully ', 3);
+            message.success('product fetched Succesfully ', 2);
         }
     }
     
@@ -59,19 +59,19 @@ const DeleteProduct = (props) => {
 
         if (productDeleteResponse.hasError) {
             console.log('Cant delete a product -> ', productDeleteResponse.errorMessage);
-            message.error(productDeleteResponse.errorMessage, 3);
             setButtonDisabled(false);
             document.getElementById('app-loader-container').style.display = "none";
+            message.error(productDeleteResponse.errorMessage, 2);
         }
         else {
             console.log('res -> ', productDeleteResponse);
-            message.success(productDeleteResponse.message, 3);
             document.getElementById('app-loader-container').style.display = "none";
+            message.success(productDeleteResponse.message, 1);
             setTimeout(() => {
                 history.push({
                   pathname: '/products',
               });
-            }, 2000);
+            }, 1200);
         }
     };
 

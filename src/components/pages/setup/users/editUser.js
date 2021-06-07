@@ -47,7 +47,7 @@ function EditUser(props) {
                     pathname: '/setup/users',
                     activeKey: 'users'
                 });
-            }, 1000);
+            }, 2000);
         }
 
     }, []);
@@ -111,7 +111,7 @@ function EditUser(props) {
 
 
     const checkStoreExistsInOutlets = (row) => {
-        console.log(selectedOutlets);
+        //console.log(selectedOutlets);
         const index = selectedOutlets.indexOf(row.store_id);
         if (index > -1) { return true; }
         else { return false; }
@@ -155,19 +155,19 @@ function EditUser(props) {
         if (editUserResponse.hasError) {
             console.log('Cant Edit User -> ', editUserResponse.errorMessage);
             document.getElementById('app-loader-container').style.display = "none";
-            message.error(editUserResponse.errorMessage, 3);
+            message.error(editUserResponse.errorMessage, 2);
             setButtonDisabled(false);
         }
         else {
             console.log('res -> ', editUserResponse);
             document.getElementById('app-loader-container').style.display = "none";
-            message.success(editUserResponse.message, 3);
+            message.success(editUserResponse.message, 1);
             setTimeout(() => {
                 history.push({
                     pathname: '/setup/users',
                     activeKey: 'users'
                 });
-            }, 2000);
+            }, 1200);
         }
 
     };

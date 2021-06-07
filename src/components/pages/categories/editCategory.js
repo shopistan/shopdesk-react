@@ -25,7 +25,7 @@ const EditCategory = (props) => {
             message.error("Category Id cannot be null", 2);
             setTimeout(() => {
                 history.goBack();
-            }, 1000);
+            }, 2000);
         }
 
         return () => {
@@ -75,22 +75,24 @@ const EditCategory = (props) => {
         console.log('categoryEditResponse:', categoryEditResponse);
         if (categoryEditResponse.hasError) {
             console.log('Cant Edit a Category -> ', categoryEditResponse.errorMessage);
-            message.error(categoryEditResponse.errorMessage, 3);
+            //message.error(categoryEditResponse.errorMessage, 2);
             setButtonDisabled(false);
             //setTimeout(hide, 1500);
             document.getElementById('app-loader-container').style.display = "none";
+            message.error(categoryEditResponse.errorMessage, 2);
         }
         else {
             console.log('res -> ', categoryEditResponse);
             if (mounted) {     //imp if unmounted
-                message.success(categoryEditResponse.message, 3);
+                //message.success(categoryEditResponse.message, 1);
                 //setTimeout(hide, 1500);
                 document.getElementById('app-loader-container').style.display = "none";
+                message.success(categoryEditResponse.message, 1);
                 setTimeout(() => {
                     history.push({
                         pathname: '/categories',
                     });
-                }, 2000);
+                }, 1200);
             }
         }
     };

@@ -260,18 +260,18 @@ const ProductAdd = () => {
 
       setButtonDisabled(false);
       document.getElementById('app-loader-container').style.display = "none";
-      message.error(AddProductResponse.errorMessage, 3);
+      message.error(AddProductResponse.errorMessage, 2);
 
     } else {
       console.log("res -> ", AddProductResponse);
       if (mounted) {     //imp if unmounted
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(AddProductResponse.message, 3);
+        message.success(AddProductResponse.message, 1);
         setTimeout(() => {
           history.push({
             pathname: "/products",
           });
-        }, 2000);
+        }, 1200);
       }
 
     }

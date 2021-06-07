@@ -55,7 +55,7 @@ const StockReceive = (props) => {
             message.error("Puchase Oder Id cannot be null", 2);
             setTimeout(() => {
                 history.goBack();
-            }, 1000);
+            }, 2000);
         }
 
         /*--------------set user local data-------------------------------*/
@@ -173,13 +173,13 @@ const StockReceive = (props) => {
             console.log('res -> ', res);
             if (mounted) {     //imp if unmounted
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(res.message, 3);
+                message.success(res.message, 1);
                 setTimeout(() => {
                     history.push({
                         pathname: '/stock-control/purchase-orders',
                         activeKey: 'purchase-orders'
                     });
-                }, 2000);
+                }, 1200);
             }
 
         }

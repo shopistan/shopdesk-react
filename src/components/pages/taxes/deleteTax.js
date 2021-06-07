@@ -25,7 +25,7 @@ const DeleteTax = (props) => {
             message.error("Tax Id cannot be null", 2);
             setTimeout(() => {
                 history.goBack();
-            }, 1000);
+            }, 2000);
         }
 
         return () => {
@@ -78,12 +78,12 @@ const DeleteTax = (props) => {
             console.log('res -> ', taxDeleteResponse.message);
             if (mounted) {     //imp if unmounted
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(taxDeleteResponse.message, 3);
+                message.success(taxDeleteResponse.message, 1);
                 setTimeout(() => {
                     history.push({
                         pathname: '/taxes',
                     });
-                }, 2000);
+                }, 1200);
             }
         }
     };

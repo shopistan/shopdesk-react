@@ -117,17 +117,17 @@ const CustomerForm = (props) => {
           console.log('Cant Edit Customer -> ', userDataUpdateResponse.errorMessage);
           setButtonDisabled(false);
           document.getElementById('app-loader-container').style.display = "none";
-          message.error(userDataUpdateResponse.errorMessage, 3);
+          message.error(userDataUpdateResponse.errorMessage, 2);
         }
         else {
           console.log('res -> ', userDataUpdateResponse);
           document.getElementById('app-loader-container').style.display = "none";
-          message.success(userDataUpdateResponse.message, 3);
+          message.success(userDataUpdateResponse.message, 1);
           setTimeout(() => {
             history.push({
               pathname: `/customers/${customer_id}/view`,
             });
-          }, 1500);
+          }, 1000);
         }
 
       }  /*---end of if---*/
@@ -146,18 +146,18 @@ const CustomerForm = (props) => {
         if (userDataAddResponse.hasError) {
           console.log('Cant Edit Customer -> ', userDataAddResponse.errorMessage);
           document.getElementById('app-loader-container').style.display = "none";
-          message.error(userDataAddResponse.errorMessage, 3);
+          message.error(userDataAddResponse.errorMessage, 2);
           setButtonDisabled(false);
         }
         else {
           console.log('res -> ', userDataAddResponse);
           document.getElementById('app-loader-container').style.display = "none";
-          message.success(userDataAddResponse.message, 3);
+          message.success(userDataAddResponse.message, 1);
           setTimeout(() => {
             history.push({
               pathname: '/customers',
             });
-          }, 1500);
+          }, 1200);
         }
 
       } /*---end of else---*/

@@ -88,19 +88,19 @@ const ProductDiscount = () => {
       console.log('Cant save products Discounted Data -> ', saveproductsDiscountedDataResponse.errorMessage);
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
-      message.error(saveproductsDiscountedDataResponse.errorMessage, 3);
+      message.error(saveproductsDiscountedDataResponse.errorMessage, 2);
     }
     else {
       console.log('res -> ', saveproductsDiscountedDataResponse);
       if (mounted) {     //imp if unmounted  
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(saveproductsDiscountedDataResponse.message, 3);
+        message.success(saveproductsDiscountedDataResponse.message, 1);
         setTimeout(() => {
           history.push({
             pathname: '/products',
           });
-        }, 2000);
+        }, 1200);
 
       }
 

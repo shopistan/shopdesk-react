@@ -49,8 +49,9 @@ const SignIn = () => {
         
         setTimeout(() => {
           window.open("/outlets", "_self");
-        }, 2000);
+        }, 2500);
       }
+
     }
 
     console.log("Success:", loginResponse);

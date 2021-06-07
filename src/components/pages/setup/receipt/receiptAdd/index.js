@@ -54,18 +54,18 @@ function ReceiptAdd() {
       console.log('Cant Add Template -> ', addTemplateResponse.errorMessage);
       setButtonDisabled(false);
       document.getElementById('app-loader-container').style.display = "none";
-      message.error(addTemplateResponse.errorMessage, 3);
+      message.error(addTemplateResponse.errorMessage, 2);
     }
     else {
       console.log('res -> ', addTemplateResponse);
       document.getElementById('app-loader-container').style.display = "none";
-      message.success(addTemplateResponse.message, 3);
+      message.success(addTemplateResponse.message, 1);
       setTimeout(() => {
         history.push({
           pathname: '/setup/receipts-templates',
           activeKey: 'receipts-templates'
         });
-      }, 2000);
+      }, 1200);
     }
 
   };

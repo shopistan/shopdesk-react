@@ -87,18 +87,18 @@ const EditTax = (props) => {
     if (taxEditResponse.hasError) {
       console.log("Cant Edit Tax -> ", taxEditResponse.errorMessage);
       document.getElementById('app-loader-container').style.display = "none";
-      message.error(taxEditResponse.errorMessage, 3);
+      message.error(taxEditResponse.errorMessage, 2);
       setButtonDisabled(false);
     } else {
       console.log("res -> ", taxEditResponse.message);
       if (mounted) {     //imp if unmounted
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(taxEditResponse.message, 3);
+        message.success(taxEditResponse.message, 1);
         setTimeout(() => {
           history.push({
             pathname: "/taxes",
           });
-        }, 1500);
+        }, 1200);
       }
     }
   };

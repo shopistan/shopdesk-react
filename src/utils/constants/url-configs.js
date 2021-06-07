@@ -40,6 +40,7 @@ const urls = {
   OULETS: {
     SELECT_OUTLET: BASE_URL + '/api/users/selectStore',
     VIEW_ALL: BASE_URL + '/api/stores/viewAll',
+    VIEW_ALL_OUTLETS: BASE_URL + '/api/stores/viewAllOutlets',
   },
   COURIERS: {
     VIEW: BASE_URL + '/api/couriers/view',

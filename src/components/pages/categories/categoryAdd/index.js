@@ -26,19 +26,21 @@ const CategoryAdd = () => {
         "Cant add new Category -> ",
         categoryAddResponse.errorMessage
       );
-      message.error(categoryAddResponse.errorMessage, 3);
+
       setButtonDisabled(false);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(categoryAddResponse.errorMessage, 2);
+
     } else {
       console.log("res -> ", categoryAddResponse);
       if (mounted) {     //imp if unmounted
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(categoryAddResponse.message, 3);
+        message.success(categoryAddResponse.message, 1);
         setTimeout(() => {
           history.push({
             pathname: "/categories",
           });
-        }, 2000);
+        }, 1200);
       }
     }
   };

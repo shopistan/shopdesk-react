@@ -2,6 +2,14 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { Table, Input, Form, InputNumber, Row, Col } from "antd";
 import "./style.scss";
+import * as SetupApiUtil from "../../../../utils/api/setup-api-utils";
+import Constants from '../../../../utils/constants/constants';
+import {
+    getDataFromLocalStorage,
+    checkUserAuthFromLocalStorage,
+} from "../../../../utils/local-storage/local-store-utils";
+
+
 
 
 const EditableContext = React.createContext(null);
@@ -93,7 +101,8 @@ const EditableCell = ({
 
 
 const StockReceiveTable = (props) => {
-    const {currency = "" } = props;
+    //const {currency = "" } = props;
+    const [outletData, setOutletData] = useState(null);
     const [form] = Form.useForm();
     const [data, setData] = useState([]);
     const [productsTotalAmount, setProductsTotalAmount] = useState(0);
@@ -134,9 +143,41 @@ const StockReceiveTable = (props) => {
     }
 
 
+    
+    const getUserStoreData = async (storeId) => {
+        document.getElementById('app-loader-container').style.display = "block";
+        const getOutletViewResponse = await SetupApiUtil.getOutlet(storeId);
+        console.log('getOutletViewResponse:', getOutletViewResponse);
+
+        if (getOutletViewResponse.hasError) {
+            console.log('Cant fetch Store Data -> ', getOutletViewResponse.errorMessage);
+            //message.warning(getOutletViewResponse.errorMessage, 3);
+            document.getElementById('app-loader-container').style.display = "none";
+        }
+        else {
+            console.log('res -> ', getOutletViewResponse);
+            let selectedStore = getOutletViewResponse.outlet;
+            //message.success(getOutletViewResponse.message, 3);
+            setOutletData(selectedStore);   //imp to get template data
+            document.getElementById('app-loader-container').style.display = "none";
+
+        }
+    }
+
+
 
     useEffect(async () => {
         setData(props.tableData);
+
+        let userData = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+        userData = userData.data ? userData.data : null;
+        if (userData) {
+            if (
+                checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
+            ) {
+                getUserStoreData(userData.auth.current_store);  //imp to get user outlet data
+            }
+        }
 
 
     }, [props.tableData, props.tableDataLoading]);  /* imp passing props to re-render */
@@ -205,11 +246,12 @@ const StockReceiveTable = (props) => {
             },
             {
                 title: "Price",
-                dataIndex: "purchase_order_junction_price",
+                //dataIndex: "purchase_order_junction_price",
                 render: (_, record) => {
+                    let currency = outletData && outletData.currency_symbol;
                     return (
                         <div>
-                        {currency+record.purchase_order_junction_price}
+                        {(currency || "") + record.purchase_order_junction_price}
                     </div>
                     );
                 }
@@ -217,9 +259,10 @@ const StockReceiveTable = (props) => {
             {
                 title: "Total",
                 render: (_, record) => {
+                    let currency = outletData && outletData.currency_symbol;
                     return (
                         <span>
-                            {record.qty ? currency + (parseFloat(record.qty) * parseFloat(record.purchase_order_junction_price)).toFixed(2)
+                            {record.qty ? (currency || "") +  (parseFloat(record.qty) * parseFloat(record.purchase_order_junction_price)).toFixed(2)
                                 : currency + parseFloat(0)
                             }
                         </span>

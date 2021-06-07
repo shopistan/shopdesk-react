@@ -121,7 +121,7 @@ const ProductUpload = () => {
       );
       
       document.getElementById('app-loader-container').style.display = "none";
-      message.error(productsBulkUploadResponse.errorMessage, 3);
+      message.error(productsBulkUploadResponse.errorMessage, 2);
       
     } else {
       console.log("res -> ", productsBulkUploadResponse);
@@ -131,12 +131,12 @@ const ProductUpload = () => {
       } else {
         
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(productsBulkUploadResponse.message, 2);
+        message.success(productsBulkUploadResponse.message, 1);
         setTimeout(() => {
           history.push({
             pathname: '/products',
           });
-        }, 500);
+        }, 1200);
 
       }
 

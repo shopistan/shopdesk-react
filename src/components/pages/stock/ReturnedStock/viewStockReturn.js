@@ -41,7 +41,7 @@ const ViewStockReturn = (props) => {
             message.error("Stock Returned Id cannot be null", 2);
             setTimeout(() => {
                 history.goBack();
-            }, 1000);
+            }, 2000);
         }
 
 
@@ -60,9 +60,9 @@ const ViewStockReturn = (props) => {
 
         if (viewStockReturnDataResponse.hasError) {
             console.log('Cant Get Stock Returned Data -> ', viewStockReturnDataResponse.errorMessage);
-            message.warning(viewStockReturnDataResponse.errorMessage, 3);
             setLoading(false);
             document.getElementById('app-loader-container').style.display = "none";
+            message.warning(viewStockReturnDataResponse.errorMessage, 2);
         }
         else {
             console.log('res -> ', viewStockReturnDataResponse);

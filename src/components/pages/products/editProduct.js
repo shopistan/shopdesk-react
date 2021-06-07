@@ -58,7 +58,7 @@ const EditProduct = (props) => {
             message.error("Product Id cannot be null", 2);
             setTimeout(() => {
                 history.goBack();
-            }, 1000);
+            }, 2000);
         }
 
         return () => {
@@ -167,7 +167,7 @@ const EditProduct = (props) => {
             /*  taxes response  */
             setLoading(false);
             document.getElementById('app-loader-container').style.display = "none";
-            message.success(getProductsResponse.message, 3);
+            message.success(getProductsResponse.message, 2);
 
         }
     };
@@ -213,18 +213,18 @@ const EditProduct = (props) => {
             console.log('product Editing UnSuccesfully -> ', EditProductResponse.errorMessage);
             setButtonDisabled(false);
             document.getElementById('app-loader-container').style.display = "none";
-            message.error(EditProductResponse.errorMessage, 3);
+            message.error(EditProductResponse.errorMessage, 2);
         }
         else {
             console.log('res -> ', EditProductResponse);
             document.getElementById('app-loader-container').style.display = "none";
             if (mounted) {     //imp if unmounted
-                message.success(EditProductResponse.message, 3);
+                message.success(EditProductResponse.message, 1);
                 setTimeout(() => {
                     history.push({
                         pathname: '/products',
                     });
-                }, 1000);
+                }, 1200);
             }
 
         }
