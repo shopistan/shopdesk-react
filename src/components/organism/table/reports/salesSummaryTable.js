@@ -174,6 +174,10 @@ const SalesSummaryTable = (props) => {
       dataIndex: "invoice_no",
     },
     {
+      title: "Invoice Note",
+      dataIndex: "invoice_note",
+    },
+    {
       title: "Oder No.",
       dataIndex: "order_no",
     },
