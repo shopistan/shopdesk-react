@@ -60,7 +60,7 @@ const ViewOmniSaleOrder = (props) => {
             message.error("Invoice Id cannot be null", 2);
             setTimeout(() => {
                 history.goBack();
-            }, 1000);
+            }, 2000);
         }
 
         return () => {

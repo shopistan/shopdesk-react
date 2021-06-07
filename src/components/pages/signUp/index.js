@@ -49,13 +49,13 @@ const SignUp = () => {
       const signedUpUserDetails = signUpResponse;
       saveDataIntoLocalStorage();
       document.getElementById('app-loader-container').style.display = "none";
-      message.success("SignUp Successfull ", 3);
+      message.success("SignUp Successfull ", 1);
       console.log("res -> ", signedUpUserDetails);
       setTimeout(() => {
         history.push({
           pathname: "/sign-in",
         });
-      }, 2000);
+      }, 1200);
     }
 
     console.log("Success:", values);
@@ -68,7 +68,7 @@ const SignUp = () => {
 
   const onEmailChange = async (e) => {
     let emailValue = e.target.value;
-    console.log(emailValue.toLowerCase());
+    //console.log(emailValue.toLowerCase());
     form.setFieldsValue({
       email: emailValue.toLowerCase(),
     });

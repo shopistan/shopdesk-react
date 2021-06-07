@@ -49,7 +49,7 @@ const TransferIn = (props) => {
             message.error("Transfer Order Id cannot be null", 2);
             setTimeout(() => {
                 history.goBack();
-            }, 1000);
+            }, 2000);
         }
 
 
@@ -102,20 +102,20 @@ const TransferIn = (props) => {
         if (res.hasError) {
             console.log('Cant add Receive transfers status -> ', res.errorMessage);
             document.getElementById('app-loader-container').style.display = "none";
-            message.error(res.errorMessage, 3);
+            message.error(res.errorMessage, 2);
             setButtonDisabled(false);
         }
         else {
             console.log('res -> ', res);
             if (mounted) {     //imp if unmounted
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(res.message, 3);
+                message.success(res.message, 1);
                 setTimeout(() => {
                     history.push({
                         pathname: '/stock-control/inventory-transfers',
                         activeKey: 'inventory-transfers'
                     });
-                }, 1500);
+                }, 1200);
             }
 
         }

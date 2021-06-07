@@ -28,19 +28,19 @@ const TaxAdd = () => {
     if (TaxAddResponse.hasError) {
       console.log("Cant add new Tax-> ", TaxAddResponse.errorMessage);
       document.getElementById('app-loader-container').style.display = "none";
-      message.error(TaxAddResponse.errorMessage, 3);
+      message.error(TaxAddResponse.errorMessage, 2);
       setButtonDisabled(false);
       
     } else {
       console.log("res -> ", TaxAddResponse.message);
       if (mounted) {     //imp if unmounted
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(TaxAddResponse.message, 3);
+        message.success(TaxAddResponse.message, 1);
         setTimeout(() => {
           history.push({
             pathname: "/taxes",
           });
-        }, 2000);
+        }, 1200);
       }
     }
   };

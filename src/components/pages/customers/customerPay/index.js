@@ -81,7 +81,7 @@ const CustomerPay = (props) => {
     if (customerRechargeResponse.hasError) {
       document.getElementById('app-loader-container').style.display = "none";
       setButtonDisabled(false);
-      return message.error("Cannot recharge user account!", 3);
+      return message.error("Cannot recharge user account!", 2);
     }
 
     /*message.success(
@@ -91,10 +91,12 @@ const CustomerPay = (props) => {
       3
     );*/
 
-    message.success("Customer Amount Addded!", 3);
-
     document.getElementById('app-loader-container').style.display = "none";
-    history.push(`/customers/${customer_id}/view`);
+    message.success("Customer Amount Addded!", 1);
+    //history.push(`/customers/${customer_id}/view`);
+    setTimeout(() => {
+      history.push(`/customers/${customer_id}/view`);
+    }, 1200);
 
   };
 

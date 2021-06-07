@@ -39,7 +39,7 @@ const ProductsTable = (props) => {
       pathname: `/products/${record.product_id}/edit`,
       data: record, // your data array of objects
     });
-    
+
   };
 
   const showTotalItemsBar = (total, range) => {
@@ -73,6 +73,7 @@ const ProductsTable = (props) => {
     if (readFromLocalStorage) {
       //symbol = readFromLocalStorage.currency.symbol;     //imp prev
       symbol = selectedOutletData.currency_symbol;     //imp new one
+      symbol = symbol || "" ;                          //imp new one
       if (
         checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
       ) {

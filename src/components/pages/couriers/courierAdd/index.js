@@ -34,12 +34,12 @@ const CourierAdd = () => {
       console.log("res -> ", courierAddResponse);
       if (mounted) {     //imp if unmounted
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(courierAddResponse.message, 3);
+        message.success(courierAddResponse.message, 1);
         setTimeout(() => {
           history.push({
             pathname: "/couriers",
           });
-        }, 2000);
+        }, 1200);
       }
     }
   };

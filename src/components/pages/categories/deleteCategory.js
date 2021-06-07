@@ -24,7 +24,7 @@ const DeleteCategory = (props) => {
             message.error("Category Id cannot be null", 2);
             setTimeout(() => {
                 history.goBack();
-            }, 1000);
+            }, 2000);
         }
 
         return () => {
@@ -69,22 +69,23 @@ const DeleteCategory = (props) => {
 
         if (categoryDeleteResponse.hasError) {
             console.log('Cant delete a Category -> ', categoryDeleteResponse.errorMessage);
-            message.error(categoryDeleteResponse.errorMessage, 3);
+            //message.error(categoryDeleteResponse.errorMessage, 3);
             setButtonDisabled(false);
             //setTimeout(hide, 1500);
             document.getElementById('app-loader-container').style.display = "none";
+            message.error(categoryDeleteResponse.errorMessage, 2);
         }
         else {
             console.log('res -> ', categoryDeleteResponse);
             if (mounted) {     //imp if unmounted
                 //setTimeout(hide, 1500);
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(categoryDeleteResponse.message, 3);
+                message.success(categoryDeleteResponse.message, 1);
                 setTimeout(() => {
                     history.push({
                         pathname: '/categories',
                     });
-                }, 2000);
+                }, 1200);
             }
         }
     };

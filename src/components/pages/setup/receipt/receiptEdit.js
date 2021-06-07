@@ -37,7 +37,7 @@ function ReceiptEdit(props) {
           pathname: '/setup/receipts-templates',
           activeKey: 'receipts-templates',
         });
-      }, 1000);
+      }, 2000);
     }
 
   }, []);
@@ -101,18 +101,18 @@ function ReceiptEdit(props) {
       console.log('Cant Edit Template -> ', editTemplateResponse.errorMessage);
       setButtonDisabled(false);
       document.getElementById('app-loader-container').style.display = "none";
-      message.error(editTemplateResponse.errorMessage, 3);
+      message.error(editTemplateResponse.errorMessage, 2);
     }
     else {
       console.log('res -> ', editTemplateResponse);
       document.getElementById('app-loader-container').style.display = "none";
-      message.success(editTemplateResponse.message, 3);
+      message.success(editTemplateResponse.message, 1);
       setTimeout(() => {
         history.push({
           pathname: '/setup/receipts-templates',
           activeKey: 'receipts-templates'
         });
-      }, 2000);
+      }, 1200);
     }
 
   };

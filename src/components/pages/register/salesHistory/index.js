@@ -360,7 +360,7 @@ const SalesHistory = () => {
     }
     else {
       console.log('res -> ', getSaleHistoryResponse);
-      message.success(getSaleHistoryResponse.message, 2);
+      //message.success(getSaleHistoryResponse.message, 2);
       setSelectedInvoiceData(getSaleHistoryResponse);
       history.push({
         pathname: "/register/sell",
@@ -501,7 +501,7 @@ const SalesHistory = () => {
       
       document.getElementById('app-loader-container').style.display = "none";
       message.error(parkedSalesInvoicesExportResponse.errorMessage, 3);
-      
+
     } else {
       console.log("res -> ", parkedSalesInvoicesExportResponse.data);
       /*---------------csv download--------------------------------*/

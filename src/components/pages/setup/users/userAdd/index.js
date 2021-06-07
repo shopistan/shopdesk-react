@@ -104,18 +104,18 @@ function UserAdd() {
       console.log('Cant Add User -> ', addUserResponse.errorMessage);
       setButtonDisabled(false);
       document.getElementById('app-loader-container').style.display = "none";
-      message.error(addUserResponse.errorMessage, 3);
+      message.error(addUserResponse.errorMessage, 2);
     }
     else {
       console.log('res -> ', addUserResponse);
       document.getElementById('app-loader-container').style.display = "none";
-      message.success(addUserResponse.message, 3);
+      message.success(addUserResponse.message, 1);
       setTimeout(() => {
         history.push({
           pathname: '/setup/users',
           activeKey: 'users'
         });
-      }, 2000);
+      }, 1200);
     }
 
   };
@@ -125,7 +125,7 @@ function UserAdd() {
     let outletId = e.target.dataset.outletid;
     var outletsData = [...selectedOutlets];
     const index = outletsData.indexOf(outletId);
-    console.log(index);
+    //console.log(index);
     if (index > -1) {
       outletsData.splice(index, 1);
       setSelectedOutlets(outletsData);
@@ -154,7 +154,7 @@ function UserAdd() {
   const onPhoneChange = (e) => {
     let phoneNumber = e.target.value;
     const re = /^[0-9\b]+$/;
-    console.log(e.target.value);
+    //console.log(e.target.value);
     if (!e.target.value === '' || !re.test(e.target.value)) {  //if contains alphabets in string
       form.setFieldsValue({
         phone: phoneNumber.replace(/[^\d.-]/g, '')

@@ -70,7 +70,7 @@ function OutletEdit(props) {
           pathname: '/setup/outlets',
           activeKey: 'outlets'
         });
-      }, 1000);
+      }, 2000);
     }
 
   }, []);
@@ -314,18 +314,18 @@ function OutletEdit(props) {
     if (addOeKeyDataResponse.hasError) {
       console.log('Cant Add Oe Keys Data -> ', addOeKeyDataResponse.errorMessage);
       document.getElementById('app-loader-container').style.display = "none";
-      message.error(addOeKeyDataResponse.errorMessage, 3);
+      message.error(addOeKeyDataResponse.errorMessage, 2);
       setButtonDisabled(false);
     }
     else {
       console.log('res -> ', addOeKeyDataResponse);
       document.getElementById('app-loader-container').style.display = "none";
-      message.success(addOeKeyDataResponse.message, 3);
+      message.success(addOeKeyDataResponse.message, 1);
       setTimeout(() => {
         history.push({
           pathname: '/outlets',
         });
-      }, 2000);
+      }, 1200);
     }
 
   };
@@ -358,19 +358,19 @@ function OutletEdit(props) {
     if (editOutletResponse.hasError) {
       console.log('Cant Edit Template -> ', editOutletResponse.errorMessage);
       document.getElementById('app-loader-container').style.display = "none";
-      message.error(editOutletResponse.errorMessage, 3);
+      message.error(editOutletResponse.errorMessage, 2);
       setButtonDisabled(false);
     }
     else {
       console.log('res -> ', editOutletResponse);
       document.getElementById('app-loader-container').style.display = "none";
-      message.success(editOutletResponse.message, 3);
+      message.success(editOutletResponse.message, 1);
       setTimeout(() => {
         history.push({
           pathname: '/setup/outlets',
           activeKey: 'outlets'
         });
-      }, 2000);
+      }, 1200);
     }
 
   };

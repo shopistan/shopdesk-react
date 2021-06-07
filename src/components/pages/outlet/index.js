@@ -59,7 +59,7 @@ const Outlet = () => {
   const fetchAllOutletsData = async (localStorageData) => {
 
     document.getElementById('app-loader-container').style.display = "block";
-    const outletsViewResponse = await OutletsApiUtil.viewAllOutlets();
+    const outletsViewResponse = await OutletsApiUtil.viewAllOutletsForStoreSelection();
     console.log('outletsViewResponse:', outletsViewResponse);
 
     if (outletsViewResponse.hasError) {
@@ -110,7 +110,7 @@ const Outlet = () => {
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
         message.error('Store Change UnSuccesfull ', 3);
-        
+
       }
       else {
         console.log('res -> ', userSelectOutletResponse);
@@ -121,12 +121,12 @@ const Outlet = () => {
           saveDataIntoLocalStorage("user", userSelectOutletResponse);
           setLoading(false);
           document.getElementById('app-loader-container').style.display = "none";
-          message.success('Store Change Succesfull ', 2);
+          message.success('Store Change Succesfull ', 1);
           setTimeout(() => {
             history.push({
               pathname: '/dashboard',
             });
-          }, 2000);
+          }, 1200);
         }
 
       }

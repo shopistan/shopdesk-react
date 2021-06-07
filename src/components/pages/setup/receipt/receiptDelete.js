@@ -33,7 +33,7 @@ const ReceiptDelete = (props) => {
                     pathname: '/setup/receipts-templates',
                     activeKey: 'receipts-templates',
                 });
-            }, 1000);
+            }, 2000);
         }
 
     }, []);
@@ -74,18 +74,18 @@ const ReceiptDelete = (props) => {
             console.log('Cant delete Receipt -> ', receiptDeleteResponse.errorMessage);
             setButtonDisabled(false);
             document.getElementById('app-loader-container').style.display = "none";
-            message.error(receiptDeleteResponse.errorMessage, 3);
+            message.error(receiptDeleteResponse.errorMessage, 2);
         }
         else {
             console.log('res -> ', receiptDeleteResponse);
             document.getElementById('app-loader-container').style.display = "none";
-            message.success('Receipt deletion Succesfull ', 3);
+            message.success('Receipt deletion Succesfull ', 1);
             setTimeout(() => {
                 history.push({
                     pathname: '/setup/receipts-templates',
                     activeKey: 'receipts-templates',
                 });
-            }, 1000);
+            }, 1200);
         }
     };
 

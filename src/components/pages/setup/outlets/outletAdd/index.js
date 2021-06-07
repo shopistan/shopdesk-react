@@ -79,20 +79,20 @@ function OutletAdd() {
 
     if (addOutletResponse.hasError) {
       console.log('Cant Add outlet -> ', addOutletResponse.errorMessage);
-      message.error(addOutletResponse.errorMessage, 3);
       setButtonDisabled(false);
       document.getElementById('app-loader-container').style.display = "none";
+      message.error(addOutletResponse.errorMessage, 2);
     }
     else {
       console.log('res -> ', addOutletResponse);
-      message.success(addOutletResponse.message, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.success(addOutletResponse.message, 1);
       setTimeout(() => {
         history.push({
           pathname: '/setup/outlets',
           activeKey: 'outlets'
         });
-      }, 2000);
+      }, 1200);
     }
 
   };

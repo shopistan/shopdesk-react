@@ -47,18 +47,18 @@ const DeleteCustomer = (props) => {
             console.log('Cant delete Customer -> ', customerDeleteResponse.errorMessage);
             setButtonDisabled(false);
             document.getElementById('app-loader-container').style.display = "none";
-            message.error( customerDeleteResponse.errorMessage, 3);
+            message.error( customerDeleteResponse.errorMessage, 2);
         }
         else {
             console.log('res -> ', customerDeleteResponse);
             if (mounted) {     //imp if unmounted
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(customerDeleteResponse.message, 3);
+                message.success(customerDeleteResponse.message, 1);
                 setTimeout(() => {
                     history.push({
                         pathname: '/customers',
                     });
-                }, 1500);
+                }, 1200);
             }
         }
     };

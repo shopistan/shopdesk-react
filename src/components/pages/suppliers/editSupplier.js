@@ -24,7 +24,7 @@ const EditSupplier = (props) => {
       message.error("Supplier Id cannot be null", 2);
       setTimeout(() => {
         history.goBack();
-      }, 1000);
+      }, 2000);
     }
 
     return () => {
@@ -101,18 +101,18 @@ const EditSupplier = (props) => {
     if (supplierEditResponse.hasError) {
       console.log("Cant Edit Supplier -> ", supplierEditResponse.errorMessage);
       document.getElementById('app-loader-container').style.display = "none";
-      message.error(supplierEditResponse.errorMessage, 3);
+      message.error(supplierEditResponse.errorMessage, 2);
       setButtonDisabled(false);
     } else {
       console.log("res -> ", supplierEditResponse.message);
       if (mounted) {     //imp if unmounted
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(supplierEditResponse.message, 3);
+        message.success(supplierEditResponse.message, 1);
         setTimeout(() => {
           history.push({
             pathname: "/suppliers",
           });
-        }, 2000);
+        }, 1200);
       }
     }
   };

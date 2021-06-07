@@ -24,7 +24,7 @@ const DeleteCourier  = (props) => {
             message.error("Courier Id cannot be null", 2);
             setTimeout(() => {
                 history.goBack();
-            }, 1000);
+            }, 2000);
         }
 
         return () => {
@@ -69,19 +69,19 @@ const DeleteCourier  = (props) => {
             console.log('Cant delete courier -> ', courierDeleteResponse.errorMessage);
             setButtonDisabled(false);
             document.getElementById('app-loader-container').style.display = "none";
-            message.error(courierDeleteResponse.errorMessage, 3);
+            message.error(courierDeleteResponse.errorMessage, 2);
             
         }
         else {
             console.log('res -> ', courierDeleteResponse);
             if (mounted) {     //imp if unmounted
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(courierDeleteResponse.message, 3);
+                message.success(courierDeleteResponse.message, 1);
                 setTimeout(() => {
                     history.push({
                         pathname: '/couriers',
                     });
-                }, 2000);
+                }, 1200);
             }
         }
     };

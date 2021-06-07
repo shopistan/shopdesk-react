@@ -24,7 +24,7 @@ const EditCourier = (props) => {
             message.error("Courier Id cannot be null", 2);
             setTimeout(() => {
                 history.goBack();
-            }, 1000);
+            }, 2000);
         }
 
         return () => {
@@ -45,7 +45,6 @@ const EditCourier = (props) => {
             document.getElementById('app-loader-container').style.display = "none";
         }
         else {
-            message.success(getCourierResponse.message, 2);
             if (mounted) {     //imp if unmounted
                 const courierData = getCourierResponse.courier[0];  //vvimp
                 setSelectedCourierData(courierData);
@@ -63,6 +62,7 @@ const EditCourier = (props) => {
                 setCourierDataFields(fieldsForAntForm);
                 setLoading(false);
                 document.getElementById('app-loader-container').style.display = "none";
+                message.success(getCourierResponse.message, 2);
             }
             
         }
@@ -80,20 +80,20 @@ const EditCourier = (props) => {
         console.log('courierEditResponse:', courierEditResponse);
         if (courierEditResponse.hasError) {
             console.log('Cant Edit Courier -> ', courierEditResponse.errorMessage);
-            message.error(courierEditResponse.errorMessage, 3);
             setButtonDisabled(false);
             document.getElementById('app-loader-container').style.display = "none";
+            message.error(courierEditResponse.errorMessage, 2);
         }
         else {
             console.log('res -> ', courierEditResponse);
             if (mounted) {     //imp if unmounted
-                message.success(courierEditResponse.message, 3);
                 document.getElementById('app-loader-container').style.display = "none";
+                message.success(courierEditResponse.message, 1);
                 setTimeout(() => {
                     history.push({
                         pathname: '/couriers',
                     });
-                }, 2000);
+                }, 1200);
             }
         }
     };
