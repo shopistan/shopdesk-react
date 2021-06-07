@@ -9,7 +9,7 @@ import Constants from '../../../../utils/constants/constants';
 import {
     getDataFromLocalStorage,
     checkUserAuthFromLocalStorage,
-  } from "../../../../utils/local-storage/local-store-utils";
+} from "../../../../utils/local-storage/local-store-utils";
 
 
 
