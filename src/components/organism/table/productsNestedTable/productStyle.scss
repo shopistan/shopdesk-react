@@ -1,0 +1,32 @@
+.table-frame {
+    .ant-table-row-expand-icon {
+      display: none;
+    }
+    .ant-table-row-expand-icon-cell{
+      display: none;
+    }
+}
+
+.products-lookup-count,
+.products-discount-tag{
+  background-color: #337ab7;
+  color: #fff;
+  padding: 0.2rem;
+}
+
+.products-lookup-store{
+  background-color: #5cb85c;
+  color: #fff;
+  padding: 0.2rem;
+}
+
+.products-zero-discount-tag{
+  background-color: #777;
+  color: #fff;
+  padding: 0.2rem;
+}
+
+.select-w-100{
+  width: 100%;
+}
+

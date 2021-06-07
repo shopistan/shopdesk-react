@@ -1,0 +1,75 @@
+@import "../../../styles/variables";
+@import "../../../styles/mixins";
+
+.reports,
+.reports-omni {
+  .action-row {
+    justify-content: flex-start !important;
+
+    .date-picker {
+      margin-right: 2rem;
+    }
+  }
+
+  .card-shade {
+    padding: 15px;
+
+    h2 {
+      color: #555;
+    }
+  }
+
+  .card-container {
+    -webkit-box-shadow: 0px 0px 5px 0px darkgray;
+    -moz-box-shadow: 0px 0px 5px 0px darkgray;
+    box-shadow: 0px 0px 5px 0px darkgray;
+    margin: 1rem;
+  }
+
+  .card-pull-right {
+    float: right !important;
+  }
+
+  .print-overview-btn {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+.reports-category-wise {
+  .action-row {
+    justify-content: flex-start !important;
+
+    .date-picker {
+      margin-right: 2rem;
+    }
+  }
+}
+
+.reports-inventory {
+  .action-row {
+    float: right;
+
+    .inventory-count-badge {
+      background-color: #337ab7;
+      color: #fff;
+      padding: 0.3rem;
+    }
+  }
+
+  .inventory-table {
+    margin-top: 5rem !important;
+  }
+}
+
+.reports {
+  .action-row {
+    @include respond(mobile) {
+      flex-direction: row !important;
+    }
+  }
+
+  .fetch-bar {
+    display: flex;
+  }
+}

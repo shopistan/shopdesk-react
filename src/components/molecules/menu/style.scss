@@ -1,0 +1,65 @@
+@import "../../../styles/variables";
+@import "../../../styles/mixins";
+
+.side-menu,
+.ant-layout-sider {
+  background-color: $color-white !important;
+
+  li {
+    color: $color-black !important;
+  }
+
+  li .nav-menu-item-link {
+    color: $color-black !important;
+  }
+
+  .ant-menu-item-selected {
+    background-color: $color-primary !important;
+  }
+
+  .ant-menu-item-selected .nav-menu-item-link {
+    color: $color-white !important;
+  }
+
+  .ant-menu-submenu-title {
+    color: $color-black !important;
+  }
+
+  .ant-menu-sub {
+    background-color: $color-primary-light !important;
+
+    .ant-menu-item {
+      color: $color-white !important;
+    }
+
+    .ant-menu-item .nav-menu-item-link  {
+      color: $color-white !important;
+    }
+
+  }
+
+  .ant-menu-submenu-arrow::before, .ant-menu-submenu-arrow::after {
+    background: $color-black !important;
+  }
+}
+
+.side-menu {
+  height: calc(100vh - 6.4rem);
+  overflow: auto;
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.side-menu-padding{
+  padding-bottom: 5rem !important;
+}
+
+.mobile__menu {
+  background-color: $color-white;
+}

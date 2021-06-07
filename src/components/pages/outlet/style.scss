@@ -1,0 +1,51 @@
+@import "../../../styles/variables";
+@import "../../../styles/mixins";
+
+.outlet {
+  &__select {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    column-gap: 2rem;
+    row-gap: 2rem;
+    cursor: pointer;
+
+    @include respond(mobile) {
+      grid-template-columns: 1fr;
+      margin-bottom: 6rem;
+    }
+  }
+
+  &__link {
+    padding: 2rem 5rem;
+    background-color: $color-white;
+    color: $color-black;
+    display: inline-block;
+    transition: all 0.3s;
+    border: 3px solid #eee;
+    text-transform: capitalize;
+
+    &:hover {
+      color: $color-white;
+      background-color: $color-primary;
+      border-color: $color-primary;
+      transform: scale(0.9);
+    }
+
+    @include respond(mobile) {
+      &:not(:last-child) {
+        margin-bottom: 2rem;
+      }
+    }
+  }
+
+  &__active {
+    color: $color-white;
+    background-color: $color-primary;
+    border-color: $color-primary;
+  }
+}
+
+.loading-container {
+  text-align: center;
+}

@@ -1,0 +1,30 @@
+version: 0.2
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+  build:
+    commands:
+      - IMAGE_TAG=$CODEBUILD_BUILD_NUMBER
+      - echo Build started on `date`
+      - echo Building the Docker image... 
+      - ls     
+      - docker build -t $IMAGE_REPO:$IMAGE_TAG .
+      - docker tag $IMAGE_REPO:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO:$IMAGE_TAG
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO:$IMAGE_TAG
+      - CREDENTIALS=$(aws sts assume-role --role-arn arn:aws:iam::559165824181:role/EksCodeBuildKubectlRole --role-session-name codebuild-kubectl --duration-seconds 900)
+      - export AWS_ACCESS_KEY_ID="$(echo ${CREDENTIALS} | jq -r '.Credentials.AccessKeyId')"
+      - export AWS_SECRET_ACCESS_KEY="$(echo ${CREDENTIALS} | jq -r '.Credentials.SecretAccessKey')"
+      - export AWS_SESSION_TOKEN="$(echo ${CREDENTIALS} | jq -r '.Credentials.SessionToken')"
+      - export AWS_EXPIRATION=$(echo ${CREDENTIALS} | jq -r '.Credentials.Expiration')
+      - aws sts get-caller-identity
+      - sed -i "s/_AWS_DEFAULT_REGION/${AWS_DEFAULT_REGION}/g;s/_AWS_ACCOUNT_ID/${AWS_ACCOUNT_ID}/g;s/IMAGE_TAG/${IMAGE_TAG}/g;s/_IMAGE_REPO/${IMAGE_REPO}/g;s/_APP_NAME/$APP_NAME/g; s/_NAMESPACE/$NAMESPACE/g; s/_APP_PORT/$APP_PORT/g; s/_NODE_ENV/$NODE_ENV/g;s/_PROTOCOL_HTTP/$PROTOCOL_HTTP/g;" "k8s/service.yaml"
+      - cat k8s/service.yaml
+      - echo "$APP_NAME" $APP_NAME
+      - aws eks update-kubeconfig --region us-east-2 --name $CLUSTER
+      - kubectl apply -f k8s/service.yaml

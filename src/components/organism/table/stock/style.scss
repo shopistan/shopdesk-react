@@ -1,0 +1,26 @@
+.btn-mark-all-products{
+    color: #333;
+    background-color: #fff;
+    border-radius: 2px !important;
+    padding: 0.3rem;
+    border: 2px solid #ccc;
+    cursor: pointer;
+    outline: none;
+}
+
+.btn-mark-all-products:hover{
+    background-color: #e6e6e6;
+    border-color: #adadad;
+    outline: none !important;
+}
+
+.stock-table-delete-item{
+    color: red;
+    //border: 1px solid red;
+}
+
+.return-stock-view-footer{
+    text-align: center;
+
+}
+

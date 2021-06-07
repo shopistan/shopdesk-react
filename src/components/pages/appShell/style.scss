@@ -1,0 +1,145 @@
+@import "../../../styles/variables";
+@import "../../../styles/mixins";
+
+// Logo
+.logo {
+  height: 64px;
+  background-color: $color-white;
+
+  @extend %flex-center;
+
+  &--desktop {
+    img {
+      width: 19.5rem;
+      height: 5rem;
+    }
+  }
+
+  h2 {
+    color: $color-white;
+    margin: 0;
+  }
+}
+
+// Sider
+.sider {
+  @include respond(mobile) {
+    display: none;
+  }
+}
+
+.site-layout {
+  overflow: hidden;
+}
+
+.content-layout {
+  width: 100%;
+  transition: all 0.3s;
+}
+
+
+.logo-dropdown-item:hover{
+  color: $color-logo-dropdown-item !important;
+}
+
+
+// Header
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $color-white !important;
+
+  @include respond(mobile) {
+    height: auto !important;
+    padding: 0 1.5rem !important;
+    flex-direction: column;
+  }
+
+  &__left {
+    display: flex;
+
+    @include respond(mobile) {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .heading {
+      color: $color-black;
+      margin-left: 2rem;
+    }
+
+    .switch-outlet-heading {
+      color: $color-black !important;
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    .switch-outlet-heading:hover {
+      text-decoration: underline;
+    }
+
+  }
+
+  &__right {
+    @extend %flex-between;
+
+    color: $color-white;
+
+    @include respond(mobile) {
+      width: 100%;
+      flex-direction: row-reverse;
+    }
+
+    h2 {
+      color: $color-white;
+      text-transform: uppercase;
+    }
+
+    .outlet {
+      display: flex;
+
+      &__btn {
+        margin-left: 1rem;
+        padding: 0.5rem 1rem;
+        color: $color-black;
+        border: 1px solid $color-black;
+      }
+    }
+  }
+
+  &__menu-btn {
+    @include respond(mobile) {
+      display: none;
+    }
+
+    svg {
+      fill: $color-black;
+    }
+  }
+
+  &__mob-menu-btn {
+    display: none;
+    margin-right: 2rem;
+
+    @include respond(mobile) {
+      display: block;
+    }
+  }
+
+  .user {
+    @extend %flex-center;
+
+    &__avatar {
+      margin-left: 1rem;
+
+      @include respond(mobile) {
+        display: none;
+      }
+    }
+
+    &__dropdown {
+      color: $color-black;
+    }
+  }
+}

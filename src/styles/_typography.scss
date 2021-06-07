@@ -1,0 +1,17 @@
+body {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  line-height: 1.7;
+  font-size: $default-font-size;
+  color: $color-black;
+  overflow: hidden;
+}
+
+h1 {
+  font-size: $font-size-big;
+  font-weight: $semi-bold;
+}
+
+h2 {
+  font-size: $font-size-medium;
+}

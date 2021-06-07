@@ -1,0 +1,48 @@
+.attribute__wrapper {
+  display: flex;
+
+  .ant-space-item {
+    &:first-child {
+      flex: 1;
+    }
+  }
+}
+
+.switch__row {
+  display: flex;
+  align-items: center;
+
+  h2 {
+    margin-right: 25px;
+  }
+}
+
+.form__row--variant {
+  .ant-space-item:nth-child(2) {
+    flex: 2;
+  }
+}
+
+.inventory-tracking {
+  /* display: grid; */
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  column-gap: 2rem;
+  row-gap: 2rem;
+
+  width: 50%;     //new one
+
+  label {
+    font-weight: bold;
+  }
+}
+
+
+.opening-qty-margin {
+  margin-bottom: 3rem;
+}
+
+.opening-qty-margin h3 {
+ font-weight: bold;
+}
+

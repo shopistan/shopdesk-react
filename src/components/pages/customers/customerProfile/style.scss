@@ -1,0 +1,40 @@
+@import "../../../../styles/variables";
+@import "../../../../styles/mixins";
+
+.customer-profile {
+  .page__content {
+    display: flex;
+
+    @include respond(mobile) {
+      flex-direction: column;
+    }
+
+    > * {
+      flex: 1;
+    }
+
+    li {
+      display: flex;
+      padding: 1rem 0;
+
+      > * {
+        width: 50%;
+      }
+    }
+
+    .link {
+      span {
+        margin-right: 1.5rem;
+      }
+    }
+
+
+    .customer-details-section{
+      margin-bottom: 3rem;
+    }
+
+
+
+
+  }
+}
