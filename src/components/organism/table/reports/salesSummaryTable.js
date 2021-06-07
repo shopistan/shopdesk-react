@@ -182,12 +182,12 @@ const SalesSummaryTable = (props) => {
       dataIndex: "customer_name",
     },
     {
-      title: "SkU",
-      dataIndex: "sku",
+      title: "SKU",
+      dataIndex: "product_sku",
     },
     {
       title: "Product Name",
-      dataIndex: "name",
+      dataIndex: "product_name",
     },
     {
       title: "Color",
