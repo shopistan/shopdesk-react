@@ -262,6 +262,7 @@ function Sell() {
     setSelectedValue(option.children); //working correctly
     setSelectedProductId(value); //passes productuinqId
     handleAddProduct(value);          //imp new one 
+    setSelectedValue("");      //imp new one
   };
 
   const handleCustomerDelete = () => {
