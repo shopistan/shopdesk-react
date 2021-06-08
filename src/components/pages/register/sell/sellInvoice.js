@@ -62,7 +62,6 @@ const PrintSalesInvoice = (props) => {
                 <center>
                     <img src={templateImageSrc}  style={{width: "6rem"}} /><br/> 
                     <b>{removeHTML(templateHeader)}</b><br />
-                    <b>{removeHTML(templateFooter)}</b><br />
                     <div style={{ fontSize: "10px", marginTop: "7px" }}></div>
 
                     <span>Receipt / Tax Invoice</span><br /><br />
@@ -119,12 +118,17 @@ const PrintSalesInvoice = (props) => {
                 </div>}
 
                 <center style={{ borderBottom: "2px dotted #000", marginBottom: "5px; padding: 10px" }}>
-                    <img src={`${UrlConstants.BASE_URL}/api/open/barcode/${invoice.invoiceNo || invoice.invoice_unique}`} style={{ width: "20%" }} />
+                    <img src={`${UrlConstants.BASE_URL}/api/open/barcode/${invoice.invoiceNo || invoice.invoice_unique}`} style={{ width: "30%" }} />
 
                 </center>
-                <div style={{fontSize: "10px"}}>
+                <hr />
 
+                <div style={{ marginTop: "2rem" }}>
+                    <center>
+                        <b>{removeHTML(templateFooter)}</b><br />
+                    </center>
                 </div>
+
                 <hr />
 
             </div>
