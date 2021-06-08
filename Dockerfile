@@ -1,4 +1,4 @@
-FROM node:12-alpine as build-step
+FROM 559165824181.dkr.ecr.us-east-2.amazonaws.com/node:latest as build-step
 
 RUN mkdir /app
 
