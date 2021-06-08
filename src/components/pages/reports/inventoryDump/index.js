@@ -38,11 +38,17 @@ const InventoryDump = () => {
     else {
       console.log('res -> ', productsInventoryResponse);
       if (mounted) {     //imp if unmounted
-        //message.success(productsInventoryResponse.message, 3);
-        setInventoryData(productsInventoryResponse.inventory_report);
+        let inventoryDump = productsInventoryResponse.inventory_report;
+        let totalQuantity = 0;
+        inventoryDump.map((item) => {
+          totalQuantity += +item.quantity;
+        });
+        setInventoryData(inventoryDump);
         setLoading(false);
-        SetinventoryCount((productsInventoryResponse.inventory_report).length);
+        //SetinventoryCount((productsInventoryResponse.inventory_report).length);     //imp prev
+        SetinventoryCount(totalQuantity);                                             //imp new one
         document.getElementById('app-loader-container').style.display = "none";
+        //message.success(productsInventoryResponse.message, 3);
       }
     }
   }
