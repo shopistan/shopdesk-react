@@ -10,4 +10,4 @@ phases:
       - npm run build:$ENV
   post_build:
     commands:
-      - aws s3 sync build/ s3://shopdesk-react-app-uat
+      - aws s3 sync build/ s3://shopdesk-fe-app-uat
