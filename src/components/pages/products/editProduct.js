@@ -614,7 +614,7 @@ const EditProduct = (props) => {
                                 </div>
 
                                 {/* Row */}
-                                {productData && productData.product_variant1_name !== "null" &&
+                                {productData && productData.product_variant1_name &&
                                     <div className='form__row'>
                                         <div className='form__col'>
                                             <Form.Item
@@ -637,7 +637,7 @@ const EditProduct = (props) => {
                                 {/* Row */}
 
                                 {/* Row */}
-                                {productData && productData.product_variant2_name !== "null" &&
+                                {productData && productData.product_variant2_name &&
                                     <div className='form__row'>
                                         <div className='form__col'>
                                             <Form.Item
