@@ -346,7 +346,7 @@ const SalesHistory = () => {
     popupWin.document.open();
     // window.print(); window.close(); 'width: 80%, height=80%'
     popupWin.document.write(doc);
-    //popupWin.document.close();  //vvimp for autoprint
+    popupWin.document.close();  //vvimp for autoprint
   };
 
 

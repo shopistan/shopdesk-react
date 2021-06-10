@@ -18,6 +18,9 @@ const PrintSalesInvoice = (props) => {
     let templateImageSrc = '';
     let templateHeader = '';
     let templateFooter = '';
+    let templateFooterComplete = [];
+    let templateHeaderComplete = [];
+    let iterator = 0;
 
     /*if (props.user.template_data) {
         if (props.user.template_data.template_image) {
@@ -33,6 +36,10 @@ const PrintSalesInvoice = (props) => {
         templateImageSrc = `${selectedOutletTemplateData.template_image}`;    //new one
         templateHeader = `${selectedOutletTemplateData.template_header}`;    //new one
         templateFooter = `${selectedOutletTemplateData.template_footer}`;    //new one
+        //templateFooter = templateFooter.replace(/\n/g, '<br />');
+        templateFooterComplete = templateFooter.split("\n");
+        templateHeaderComplete = templateHeader.split("\n");
+        //console.log(templateFooterComplete);
     }
 
 
@@ -61,7 +68,14 @@ const PrintSalesInvoice = (props) => {
             <div id="printSalesTable">
                 <center>
                     <img src={templateImageSrc}  style={{width: "6rem"}} /><br/> 
-                    <b>{removeHTML(templateHeader)}</b><br />
+                    {templateHeaderComplete.length > 0 &&
+                            templateHeaderComplete.map((item) => {
+                                return (
+                                    item !== "" && <> <b key={iterator++}>{item}</b><br /></>
+                                )
+                            })
+                    }
+                    {/*<b>{removeHTML(templateHeader)}</b><br />*/}
                     <div style={{ fontSize: "10px", marginTop: "7px" }}></div>
 
                     <span>Receipt / Tax Invoice</span><br /><br />
@@ -125,9 +139,17 @@ const PrintSalesInvoice = (props) => {
 
                 <div style={{ marginTop: "2rem" }}>
                     <center>
-                        <b>{removeHTML(templateFooter)}</b><br />
+                        {templateFooterComplete.length > 0 &&
+                            templateFooterComplete.map((item) => {
+                                return (
+                                    item !== "" && <> <b key={iterator++}>{item}</b><br /></>
+                                )
+                            })
+                        }
+                        <br />
                     </center>
                 </div>
+
 
                 <hr />
 

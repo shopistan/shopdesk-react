@@ -112,6 +112,7 @@ function Sell() {
 
     return () => {
       console.log("unmount");
+      saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, null);    //imp new one
       clearSync = true;
       mounted = false;
     }
@@ -178,7 +179,7 @@ function Sell() {
           }
           products[i].searchName = searchName;
           //products[i].qty = 0;   //imp but not set here ,set at addorder
-          products[i].original_tax_value = products[i].tax_value;
+          //products[i].original_tax_value = products[i].tax_value;    //imp prev version comment this here
         }
 
         setRegistereProductsData(products);
@@ -247,10 +248,12 @@ function Sell() {
       setProductsSearchResult([]);
     } else {
       const filteredData = registereProductsData.filter((entry) => {
-        var searchValue = entry.searchName;
+        let searchValue = entry.searchName;
         searchValue = searchValue.toLowerCase();
+        let productSku = entry.product_sku;
+        productSku = productSku.toLowerCase();
 
-        return searchValue.includes(currValue);
+        return searchValue.includes(currValue) || productSku.includes(currValue);
       });
       setProductsSearchResult(filteredData);
     }
@@ -314,6 +317,7 @@ function Sell() {
     console.log(methodName);
     setSaleInvoiceData(saleInvoiceData);
     setIsMopModalVisible(false);
+    saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, saleInvoiceData);    //imp new one
   };
 
   const showModal = () => {
@@ -699,7 +703,7 @@ function Sell() {
             }
           }
           if (index != -1) {
-            //console.log("imp-sync-queue-inserted-val", localInvoiceQueue[index]);
+            console.log("imp-sync-queue-inserted-val", localInvoiceQueue[index]);
             localInvoiceQueue.splice(index, 1);
             saveDataIntoLocalStorage(Constants.SELL_INVOICE_QUEUE_KEY, localInvoiceQueue);
             await getCurrentInvoiceNumber();     //imp new one working correctly
@@ -812,12 +816,22 @@ function Sell() {
         );
       else tableProducsData[i].product_sale_price = 0;
 
+      if (!tableProducsData[i].original_tax_value)
+        tableProducsData[i].original_tax_value =
+        tableProducsData[i].tax_value;
+
+
+      tableProducsData[i].tax_value =
+      clonedInvoiceData.taxCategory === 'punjab_food_fbr'
+          ? 5
+          : tableProducsData[i].original_tax_value;
+
+
       clonedInvoiceData.tax +=
-        ((Helpers.var_check(formValues.tax_value)
-          ? formValues.tax_value
-          : tableProducsData[i].tax_value) *
+        ((tableProducsData[i].tax_value) *
           (tableProducsData[i].qty * tableProducsData[i].product_sale_price)) /
         100;
+
 
       clonedInvoiceData.sub_total +=
         tableProducsData[i].product_sale_price * tableProducsData[i].qty;

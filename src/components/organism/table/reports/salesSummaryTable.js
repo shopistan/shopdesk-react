@@ -8,12 +8,12 @@ const SalesSummaryTable = (props) => {
 
 
   const showTotalItemsBar = (total, range) => {
-    console.log(range);
+    //console.log(range);
     return `${range[0]}-${range[1]} of ${total} items`
   };
   
 
-  useEffect(() => {
+  useEffect(() => {  
     setData(props.tableData);
 
   }, [props.tableData, props.tableDataLoading]);  /* imp passing props to re-render */
@@ -31,6 +31,7 @@ const SalesSummaryTable = (props) => {
         width: "25%",
         render: (_, record) => {  
           return  moment(record.Dispatch).format("DD/MM/yyyy hh:mm A");
+
         },
       },
       {
