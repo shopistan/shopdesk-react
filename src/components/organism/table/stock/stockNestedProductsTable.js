@@ -245,9 +245,9 @@ const StockNestedProductsTable = (props) => {
                         {record.product_name &&
                             <small>
                                 {
-                                    record.product_name
-                                    + '/' + record.product_variant1_value
-                                    + '/ ' + record.product_variant2_value
+                                    <small>{record.product_name + (record.product_variant1_value ? `/ ${record.product_variant1_value}` : "")
+                                        + (record.product_variant2_value ? `/ ${record.product_variant2_value}` : "")}</small>
+
                                 }
                             </small>
                         }
