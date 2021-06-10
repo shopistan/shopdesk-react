@@ -29,6 +29,8 @@ const OmniSalesSummary = () => {
   const [user, setUser] = useState({});
   const [salesMops, setSalesMops] = useState(mops);
 
+  let mounted = true;
+
   const fetchOmniSalesSumaryData = async () => {
     let ecommerce = true;
     let startDate = selectedDates[0];
@@ -47,43 +49,52 @@ const OmniSalesSummary = () => {
         "Cant fetch omni Sales Data -> ",
         omnisalesSummaryResponse.errorMessage
       );
-      message.warning(omnisalesSummaryResponse.errorMessage, 3);
+      
       document.getElementById('app-loader-container').style.display = "none";
+      message.warning(omnisalesSummaryResponse.errorMessage, 3);
       setLoading(false);
+
     } else {
       console.log("res -> ", omnisalesSummaryResponse);
-      //message.success(omnisalesSummaryResponse.message, 3);
-      setOmniSalesSummaryData(omnisalesSummaryResponse.sales_summary);
-      setLoading(false);
-      setShowSummaryTable(true); //imp to show
-      /*--setting sales Mops--*/
-      var omniSalesData = omnisalesSummaryResponse.sales_summary;
-      let salesDataMops = {
-        cash: 0,
-        credit: 0,
-        customer: 0,
-        discounts: 0,
-      };
-      omniSalesData.forEach((element) => {
-        if (element.MOP == "Credit Card") {
-          salesDataMops.credit += parseFloat(element.gross_sale);
-        } else if (element.MOP == "Cash") {
-          salesDataMops.cash += parseFloat(element.gross_sale);
-        } else {
-          salesDataMops.customer += parseFloat(element.gross_sale);
-        }
-      });
+      
+      if (mounted) {     //imp if unmounted
+        setOmniSalesSummaryData(omnisalesSummaryResponse.sales_summary);
+        setLoading(false);
+        setShowSummaryTable(true); //imp to show
+        /*--setting sales Mops--*/
+        var omniSalesData = omnisalesSummaryResponse.sales_summary;
+        let salesDataMops = {
+          cash: 0,
+          credit: 0,
+          customer: 0,
+          discounts: 0,
+        };
+        omniSalesData.forEach((element) => {
+          if (element.MOP == "Credit Card") {
+            salesDataMops.credit += parseFloat(element.gross_sale);
+          } else if (element.MOP == "Cash") {
+            salesDataMops.cash += parseFloat(element.gross_sale);
+          } else {
+            salesDataMops.customer += parseFloat(element.gross_sale);
+          }
+        });
 
-      salesDataMops.discounts = parseFloat(
-        omnisalesSummaryResponse.invoice_discount
-      );
+        salesDataMops.discounts = parseFloat(
+          omnisalesSummaryResponse.invoice_discount
+        );
 
-      setSalesMops(salesDataMops); //setting sales mops
-      document.getElementById('app-loader-container').style.display = "none";
+        setSalesMops(salesDataMops); //setting sales mops
+        document.getElementById('app-loader-container').style.display = "none";
+        //message.success(omnisalesSummaryResponse.message, 3);
 
-      /*--setting sales Mops--*/
+        /*--setting sales Mops--*/
+      }
+
     }
+
   };
+
+
 
   useEffect(() => {
     /*-----------set user store */
@@ -101,6 +112,11 @@ const OmniSalesSummary = () => {
       }
     }
     /*-----------set user store */
+
+    return () => {
+      mounted = false;
+    }
+
   }, []);
 
   const handleRangePicker = (values) => {
@@ -111,7 +127,7 @@ const OmniSalesSummary = () => {
     }
   };
 
-  function download_csv(csv, filename) {
+  /*function download_csv(csv, filename) {
     var csvFile;
     var downloadLink;
 
@@ -135,9 +151,9 @@ const OmniSalesSummary = () => {
 
     // Lanzamos
     downloadLink.click();
-  }
+  }*/
 
-  function export_table_to_csv(html, filename) {
+  /*function export_table_to_csv(html, filename) {
     var csv = [];
     //imp selection below
     var rows = document.querySelectorAll(
@@ -155,9 +171,9 @@ const OmniSalesSummary = () => {
 
     // Download CSV
     download_csv(csv.join("\n"), filename);
-  }
+  }*/
 
-  const DownloadToCsv = (e) => {
+  /*const DownloadToCsv = (e) => {
     if (omniSalesSummaryData.length > 0) {
       var html = document.getElementById("omni_sales_summary_data_table")
         .innerHTML;
@@ -166,7 +182,77 @@ const OmniSalesSummary = () => {
     } else {
       message.warning("No Omni Sales Data Found", 3);
     }
-  };
+  };*/
+
+
+  const ExportToCsv = async () => {
+
+    if (omniSalesSummaryData.length > 0) {
+      document.getElementById('app-loader-container').style.display = "block";
+      const getStoreResponse = await ReportsApiUtil.getStoreId();
+      if (getStoreResponse.hasError) {
+        const errorMessage = getStoreResponse.errorMessage;
+        console.log('Cant get Store Id -> ', errorMessage);
+        document.getElementById('app-loader-container').style.display = "none";
+        message.error(errorMessage, 3);
+      } else {
+        console.log("Success:", getStoreResponse.message);
+        downloadOmniSalesSummaryDump(getStoreResponse.store_id || null);
+      }
+    }
+    else { message.warning("No Sales Summary Data Found", 3) }
+
+  }
+
+
+  const downloadOmniSalesSummaryDump = async (currentStoreId) => {
+    //console.log("currentStoreId", currentStoreId);
+    let salesImportParams = {
+      "store_id": currentStoreId,
+      "startDate": selectedDates[0],
+      "finishDate": selectedDates[1],
+    };
+
+    const salesOmniSummaryExportResponse = await ReportsApiUtil.importOmniSalesSummayDumpReport(salesImportParams);
+    console.log("Omni Sales Dump export response:", salesOmniSummaryExportResponse);
+
+    if (salesOmniSummaryExportResponse.hasError) {
+
+      /*console.log(
+        "Cant Import Omni Sales Summary Report -> ",
+        salesOmniSummaryExportResponse.errorMessage
+      );*/
+      console.log("Can't Import Omni Sales Summary Report");
+      
+      document.getElementById('app-loader-container').style.display = "none";
+      //message.error(salesOmniSummaryExportResponse.errorMessage, 3);     //imp prev if fails
+      message.error("Can't Import Omni Sales Summary Report", 3);
+
+    } else {
+      console.log("res -> ", salesOmniSummaryExportResponse.data);
+      /*---------------csv download--------------------------------*/
+      if (mounted) {     //imp if unmounted
+        // CSV FILE
+        let csvFile = new Blob([salesOmniSummaryExportResponse.data], { type: "text/csv" });
+        let url = window.URL.createObjectURL(csvFile);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = "omni_sales_summary_dump_" + new Date().toUTCString() + ".csv";
+        document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+        a.click();
+        a.remove();  //afterwards we remove the element again
+        /*---------------csv download--------------------------------*/
+        
+        document.getElementById('app-loader-container').style.display = "none";
+        message.success(salesOmniSummaryExportResponse.message, 3);
+        
+      }
+
+    }
+
+  }
+
+
 
   const handlePrintOverview = (e) => {
     var previewSalesHtml = document.getElementById("printTable").innerHTML;
@@ -199,7 +285,7 @@ const OmniSalesSummary = () => {
             type='primary'
             className='custom-btn custom-btn--primary'
             icon={<DownloadOutlined />}
-            onClick={DownloadToCsv}
+            onClick={ExportToCsv}
           >
             {" "}
             Download

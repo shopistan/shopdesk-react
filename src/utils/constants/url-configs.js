@@ -86,6 +86,8 @@ const urls = {
     INVENTORY_DUMP: BASE_URL + '/api/reports/inventoryReport',
     EXPORT_INVENTORY_DUMP: BASE_URL + '/api/reports/inventoryReportCsv',
     GET_STORE: BASE_URL + '/api/reports/get_store_id',
+    IMPORT_SALES_SUMMARY: BASE_URL + '/api/reports/saleSummaryCsv',
+    IMPORT_SALES_OMNI_SUMMARY: BASE_URL + '/api/reports/saleSummaryOmniCsv',
 
   },
   SETUP: {

@@ -75,8 +75,8 @@ export const exportInventory = async (storeId) => {
     headers: headers
   })
     .then( async (res) => {
-      console.log('Inventory Dump Export Data Response -> ', res);
-      return { hasError: false, message: "Inventory Succesfully Exported", data: res.data };
+      console.log('Inventory Dump Import Data Response -> ', res);
+      return { hasError: false, message: "Inventory Succesfully Imported", data: res.data };
 
     })
     .catch((error) => {
@@ -86,3 +86,62 @@ export const exportInventory = async (storeId) => {
     })
 
 };
+
+
+
+export const importSalesSummayDumpReport = async (params) => {
+
+  let query = Object.keys(params)
+    .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+    .join('&');
+  
+  const url = UrlConstants.REPORTS.IMPORT_SALES_SUMMARY+'?'+ query;
+  const headers = {
+    'Authorization': ApiCallUtil.getUserAuthToken(),
+  };
+
+  return await axios.get(url, {
+    headers: headers
+  })
+    .then( async (res) => {
+      console.log('Sales Dump Export Data Response -> ', res);
+      return { hasError: false, message: "Sales Report Succesfully Imported", data: res.data };
+
+    })
+    .catch((error) => {
+      console.log("AXIOS ERROR: ", error);
+      return { hasError: true, errorMessage: error };
+      
+    })
+
+};
+
+
+export const importOmniSalesSummayDumpReport = async (params) => {
+
+  let query = Object.keys(params)
+    .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+    .join('&');
+  
+  const url = UrlConstants.REPORTS.IMPORT_SALES_OMNI_SUMMARY+'?'+ query;
+  const headers = {
+    'Authorization': ApiCallUtil.getUserAuthToken(),
+  };
+
+  return await axios.get(url, {
+    headers: headers
+  })
+    .then( async (res) => {
+      console.log('Sales Omni Dump Export Data Response -> ', res);
+      return { hasError: false, message: "Sales Report Succesfully Imported", data: res.data };
+
+    })
+    .catch((error) => {
+      console.log("AXIOS ERROR: ", error);
+      return { hasError: true, errorMessage: error };
+      
+    })
+
+};
+
+

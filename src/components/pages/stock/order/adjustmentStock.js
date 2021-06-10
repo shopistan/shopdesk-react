@@ -87,8 +87,10 @@ const AdjustmentStock = () => {
       const filteredData = registereProductsData.filter((entry) => {
         var searchValue = entry.searchName;
         searchValue = searchValue.toLowerCase();
+        let productSku = entry.product_sku;
+        productSku = productSku.toLowerCase();
 
-        return searchValue.includes(currValue);
+        return searchValue.includes(currValue) || productSku.includes(currValue);
       });
       setProductsSearchResult(filteredData);
     }
