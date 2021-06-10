@@ -1,27 +1,101 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import "./print.scss";
 import moment from 'moment';
 import UrlConstants from '../../../../utils/constants/url-configs';
+import {
+    getDataFromLocalStorage,
+    checkUserAuthFromLocalStorage,
+} from "../../../../utils/local-storage/local-store-utils";
+import * as SetupApiUtil from "../../../../utils/api/setup-api-utils";
+import Constants from "../../../../utils/constants/constants";
+
+
 
 
 const PrintOverviewSales = (props) => {
+    const [templateData, setTemplateData] = useState(null);
 
 
-    useEffect(async () => {
+    useEffect(() => {
+
+        /*-----------set user store id-------------*/
+        var userData = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+        userData = userData.data ? userData.data : null;
+
+        if (userData) {
+            if (
+                checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
+            ) {
+                getUserStoreData(userData.auth.current_store);  //imp to get user outlet data
+
+
+            }
+        }
+        /*-----------set user store id-------------*/
+
 
     }, []);
 
 
-    var templateImageSrc = '';
-    var templateHeader = '';
+    const getUserStoreData = async (storeId) => {
+        document.getElementById('app-loader-container').style.display = "block";
+        const getOutletViewResponse = await SetupApiUtil.getOutlet(storeId);
+        console.log('getOutletViewResponse:', getOutletViewResponse);
 
-    if (props.user.template_data) {
+        if (getOutletViewResponse.hasError) {
+            console.log('Cant fetch Store Data -> ', getOutletViewResponse.errorMessage);
+            document.getElementById('app-loader-container').style.display = "none";
+        }
+        else {
+            console.log('res -> ', getOutletViewResponse);
+            let selectedStore = getOutletViewResponse.outlet;
+            getTemplateData(selectedStore.template_id);   //imp to get template data
+
+        }
+    }
+
+
+    const getTemplateData = async (templateId) => {
+
+        const getTepmlateResponse = await SetupApiUtil.getTemplate(templateId);
+        console.log('getTepmlateResponse:', getTepmlateResponse);
+
+        if (getTepmlateResponse.hasError) {
+            console.log('Cant get template Data -> ', getTepmlateResponse.errorMessage);
+            document.getElementById('app-loader-container').style.display = "none";
+            //message.warning(getTepmlateResponse.errorMessage, 3);
+        }
+        else {
+            console.log('res -> ', getTepmlateResponse);
+            var receivedTemplateData = getTepmlateResponse.template;
+            setTemplateData(receivedTemplateData);
+            document.getElementById('app-loader-container').style.display = "none";
+            //message.success(getTepmlateResponse.message, 3);
+
+        }
+    }
+
+
+
+    let templateImageSrc = '';
+    let templateHeader = '';
+    let templateHeaderComplete = [];
+    let iterator = 0;
+
+    /*if (props.user.template_data) {
         if (props.user.template_data.template_image) {
             templateImageSrc = `${UrlConstants.IMAGE_UPLOADS_URL}/uploads/${props.user.template_data.template_image}`;
         }
         if (props.user.template_data.template_header) {
             templateHeader = props.user.template_data.template_header
         }
+    }*/
+
+    if (templateData) {
+        templateImageSrc = `${templateData.template_image}`;    //new one
+        templateHeader = `${templateData.template_header}`;    //new one
+        //templateFooter = `${templateData.template_footer}`;    //new one
+        templateHeaderComplete = templateHeader.split("\n");
     }
 
     function removeHTML(str) {
@@ -39,11 +113,15 @@ const PrintOverviewSales = (props) => {
 
         <div id="printTable">
             <center>
-                <img src={templateImageSrc} style={{ width: "70" }} /><br />
-                <div style={{ fontSize: "10px", marginTop: "7px" }}>
-                    {removeHTML(templateHeader)}
-                </div>
-
+                <img src={templateImageSrc} style={{ width: "6rem" }} /><br />
+                    {/*removeHTML(templateHeader)*/}
+                    {templateHeaderComplete.length > 0 &&
+                            templateHeaderComplete.map((item) => {
+                                return (
+                                    item !== "" && <> <b key={iterator++}>{item}</b><br /></>
+                                )
+                            })
+                    }
                 <br /><span><strong>Sales overview</strong></span><br />
                 <b style={{ fontSize: "10px" }}>DATE: </b> <span>{overviewStart} - {overviewEnd}</span><br />
             </center>

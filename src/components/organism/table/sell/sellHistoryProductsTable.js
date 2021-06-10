@@ -104,9 +104,7 @@ const SellHistoryProductsTable = (props) => {
             render: (_, record) => {
                 return (
                     <span>
-                        {record.invoice_method === "1" ? "Credit"
-                            : "Cash"
-                        }
+                        {record.invoice_method}
                     </span>
                 );
             },
