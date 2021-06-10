@@ -29,6 +29,10 @@ const SalesSummary = () => {
   const [user, setUser] = useState({});
   const [salesMops, setSalesMops] = useState(mops);
 
+
+  let mounted = true;
+
+
   const fetchSalesSumaryData = async () => {
     //let ecommerce = user.auth.store_ecommerce; //prev version
     let ecommerce = false;
@@ -48,43 +52,52 @@ const SalesSummary = () => {
         "Cant fetch Omni Sales Data -> ",
         salesSummaryResponse.errorMessage
       );
-      message.warning(salesSummaryResponse.errorMessage, 3);
+      
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
+      message.warning(salesSummaryResponse.errorMessage, 3);
+
     } else {
       console.log("res -> ", salesSummaryResponse);
-      //message.success(salesSummaryResponse.message, 3);
-      setSalesSummaryData(salesSummaryResponse.sales_summary);
-      setLoading(false);
-      setShowSummaryTable(true); //imp to show
-      /*--setting sales Mops--*/
-      var omniSalesData = salesSummaryResponse.sales_summary;
-      let salesDataMops = {
-        cash: 0,
-        credit: 0,
-        customer: 0,
-        discounts: 0,
-      };
-      omniSalesData.forEach((element) => {
-        if (element.MOP == "Credit Card") {
-          salesDataMops.credit += parseFloat(element.gross_sale);
-        } else if (element.MOP == "Cash") {
-          salesDataMops.cash += parseFloat(element.gross_sale);
-        } else {
-          salesDataMops.customer += parseFloat(element.gross_sale);
-        }
-      });
 
-      salesDataMops.discounts = parseFloat(
-        salesSummaryResponse.invoice_discount
-      );
+      if (mounted) {     //imp if unmounted
+        setSalesSummaryData(salesSummaryResponse.sales_summary);
+        setLoading(false);
+        setShowSummaryTable(true); //imp to show
+        /*--setting sales Mops--*/
+        var omniSalesData = salesSummaryResponse.sales_summary;
+        let salesDataMops = {
+          cash: 0,
+          credit: 0,
+          customer: 0,
+          discounts: 0,
+        };
+        omniSalesData.forEach((element) => {
+          if (element.MOP == "Credit Card") {
+            salesDataMops.credit += parseFloat(element.gross_sale);
+          } else if (element.MOP == "Cash") {
+            salesDataMops.cash += parseFloat(element.gross_sale);
+          } else {
+            salesDataMops.customer += parseFloat(element.gross_sale);
+          }
+        });
 
-      setSalesMops(salesDataMops); //setting sales mops
-      document.getElementById('app-loader-container').style.display = "none";
+        salesDataMops.discounts = parseFloat(
+          salesSummaryResponse.invoice_discount
+        );
 
-      /*--setting sales Mops--*/
+        setSalesMops(salesDataMops); //setting sales mops
+        document.getElementById('app-loader-container').style.display = "none";
+        //message.success(salesSummaryResponse.message, 3);
+
+        /*--setting sales Mops--*/
+      }
+
     }
+
   };
+
+
 
   useEffect(() => {
     /*-----------set user store */
@@ -102,7 +115,14 @@ const SalesSummary = () => {
       }
     }
     /*-----------set user store */
+
+    return () => {
+      mounted = false;
+    }
+
   }, []);
+
+
 
   const fetchSalesSummary = (e) => {
     fetchSalesSumaryData();
@@ -116,7 +136,8 @@ const SalesSummary = () => {
     }
   };
 
-  function download_csv(csv, filename) {
+
+  /*function download_csv(csv, filename) {
     var csvFile;
     var downloadLink;
 
@@ -140,9 +161,9 @@ const SalesSummary = () => {
 
     // Lanzamos
     downloadLink.click();
-  }
+  }*/
 
-  function export_table_to_csv(html, filename) {
+  /*function export_table_to_csv(html, filename) {
     var csv = [];
     //imp selection below
     var rows = document.querySelectorAll("div#sales_summary_data_table  tr");
@@ -158,9 +179,9 @@ const SalesSummary = () => {
 
     // Download CSV
     download_csv(csv.join("\n"), filename);
-  }
+  }*/
 
-  const DownloadToCsv = (e) => {
+  /*const DownloadToCsv = (e) => {
     if (salesSummaryData.length > 0) {
       var html = document.getElementById("sales_summary_data_table").innerHTML;
 
@@ -168,7 +189,78 @@ const SalesSummary = () => {
     } else {
       message.warning("No Sales Data Found", 3);
     }
-  };
+  };*/
+
+
+
+  const ExportToCsv = async () => {
+
+    if (salesSummaryData.length > 0) {
+      document.getElementById('app-loader-container').style.display = "block";
+      const getStoreResponse = await ReportsApiUtil.getStoreId();
+      if (getStoreResponse.hasError) {
+        const errorMessage = getStoreResponse.errorMessage;
+        console.log('Cant get Store Id -> ', errorMessage);
+        document.getElementById('app-loader-container').style.display = "none";
+        message.error(errorMessage, 3);
+      } else {
+        console.log("Success:", getStoreResponse.message);
+        downloadSalesSummaryDump(getStoreResponse.store_id || null);
+      }
+    }
+    else { message.warning("No Sales Summary Data Found", 3) }
+
+  }
+
+
+
+  const downloadSalesSummaryDump = async (currentStoreId) => {
+    //console.log("currentStoreId", currentStoreId);
+    let salesImportParams = {
+      "store_id": currentStoreId,
+      "startDate": selectedDates[0],
+      "finishDate": selectedDates[1],
+    };
+
+    const salesSummaryExportResponse = await ReportsApiUtil.importSalesSummayDumpReport(salesImportParams);
+    console.log("Sales Dump export response:", salesSummaryExportResponse);
+
+    if (salesSummaryExportResponse.hasError) {
+      /*console.log(
+        "Cant Import Sales Summary Report -> ",
+        salesSummaryExportResponse.errorMessage
+      );*/
+      console.log(
+        "Can't Import Sales Summary Report"
+      );
+
+      
+      document.getElementById('app-loader-container').style.display = "none";
+      //message.error(salesSummaryExportResponse.errorMessage, 3);
+      message.error("Can't Import Sales Summary Report", 3);
+    } else {
+      console.log("res -> ", salesSummaryExportResponse.data);
+      /*---------------csv download--------------------------------*/
+      if (mounted) {     //imp if unmounted
+        // CSV FILE
+        let csvFile = new Blob([salesSummaryExportResponse.data], { type: "text/csv" });
+        let url = window.URL.createObjectURL(csvFile);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = "sales_summary_dump_" + new Date().toUTCString() + ".csv";
+        document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+        a.click();
+        a.remove();  //afterwards we remove the element again
+        /*---------------csv download--------------------------------*/
+        
+        document.getElementById('app-loader-container').style.display = "none";
+        message.success(salesSummaryExportResponse.message, 3);
+        
+      }
+
+    }
+
+  }
 
   const handlePrintOverview = (e) => {
     var previewSalesHtml = document.getElementById("printTable").innerHTML;
@@ -201,7 +293,7 @@ const SalesSummary = () => {
             type='primary'
             className='custom-btn custom-btn--primary'
             icon={<DownloadOutlined />}
-            onClick={DownloadToCsv}
+            onClick={ExportToCsv}
           >
             {" "}
             Download

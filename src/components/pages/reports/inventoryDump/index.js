@@ -19,7 +19,7 @@ const InventoryDump = () => {
   const [userLocalStorageData, setUserLocalStorageData] = useState("");
 
 
-  var mounted = true;
+  let mounted = true;
 
 
   const fetchProductsInventoryData = async () => {
@@ -158,13 +158,18 @@ const InventoryDump = () => {
     console.log("Inventory Dump export response:", inventoryDumpExportResponse);
 
     if (inventoryDumpExportResponse.hasError) {
-      console.log(
-        "Cant Export Inventory -> ",
+      /*console.log(
+        "Cant Import Inventory -> ",
         inventoryDumpExportResponse.errorMessage
+      );*/
+
+      console.log(
+        "Can't Import Inventory"
       );
       
       document.getElementById('app-loader-container').style.display = "none";
-      message.error(inventoryDumpExportResponse.errorMessage, 3);
+      //message.error(inventoryDumpExportResponse.errorMessage, 3);
+      message.error("Can't Import Inventory", 3);
     } else {
       console.log("res -> ", inventoryDumpExportResponse.data);
       /*---------------csv download--------------------------------*/

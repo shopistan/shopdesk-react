@@ -163,31 +163,39 @@ const SalesSummaryTable = (props) => {
 
   columns = [
     {
-      title: "Date",
-      dataIndex: "Dispatch",
+      title: "Order Date",
+      //dataIndex: "order_date",
       width: "25%",
       render: (_, record) => {  
-        return  moment(record.Dispatch).format("DD/MM/yyyy hh:mm A");
+        //{formatDate(s.order_date) | date:'dd MMM , yyyy hh:mm a'}
+        return  moment(record.order_date).format("DD/MM/yyyy hh:mm A");
       },
+    },
+    {
+      title: "Invoice/Return Date",
+      //dataIndex: "invoice_date",
+      render: (_, record) => {  
+        return  moment(record.invoice_date).format("DD/MM/yyyy hh:mm A");
+      },
+    },
+    {
+      title: "Invoice Note",
+      dataIndex: "invoice_notes",
+    },
+    {
+      title: "Oder No.",
+      dataIndex: "order_id",
     },
     {
       title: "Invoice No.",
       dataIndex: "invoice_no",
     },
     {
-      title: "Invoice Note",
-      dataIndex: "invoice_note",
-    },
-    {
-      title: "Oder No.",
-      dataIndex: "order_no",
-    },
-    {
       title: "Customer",
-      dataIndex: "customer_name",
+      dataIndex: "",
     },
     {
-      title: "SKU",
+      title: "Product SKU",
       dataIndex: "product_sku",
     },
     {
@@ -203,8 +211,24 @@ const SalesSummaryTable = (props) => {
       dataIndex: "size",
     },
     {
+      title: "Actual Price",
+      render: (_, record) => {
+        return (
+          <span> {parseFloat(record.actual_price).toFixed(2)} </span>
+        );
+      },
+    },
+    {
+      title: "Discount Price",
+      render: (_, record) => {
+        return (
+          <span> {parseFloat(record.discount_price).toFixed(2)} </span>
+        );
+      },
+
+    },
+    {
       title: "Retail Price",
-      dataIndex: "retail_price",
       render: (_, record) => {
         return (
           <span> {parseFloat(record.retail_price).toFixed(2)} </span>
@@ -212,15 +236,13 @@ const SalesSummaryTable = (props) => {
       },
     },
     {
-      title: "Sale Price",
-      dataIndex: "sale_price",
+      title: "Base Price",
       render: (_, record) => {
         return (
-          <span> {parseFloat(record.sale_price).toFixed(2)} </span>
+          <span> {parseFloat(record.base_price).toFixed(2)} </span>
         );
       },
     },
-
     {
       title: "Quantity",
       dataIndex: "quantity",
@@ -231,98 +253,59 @@ const SalesSummaryTable = (props) => {
       },
     },
     {
-      title: "Sales",
-      dataIndex: "total_sale",
+      title: "Sales Excl. GST",
       render: (_, record) => {
         return (
-          <span> {parseFloat(record.total_sale).toFixed(2)} </span>
+          <span> {parseFloat(record.sale_exlcusive_gst).toFixed(2)} </span>
         );
       },
     },
     {
-      title: "Sale Price (Original)",
-      dataIndex: "gross_sale",
+      title: "Sales Incl. GST/Premium",
       render: (_, record) => {
         return (
-          <span> { record.currency+' '+parseFloat(record.total_sale).toFixed(2)} </span>
+          <span> {parseFloat(record.sales_incl_premium_gst).toFixed(2)} </span>
         );
       },
     },
     {
-      title: "Gross Sales",
-      dataIndex: "gross_sale",
-      render: (_, record) => {
-        return (
-          <span> {parseFloat(record.gross_sale).toFixed(2)} </span>
-        );
-      },
-    },
-    ,
-    {
-      title: "Tax",
-      dataIndex: "tax",
-      render: (_, record) => {
-        return (
-          <span> {parseFloat(record.tax).toFixed(2)} </span>
-        );
-      },
-    },
-    ,
-    {
-      title: "Net Sales",
-      dataIndex: "net_sales",
-      render: (_, record) => {
-        return (
-          <span> {parseFloat(record.net_sales).toFixed(2)} </span>
-        );
-      },
+      title: "Sales (USD/PKR)",
+      dataIndex: "sales_usd_pkr",
     },
     {
-      title: "Cost",
-      dataIndex: "cost",
-      render: (_, record) => {
-        return (
-          <span> {parseFloat(record.cost).toFixed(2)} </span>
-        );
-      },
+      title: "Sales Tax",
+      dataIndex: "sales_tax",
     },
     {
-      title: "Margin",
-      dataIndex: "margin",
-      render: (_, record) => {
-        return (
-          <span> {parseFloat(record.margin).toFixed(2)} </span>
-        );
-      },
-    },
-    {
-      title: "Discount",
-      dataIndex: "Discount",
-      render: (_, record) => {
-        return (
-          <span> {parseFloat(record.Discount).toFixed(2)} </span>
-        );
-      },
-    },
-    {
-      title: "Mop",
-      dataIndex: "MOP",
+      title: "Courier/Client",
+      dataIndex: "courier",
     },
     {
       title: "Shipping Cost",
       dataIndex: "shipping_cost",
-      render: (_, record) => {
-        return (
-          <span> {parseFloat(record.shipping_cost).toFixed(2)} </span>
-        );
-      },
     },
     {
       title: "Premium",
-      dataIndex: "premium",
+      dataIndex: "item_premium",
+    },
+    {
+      title: "Discount",
+      dataIndex: "item_discount",
+    },
+    {
+      title: "Coupon Code",
+      dataIndex: "coupon_code",
+    },
+    {
+      title: "Coupon Amount",
+      dataIndex: "coupon_amount",
+    },
+    {
+      title: "Order Total",
+      //dataIndex: "order_total",
       render: (_, record) => {
         return (
-          <span> {parseFloat(record.premium).toFixed(2)} </span>
+          <span> {parseFloat(record.order_total).toFixed(2)} </span>
         );
       },
     },
