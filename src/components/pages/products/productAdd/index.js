@@ -13,7 +13,7 @@ import {
   Space,
   Switch,
   Checkbox,
-  Spin,
+  Tag,
 } from "antd";
 
 import {
@@ -432,6 +432,26 @@ const ProductAdd = () => {
     //console.log('changed-actual-impp-main', updatedVariantsProducts);
     setproductVariantsCombinations(updatedVariantsProducts);
   };
+
+
+  function tagRender(props) {
+    const { label, value, closable, onClose } = props;
+    const onPreventMouseDown = event => {
+      event.preventDefault();
+      event.stopPropagation();
+    };
+    return (
+      <Tag
+        //color={value}
+        onMouseDown={onPreventMouseDown}
+        closable={closable}
+        onClose={onClose}
+        style={{ marginRight: 3 }}
+      >
+        {label}
+      </Tag>
+    );
+  }
 
 
   const handleSaleChange = (e) => {
@@ -1117,6 +1137,7 @@ const ProductAdd = () => {
                           onDeselect={(value, e) => handleVariants1DeSelectTags(value, e)}
                           dropdownStyle	={{display: "none"}}   //imp
                           onBlur={handleVariants1TagsOnBlur}
+                          tagRender={tagRender}
                           
                         >
                           {variant1Tags.length > 0 &&

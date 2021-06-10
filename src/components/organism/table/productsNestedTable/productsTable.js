@@ -188,7 +188,14 @@ const ProductsTable = (props) => {
     },
     {
       title: <div>Sale Price<small>(Exclusive of GST)</small></div>,
-      dataIndex: "product_sale_price",
+      //dataIndex: "product_sale_price",
+      render: (_, record) => {
+        return (
+          <span>
+            {parseFloat(record.product_sale_price).toFixed(2)}
+          </span>
+        );
+      },
     },
     {
       title: "Barcode",

@@ -88,10 +88,10 @@ const EditableCell = ({
 
             </Form.Item>
         ) : (
-                <div className="editable-cell-value-wrap" style={{ paddingRight: 24 }} onClick={toggleEdit}>
-                    {children}
-                </div>
-            );
+            <div className="editable-cell-value-wrap" style={{ paddingRight: 24 }} onClick={toggleEdit}>
+                {children}
+            </div>
+        );
     }
 
     return <td {...restProps}>{childNode}</td>;
@@ -114,11 +114,6 @@ const StockReceiveTable = (props) => {
         var productsTotalQuantity = 0;
         const newData = [...data];
         const index = newData.findIndex(item => row.product_id === item.product_id);
-        let editReceiveProductValidationCheck = false;
-
-        if((row.qty > row.purchase_order_junction_quantity) || (row.qty < 0) ){
-            editReceiveProductValidationCheck = true;
-        }
 
         if (index > -1) {
             const item = newData[index];
@@ -130,20 +125,20 @@ const StockReceiveTable = (props) => {
             newData.forEach(item => {
                 productsTotal = productsTotal + (parseFloat(item.qty || 0) * parseFloat(item.purchase_order_junction_price));
 
-                if((item.qty <= item.purchase_order_junction_quantity) && (item.qty >= 0) ){
+                if ((item.qty <= item.purchase_order_junction_quantity) && (item.qty >= 0)) {
                     productsTotalQuantity = productsTotalQuantity + parseFloat(item.qty || 0);
                 }
-                
+
             });
             setProductsTotalAmount(productsTotal);
             //setData(newData); //previous code imp one
-            props.onChangeProductsData(newData, productsTotalQuantity, editReceiveProductValidationCheck);    //imp to call
+            props.onChangeProductsData(newData, productsTotalQuantity);    //imp to call
 
         };
     }
 
 
-    
+
     const getUserStoreData = async (storeId) => {
         document.getElementById('app-loader-container').style.display = "block";
         const getOutletViewResponse = await SetupApiUtil.getOutlet(storeId);
@@ -151,22 +146,22 @@ const StockReceiveTable = (props) => {
 
         if (getOutletViewResponse.hasError) {
             console.log('Cant fetch Store Data -> ', getOutletViewResponse.errorMessage);
-            //message.warning(getOutletViewResponse.errorMessage, 3);
             document.getElementById('app-loader-container').style.display = "none";
+            //message.warning(getOutletViewResponse.errorMessage, 3);
         }
         else {
             console.log('res -> ', getOutletViewResponse);
             let selectedStore = getOutletViewResponse.outlet;
-            //message.success(getOutletViewResponse.message, 3);
             setOutletData(selectedStore);   //imp to get template data
             document.getElementById('app-loader-container').style.display = "none";
+            //message.success(getOutletViewResponse.message, 3);
 
         }
     }
 
 
 
-    useEffect(async () => {
+    useEffect(() => {
         setData(props.tableData);
 
         let userData = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
@@ -218,7 +213,8 @@ const StockReceiveTable = (props) => {
                     return (
                         <div>
                             {record.product_name &&
-                                <small>{record.product_name + '/' + record.product_variant1_value + '/ ' + record.product_variant2_value}</small>
+                                <small>{record.product_name + (record.product_variant1_value ? `/ ${record.product_variant1_value}` : "" )
+                                    + (record.product_variant2_value ?  `/ ${record.product_variant2_value}` : "" )}</small>
                             }
                         </div>
                     );
@@ -251,8 +247,8 @@ const StockReceiveTable = (props) => {
                     let currency = outletData && outletData.currency_symbol;
                     return (
                         <div>
-                        {(currency || "") + record.purchase_order_junction_price}
-                    </div>
+                            {(currency || "") + record.purchase_order_junction_price}
+                        </div>
                     );
                 }
             },
@@ -262,8 +258,8 @@ const StockReceiveTable = (props) => {
                     let currency = outletData && outletData.currency_symbol;
                     return (
                         <span>
-                            {record.qty ? (currency || "") +  (parseFloat(record.qty) * parseFloat(record.purchase_order_junction_price)).toFixed(2)
-                                : currency + parseFloat(0)
+                            {record.qty ? (currency || "") + (parseFloat(record.qty) * parseFloat(record.purchase_order_junction_price)).toFixed(2)
+                                : (currency || "") + parseFloat(0)
                             }
                         </span>
                     );
@@ -354,28 +350,28 @@ const StockReceiveTable = (props) => {
         <Form form={form} component={false}>
 
             {props.tableType === "receive_purchase_orders" &&
-            <Table
+                <Table
 
-                bordered={true}
-                columns={mergedColumns}
-                dataSource={data}
-                rowClassName='editable-row'
-                components={components}
-                //loading={props.tableDataLoading}
-                rowKey="product_id"
-                footer={tableFooter}
-            />}
+                    bordered={true}
+                    columns={mergedColumns}
+                    dataSource={data}
+                    rowClassName='editable-row'
+                    components={components}
+                    //loading={props.tableDataLoading}
+                    rowKey="product_id"
+                    footer={tableFooter}
+                />}
 
             {props.tableType === "receive_transfers" &&
-            <Table
+                <Table
 
-                bordered={true}
-                columns={mergedColumns}
-                dataSource={data}
-                rowClassName='editable-row'
-                //loading={props.tableDataLoading}
-                rowKey="product_id"
-            />}
+                    bordered={true}
+                    columns={mergedColumns}
+                    dataSource={data}
+                    rowClassName='editable-row'
+                    //loading={props.tableDataLoading}
+                    rowKey="product_id"
+                />}
 
         </Form>
 
