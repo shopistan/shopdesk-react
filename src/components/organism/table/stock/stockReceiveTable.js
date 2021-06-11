@@ -125,9 +125,11 @@ const StockReceiveTable = (props) => {
             newData.forEach(item => {
                 productsTotal = productsTotal + (parseFloat(item.qty || 0) * parseFloat(item.purchase_order_junction_price));
 
-                if ((item.qty <= item.purchase_order_junction_quantity) && (item.qty >= 0)) {
+                /*if ((item.qty <= item.purchase_order_junction_quantity) && (item.qty >= 0)) {
                     productsTotalQuantity = productsTotalQuantity + parseFloat(item.qty || 0);
-                }
+                }*/   //imp prev version
+
+                productsTotalQuantity = productsTotalQuantity + parseFloat(item.qty || 0);
 
             });
             setProductsTotalAmount(productsTotal);

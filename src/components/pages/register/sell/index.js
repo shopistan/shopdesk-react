@@ -951,6 +951,31 @@ function Sell() {
   }
 
 
+  const SelectProductOnEnter = (event) => {
+    //console.log(event);
+    if (event.key === "Enter") {
+      //console.log(" enter");
+      console.log(selectedValue);   //imp new searched value
+      let foundObj = productsSearchResult.find(obj => {
+        return obj.product_sku === selectedValue || obj.product_name === selectedValue;
+      });
+      if (foundObj) {
+        //console.log("found");
+        //console.log(foundObj);
+        handleAddProduct(foundObj.product_id);          //imp new one
+        setSelectedValue("");                            //imp new one
+      }
+      else {
+        //console.log("not found");
+      }
+
+    } else {
+      //console.log("not enter");
+    }
+
+  };
+
+
 
   const onFinish = (values) => {
     console.log("Success:", values);
@@ -987,11 +1012,13 @@ function Sell() {
             <Form.Item label='Search for products'>
               <AutoComplete
                 style={{ width: "100%" }}
+                className="info__register-sell-drop-down-menu"
                 dropdownMatchSelectWidth={250}
                 value={selectedValue}
                 onSearch={handleSearch}
                 onSelect={handleSelect}
                 placeholder='select a product'
+                onKeyDown={SelectProductOnEnter}
               >
                 {productsSearchResult &&
                   productsSearchResult.map((item) => (

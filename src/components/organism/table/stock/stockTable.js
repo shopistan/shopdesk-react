@@ -14,7 +14,7 @@ const StockTable = (props) => {
     const showActionDropDown = (record) => {
 
         return (
-            <Dropdown overlay={() => actionMenu(record)} trigger={["click"]}>
+            <Dropdown overlay={() => actionMenu(record)} placement="bottomCenter"  trigger={["click"]}>
                 <Button
                     type='Default'
                     icon={<ProfileOutlined />}
@@ -94,6 +94,11 @@ const StockTable = (props) => {
     const handlePageChange = (page, pageSize) => {
         setcurrentPageNumber(page)
         props.onClickPageChanger(page);
+    };
+
+    const handlePoQuickView = (record) => {
+        props.onPoQuickViewSelection(record);
+
     };
     
     
@@ -308,6 +313,21 @@ const StockTable = (props) => {
                     );
                 },
             },
+
+            /*{
+                title: "View",
+                render: (_, record) => {
+                    return (
+                        <div className='sell-history-action-btn-quick-view'>
+                            <EyeOutlined
+                                onClick={() => handlePoQuickView(record)}
+                            />
+                        </div>
+                    );
+                },
+            },*/
+
+
         ];
 
     }
