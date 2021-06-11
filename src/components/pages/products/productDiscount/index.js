@@ -26,7 +26,7 @@ const ProductDiscount = () => {
 
 
   const onSearch = (value) => {
-    console.log(value);
+    //console.log(value);
     var currValue = value;
     currValue = currValue.toLowerCase();
     if (currValue === "") {

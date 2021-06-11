@@ -157,7 +157,13 @@ const ProductsDiscountsTable = (props) => {
         {
             title: "Sale Price",
             dataIndex: "product_sale_price",
-            
+            render: (_, record) => {
+                return (
+                    <span>
+                        {parseFloat(record.product_sale_price).toFixed(2)}
+                    </span>
+                );
+            }
         },
         {
             title: "Discount",
@@ -186,7 +192,7 @@ const ProductsDiscountsTable = (props) => {
             render: (_, record) => {
                 return (
                     <span>
-                        <Input className='u-width-100' value={record.discounted_price} readOnly  />
+                        <Input className='u-width-100' value={parseFloat(record.discounted_price).toFixed(2)} readOnly  />
                     </span>
                 );
             }

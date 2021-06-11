@@ -21,7 +21,7 @@ const SellHistoryProductsTable = (props) => {
     };
 
 
-    const handleInvoiceQuickView = (record) => {
+    const handleInvoiceQuickView = (record) => { 
         props.onInvoiceQuickViewSelection(record);
 
     };
