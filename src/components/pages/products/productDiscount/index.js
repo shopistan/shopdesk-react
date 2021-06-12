@@ -18,7 +18,10 @@ const ProductDiscount = () => {
   const [discountedRowsKeys, setDiscountedRowsKeys] = useState([]);
   const [selectedDiscountedProducts, setSelectedDiscountedProducts] = useState([]);
 
-  var mounted = true;
+
+  let selectedDiscountedProductsData = [];
+
+  let mounted = true;
 
 
   const { Option } = Select;
@@ -144,6 +147,7 @@ const ProductDiscount = () => {
     }
     else {
       const newData = [...data];
+      let newDataSelected = [...selectedDiscountedProducts];   //imp new one
       discountedRowsKeys.forEach((val, indx) => {
         const index = newData.findIndex(item => val === item.product_id);
         if (index > -1) {      //if item found
@@ -156,7 +160,15 @@ const ProductDiscount = () => {
             });
 
             /*-----------------------------------------*/
-            handleSetSelectedDiscountedProducts(item);   //imp here to set selected discounted products
+            const indexSelected = newDataSelected.findIndex(selectedObj => item.product_id === selectedObj.product_id);
+            if (indexSelected > -1) {      // if item found
+                newDataSelected.splice(indexSelected, 1, {
+                    ...item,
+                });
+            }
+            else {       //if item not found
+              newDataSelected.push(item);
+            }
             /*-----------------------------------------*/
 
           }  /*--end of inner if condition--*/
@@ -165,8 +177,11 @@ const ProductDiscount = () => {
 
       }); /*--end of foreach--*/
 
+
       setData(newData);
       message.success("Discount applied", 3);
+      //console.log("newData-selected-for-discounts", newDataSelected);
+      setSelectedDiscountedProducts(newDataSelected);  //imp but no need here
       //console.log("save-values-new", newData); //correct
 
     }
@@ -176,20 +191,25 @@ const ProductDiscount = () => {
 
 
   const handleSetSelectedDiscountedProducts = (productsDiscountedObj) => {
-    let newData = [...selectedDiscountedProducts];
-    const index = newData.findIndex(item => productsDiscountedObj.product_id === item.product_id);
+    let newDataSelected = [...selectedDiscountedProducts];
+    //console.log(newDataSelected);
+    //console.log("prod", productsDiscountedObj);
+    //console.log("prod-id", productsDiscountedObj.product_id);
+    const index = newDataSelected.findIndex(item => productsDiscountedObj.product_id === item.product_id);
     if (index > -1) {      // if item found
         //const item = newData[index];
-        newData.splice(index, 1, {
+        //console.log("found");
+        newDataSelected.splice(index, 1, {
             ...productsDiscountedObj,
         });
     }
     else {       //if item not found
-      newData.push(productsDiscountedObj);
+      //console.log("not-found");
+      newDataSelected.push(productsDiscountedObj);
     }
 
-    //console.log("newData", newData);
-    setSelectedDiscountedProducts(newData);  //imp
+    //console.log("newData", newDataSelected);
+    setSelectedDiscountedProducts(newDataSelected);  //imp need here
 
   };
 
@@ -210,6 +230,7 @@ const ProductDiscount = () => {
   const onFinish = async (values) => {
     //console.log('changed', values);
     //saveProductsDiscountedData(data);    // imp prev version
+    console.log('selected-products-for-discounts', selectedDiscountedProducts);
     saveProductsDiscountedData(selectedDiscountedProducts);   //imp here new one
 
   };

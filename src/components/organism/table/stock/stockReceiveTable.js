@@ -272,6 +272,63 @@ const StockReceiveTable = (props) => {
     }
 
 
+    if (props.tableType === "quick-view_purchase_orders") {
+
+        columns = [
+            {
+                title: "Product Name",
+                //width: "20%",
+                dataIndex: "product_name",
+                render: (_, record) => {
+                    return (
+                        <div>
+                            {record.product_name &&
+                                <small>{record.product_name + (record.product_variant1_value ? `/ ${record.product_variant1_value}` : "" )
+                                    + (record.product_variant2_value ?  `/ ${record.product_variant2_value}` : "" )}</small>
+                            }
+                        </div>
+                    );
+                }
+            },
+            {
+                title: "SKU",
+                dataIndex: "product_sku",
+            },
+            {
+                title: "Quantity ordered",
+                dataIndex: "purchase_order_junction_quantity",
+            },
+           
+            {
+                title: "Price",
+                render: (_, record) => {
+                    let currency = outletData && outletData.currency_symbol;
+                    return (
+                        <div>
+                            {(currency || "") + record.purchase_order_junction_price}
+                        </div>
+                    );
+                }
+            },
+            {
+                title: "Total",
+                render: (_, record) => {
+                    let currency = outletData && outletData.currency_symbol;
+                    return (
+                        <span>
+                            {
+                                (currency || "") + (parseFloat(record.purchase_order_junction_quantity) * parseFloat(record.purchase_order_junction_price)).toFixed(2)
+
+                            }
+                        </span>
+                    );
+                }
+            },
+        ];
+
+    }
+
+
 
 
 
@@ -359,7 +416,6 @@ const StockReceiveTable = (props) => {
                     dataSource={data}
                     rowClassName='editable-row'
                     components={components}
-                    //loading={props.tableDataLoading}
                     rowKey="product_id"
                     footer={tableFooter}
                 />}
@@ -371,8 +427,18 @@ const StockReceiveTable = (props) => {
                     columns={mergedColumns}
                     dataSource={data}
                     rowClassName='editable-row'
-                    //loading={props.tableDataLoading}
                     rowKey="product_id"
+                />}
+
+            {props.tableType === "quick-view_purchase_orders" &&
+                <Table
+
+                    bordered={true}
+                    columns={mergedColumns}
+                    dataSource={data}
+                    rowClassName='editable-row'
+                    rowKey="product_id"
+
                 />}
 
         </Form>

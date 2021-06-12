@@ -609,9 +609,14 @@ const EditProduct = (props) => {
                             {/* Form Section */}
 
                             <div className='form__section'>
-                                <div className='form__section__header'>
-                                    <h2>product Variants</h2>
-                                </div>
+
+                                {(productData && productData.product_variant1_name &&
+                                    productData.product_variant2_name)
+                                    &&
+                                    <div className='form__section__header'>
+                                        <h2>product Variants</h2>
+                                    </div>}
+
 
                                 {/* Row */}
                                 {productData && productData.product_variant1_name &&
