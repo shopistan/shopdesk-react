@@ -313,20 +313,19 @@ const StockTable = (props) => {
                     );
                 },
             },
-
-            /*{
+            {
                 title: "View",
                 render: (_, record) => {
                     return (
                         <div className='sell-history-action-btn-quick-view'>
-                            <EyeOutlined
-                                onClick={() => handlePoQuickView(record)}
-                            />
+                            { record.purchase_order_status === '1' &&
+                                <EyeOutlined
+                                    onClick={() => handlePoQuickView(record)}
+                                />}
                         </div>
                     );
                 },
-            },*/
-
+            },
 
         ];
 

@@ -170,13 +170,20 @@ function Sell() {
         });
 
         for (let i in products) {
-          var searchName = products[i].product_name;
-          if (Helpers.var_check(products[i].product_variant1_value)) {
+          let searchName = products[i].product_name;
+
+          /*if (Helpers.var_check(products[i].product_variant1_value)) {
             searchName += " / " + products[i].product_variant1_value;
           }
           if (Helpers.var_check(products[i].product_variant2_value)) {
             searchName += " / " + products[i].product_variant2_value;
-          }
+          }*/ //imp prev version
+
+          /*--------------------new version-------------------------------*/
+          searchName += (products[i].product_variant1_value ? `/ ${products[i].product_variant1_value}` : "")
+            + (products[i].product_variant2_value ? `/ ${products[i].product_variant2_value}` : "");
+          /*--------------------new version-------------------------------*/
+
           products[i].searchName = searchName;
           //products[i].qty = 0;   //imp but not set here ,set at addorder
           //products[i].original_tax_value = products[i].tax_value;    //imp prev version comment this here
@@ -262,10 +269,11 @@ function Sell() {
   const handleSelect = (value, option) => {
     //console.log(value);
     //console.log("imp", option);
-    setSelectedValue(option.children); //working correctly
-    setSelectedProductId(value); //passes productuinqId
-    handleAddProduct(value);          //imp new one 
-    setSelectedValue("");      //imp new one
+    setSelectedValue(option.children);    //working correctly
+    setSelectedProductId(value);       //passes productuinqId
+    handleAddProduct(value);           //imp new one 
+    setSelectedValue("");              //imp new one
+    setProductsSearchResult([]);       //imp vv new one
   };
 
   const handleCustomerDelete = () => {
@@ -570,8 +578,10 @@ function Sell() {
   };
 
   const printSalesOverview = () => {
-    var previewSalesInvoiceHtml = document.getElementById("printSalesTable")
-      .innerHTML;
+    var previewSalesInvoiceHtml = document.getElementById("printSalesTable");
+    if (!previewSalesInvoiceHtml) { return; }
+    previewSalesInvoiceHtml = document.getElementById("printSalesTable").innerHTML;
+
     var doc =
       '<html><head><title></title><link rel="stylesheet" type="text/css" href="/printInvoice.scss" /></head><body onload="window.print(); window.close();">' +
       previewSalesInvoiceHtml +
@@ -963,7 +973,8 @@ function Sell() {
         //console.log("found");
         //console.log(foundObj);
         handleAddProduct(foundObj.product_id);          //imp new one
-        setSelectedValue("");                            //imp new one
+        setSelectedValue("");                           //imp new one
+        setProductsSearchResult([]);                    //imp new one
       }
       else {
         //console.log("not found");

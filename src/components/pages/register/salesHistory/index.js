@@ -23,7 +23,6 @@ import { useHistory } from "react-router-dom";
 import * as Helpers from "../../../../utils/helpers/scripts";
 import SellHistoryNestedProductsTable from "../../../organism/table/sell/sellHistoryProductsTable";
 import SellNestedQuickViewProductsTable from "../../../organism/table/sell/sellNestedQuickViewProductsTable";
-
 import {
   getSellInvoiceDataFromLocalStorage,
   saveDataIntoLocalStorage,
@@ -335,8 +334,10 @@ const SalesHistory = () => {
 
 
   const printSalesOverview = () => {
-    var previewSalesInvoiceHtml = document.getElementById("printSalesTable")
-      .innerHTML;
+    let previewSalesInvoiceHtml = document.getElementById("printSalesTable")
+    if (!previewSalesInvoiceHtml) { return; }
+    previewSalesInvoiceHtml = document.getElementById("printSalesTable").innerHTML;
+
     var doc =
       '<html><head><title></title><link rel="stylesheet" type="text/css" href="/printInvoice.scss" /></head><body onload="window.print(); window.close();">' +
       previewSalesInvoiceHtml +
@@ -749,7 +750,7 @@ const SalesHistory = () => {
             >
               Cancel
             </Button>,
-            <Button key="submit" type="primary" //loading={loading} 
+            <Button key="submit" type="primary"
               className="custom-btn--primary" onClick={handlePrintQuickSaleInvoice}
             >
               Print

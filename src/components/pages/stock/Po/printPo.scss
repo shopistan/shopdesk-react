@@ -1,0 +1,37 @@
+
+#printPoTable{
+    display: none !important;
+}
+
+.print-purchase-order {
+	width: 100% !important;
+}
+
+/*.view-purchase-order th,td:p:nth-child(1)  {
+	width: 25%;
+}
+.view-purchase-order th,td:p:nth-child(2)  {
+	width: 25%;
+}
+.view-purchase-orderth,td:p:nth-child(3)  {
+	width: 25%;
+}
+.view-purchase-order th,td:p:nth-child(4)  {
+	width: 25%;
+}
+.view-purchase-order .card-pull-right  {
+	float: right !important;
+}*/
+
+.view-purchase-order tr {
+	border-bottom: 1px solid #000;
+
+}
+.view-purchase-order th {
+	text-align: left;
+	border-bottom: 2px dotted #000;
+}
+#printPoTable hr {
+	border-right: 2px solid #000;
+}
+

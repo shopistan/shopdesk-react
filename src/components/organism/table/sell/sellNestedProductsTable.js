@@ -82,7 +82,8 @@ const EditableCell = ({
 
             </Form.Item>
         ) : (
-                <div className="editable-cell-value-wrap" style={{ paddingRight: 24 }} onClick={toggleEdit}>
+                <div className="editable-cell-value-wrap" style={{ paddingRight: 24 }}
+                    onFocus={toggleEdit} onClick={toggleEdit}>
                     {children}
                 </div>
             );
