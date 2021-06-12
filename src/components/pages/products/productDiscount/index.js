@@ -142,6 +142,10 @@ const ProductDiscount = () => {
   const onApplyDiscount = (value) => {
     var discountedValue = value;
 
+    if(!value){
+      return;
+    }
+
     if (discountedRowsKeys.length === 0) {
       message.error('Please select Rows ', 4);
     }
@@ -297,7 +301,7 @@ const ProductDiscount = () => {
                   >
                     <Search
                       placeholder='Discount Percentage'
-                      allowClear
+                      allowClear={true}
                       enterButton='Apply'
                       size='large'
                       maxLength={3}
@@ -332,18 +336,22 @@ const ProductDiscount = () => {
                 </div>
               </div>
 
+
+              <div className='table'>{/* Insert Table Here */}
+                <ProductsDiscountsTable
+                  pageLimit={paginationLimit} tableData={data} tableDataLoading={loading}
+                  //paginationData={paginationData}
+                  //onClickPageChanger={handlePageChange}
+                  onSelectedTableRows={handleSelectedRows}
+                  onSaveProductsSpecialPrice={handleSaveSpecialPrice} />
+              </div>
+
+
             </div>
           </Form>
         </div>
 
-        <div className='table'>{/* Insert Table Here */}
-          <ProductsDiscountsTable
-            pageLimit={paginationLimit} tableData={data} tableDataLoading={loading}
-            //paginationData={paginationData}
-            //onClickPageChanger={handlePageChange}
-            onSelectedTableRows={handleSelectedRows}
-            onSaveProductsSpecialPrice={handleSaveSpecialPrice} />
-        </div>
+        
 
       </div>
     </div>

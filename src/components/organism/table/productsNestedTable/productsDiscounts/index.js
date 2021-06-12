@@ -49,13 +49,13 @@ const ProductsDiscountsTable = (props) => {
     const [form] = Form.useForm();
     const [data, setData] = useState([]);
     const [currentPageNumber, setcurrentPageNumber] = useState(1);
-    const [loading, setLoading] = useState(true);
     const [editingKey, setEditingKey] = useState('');
 
     const isEditing = (record) => record.product_id === editingKey;
 
     const edit = (record) => {
-        form.setFieldsValue({ ["discounted_price"]: record["discounted_price"] });
+        let discountedInputValue = parseFloat(record["discounted_price"]).toFixed(2);
+        form.setFieldsValue({ ["discounted_price"]: discountedInputValue });
         setEditingKey(record.product_id);
     };
 
