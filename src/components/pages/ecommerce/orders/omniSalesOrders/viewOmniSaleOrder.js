@@ -107,7 +107,7 @@ const ViewOmniSaleOrder = (props) => {
                 setSaleOrdersInvoiceTotal(total);
                 setLoading(false);
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(fetchOeSaleOrderViewResponse.message, 3);
+                //message.success(fetchOeSaleOrderViewResponse.message, 3);
 
             }
         }
@@ -132,7 +132,7 @@ const ViewOmniSaleOrder = (props) => {
           console.log('res -> ', cancelOeSalesOrdersResponse);
           if (mounted) {     //imp if unmounted
             document.getElementById('app-loader-container').style.display = "none";
-            message.success(cancelOeSalesOrdersResponse.message, 2);
+            //message.success(cancelOeSalesOrdersResponse.message, 2);
             setLoading(true);
             fetchOeSaleOrderData(invoice_id);
     
@@ -157,7 +157,7 @@ const ViewOmniSaleOrder = (props) => {
           console.log('res -> ', confirmOeSalesOrdersResponse);
           if (mounted) {     //imp if unmounted
             document.getElementById('app-loader-container').style.display = "none";
-            message.success(confirmOeSalesOrdersResponse.message, 2);
+            //message.success(confirmOeSalesOrdersResponse.message, 2);
             setLoading(true);
             fetchOeSaleOrderData(invoice_id);
           }

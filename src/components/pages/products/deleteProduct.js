@@ -44,7 +44,7 @@ const DeleteProduct = (props) => {
             setproductData(getProductsResponse.product);
             setLoading(false);
             document.getElementById('app-loader-container').style.display = "none";
-            message.success('product fetched Succesfully ', 2);
+            //message.success('product fetched Succesfully ', 2);
         }
     }
     
@@ -66,7 +66,7 @@ const DeleteProduct = (props) => {
         else {
             console.log('res -> ', productDeleteResponse);
             document.getElementById('app-loader-container').style.display = "none";
-            message.success(productDeleteResponse.message, 1);
+            //message.success(productDeleteResponse.message, 1);
             setTimeout(() => {
                 history.push({
                   pathname: '/products',

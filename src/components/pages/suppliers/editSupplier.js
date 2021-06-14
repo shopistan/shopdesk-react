@@ -74,7 +74,7 @@ const EditSupplier = (props) => {
         setSupplierDataFields(fieldsForAntForm);
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(getSupplierResponse.message, 2);
+        //message.success(getSupplierResponse.message, 2);
       }
 
     }
@@ -107,7 +107,7 @@ const EditSupplier = (props) => {
       console.log("res -> ", supplierEditResponse.message);
       if (mounted) {     //imp if unmounted
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(supplierEditResponse.message, 1);
+        //message.success(supplierEditResponse.message, 1);
         setTimeout(() => {
           history.push({
             pathname: "/suppliers",

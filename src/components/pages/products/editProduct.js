@@ -167,7 +167,7 @@ const EditProduct = (props) => {
             /*  taxes response  */
             setLoading(false);
             document.getElementById('app-loader-container').style.display = "none";
-            message.success(getProductsResponse.message, 2);
+            //message.success(getProductsResponse.message, 2);
 
         }
     };
@@ -219,7 +219,7 @@ const EditProduct = (props) => {
             console.log('res -> ', EditProductResponse);
             document.getElementById('app-loader-container').style.display = "none";
             if (mounted) {     //imp if unmounted
-                message.success(EditProductResponse.message, 1);
+                //message.success(EditProductResponse.message, 1);
                 setTimeout(() => {
                     history.push({
                         pathname: '/products',
@@ -250,7 +250,7 @@ const EditProduct = (props) => {
         else {
             console.log('res -> ', ImageUploadResponse);
             document.getElementById('app-loader-container').style.display = "none";
-            message.success(ImageUploadResponse.message, 3);
+            //message.success(ImageUploadResponse.message, 3);
             setFileList([]);
             setproductImagePreviewSource(ImageUploadResponse.upload_data);
             setIsImageUpload(true);

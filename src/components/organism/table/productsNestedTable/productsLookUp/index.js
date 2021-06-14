@@ -22,7 +22,7 @@ const ProductsLookUpTable = (props) => {
         }
         else {
             console.log('res -> ', productsLookUpResponse);
-            message.success(productsLookUpResponse.message, 3);
+            //message.success(productsLookUpResponse.message, 3);
             setData(productsLookUpResponse.data);
             setLoading(false);
         }

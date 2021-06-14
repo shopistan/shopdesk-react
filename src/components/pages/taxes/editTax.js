@@ -64,7 +64,7 @@ const EditTax = (props) => {
         setTaxDataFields(fieldsForAntForm);
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(gettaxResponse.message, 2);
+        //message.success(gettaxResponse.message, 2);
 
       }
 
@@ -93,7 +93,7 @@ const EditTax = (props) => {
       console.log("res -> ", taxEditResponse.message);
       if (mounted) {     //imp if unmounted
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(taxEditResponse.message, 1);
+        //message.success(taxEditResponse.message, 1);
         setTimeout(() => {
           history.push({
             pathname: "/taxes",

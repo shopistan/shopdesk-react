@@ -109,7 +109,7 @@ function UserAdd() {
     else {
       console.log('res -> ', addUserResponse);
       document.getElementById('app-loader-container').style.display = "none";
-      message.success(addUserResponse.message, 1);
+      //message.success(addUserResponse.message, 1);
       setTimeout(() => {
         history.push({
           pathname: '/setup/users',

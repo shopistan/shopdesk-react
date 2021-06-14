@@ -266,7 +266,7 @@ const ProductAdd = () => {
       console.log("res -> ", AddProductResponse);
       if (mounted) {     //imp if unmounted
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(AddProductResponse.message, 1);
+        //message.success(AddProductResponse.message, 1);
         setTimeout(() => {
           history.push({
             pathname: "/products",
@@ -300,7 +300,7 @@ const ProductAdd = () => {
     } else {
       console.log("res -> ", ImageUploadResponse);
       document.getElementById('app-loader-container').style.display = "none";
-      message.success(ImageUploadResponse.message, 3);
+      //message.success(ImageUploadResponse.message, 3);
       setFileList([]);
       setproductImagePreviewSource(ImageUploadResponse.upload_data);
       setIsImageUpload(true);

@@ -34,7 +34,7 @@ const CourierAdd = () => {
       console.log("res -> ", courierAddResponse);
       if (mounted) {     //imp if unmounted
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(courierAddResponse.message, 1);
+        //message.success(courierAddResponse.message, 1);
         setTimeout(() => {
           history.push({
             pathname: "/couriers",

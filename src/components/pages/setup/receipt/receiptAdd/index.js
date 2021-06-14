@@ -59,7 +59,7 @@ function ReceiptAdd() {
     else {
       console.log('res -> ', addTemplateResponse);
       document.getElementById('app-loader-container').style.display = "none";
-      message.success(addTemplateResponse.message, 1);
+      //message.success(addTemplateResponse.message, 1);
       setTimeout(() => {
         history.push({
           pathname: '/setup/receipts-templates',
@@ -84,7 +84,7 @@ function ReceiptAdd() {
     else {
       console.log('res -> ', ImageUploadResponse);
       document.getElementById('app-loader-container').style.display = "none";
-      message.success(ImageUploadResponse.message, 3);
+      //message.success(ImageUploadResponse.message, 3);
       setFileList([]);
       setproductImagePreviewSource(ImageUploadResponse.upload_data);
       setIsImageUpload(true);

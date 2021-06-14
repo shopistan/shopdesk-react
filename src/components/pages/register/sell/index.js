@@ -533,8 +533,8 @@ function Sell() {
           saleInvoiceData.total - saleInvoiceData.discountAmount
         ).toFixed(2);
         if (parseFloat(saleInvoiceData.customer.balance) < invoiceTotal) {
-          message.warning("Insufficient Balance", 3);
-          return;
+          message.warning("Insufficient Balance", 3);     //imp 
+          return;                                          //imp
         }
       } //end of inner if (customer selected)
 
@@ -550,7 +550,7 @@ function Sell() {
       // print function
       printSalesOverview();
     } else {
-      message.success("Invoice held", 5);
+      //message.success("Invoice held", 5);
     }
 
     setSelectedCutomer("");
@@ -997,8 +997,8 @@ function Sell() {
   };
 
   console.log(saleInvoiceData);
-
   console.log("currentInvoiceNumber", currentInvoiceNumber);
+
 
  
 
@@ -1134,9 +1134,10 @@ function Sell() {
             <div className='checkout__header'>
               <h3>
                 Checkout &nbsp; (
-                {saleInvoiceData && saleInvoiceData.products
+                {/*saleInvoiceData && saleInvoiceData.products
                   ? saleInvoiceData.products.length
-                  : 0}
+                  : 0 */}
+                {productsTotalQuantity}
                 )Items
               </h3>
 

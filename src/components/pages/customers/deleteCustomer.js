@@ -53,7 +53,7 @@ const DeleteCustomer = (props) => {
             console.log('res -> ', customerDeleteResponse);
             if (mounted) {     //imp if unmounted
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(customerDeleteResponse.message, 1);
+                //message.success(customerDeleteResponse.message, 1);
                 setTimeout(() => {
                     history.push({
                         pathname: '/customers',

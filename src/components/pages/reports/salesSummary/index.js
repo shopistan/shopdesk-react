@@ -254,7 +254,7 @@ const SalesSummary = () => {
         /*---------------csv download--------------------------------*/
         
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(salesSummaryExportResponse.message, 3);
+        //message.success(salesSummaryExportResponse.message, 3);
         
       }
 

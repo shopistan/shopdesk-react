@@ -98,7 +98,7 @@ const ProductDiscount = () => {
       if (mounted) {     //imp if unmounted  
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(saveproductsDiscountedDataResponse.message, 1);
+        //message.success(saveproductsDiscountedDataResponse.message, 1);
         setTimeout(() => {
           history.push({
             pathname: '/products',
@@ -183,7 +183,7 @@ const ProductDiscount = () => {
 
 
       setData(newData);
-      message.success("Discount applied", 3);
+      //message.success("Discount applied", 3);
       //console.log("newData-selected-for-discounts", newDataSelected);
       setSelectedDiscountedProducts(newDataSelected);  //imp but no need here
       //console.log("save-values-new", newData); //correct

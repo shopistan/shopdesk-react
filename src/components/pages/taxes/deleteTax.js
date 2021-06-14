@@ -52,7 +52,7 @@ const DeleteTax = (props) => {
                 setSelectedTaxData(taxData);
                 setLoading(false);
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(gettaxResponse.message, 2);
+                //message.success(gettaxResponse.message, 2);
             }
 
         }
@@ -78,7 +78,7 @@ const DeleteTax = (props) => {
             console.log('res -> ', taxDeleteResponse.message);
             if (mounted) {     //imp if unmounted
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(taxDeleteResponse.message, 1);
+                //message.success(taxDeleteResponse.message, 1);
                 setTimeout(() => {
                     history.push({
                         pathname: '/taxes',

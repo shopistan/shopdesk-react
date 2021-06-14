@@ -106,7 +106,7 @@ function ReceiptEdit(props) {
     else {
       console.log('res -> ', editTemplateResponse);
       document.getElementById('app-loader-container').style.display = "none";
-      message.success(editTemplateResponse.message, 1);
+      //message.success(editTemplateResponse.message, 1);
       setTimeout(() => {
         history.push({
           pathname: '/setup/receipts-templates',
@@ -135,7 +135,7 @@ function ReceiptEdit(props) {
       setproductImagePreviewSource(ImageUploadResponse.upload_data);
       setIsImageUpload(true);
       document.getElementById('app-loader-container').style.display = "none";
-      message.success(ImageUploadResponse.message, 3);
+      //message.success(ImageUploadResponse.message, 3);
     }
 
   };

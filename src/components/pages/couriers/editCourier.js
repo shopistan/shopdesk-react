@@ -62,7 +62,7 @@ const EditCourier = (props) => {
                 setCourierDataFields(fieldsForAntForm);
                 setLoading(false);
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(getCourierResponse.message, 2);
+                //message.success(getCourierResponse.message, 2);
             }
             
         }
@@ -88,7 +88,7 @@ const EditCourier = (props) => {
             console.log('res -> ', courierEditResponse);
             if (mounted) {     //imp if unmounted
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(courierEditResponse.message, 1);
+                //message.success(courierEditResponse.message, 1);
                 setTimeout(() => {
                     history.push({
                         pathname: '/couriers',

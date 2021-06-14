@@ -302,7 +302,7 @@ const SalesHistory = () => {
     if (Helpers.var_check(localInvoiceQueue.data)) {
       localInvoiceQueue.data.push(localCurrentInvoice);  //insert
       saveDataIntoLocalStorage("invoice_queue", localInvoiceQueue.data); //insert into cache
-      message.success("Invoice held", 3);
+      //message.success("Invoice held", 3);
       saveDataIntoLocalStorage("current_invoice", null);   ///imp make empty current invoice
     }
 
@@ -518,7 +518,7 @@ const SalesHistory = () => {
         a.remove();  //afterwards we remove the element again
         /*---------------csv download--------------------------------*/
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(parkedSalesInvoicesExportResponse.message, 3);
+        //message.success(parkedSalesInvoicesExportResponse.message, 3);
 
       }
 
