@@ -63,7 +63,7 @@ const EditableCell = ({
     var inputNode;
 
     inputNode = inputType === 'number' ?
-        <InputNumber ref={inputRef}  onBlur={save} />
+        <InputNumber  className='u-width-100' ref={inputRef}  onBlur={save} />
         : <Input ref={inputRef} onBlur={save} />;
 
 
@@ -170,7 +170,7 @@ const ProductsVariantsNestedTable = (props) => {
         {
             title: "Outlet Name",
             //dataIndex: "store_id",
-            //width: "30%",
+            width: "30%",
             render: (_, record) => {
                 return (
                     <div>
