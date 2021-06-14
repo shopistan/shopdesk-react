@@ -121,7 +121,7 @@ const Outlet = () => {
           saveDataIntoLocalStorage("user", userSelectOutletResponse);
           setLoading(false);
           document.getElementById('app-loader-container').style.display = "none";
-          message.success('Store Change Succesfull ', 1);
+          //message.success('Store Change Succesfull ', 1);
           setTimeout(() => {
             history.push({
               pathname: '/dashboard',

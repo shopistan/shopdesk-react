@@ -550,7 +550,7 @@ function Sell() {
       // print function
       printSalesOverview();
     } else {
-      message.success("Invoice held", 5);
+      //message.success("Invoice held", 5);
     }
 
     setSelectedCutomer("");

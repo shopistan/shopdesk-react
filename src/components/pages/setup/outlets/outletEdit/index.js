@@ -196,7 +196,7 @@ function OutletEdit(props) {
             console.log('res -> ', userSelectOutletResponse);
             setGeneratedSecretKey(userSelectOutletResponse.api_key);
             document.getElementById('app-loader-container').style.display = "none";
-            message.success("Secret Key Successfully Generated", 3);
+            //message.success("Secret Key Successfully Generated", 3);
 
           }
 
@@ -252,7 +252,7 @@ function OutletEdit(props) {
       fetchOutletWebHooks();
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
-      message.success(addWebHookResponse.message, 3);
+      //message.success(addWebHookResponse.message, 3);
     }
   }
 
@@ -271,7 +271,7 @@ function OutletEdit(props) {
     else {
       console.log('res -> ', deleteWebHookResponse);
       document.getElementById('app-loader-container').style.display = "none";
-      message.success(deleteWebHookResponse.message, 3);
+      //message.success(deleteWebHookResponse.message, 3);
       fetchOutletWebHooks();
       setLoading(false);
     }
@@ -320,7 +320,7 @@ function OutletEdit(props) {
     else {
       console.log('res -> ', addOeKeyDataResponse);
       document.getElementById('app-loader-container').style.display = "none";
-      message.success(addOeKeyDataResponse.message, 1);
+      //message.success(addOeKeyDataResponse.message, 1);
       setTimeout(() => {
         history.push({
           pathname: '/outlets',
@@ -364,7 +364,7 @@ function OutletEdit(props) {
     else {
       console.log('res -> ', editOutletResponse);
       document.getElementById('app-loader-container').style.display = "none";
-      message.success(editOutletResponse.message, 1);
+      //message.success(editOutletResponse.message, 1);
       setTimeout(() => {
         history.push({
           pathname: '/setup/outlets',

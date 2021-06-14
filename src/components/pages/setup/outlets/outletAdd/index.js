@@ -86,7 +86,7 @@ function OutletAdd() {
     else {
       console.log('res -> ', addOutletResponse);
       document.getElementById('app-loader-container').style.display = "none";
-      message.success(addOutletResponse.message, 1);
+      //message.success(addOutletResponse.message, 1);
       setTimeout(() => {
         history.push({
           pathname: '/setup/outlets',

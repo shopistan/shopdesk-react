@@ -111,7 +111,7 @@ const PurchaseOrder = (props) => {
     }
     else {
       console.log('res -> ', closePurchaseOrderResponse);
-      message.success(closePurchaseOrderResponse.message, 3);
+      //message.success(closePurchaseOrderResponse.message, 3);
       setIsForceCloseModalVisible(false);
       fetchPurchaseOrdersData();
     }
@@ -153,6 +153,10 @@ const PurchaseOrder = (props) => {
         document.getElementById('app-loader-container').style.display = "none";
         //message.success(receivePurchaseOrdersResponse.message, 3);
         setIsQuickViewPoModalVisible(true);    //show modal for purchasce order view for now
+        /*setTimeout(() => {
+          setIsQuickViewPoModalVisible(true);    //show modal for purchasce order view for now
+        }, 500);*/
+
 
       }
 
@@ -167,7 +171,7 @@ const PurchaseOrder = (props) => {
 
   function handlePoQuickViewSelection(tableRecord) {
     if (tableRecord) {
-      console.log("table-record");
+      //console.log("table-record");
       setCurrentViewedPoQuickViewId(tableRecord.purchase_order_id);
       setSelectedPoRecordData(tableRecord);  //imp for quick view stats
       receivePurchaseOrders(tableRecord.purchase_order_id);    //imp

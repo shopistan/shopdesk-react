@@ -285,7 +285,7 @@ const ReturnStock = () => {
     else {
       console.log('res -> ', res);
       document.getElementById('app-loader-container').style.display = "none";
-      message.success(res.message, 1);
+      //message.success(res.message, 1);
       setTimeout(() => {
         history.push({
           pathname: '/stock-control/purchase-orders',

@@ -39,7 +39,7 @@ const SupplierAdd = () => {
       console.log("res -> ", supplierAddResponse.message);
       if (mounted) {     //imp if unmounted
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(supplierAddResponse.message, 1);
+        //message.success(supplierAddResponse.message, 1);
         setTimeout(() => {
           history.push({
             pathname: "/suppliers",

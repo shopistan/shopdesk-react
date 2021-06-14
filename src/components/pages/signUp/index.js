@@ -49,7 +49,7 @@ const SignUp = () => {
       const signedUpUserDetails = signUpResponse;
       saveDataIntoLocalStorage();
       document.getElementById('app-loader-container').style.display = "none";
-      message.success("SignUp Successfull ", 1);
+      //message.success("SignUp Successfull ", 1);
       console.log("res -> ", signedUpUserDetails);
       setTimeout(() => {
         history.push({

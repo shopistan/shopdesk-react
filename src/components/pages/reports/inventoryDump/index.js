@@ -186,7 +186,7 @@ const InventoryDump = () => {
         /*---------------csv download--------------------------------*/
         
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(inventoryDumpExportResponse.message, 3);
+        //message.success(inventoryDumpExportResponse.message, 3);
         
       }
 

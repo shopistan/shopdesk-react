@@ -131,7 +131,7 @@ const ProductUpload = () => {
       } else {
         
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(productsBulkUploadResponse.message, 1);
+        //message.success(productsBulkUploadResponse.message, 1);
         setTimeout(() => {
           history.push({
             pathname: '/products',

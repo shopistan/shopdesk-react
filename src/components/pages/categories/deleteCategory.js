@@ -51,7 +51,7 @@ const DeleteCategory = (props) => {
                 setSelectedCategoryName(categoryName);
                 setLoading(false);
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(getCategoryResponse.message, 2);
+                //message.success(getCategoryResponse.message, 2);
             }
 
         }
@@ -80,7 +80,7 @@ const DeleteCategory = (props) => {
             if (mounted) {     //imp if unmounted
                 //setTimeout(hide, 1500);
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(categoryDeleteResponse.message, 1);
+                //message.success(categoryDeleteResponse.message, 1);
                 setTimeout(() => {
                     history.push({
                         pathname: '/categories',

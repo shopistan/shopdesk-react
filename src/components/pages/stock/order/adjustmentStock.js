@@ -181,7 +181,7 @@ const AdjustmentStock = () => {
         //setProductsTableData(bulkProducts);   //imp 
         handleCombineProductsTableData(bulkProducts, productsTableData);
         document.getElementById('app-loader-container').style.display = "none";
-        message.success("Products Imported", 3);
+        //message.success("Products Imported", 3);
         /*-------------------------------*/
 
       }
@@ -358,7 +358,7 @@ const AdjustmentStock = () => {
     else {
       console.log('res -> ', res);
       document.getElementById('app-loader-container').style.display = "none";
-      message.success(res.message, 1);
+      //message.success(res.message, 1);
       setTimeout(() => {
         history.push({
           pathname: '/stock-control/stock-adjustments',

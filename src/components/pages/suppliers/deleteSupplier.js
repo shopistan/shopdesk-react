@@ -51,7 +51,7 @@ const DeleteSupplier = (props) => {
                 setSupplierData(supplierData);
                 setLoading(false);
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(getSupplierResponse.message, 2);
+                //message.success(getSupplierResponse.message, 2);
             }
         }
     }
@@ -74,7 +74,7 @@ const DeleteSupplier = (props) => {
             console.log('res -> ', supplierDeleteResponse.message);
             if (mounted) {     //imp if unmounted
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(supplierDeleteResponse.message, 1);
+                //message.success(supplierDeleteResponse.message, 1);
                 setTimeout(() => {
                     history.push({
                         pathname: '/suppliers',

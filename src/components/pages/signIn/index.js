@@ -45,11 +45,11 @@ const SignIn = () => {
       if (mounted) {   //imp if unmounted
         saveDataIntoLocalStorage(Constants.USER_DETAILS_KEY, loggedInUserDetails);
         document.getElementById('app-loader-container').style.display = "none";
-        message.success("Login Succesfull ", 2);
+        //message.success("Login Succesfull ", 2);
         
         setTimeout(() => {
           window.open("/outlets", "_self");
-        }, 2500);
+        }, 1000);
       }
 
     }

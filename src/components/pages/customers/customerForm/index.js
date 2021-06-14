@@ -122,7 +122,7 @@ const CustomerForm = (props) => {
         else {
           console.log('res -> ', userDataUpdateResponse);
           document.getElementById('app-loader-container').style.display = "none";
-          message.success(userDataUpdateResponse.message, 1);
+          //message.success(userDataUpdateResponse.message, 1);
           setTimeout(() => {
             history.push({
               pathname: `/customers/${customer_id}/view`,
@@ -152,7 +152,7 @@ const CustomerForm = (props) => {
         else {
           console.log('res -> ', userDataAddResponse);
           document.getElementById('app-loader-container').style.display = "none";
-          message.success(userDataAddResponse.message, 1);
+          //message.success(userDataAddResponse.message, 1);
           setTimeout(() => {
             history.push({
               pathname: '/customers',

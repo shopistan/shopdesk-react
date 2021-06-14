@@ -50,7 +50,7 @@ const DeleteCourier  = (props) => {
                 setSelectedCourierData(courierData);
                 setLoading(false);
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(getCourierResponse.message, 2);
+                //message.success(getCourierResponse.message, 2);
             }
         }
     }
@@ -76,7 +76,7 @@ const DeleteCourier  = (props) => {
             console.log('res -> ', courierDeleteResponse);
             if (mounted) {     //imp if unmounted
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(courierDeleteResponse.message, 1);
+                //message.success(courierDeleteResponse.message, 1);
                 setTimeout(() => {
                     history.push({
                         pathname: '/couriers',

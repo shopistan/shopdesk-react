@@ -49,7 +49,7 @@ const TransferInventory = (props) => {
           if (
             inventoryTransfersData[i].transfer_status === "1"
           ) {
-            message.success("Some Of The Inventory Transfers Are pending", 3);
+            //message.success("Some Of The Inventory Transfers Are pending", 3);
             break;
           }
         }
@@ -97,7 +97,7 @@ const TransferInventory = (props) => {
     }
     else {
       console.log('res -> ',  closeTransferResponse);
-      message.success( closeTransferResponse.message, 3);
+      //message.success( closeTransferResponse.message, 3);
       setIsForceCloseModalVisible(false);
       fetchInventoryTransfersData();
     }

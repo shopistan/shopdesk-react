@@ -161,7 +161,7 @@ function EditUser(props) {
         else {
             console.log('res -> ', editUserResponse);
             document.getElementById('app-loader-container').style.display = "none";
-            message.success(editUserResponse.message, 1);
+            //message.success(editUserResponse.message, 1);
             setTimeout(() => {
                 history.push({
                     pathname: '/setup/users',
