@@ -14,9 +14,10 @@ import {
   Pagination,
   Row,
   Col,
+  DatePicker,
 }
   from "antd";
-import { ProfileOutlined, DownOutlined, DownloadOutlined } from "@ant-design/icons";
+import { ProfileOutlined, DownOutlined, DownloadOutlined, BarsOutlined } from "@ant-design/icons";
 import * as SalesApiUtil from '../../../../utils/api/sales-api-utils';
 import * as SetupApiUtil from "../../../../utils/api/setup-api-utils";
 import { useHistory } from "react-router-dom";
@@ -32,6 +33,8 @@ import {
 import Constants from '../../../../utils/constants/constants';
 import PrintSalesInvoiceTable from "../sell/sellInvoice";
 import moment from 'moment';
+
+const dateFormat = "YYYY-MM-DD";
 
 
 
@@ -63,6 +66,12 @@ const SalesHistory = () => {
   const [dataSearched, setDataSearched] = useState([]);
   const [dataSearchedAccumulate, setDataSearchedAccumulate] = useState([]);
   const [templateData, setTemplateData] = useState(null);
+  const [selectedDates, setselectedDates] = useState([]);
+
+
+
+
+  const { RangePicker } = DatePicker;
 
 
   var mounted = true;
@@ -127,26 +136,38 @@ const SalesHistory = () => {
 
 
 
-  const fetchSalesHistoryData = async (pageLimit = 20, pageNumber = 1) => {
+  const fetchSalesHistoryData = async (pageLimit = 20, pageNumber = 1, datePickerCheck = false) => {
+
+    let startDate = datePickerCheck ? selectedDates[0] :  moment(new Date()).format(dateFormat);
+    let finishDate = datePickerCheck ? selectedDates[1] : moment(new Date()).format(dateFormat);
+
     document.getElementById('app-loader-container').style.display = "block";
     const salesHistoryViewResponse = await SalesApiUtil.getSalesHistory(
       pageLimit,
       pageNumber,
-      salesListLimitCheck
+      salesListLimitCheck,
+      startDate,
+      finishDate,
     );
     console.log('salesHistoryViewResponse:', salesHistoryViewResponse);
 
     if (salesHistoryViewResponse.hasError) {
       console.log('Cant fetch registered products Data -> ', salesHistoryViewResponse.errorMessage);
-      message.warning(salesHistoryViewResponse.errorMessage, 3);
       setLoading(false);
+      /*------------------new verion---------------------*/
+      setSalesHistoryData([]);
+      handletabChangeData([]);
+      handledSearchedDataResponse([]);
+      setPaginationData({});
+      /*------------------new verion---------------------*/
       document.getElementById('app-loader-container').style.display = "none";
+      //message.warning(salesHistoryViewResponse.errorMessage, 3);
+
     }
     else {
       console.log('res -> ', salesHistoryViewResponse);
       if (mounted) {     //imp if unmounted
         var salesData = salesHistoryViewResponse.invoices.data || salesHistoryViewResponse.invoices;
-        //message.success(salesHistoryViewResponse.message, 3);
         setSalesHistoryData(salesData);
         setPaginationData(salesHistoryViewResponse.invoices.page || {});
         /*-------setting sales data selection---------*/
@@ -157,6 +178,8 @@ const SalesHistory = () => {
          /*-----------handle data serching response-----------*/
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
+        //message.success(salesHistoryViewResponse.message, 3);
+
       }
     }
   }
@@ -366,6 +389,8 @@ const SalesHistory = () => {
       history.push({
         pathname: "/register/sell",
         selected_invoice_data: getSaleHistoryResponse,
+        selected_invoice_id: invoiceId,
+
       });
 
 
@@ -489,9 +514,19 @@ const SalesHistory = () => {
 
   const downloadParkedSalesInvoices = async (fetchedStore) => {
     //console.log("fetchedStore", fetchedStore);
+    let salesHistoryImportParams = {
+      "store_id": fetchedStore.store_id,
+      "startDate": selectedDates[0] || moment(new Date()).format("YYYY-MM-DD"),
+      "finishDate": selectedDates[1] ||moment(new Date()).format("YYYY-MM-DD"),
+    };
+
+
     const parkedSalesInvoicesExportResponse = await SalesApiUtil.exportParkedSalesInvoices(
-      fetchedStore.store_id
+      salesHistoryImportParams
     );
+    /*const parkedSalesInvoicesExportResponse = await SalesApiUtil.exportParkedSalesInvoices(
+      fetchedStore.store_id
+    );*/     //imp rev ver
     console.log("Parked Sales Invoices export response:", parkedSalesInvoicesExportResponse);
 
     if (parkedSalesInvoicesExportResponse.hasError) {
@@ -535,14 +570,14 @@ const SalesHistory = () => {
 
     if (getOutletViewResponse.hasError) {
       console.log('Cant fetch Store Data -> ', getOutletViewResponse.errorMessage);
-      //message.warning(getOutletViewResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      //message.warning(getOutletViewResponse.errorMessage, 3);
     }
     else {
       console.log('res -> ', getOutletViewResponse);
       let selectedStore = getOutletViewResponse.outlet;
-      //message.success(getOutletViewResponse.message, 3);
       getTemplateData(selectedStore.template_id);   //imp to get template data
+      //message.success(getOutletViewResponse.message, 3);
 
     }
   }
@@ -556,18 +591,32 @@ const SalesHistory = () => {
 
     if (getTepmlateResponse.hasError) {
       console.log('Cant get template Data -> ', getTepmlateResponse.errorMessage);
-      //message.warning(getTepmlateResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      //message.warning(getTepmlateResponse.errorMessage, 3);
     }
     else {
       console.log('res -> ', getTepmlateResponse);
       var receivedTemplateData = getTepmlateResponse.template;
-      //message.success(getTepmlateResponse.message, 3);
       setTemplateData(receivedTemplateData);
       document.getElementById('app-loader-container').style.display = "none";
+      //message.success(getTepmlateResponse.message, 3);
 
     }
   } 
+
+
+  const fetchSalesHistoryWithDateRange = (e) => {
+    fetchSalesHistoryData(20, 1, true);
+  };
+
+
+  const handleRangePicker = (values) => {
+    if (values) {
+      let startDate = moment(values[0]).format(dateFormat);
+      let endDate = moment(values[1]).format(dateFormat);
+      setselectedDates([startDate, endDate]);
+    }
+  };
 
 
 
@@ -643,22 +692,24 @@ const SalesHistory = () => {
           </div>
         </div>
 
-        <div className="sales-history-pagination">
-          <Pagination
-            total={paginationData && paginationData.totalElements}
-            showTotal={(total, range) => showTotalItemsBar(total, range)}
-            defaultPageSize={20}
-            current={currentPage}
-            pageSize={parseInt(paginationLimit)}
-            showSizeChanger={false}
-            position="topRight"
-            onChange={(page, pageSize) => handlePageChange(page, pageSize)}
 
-          />
-        </div>
+        <div className='action-row row-date-picker'>
+            <RangePicker
+              className='date-picker'
+              onCalendarChange={handleRangePicker}
+            />
+            <Button
+              type='primary'
+              icon={<BarsOutlined />}
+              onClick={fetchSalesHistoryWithDateRange}
+              className='custom-btn custom-btn--primary'
+            >
+              Fetch
+            </Button>
+          </div>
 
+          <Divider />
 
-        <Divider />
 
         <Tabs activeKey={currentTab} onChange={handletabChange}>
 
@@ -708,6 +759,23 @@ const SalesHistory = () => {
           </TabPane>
 
         </Tabs>
+
+        <div className="sales-history-pagination">
+          <Pagination
+            total={paginationData && paginationData.totalElements}
+            showTotal={(total, range) => showTotalItemsBar(total, range)}
+            defaultPageSize={20}
+            current={currentPage}
+            pageSize={parseInt(paginationLimit)}
+            showSizeChanger={false}
+            //position="topLeft"
+            onChange={(page, pageSize) => handlePageChange(page, pageSize)}
+
+          />
+        </div>
+
+
+        <Divider />
 
         {/*--Modal for navigation to register screen*/}
         <Modal title="Hold up! You currently have a sale in progress"

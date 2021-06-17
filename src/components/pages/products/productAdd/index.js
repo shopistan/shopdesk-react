@@ -447,6 +447,7 @@ const ProductAdd = () => {
         closable={closable}
         onClose={onClose}
         style={{ marginRight: 3 }}
+        onChange={handleTagChange}
       >
         {label}
       </Tag>
@@ -1137,6 +1138,7 @@ const ProductAdd = () => {
                           onDeselect={(value, e) => handleVariants1DeSelectTags(value, e)}
                           dropdownStyle	={{display: "none"}}   //imp
                           onBlur={handleVariants1TagsOnBlur}
+                          //tagRender={tagRender}
                           
                         >
                           {variant1Tags.length > 0 &&
