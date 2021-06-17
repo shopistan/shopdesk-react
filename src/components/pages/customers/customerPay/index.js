@@ -92,7 +92,7 @@ const CustomerPay = (props) => {
     );*/
 
     document.getElementById('app-loader-container').style.display = "none";
-    message.success("Customer Amount Addded!", 1);
+    //message.success("Customer Amount Addded!", 1);
     //history.push(`/customers/${customer_id}/view`);
     setTimeout(() => {
       history.push(`/customers/${customer_id}/view`);

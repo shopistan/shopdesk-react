@@ -50,13 +50,13 @@ const InventorySync = () => {
     else {
       console.log('res -> ', fetchOmniAlInventorySyncResponse);
       if (mounted) {     //imp if unmounted
-        //message.success(fetchOmniAlInventorySyncResponse.message, 3);
         var omniInventorySyncData = fetchOmniAlInventorySyncResponse.Inventory.data || fetchOmniAlInventorySyncResponse.Inventory;
         console.log(omniInventorySyncData);
         setOmniInventorySyncData(omniInventorySyncData);
         setPaginationData(fetchOmniAlInventorySyncResponse.Inventory.page || {});
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
+        //message.success(fetchOmniAlInventorySyncResponse.message, 3);
       }
     }
 
@@ -88,7 +88,7 @@ const InventorySync = () => {
       console.log('res -> ', fetchOmniInventoryDumpViewResponse);
       if (mounted) {     //imp if unmounted
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(fetchOmniInventoryDumpViewResponse.message, 3);
+        //message.success(fetchOmniInventoryDumpViewResponse.message, 3);
         fetchOmniAlInventorySync();
 
       }

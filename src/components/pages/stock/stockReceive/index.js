@@ -92,7 +92,7 @@ const StockReceive = (props) => {
                 setProductsData(receiveProducts);
                 setLoading(false);
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(receivePurchaseOrdersResponse.message, 3);
+                //message.success(receivePurchaseOrdersResponse.message, 3);
             }
             
         }
@@ -146,7 +146,7 @@ const StockReceive = (props) => {
             console.log('res -> ', res);
             if (mounted) {     //imp if unmounted
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(res.message, 1);
+                //message.success(res.message, 1);
                 setTimeout(() => {
                     history.push({
                         pathname: '/stock-control/purchase-orders',

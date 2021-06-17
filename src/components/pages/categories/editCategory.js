@@ -58,7 +58,7 @@ const EditCategory = (props) => {
                 setCategoryDataFields(fieldsForAntForm);
                 setLoading(false);
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(getCategoryResponse.message, 2);
+                //message.success(getCategoryResponse.message, 2);
             }
 
         }
@@ -87,7 +87,7 @@ const EditCategory = (props) => {
                 //message.success(categoryEditResponse.message, 1);
                 //setTimeout(hide, 1500);
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(categoryEditResponse.message, 1);
+                //message.success(categoryEditResponse.message, 1);
                 setTimeout(() => {
                     history.push({
                         pathname: '/categories',

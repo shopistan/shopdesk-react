@@ -78,7 +78,7 @@ const TransferIn = (props) => {
                 setProductsData(receivetransferResponse.products);
                 setLoading(false);
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(receivetransferResponse.message, 3);
+                //message.success(receivetransferResponse.message, 3);
             }
         }
     }
@@ -109,7 +109,7 @@ const TransferIn = (props) => {
             console.log('res -> ', res);
             if (mounted) {     //imp if unmounted
                 document.getElementById('app-loader-container').style.display = "none";
-                message.success(res.message, 1);
+                //message.success(res.message, 1);
                 setTimeout(() => {
                     history.push({
                         pathname: '/stock-control/inventory-transfers',

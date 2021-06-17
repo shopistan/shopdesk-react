@@ -67,11 +67,17 @@ const CustomersTable = (props) => {
     },
     {
       title: 'Balance',
-      dataIndex: 'balance',
+      //dataIndex: 'balance',
+      render: (_, record) => {
+        return (
+          <span>
+            {parseFloat(record.balance).toFixed(2)}
+          </span>
+        );
+      }
     },
     {
       title: 'operation',
-      dataIndex: 'operation',
       render: (_, record) => {
         return (
           <div className='action-btns'>

@@ -72,15 +72,14 @@ function EcommerceOrders() {
 
     if (omniSalesOrdersViewResponse.hasError) {
       console.log('Cant fetch Omni Sales Orders Data -> ', omniSalesOrdersViewResponse.errorMessage);
-      //message.error(omniSalesOrdersViewResponse.errorMessage, 3);
       setLoading(false);
       document.getElementById('app-loader-container').style.display = "none";
+      message.warning(omniSalesOrdersViewResponse.errorMessage, 3);
     }
     else {
       console.log('res -> ', omniSalesOrdersViewResponse);
       if (mounted) {     //imp if unmounted
         var omniSalesData = omniSalesOrdersViewResponse.invoices.data || omniSalesOrdersViewResponse.invoices;
-        //message.success(omniSalesOrdersViewResponse.message, 3);
         setOmniSalesOrdersData(omniSalesData);
         setPaginationData(omniSalesOrdersViewResponse.invoices.page || {});
         /*-------setting sales data selection---------*/
@@ -91,6 +90,7 @@ function EcommerceOrders() {
         /*-----------handle data serching response-----------*/
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
+        //message.success(omniSalesOrdersViewResponse.message, 3);
       }
     }
   }
@@ -238,13 +238,13 @@ function EcommerceOrders() {
     if (confirmOeSalesOrdersResponse.hasError) {
       console.log('Cant Confirm Oe Sales Orders Data -> ', confirmOeSalesOrdersResponse.errorMessage);
       document.getElementById('app-loader-container').style.display = "none";
-      message.error(confirmOeSalesOrdersResponse.errorMessage, 3);
+      message.warning(confirmOeSalesOrdersResponse.errorMessage, 3);
     }
     else {
       console.log('res -> ', confirmOeSalesOrdersResponse);
       if (mounted) {     //imp if unmounted
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(confirmOeSalesOrdersResponse.message, 3);
+        //message.success(confirmOeSalesOrdersResponse.message, 3);
         setLoading(true);
         fetchSalesOrdersData(paginationLimit, currentPage);
 
@@ -263,17 +263,17 @@ function EcommerceOrders() {
 
     if (fetchOeSalesOrdersResponse.hasError) {
       console.log('Cant Confirm Oe Sales Orders Data -> ', fetchOeSalesOrdersResponse.errorMessage);
-      message.warning(fetchOeSalesOrdersResponse.errorMessage, 3);
       document.getElementById('app-loader-container').style.display = "none";
+      message.warning(fetchOeSalesOrdersResponse.errorMessage, 3);
       
     }
     else {
       console.log('res -> ', fetchOeSalesOrdersResponse);
 
       if (mounted) {     //imp if unmounted
-        message.success(fetchOeSalesOrdersResponse.message, 3);
         setLoading(false);
         document.getElementById('app-loader-container').style.display = "none";
+        //message.success(fetchOeSalesOrdersResponse.message, 3);
         fetchSalesOrdersData();   //imp to fetch again
         
       }

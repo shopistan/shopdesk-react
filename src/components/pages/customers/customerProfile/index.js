@@ -127,7 +127,7 @@ const CustomerProfile = (props) => {
                 </li>
                 <li>
                   <span>Balance:</span>
-                  <span>{customerData.balance ? customerData.balance : ""}</span>
+                  <span>{customerData.balance ? parseFloat(customerData.balance).toFixed(2) : ""}</span>
                 </li>
                 <li>
                   <span>Code:</span>

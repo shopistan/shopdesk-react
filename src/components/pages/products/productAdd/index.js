@@ -266,7 +266,7 @@ const ProductAdd = () => {
       console.log("res -> ", AddProductResponse);
       if (mounted) {     //imp if unmounted
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(AddProductResponse.message, 1);
+        //message.success(AddProductResponse.message, 1);
         setTimeout(() => {
           history.push({
             pathname: "/products",
@@ -300,7 +300,7 @@ const ProductAdd = () => {
     } else {
       console.log("res -> ", ImageUploadResponse);
       document.getElementById('app-loader-container').style.display = "none";
-      message.success(ImageUploadResponse.message, 3);
+      //message.success(ImageUploadResponse.message, 3);
       setFileList([]);
       setproductImagePreviewSource(ImageUploadResponse.upload_data);
       setIsImageUpload(true);
@@ -447,6 +447,7 @@ const ProductAdd = () => {
         closable={closable}
         onClose={onClose}
         style={{ marginRight: 3 }}
+        onChange={handleTagChange}
       >
         {label}
       </Tag>
@@ -1137,6 +1138,7 @@ const ProductAdd = () => {
                           onDeselect={(value, e) => handleVariants1DeSelectTags(value, e)}
                           dropdownStyle	={{display: "none"}}   //imp
                           onBlur={handleVariants1TagsOnBlur}
+                          //tagRender={tagRender}
                           
                         >
                           {variant1Tags.length > 0 &&

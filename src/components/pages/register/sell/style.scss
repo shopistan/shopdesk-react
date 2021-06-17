@@ -42,6 +42,10 @@
       }
     }
 
+    .register-sync-pull-right{
+      float: right;
+    }
+
 
   }
 
@@ -177,17 +181,31 @@
 
 
 
-.sales-history{
+.sales-history {
 
-  .sales-history-pagination{
-    margin-top: 5rem;
-    margin-bottom: 5rem;
+  .row-date-picker{
+
+    justify-content: flex-start !important;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+
+    .date-picker {
+      margin-right: 2rem;
+    }
 
   }
+
+  .sales-history-pagination {
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+    float: right;
+
+  }
+
 }
 
 
-.quick-view-modal-dailog{
+.quick-view-modal-dailog {
   margin-top: -2rem;
   
   .table{

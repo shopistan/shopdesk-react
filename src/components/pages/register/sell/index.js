@@ -13,7 +13,7 @@ import {
   message,
   Divider,
   InputNumber,
-  Collapse,
+  Tag,
   DatePicker,
 } from "antd";
 
@@ -23,6 +23,7 @@ import {
   DollarCircleOutlined,
   DeleteOutlined,
   UserOutlined,
+  SyncOutlined,
 } from "@ant-design/icons";
 import {
   getDataFromLocalStorage,
@@ -67,7 +68,8 @@ function Sell() {
   const [syncStatus, setSyncStatus] = useState(false);
   const [templateData, setTemplateData] = useState(null);
   const [currentInvoiceNumber, setCurrentInvoiceNumber] = useState("");
-
+  const [networkStatus, setNetworkStatus] = useState(true);
+  //const [refreshStatus, setRefreshStatus] = useState(false);
 
 
 
@@ -78,13 +80,15 @@ function Sell() {
 
   const todayDate = moment();
   const dateFormat = "yyyy/MM/DD";
-  const timeFormat = "hh:mm:ss A";  
+  //const timeFormat = "hh:mm:ss A";     imp prev version
+  const timeFormat = "HH:mm:ss";
 
 
   var mounted = true;
 
 
   useEffect(() => {
+  
     if (history.location.selected_invoice_data !== undefined) {
       var selectedViewedInvoice = history.location.selected_invoice_data;
       //console.log("invoice-imp", selectedViewedInvoice );
@@ -93,14 +97,17 @@ function Sell() {
       if (selectedViewedInvoice.status_invoice == 0) {
         rt = true;
       }
+      tmpInvoice.OldInvoiceNo = history.location.selected_invoice_id;
       tmpInvoice.products = selectedViewedInvoice.invoices;
       tmpInvoice.return = rt;
       if (selectedViewedInvoice.hasCustomer == true) {
         tmpInvoice.customer = selectedViewedInvoice.customer;
         tmpInvoice.hasCustomer = true;
       }
+      
       saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, tmpInvoice);
       //console.log(tmpInvoice);
+      updateCart(tmpInvoice);      //imp new one ver
     }
 
    
@@ -108,7 +115,17 @@ function Sell() {
     fetchCouriersData();
     startInvoice();
 
-    
+    /*-----------------network status hooks----------------------*/
+    window.addEventListener('offline', function (e) {
+      setNetworkStatus(false);
+      //console.log('offline');
+    });
+    window.addEventListener('online', function (e) {
+      setNetworkStatus(true);
+      //console.log('online');
+    });
+    /*---------------------------------------*/
+
 
     return () => {
       console.log("unmount");
@@ -533,8 +550,8 @@ function Sell() {
           saleInvoiceData.total - saleInvoiceData.discountAmount
         ).toFixed(2);
         if (parseFloat(saleInvoiceData.customer.balance) < invoiceTotal) {
-          message.warning("Insufficient Balance", 3);
-          return;
+          message.warning("Insufficient Balance", 3);     //imp 
+          return;                                          //imp
         }
       } //end of inner if (customer selected)
 
@@ -550,7 +567,7 @@ function Sell() {
       // print function
       printSalesOverview();
     } else {
-      message.success("Invoice held", 5);
+      //message.success("Invoice held", 5);
     }
 
     setSelectedCutomer("");
@@ -693,8 +710,8 @@ function Sell() {
           "Cant add registered Invoice Data -> ",
           registerInvoiceResponse.errorMessage
         );
-        message.error(registerInvoiceResponse.errorMessage, 3);
-        setSyncStatus(false);
+        //message.error(registerInvoiceResponse.errorMessage, 3);
+        //setSyncStatus(false);      //imp to false here
         console.log("Fail");
         setTimeout(sync, 3000);
 
@@ -763,8 +780,9 @@ function Sell() {
     // $scope.invoice
     var data = {};
     data.isDiscount = false;
-    data.dateTime = moment(new Date()).format("yyyy/MM/DD hh:mm:ss A");      //imp prev ver
+    data.dateTime = moment(new Date()).format("yyyy/MM/DD HH:mm:ss");      //imp prev ver
     data.invoiceNo = Helpers.uniqid();
+    data.OldInvoiceNo = "";
     data.store_id = readFromLocalStorage.auth.store_random;
     data.user_id = readFromLocalStorage.user_info.user_random;
     data.method = "Cash";
@@ -888,6 +906,7 @@ function Sell() {
     );
 
 
+    //console.log(localStorageInvoiceTotalPayedCheck);
 
     if (!localStorageInvoiceTotalPayedCheck) {   //imp check for local
       clonedInvoiceData.payed = parseFloat(
@@ -899,7 +918,7 @@ function Sell() {
 
 
     setSaleInvoiceData(clonedInvoiceData); //imp
-    console.log(clonedInvoiceData);
+    //console.log(clonedInvoiceData);
     //console.log(clonedInvoiceData.payed);
 
 
@@ -996,9 +1015,11 @@ function Sell() {
     console.log("Failed:", errorInfo);
   };
 
-  console.log(saleInvoiceData);
 
-  console.log("currentInvoiceNumber", currentInvoiceNumber);
+  console.log(saleInvoiceData);
+  //console.log("currentInvoiceNumber", currentInvoiceNumber);
+  //console.log(window.navigator.onLine);    //imp for online status
+
 
  
 
@@ -1020,7 +1041,14 @@ function Sell() {
             onFinishFailed={onFinishFailed}
           >
 
+            {!networkStatus && <Tag color="#f50">Offline</Tag>}
             <Form.Item label='Search for products'>
+              {(syncStatus) &&
+                <small className="register-sync-pull-right" >
+                <SyncOutlined spin />
+                Synicing Sales
+               </small>}
+
               <AutoComplete
                 style={{ width: "100%" }}
                 className="info__register-sell-drop-down-menu"
@@ -1079,7 +1107,7 @@ function Sell() {
             >
               <DatePicker  className='select-w-100'
                onChange={onInvoiceDateChange}
-               format={"yyyy/MM/DD"}
+               format={dateFormat}
                disabledDate={disabledDate}
 
               />
@@ -1134,9 +1162,10 @@ function Sell() {
             <div className='checkout__header'>
               <h3>
                 Checkout &nbsp; (
-                {saleInvoiceData && saleInvoiceData.products
+                {/*saleInvoiceData && saleInvoiceData.products
                   ? saleInvoiceData.products.length
-                  : 0}
+                  : 0 */}
+                {productsTotalQuantity}
                 )Items
               </h3>
 
@@ -1384,6 +1413,7 @@ function Sell() {
           currentInvoiceNo={currentInvoiceNumber}
         />
       )}
+
     </>
   );
 }

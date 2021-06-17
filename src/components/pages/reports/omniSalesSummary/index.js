@@ -244,7 +244,7 @@ const OmniSalesSummary = () => {
         /*---------------csv download--------------------------------*/
         
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(salesOmniSummaryExportResponse.message, 3);
+        //message.success(salesOmniSummaryExportResponse.message, 3);
         
       }
 

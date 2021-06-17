@@ -68,7 +68,7 @@ const ViewInvoice = (props) => {
         else {
             console.log('res -> ', getSaleHistoryResponse);
             document.getElementById('app-loader-container').style.display = "none";
-            message.success(getSaleHistoryResponse.message, 2);
+            //message.success(getSaleHistoryResponse.message, 2);
             setSelectedInvoiceData(getSaleHistoryResponse.invoices);
             setCustomerData(getSaleHistoryResponse.customer);
             setInvoiceDetails(getSaleHistoryResponse.invoice_details);

@@ -35,7 +35,7 @@ const CategoryAdd = () => {
       console.log("res -> ", categoryAddResponse);
       if (mounted) {     //imp if unmounted
         document.getElementById('app-loader-container').style.display = "none";
-        message.success(categoryAddResponse.message, 1);
+        //message.success(categoryAddResponse.message, 1);
         setTimeout(() => {
           history.push({
             pathname: "/categories",

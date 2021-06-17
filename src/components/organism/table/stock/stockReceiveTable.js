@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { Table, Input, Form, InputNumber, Row, Col } from "antd";
+import { Table, Input, Form, InputNumber, Row, Col, message } from "antd";
 import "./style.scss";
 import * as SetupApiUtil from "../../../../utils/api/setup-api-utils";
 import Constants from '../../../../utils/constants/constants';
@@ -142,20 +142,20 @@ const StockReceiveTable = (props) => {
 
 
     const getUserStoreData = async (storeId) => {
-        document.getElementById('app-loader-container').style.display = "block";
+        //document.getElementById('app-loader-container').style.display = "block";
         const getOutletViewResponse = await SetupApiUtil.getOutlet(storeId);
         console.log('getOutletViewResponse:', getOutletViewResponse);
 
         if (getOutletViewResponse.hasError) {
             console.log('Cant fetch Store Data -> ', getOutletViewResponse.errorMessage);
-            document.getElementById('app-loader-container').style.display = "none";
-            //message.warning(getOutletViewResponse.errorMessage, 3);
+            //document.getElementById('app-loader-container').style.display = "none";
+            message.warning(getOutletViewResponse.errorMessage, 3);
         }
         else {
             console.log('res -> ', getOutletViewResponse);
             let selectedStore = getOutletViewResponse.outlet;
             setOutletData(selectedStore);   //imp to get template data
-            document.getElementById('app-loader-container').style.display = "none";
+            //document.getElementById('app-loader-container').style.display = "none";
             //message.success(getOutletViewResponse.message, 3);
 
         }

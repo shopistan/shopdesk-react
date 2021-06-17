@@ -7,11 +7,14 @@ import axios from 'axios';
 import $ from 'jquery';
 
 
-export const getSalesHistory = async (pageLimit, pageNumber, limitCheck) => {
+export const getSalesHistory = async (pageLimit, pageNumber, limitCheck, startDate, finishDate) => {
 
     const formDataPair = {
         limit: pageLimit,
         page: pageNumber,
+        startDate: startDate,
+        finishDate: finishDate,
+
     };
 
     const salesHistoryFormDataBody = ApiCallUtil.constructFormData(formDataPair);
@@ -91,9 +94,15 @@ export const getStoreId = async () => {
 };
   
   
-export const exportParkedSalesInvoices = async (storeId) => {
+export const exportParkedSalesInvoices = async (params) => {
 
-    const url = UrlConstants.SALES.EXPORT_INVENTORY_DUMP+`/${storeId}`;
+    let query = Object.keys(params)
+    .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+    .join('&');
+    
+
+    //const url = UrlConstants.SALES.EXPORT_INVENTORY_DUMP+`/${storeId}`;         //imp prev
+    const url = UrlConstants.SALES.EXPORT_INVENTORY_DUMP+'?'+ query;
     const headers = {
         'Authorization': ApiCallUtil.getUserAuthToken(),
     };

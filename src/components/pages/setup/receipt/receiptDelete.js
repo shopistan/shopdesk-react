@@ -79,7 +79,7 @@ const ReceiptDelete = (props) => {
         else {
             console.log('res -> ', receiptDeleteResponse);
             document.getElementById('app-loader-container').style.display = "none";
-            message.success('Receipt deletion Succesfull ', 1);
+            //message.success('Receipt deletion Succesfull ', 1);
             setTimeout(() => {
                 history.push({
                     pathname: '/setup/receipts-templates',

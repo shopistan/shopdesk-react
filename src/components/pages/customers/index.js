@@ -197,7 +197,7 @@ const Customers = () => {
         a.click();
         a.remove();  //afterwards we remove the element again
         /*---------------csv download--------------------------------*/
-        message.success(customersExportResponse.message, 3);
+        //message.success(customersExportResponse.message, 3);
       }
 
     }
