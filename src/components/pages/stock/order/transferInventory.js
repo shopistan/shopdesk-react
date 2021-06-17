@@ -122,6 +122,25 @@ const TransferInventory = () => {
   };
 
 
+  const SelectProductOnEnter = (event) => {
+   
+    if (event.key === "Enter") {
+      //console.log(selectedSearchValue);   //imp new searched value
+      let foundObj = productsSearchResult.find(obj => {
+        return obj.product_sku === selectedSearchValue || obj.product_name === selectedSearchValue;
+      });
+
+      if (foundObj) {
+        handleAddProductData(foundObj.product_id);          //imp new one
+        setSelectedSearchValue("");                         //imp new one
+        setProductsSearchResult([]);                        //imp new one
+      }
+
+    }
+
+  };
+
+
 
   const fetchRegisteredProductsData = async () => {
     document.getElementById('app-loader-container').style.display = "block";
@@ -191,11 +210,17 @@ const TransferInventory = () => {
   };
 
 
-
   const handleAddProduct = () => {
+    handleAddProductData(selectedProductId);
+    setSelectedSearchValue("");
+    setProductsSearchResult([]); 
+  };
+
+
+  const handleAddProductData = (selectedProdId) => {
     var formValues = form.getFieldsValue();
     //console.log("changed", formValues);
-    if(!selectedProductId){
+    if(!selectedProdId){
       message.warning("please select product!");
       return;
     }
@@ -204,7 +229,7 @@ const TransferInventory = () => {
     var newData = [...productsTableData];
     //productsTableData
     const index = registereProductsData.findIndex(
-      item => selectedProductId == item.product_id);
+      item => selectedProdId == item.product_id);
 
     if (index > -1) {
       //deep copy
@@ -432,7 +457,9 @@ const TransferInventory = () => {
                         value={selectedSearchValue}
                         onSearch={handleSearch}
                         onSelect={handleSelect}
-                        placeholder="search for product">
+                        placeholder="search for product"
+                        onKeyDown={SelectProductOnEnter}
+                      >
                           
                         {productsSearchResult && productsSearchResult.map((item) => (
                           <Option key={item.product_id} value={item.product_id}>
