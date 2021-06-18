@@ -105,6 +105,21 @@ const SalesHistory = () => {
 
 
 
+  const registerScopeFilter = (scope) => {
+
+    if (!scope || !localStorageData) { return false; }
+    if ((localStorageData.scopes.includes(scope)) ||
+      (localStorageData.scopes.includes('*') && scope !== 'ecommerce')) {
+      return true;
+    }
+    else {
+      return false;
+    }
+
+  };
+
+
+
   const onSearch = (e) => {
     var currValue = e.target.value;
     currValue = currValue.toLowerCase();
@@ -739,7 +754,9 @@ const SalesHistory = () => {
                 paginationData={paginationData}
                 onInvoiceSelection={handleInvoiceSelection}
                 onInvoiceQuickViewSelection={handleInvoiceQuickViewSelection}
-                tableType={salesHistoryEnum.PROCESS} />
+                tableType={salesHistoryEnum.PROCESS}
+                registerProcessReturn={registerScopeFilter("process_returns")}
+               />
             </div>
             {/* Table */}
           </TabPane>
@@ -754,7 +771,9 @@ const SalesHistory = () => {
                 tableDataLoading={loading}
                 onInvoiceSelection={handleInvoiceSelection}
                 onInvoiceQuickViewSelection={handleInvoiceQuickViewSelection}
-                tableType={salesHistoryEnum.ALL} />
+                tableType={salesHistoryEnum.ALL}
+                registerProcessReturn={registerScopeFilter("process_returns")}
+               />
             </div>
             {/* Table */}
           </TabPane>

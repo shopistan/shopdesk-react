@@ -33,7 +33,7 @@ const SellHistoryProductsTable = (props) => {
             setcurrentPageNumber(1);
         }
 
-    }, [props.tableData, props.tableDataLoading, props.paginationData]);  /* imp passing props to re-render */
+    }, [props.tableData, props.tableDataLoading, props.paginationData, props.registerProcessReturn]);  /* imp passing props to re-render */
 
 
     /*const showTotalItemsBar = (total, range) => {
@@ -125,11 +125,11 @@ const SellHistoryProductsTable = (props) => {
             },
         },
         {
-            title: "Return",
+            title: "Return", 
             render: (_, record) => {
                 return (
                     <div className='action-btns stock-table-delete-item'>
-                        {record.invoice_status === "0" ? <HistoryOutlined
+                        { (record.invoice_status === "0" && props.registerProcessReturn) ? <HistoryOutlined
                             onClick={() => handleInvoiceView(record)}
                             className="sell-history-action-btn-return"
                         />

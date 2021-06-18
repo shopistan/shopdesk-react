@@ -40,7 +40,7 @@ const SideMenu = () => {
     register: "register",
     reports: "reports",
     setup: "setup",
-    stock: "stock-control",
+    stock: "stock_control",
     ecommerce: "ecommerce",
   };
   var adminUser = false;
