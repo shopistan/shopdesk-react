@@ -115,9 +115,10 @@ const SellHistoryProductsTable = (props) => {
             render: (_, record) => {
                 return (
                     <span>
-                        {record.invoice_status === "1" ? "Parked"
+                        {(record.invoice_status === "1" && record.is_dead === "0") ? "Parked"
+                            : (record.invoice_status === "1" && record.is_dead === "1") ? "Dead"
                             : record.invoice_status === "2" ? "Return, completed"
-                                : "Completed"
+                            : "Completed"
                         }
                     </span>
                 );
