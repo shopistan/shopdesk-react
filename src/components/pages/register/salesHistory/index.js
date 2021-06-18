@@ -136,10 +136,10 @@ const SalesHistory = () => {
 
 
 
-  const fetchSalesHistoryData = async (pageLimit = 20, pageNumber = 1, datePickerCheck = false) => {
+  const fetchSalesHistoryData = async (pageLimit = 20, pageNumber = 1) => {
 
-    let startDate = datePickerCheck ? selectedDates[0] :  moment(new Date()).format(dateFormat);
-    let finishDate = datePickerCheck ? selectedDates[1] : moment(new Date()).format(dateFormat);
+    let startDate  =  selectedDates[0] ? selectedDates[0]  : moment(new Date()).format(dateFormat);
+    let finishDate =  selectedDates[1] ? selectedDates[1]  : moment(new Date()).format(dateFormat);
 
     document.getElementById('app-loader-container').style.display = "block";
     const salesHistoryViewResponse = await SalesApiUtil.getSalesHistory(
@@ -606,7 +606,8 @@ const SalesHistory = () => {
 
 
   const fetchSalesHistoryWithDateRange = (e) => {
-    fetchSalesHistoryData(20, 1, true);
+    //fetchSalesHistoryData(20, 1);     //imp here to call new one
+    fetchSalesHistoryData(20, currentPage);     //imp wirh updtaed page number
   };
 
 
