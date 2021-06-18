@@ -133,7 +133,7 @@ const SellHistoryProductsTable = (props) => {
                             onClick={() => handleInvoiceView(record)}
                             className="sell-history-action-btn-return"
                         />
-                            : record.invoice_status === "1" ? <RollbackOutlined
+                            : (record.invoice_status === "1"  && record.is_dead === "0") ? <RollbackOutlined
                                 onClick={() => handleInvoiceView(record)}
                                 className="sell-history-action-btn-parked"
                             />

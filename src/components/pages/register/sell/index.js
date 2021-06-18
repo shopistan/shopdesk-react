@@ -1042,8 +1042,10 @@ function Sell() {
           >
 
             {!networkStatus && <Tag color="#f50">Offline</Tag>}
+            
             <Form.Item label='Search for products'>
-              {(syncStatus) &&
+
+              {(syncStatus && networkStatus) &&
                 <small className="register-sync-pull-right" >
                 <SyncOutlined spin />
                 Synicing Sales
