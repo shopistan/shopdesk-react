@@ -163,7 +163,8 @@ const Routes = () => {
     //console.log(rest.path.split('/'));
     var readFromLocalStorage = getDataFromLocalStorage("user");
     var authExpirationTokenDate;
-    const routePathName = rest.path.split("/")[1]; //imp to split path
+    let routePathName = rest.path.split("/")[1]; //imp to split path
+    if(routePathName === "stock-control"){routePathName = "stock_control"}   //imp new one
     var userRouteScopes = [];
     var adminUser = false;
 
@@ -503,6 +504,11 @@ const Routes = () => {
           path="/ecommerce/inventory-sync"
           component={InventorySync}
         />
+        <Route
+          render={() => (
+              <Redirect to="/dashboard"/>
+          )}
+        ></Route>
       </Switch>
     </div>
   );
