@@ -49,6 +49,7 @@ const Products = () => {
 
 
   const fetchSearchProducts = async (pageLimit = 20, pageNumber = 1, searchValue) => {
+    document.getElementById('app-loader-container').style.display = "block";
     const productsSearchResponse = await ProductsApiUtil.searchProducts(
       pageLimit,
       pageNumber,
@@ -57,15 +58,17 @@ const Products = () => {
     console.log('productsSearchResponse:', productsSearchResponse);
     if (productsSearchResponse.hasError) {
       console.log('Cant Search Products -> ', productsSearchResponse.errorMessage);
-      message.warning(productsSearchResponse.errorMessage, 2);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
+      message.warning(productsSearchResponse.errorMessage, 2);
     }
     else {
       console.log('res -> ', productsSearchResponse);
-      //message.success(productsSearchResponse.message, 2);
       setData(productsSearchResponse.products.data);
       setPaginationData(productsSearchResponse.products.page);
       setLoading(false);
+      document.getElementById('app-loader-container').style.display = "none";
+      //message.success(productsSearchResponse.message, 2);
     }
 
   }

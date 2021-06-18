@@ -164,6 +164,42 @@ const PurchaseOrder = (props) => {
   }
 
 
+
+  const receiveCompletedPurchaseOrders = async (purchaseOrderId) => {
+    document.getElementById('app-loader-container').style.display = "block";
+    const receivePurchaseOrdersResponse = await StockApiUtil.receiveCompletedPurchaseOrder(purchaseOrderId);
+    console.log('receivePurchaseOrdersResponse:', receivePurchaseOrdersResponse);
+
+    if (receivePurchaseOrdersResponse.hasError) {
+      console.log('Cant fetch Purchase Order Data -> ', receivePurchaseOrdersResponse.errorMessage);
+      document.getElementById('app-loader-container').style.display = "none";
+      message.warning(receivePurchaseOrdersResponse.errorMessage, 3);
+    }
+    else {
+      console.log('res -> ', receivePurchaseOrdersResponse);
+      if (mounted) {     //imp if unmounted
+        //setPoData(receivePurchaseOrdersResponse.purchase_order_info);
+        let receiveProducts = [...receivePurchaseOrdersResponse.products];
+        setSelectedPoProductsData(receiveProducts);
+        setSelectedAllPoData(receivePurchaseOrdersResponse);
+        /*---getting total amount----------------*/
+        let productsTotal = 0;
+        receiveProducts.forEach(item => {
+          productsTotal = productsTotal + (parseFloat(item.purchase_order_junction_quantity || 0) * parseFloat(item.purchase_order_junction_price));
+        });
+        setProductsTotalAmount(productsTotal);
+        /*---getting total amount----------------*/
+        document.getElementById('app-loader-container').style.display = "none";
+        //message.success(receivePurchaseOrdersResponse.message, 3);
+        setIsQuickViewPoModalVisible(true);    //show modal for purchasce order view for now
+      
+
+      }
+
+    }
+  }
+
+
   const handleCancelForceCloseModal = () => {
     setIsForceCloseModalVisible(false);
   };
@@ -174,7 +210,14 @@ const PurchaseOrder = (props) => {
       //console.log("table-record");
       setCurrentViewedPoQuickViewId(tableRecord.purchase_order_id);
       setSelectedPoRecordData(tableRecord);  //imp for quick view stats
-      receivePurchaseOrders(tableRecord.purchase_order_id);    //imp
+      /*--------------new version--------------------------------------*/
+      if(tableRecord.purchase_order_status === '1'){  //for open PO
+        receivePurchaseOrders(tableRecord.purchase_order_id);             //imp
+      }
+      if(tableRecord.purchase_order_status === '0'){  //for completed Po
+        receiveCompletedPurchaseOrders(tableRecord.purchase_order_id);
+      }
+      /*--------------new version--------------------------------------*/
 
     }
 
@@ -244,10 +287,6 @@ const PurchaseOrder = (props) => {
   } 
 
   let PoInfo = selectedAllPoData && selectedAllPoData.purchase_order_info;
-
-
-
-
 
 
 

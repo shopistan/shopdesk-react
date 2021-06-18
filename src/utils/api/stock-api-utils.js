@@ -106,6 +106,23 @@ export const receivePurchaseOrder = async (purchaseOrderId) => {
 };
 
 
+export const receiveCompletedPurchaseOrder = async (purchaseOrderId) => {
+    const formDataPair = {
+        purchase_order_id: purchaseOrderId,
+    };
+
+    const getPurchaseOrderFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+    const url = UrlConstants.STOCK.RECEIVE_COMPLETED_PO;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        getPurchaseOrderFormDataBody,  //body
+    );
+};
+
+
 export const receiveTransfer = async (receiveTransferId) => {
     const formDataPair = {
         transfer_id: receiveTransferId,

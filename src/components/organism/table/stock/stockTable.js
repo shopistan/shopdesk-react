@@ -318,7 +318,7 @@ const StockTable = (props) => {
                 render: (_, record) => {
                     return (
                         <div className='sell-history-action-btn-quick-view'>
-                            { record.purchase_order_status === '1' &&
+                            { (record.purchase_order_status === '1' || record.purchase_order_status === '0') &&
                                 <EyeOutlined
                                     onClick={() => handlePoQuickView(record)}
                                 />}

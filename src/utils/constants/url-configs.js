@@ -123,6 +123,7 @@ const urls = {
     VIEW_RETURNED_STOCK: BASE_URL + '/api/stock_control/viewReturnStock',
     GET_STOCK_RETURNED: BASE_URL + '/api/stock_control/getReturnStock',
     RECEIVE_PO: BASE_URL + '/api/stock_control/receivePo',
+    RECEIVE_COMPLETED_PO: BASE_URL + '/api/stock_control/viewPoDetails',
     ADD_RECEIVE_PO: BASE_URL + '/api/stock_control/insertGrn',
     ADD_PURCHASE_ORDER: BASE_URL + '/api/stock_control/addPo',
     DOWNLOAD_PO_FORM: BASE_URL + '/api/omni_engine/productsku',
