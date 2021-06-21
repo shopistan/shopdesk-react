@@ -610,8 +610,8 @@ const EditProduct = (props) => {
 
                             <div className='form__section'>
 
-                                {(productData && productData.product_variant1_name &&
-                                    productData.product_variant2_name)
+                                {(productData && Helpers.var_check_updated(productData.product_variant1_name) &&
+                                    Helpers.var_check_updated(productData.product_variant2_name) )
                                     &&
                                     <div className='form__section__header'>
                                         <h2>product Variants</h2>
@@ -619,7 +619,7 @@ const EditProduct = (props) => {
 
 
                                 {/* Row */}
-                                {productData && productData.product_variant1_name &&
+                                {(productData && Helpers.var_check_updated(productData.product_variant1_name) ) &&
                                     <div className='form__row'>
                                         <div className='form__col'>
                                             <Form.Item
@@ -642,7 +642,7 @@ const EditProduct = (props) => {
                                 {/* Row */}
 
                                 {/* Row */}
-                                {productData && productData.product_variant2_name &&
+                                {(productData && Helpers.var_check_updated(productData.product_variant2_name) ) &&
                                     <div className='form__row'>
                                         <div className='form__col'>
                                             <Form.Item
