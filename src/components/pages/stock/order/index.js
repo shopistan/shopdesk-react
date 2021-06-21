@@ -736,6 +736,7 @@ const PurchaseOrder = () => {
                     >
                       <AutoComplete style={{ width: "100%" }}
                         dropdownMatchSelectWidth={500}
+                        className="select-product-drop-down-menu"
                         value={selectedSearchValue}
                         onSearch={handleSearch}
                         onSelect={handleSelect}

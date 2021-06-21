@@ -1,3 +1,6 @@
+@import "../../../styles/variables";
+
+
 .loading-container {
   text-align: center;
 }
@@ -36,6 +39,10 @@
   justify-content: flex-end;
 }
 
+.fetch-product-row button {
+  height: 35px;
+}
+
 .fetch-product-btn:hover {
   background-color: #e6e6e6 !important;
 }
@@ -44,6 +51,21 @@
 .lookup-heading {
   margin-bottom: 2rem;
   margin-top: 2rem;
+}
+
+
+.product-look-up .select-product-drop-down-menu {
+
+  border: 3px solid $color-primary !important;
+  border-radius: 3px;
+
+    .ant-select-selector{
+      border: 0px solid transparent !important;
+      box-shadow: none !important;
+      border-width: 0px !important;
+      outline: none;
+    }
+
 }
 
 

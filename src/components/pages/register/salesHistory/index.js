@@ -702,7 +702,7 @@ const SalesHistory = () => {
             <Search
               placeholder="search sales history"
               allowClear
-              size="middle"
+              size="large"
               onChange={onSearch}
             />
           </div>

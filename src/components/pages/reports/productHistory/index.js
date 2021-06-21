@@ -7,6 +7,8 @@ import ProductsNestedTable from "../../../organism/table/productsNestedTable/pro
 import ProductMovementReportTable from "../../../organism/table/reports/productsMovementReportTable";
 import * as ProductsApiUtil from "../../../../utils/api/products-api-utils";
 
+
+
 const ProductHistory = () => {
   const [productsSearchResult, setProductsSearchResult] = useState([]);
   const [selectedValue, setSelectedValue] = useState("");
@@ -145,7 +147,7 @@ const ProductHistory = () => {
   };
 
   return (
-    <div className='page reports'>
+    <div className='page reports product-history'>
       <div className='page__header'>
         <h1>Product History</h1>
         <Button
@@ -167,6 +169,7 @@ const ProductHistory = () => {
             <AutoComplete
               style={{ width: "100%" }}
               dropdownMatchSelectWidth={500}
+              className="select-product-drop-down-menu"
               value={selectedValue}
               onSearch={handleSearch}
               onSelect={handleSelect}
