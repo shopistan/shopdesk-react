@@ -1,3 +1,6 @@
+@import "../../../styles/variables";
+
+
 .stock-item-content{
     margin-bottom: 1rem;
     color: #555;
@@ -38,5 +41,20 @@
 
 .bulk-order-switch{
     margin-right: 1rem !important;
+}
+
+
+.stock-add .select-product-drop-down-menu {
+
+    border: 2px solid $color-primary !important;
+    border-radius: 3px;
+
+      .ant-select-selector{
+        border: 0px solid transparent !important;
+        box-shadow: none !important;
+        border-width: 0px !important;
+        outline: none;
+      }
+
 }
 

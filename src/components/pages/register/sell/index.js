@@ -68,7 +68,7 @@ function Sell() {
   const [syncStatus, setSyncStatus] = useState(false);
   const [templateData, setTemplateData] = useState(null);
   const [currentInvoiceNumber, setCurrentInvoiceNumber] = useState("");
-  const [networkStatus, setNetworkStatus] = useState(true);
+  const [networkStatus, setNetworkStatus] = useState(window.navigator.onLine);   //imp
   //const [refreshStatus, setRefreshStatus] = useState(false);
 
 

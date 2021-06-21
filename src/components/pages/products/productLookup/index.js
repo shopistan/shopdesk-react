@@ -71,7 +71,7 @@ const ProductLookup = () => {
 
 
   return (
-    <div className="page dashboard">
+    <div className="page product-look-up">
       <div className="page__header">
         <h1><Button type="primary" shape="circle" className="back-btn"
           icon={<ArrowLeftOutlined />}
@@ -86,6 +86,7 @@ const ProductLookup = () => {
             <AutoComplete
               style={{ width: "100%" }}
               dropdownMatchSelectWidth={500}
+              className="select-product-drop-down-menu"
               value={selectedValue}
               onSearch={handleSearch}
               onSelect={handleSelect}
