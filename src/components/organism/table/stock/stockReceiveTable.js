@@ -8,6 +8,7 @@ import {
     getDataFromLocalStorage,
     checkUserAuthFromLocalStorage,
 } from "../../../../utils/local-storage/local-store-utils";
+import * as Helpers from "../../../../utils/helpers/scripts";
 
 
 
@@ -215,8 +216,8 @@ const StockReceiveTable = (props) => {
                     return (
                         <div>
                             {record.product_name &&
-                                <small>{record.product_name + (record.product_variant1_value ? `/ ${record.product_variant1_value}` : "" )
-                                    + (record.product_variant2_value ?  `/ ${record.product_variant2_value}` : "" )}</small>
+                                <small>{record.product_name + (Helpers.var_check_updated(record.product_variant1_value) ? `/ ${record.product_variant1_value}` : "" )
+                                    + (Helpers.var_check_updated(record.product_variant2_value) ?  `/ ${record.product_variant2_value}` : "" )}</small>
                             }
                         </div>
                     );
@@ -283,8 +284,8 @@ const StockReceiveTable = (props) => {
                     return (
                         <div>
                             {record.product_name &&
-                                <small>{record.product_name + (record.product_variant1_value ? `/ ${record.product_variant1_value}` : "" )
-                                    + (record.product_variant2_value ?  `/ ${record.product_variant2_value}` : "" )}</small>
+                                <small>{record.product_name + (Helpers.var_check_updated(record.product_variant1_value) ? `/ ${record.product_variant1_value}` : "" )
+                                    + (Helpers.var_check_updated(record.product_variant2_value) ?  `/ ${record.product_variant2_value}` : "" )}</small>
                             }
                         </div>
                     );

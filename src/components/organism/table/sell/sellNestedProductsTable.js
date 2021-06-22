@@ -4,6 +4,7 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import { Table, Input, Form, InputNumber, Row, Col } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useHistory } from 'react-router-dom';
+import * as Helpers from "../../../../utils/helpers/scripts";
 
 
 const EditableContext = React.createContext(null);
@@ -191,9 +192,9 @@ const SellNestedProductsTable = (props) => {
                 return (
                     <div>
                         {record.product_name &&
-                            record.product_variant1_value ? record.product_variant2_value ? <small>{record.product_name + '/ ' + record.product_variant1_value + '/ ' + record.product_variant2_value}</small>
+                            Helpers.var_check_updated(record.product_variant1_value) ? Helpers.var_check_updated(record.product_variant2_value) ? <small>{record.product_name + '/ ' + record.product_variant1_value + '/ ' + record.product_variant2_value}</small>
                                 : <small>{record.product_name + ' / ' + record.product_variant1_value}</small>
-                            : record.product_variant2_value ? <small>{record.product_name + ' / ' + record.product_variant2_value}</small>
+                            : Helpers.var_check_updated(record.product_variant2_value) ? <small>{record.product_name + ' / ' + record.product_variant2_value}</small>
                                 : record.product_name
                         }
                     </div>

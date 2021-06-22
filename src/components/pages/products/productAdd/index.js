@@ -206,9 +206,9 @@ const ProductAdd = () => {
     //console.log("userstores", userStores);
 
 
-    if (variant1Tags.length > 0 && !Helpers.var_check(formValues.product_variant1_name )) {
+    if (variant1Tags.length > 0 && !Helpers.var_check_updated(formValues.product_variant1_name )) {
       productVar1Name = "Variant 1";}
-    if (variant2Tags.length > 0 && !Helpers.var_check(formValues.product_variant2_name )) {
+    if (variant2Tags.length > 0 && !Helpers.var_check_updated(formValues.product_variant2_name )) {
       productVar2Name = "Variant 2";}
 
 

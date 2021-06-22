@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 import * as ProductsApiUtil from '../../../../utils/api/products-api-utils';
 import { getDataFromLocalStorage, checkUserAuthFromLocalStorage } from "../../../../utils/local-storage/local-store-utils";
 import Constants from '../../../../utils/constants/constants';
-
+import * as Helpers from "../../../../utils/helpers/scripts";
 import {
     BarcodeOutlined,
 } from "@ant-design/icons";
@@ -148,13 +148,13 @@ const ProductsViewNestedTable = (props) => {
                 title: "product Name",
                 dataIndex: "product_name",
                 width: "20%",
-                render: (_, record) => {
+                render: (_, record) => { 
                     return (
                         <div>
                             {record.product_name &&
-                                record.product_variant1_value ? record.product_variant2_value ? <small>{record.product_name + '/ ' + record.product_variant1_value + '/ ' + record.product_variant2_value}</small>
+                                Helpers.var_check_updated(record.product_variant1_value) ? Helpers.var_check_updated(record.product_variant2_value) ? <small>{record.product_name + '/ ' + record.product_variant1_value + '/ ' + record.product_variant2_value}</small>
                                     : <small>{record.product_name + ' / ' + record.product_variant1_value}</small>
-                                : record.product_variant2_value ? <small>{record.product_name + ' / ' + record.product_variant2_value}</small>
+                                : Helpers.var_check_updated(record.product_variant2_value) ? <small>{record.product_name + ' / ' + record.product_variant2_value}</small>
                                     : record.product_name
                             }
                         </div>
