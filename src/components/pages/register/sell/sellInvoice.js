@@ -128,7 +128,9 @@ const PrintSalesInvoice = (props) => {
                     <p><span><b>Subtotal</b></span><span style={{ right: "20px", position: "absolute" }}>{parseFloat(invoice.sale_total).toFixed(2)}</span></p>
                     <p><span><b>Tax</b></span><span style={{ right: "20px", position: "absolute" }}>{parseFloat(invoice.tax_total).toFixed(2)}</span></p>
                     <p><span><b>Discount</b></span><span style={{ right: "20px", position: "absolute" }}>{parseFloat(invoice.discounted_amount).toFixed(2)}</span></p>
-                    <p style={{ borderBottom: "2px solid #000", borderTop: "2px solid #000" }}><b>Total</b><b style={{ right: "20px", position: "absolute" }}>{parseFloat((invoice.sale_total+ invoice.tax_total)  - invoice.discounted_amount).toFixed(2)}</b></p>
+                    <p style={{ borderBottom: "2px solid #000", borderTop: "2px solid #000" }}><b>Total</b><b style={{ right: "20px", position: "absolute" }}>
+                        {parseFloat( (parseFloat(invoice.sale_total) + parseFloat(invoice.tax_total) )
+                         - parseFloat(invoice.discounted_amount) ).toFixed(2)}</b></p>
                 </div>}
 
                 <center style={{ borderBottom: "2px dotted #000", marginBottom: "5px; padding: 10px" }}>
