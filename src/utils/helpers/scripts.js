@@ -168,7 +168,7 @@ export function var_check(v) {
 
 
 export function var_check_updated(v) {
-  if (typeof v !== "undefined" && v !== "null" && v !== "" && v !== null) return true;
+  if (v !== "undefined" && v !== "null" && v !== "" && v !== null) return true;
   else return false;
 }
 

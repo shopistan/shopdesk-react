@@ -61,7 +61,9 @@ const ProductUpload = () => {
           variantName2: "string",
           variantValue1: "string",
           variantValue2: "string",
-          attributes: "string"
+          attributes: "string",
+          taxValue1: "float",
+          taxIncluded: "string",
 
         };
         let checkFile = new Joi_sd(opt);

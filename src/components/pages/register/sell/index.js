@@ -189,16 +189,16 @@ function Sell() {
         for (let i in products) {
           let searchName = products[i].product_name;
 
-          /*if (Helpers.var_check(products[i].product_variant1_value)) {
+          if (Helpers.var_check_updated(products[i].product_variant1_value)) {
             searchName += " / " + products[i].product_variant1_value;
           }
-          if (Helpers.var_check(products[i].product_variant2_value)) {
+          if (Helpers.var_check_updated(products[i].product_variant2_value)) {
             searchName += " / " + products[i].product_variant2_value;
-          }*/ //imp prev version
+          }
 
           /*--------------------new version-------------------------------*/
-          searchName += (products[i].product_variant1_value ? `/ ${products[i].product_variant1_value}` : "")
-            + (products[i].product_variant2_value ? `/ ${products[i].product_variant2_value}` : "");
+          /*searchName += (products[i].product_variant1_value ? `/ ${products[i].product_variant1_value}` : "")
+            + (products[i].product_variant2_value ? `/ ${products[i].product_variant2_value}` : ""); */
           /*--------------------new version-------------------------------*/
 
           products[i].searchName = searchName;
