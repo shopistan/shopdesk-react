@@ -152,7 +152,7 @@ const SellHistoryProductsTable = (props) => {
             render: (_, record) => {
                 return (
                     <div className='action-btns stock-table-delete-item'>
-                        {record.invoice_status === "0" && <EyeOutlined
+                        {(record.invoice_status === "0" || record.invoice_status === "2") && <EyeOutlined
                             onClick={() => handleInvoiceQuickView(record)}
                             className="sell-history-action-btn-quick-view"
                         />}

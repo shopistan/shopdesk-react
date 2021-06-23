@@ -289,7 +289,8 @@ const StockTable = (props) => {
                                 {record.purchase_order_status === '0'
                                     ? 'Completed'
                                     : record.purchase_order_status === '2' ? "Force closed"
-                                        : "Open"
+                                    : (record.purchase_order_status === '1' && record.po_grn === "1") ? "Partial Received"
+                                    : "Open"
                                 }
                             </span>
                         </div>
@@ -369,7 +370,7 @@ const StockTable = (props) => {
             //loading={props.tableDataLoading}
             rowKey={
                 props.tableType === "purchase_orders" ?
-                    "purchase_order_id" : props.tableType === "inventory_transfers" ? "transfer_id"
+                    "" : props.tableType === "inventory_transfers" ? "transfer_id"
                         : props.tableType === "stock_returned" && "return_id"
             }
             
