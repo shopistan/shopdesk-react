@@ -415,6 +415,7 @@ const SalesHistory = () => {
 
 
   const getSelectedQuickViewInvoiceHistory = async (invoiceId, tableRecord) => {
+    //console.log(tableRecord);
     document.getElementById('app-loader-container').style.display = "block";
     const getSaleHistoryResponse = await SalesApiUtil.getSalesInvoiceHistory(invoiceId);
     console.log('getSaleHistoryResponse:', getSaleHistoryResponse);
@@ -431,8 +432,16 @@ const SalesHistory = () => {
       let tableProducsData = getSaleHistoryResponse.invoices;
       /*---------------------------------------------------*/
       for (let i in tableProducsData) {
-        if (Helpers.var_check(tableProducsData[i].qty))
-          tableProducsData[i].qty = parseInt(tableProducsData[i].qty) > 0 ? parseInt(tableProducsData[i].qty)  : parseInt(tableProducsData[i].qty) * (-1) ;
+        if (Helpers.var_check(tableProducsData[i].qty)) {
+
+          if(tableRecord.invoice_status === "0"){    //onlt if sale is completed 
+            tableProducsData[i].qty = parseInt(tableProducsData[i].qty) > 0 ? parseInt(tableProducsData[i].qty) : parseInt(tableProducsData[i].qty) * (-1);
+          }
+          if(tableRecord.invoice_status === "2"){    //onlt if sale is returned, completed
+            tableProducsData[i].qty = parseInt(tableProducsData[i].qty) * (-1);
+          }
+
+        }
         else tableProducsData[i].qty = 0;
         if (Helpers.var_check(tableProducsData[i].product_sale_price))
           tableProducsData[i].product_sale_price = parseFloat(

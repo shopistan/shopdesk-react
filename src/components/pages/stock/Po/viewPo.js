@@ -98,7 +98,7 @@ const PrintSalesInvoice = (props) => {
                     {poInfo &&
                         <tr key={poInfo.purchase_order_id} >
 
-                            <td style={{ textAlign: "center" }}>{poInfo.purchase_order_name || ""} &nbsp; [Open] </td>
+                            <td style={{ textAlign: "center" }}>{poInfo.purchase_order_name || ""} &nbsp; [{poData.poStatus || ""}] </td>
                             <td style={{ textAlign: "center" }}>{poInfo.purchase_order_show_id || ""} </td>
                             <td style={{ textAlign: "center" }}>{moment(poInfo.purchase_order_order_datetime).format("MM, DD, yyyy")} </td>
                             <td style={{ textAlign: "center" }}>{moment(poInfo.purchase_order_delivery_datetime).format("MM, DD, yyyy")} </td>

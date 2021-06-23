@@ -142,6 +142,7 @@ const PurchaseOrder = (props) => {
         //setPoData(receivePurchaseOrdersResponse.purchase_order_info);
         let receiveProducts = [...receivePurchaseOrdersResponse.products];
         setSelectedPoProductsData(receiveProducts);
+        receivePurchaseOrdersResponse.poStatus = "Open";
         setSelectedAllPoData(receivePurchaseOrdersResponse);
         /*---getting total amount----------------*/
         let productsTotal = 0;
@@ -181,6 +182,7 @@ const PurchaseOrder = (props) => {
         //setPoData(receivePurchaseOrdersResponse.purchase_order_info);
         let receiveProducts = [...receivePurchaseOrdersResponse.products];
         setSelectedPoProductsData(receiveProducts);
+        receivePurchaseOrdersResponse.poStatus = "Completed";
         setSelectedAllPoData(receivePurchaseOrdersResponse);
         /*---getting total amount----------------*/
         let productsTotal = 0;
@@ -344,7 +346,7 @@ const PurchaseOrder = (props) => {
         {PoInfo &&
           <Row gutter={16, 16} className="stock-receive-row-heading">
             <Col xs={24} sm={24} md={12} className="stock-item-content">
-              <span> Name / reference: &nbsp; {PoInfo.purchase_order_name || ""} &nbsp; [Open] </span>
+              <span> Name / reference: &nbsp; {PoInfo.purchase_order_name || ""} &nbsp; [{selectedAllPoData && selectedAllPoData.poStatus || ""}]  </span>
             </Col>
             <Col xs={24} sm={24} md={12} className="stock-item-content">
               <span> Order No:  &nbsp;{PoInfo.purchase_order_show_id || ""} </span>

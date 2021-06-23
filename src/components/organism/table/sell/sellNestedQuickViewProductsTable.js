@@ -63,7 +63,8 @@ const SellNestedQuickViewProductsTable = (props) => {
             render: (_, record) => {
                 return (
                     <div>
-                        {parseFloat(record.qty) >= 0 ? parseFloat(record.qty) : (parseFloat(record.qty) * -1) }
+                        {/*parseFloat(record.qty) >= 0 ? parseFloat(record.qty) : (parseFloat(record.qty) * -1)   prev version*/}
+                        { parseFloat(record.qty) }
                     </div>
                 );
             }
@@ -83,7 +84,8 @@ const SellNestedQuickViewProductsTable = (props) => {
         {
             title: "Total",
             render: (_, record) => {
-                let productQty = parseFloat(record.qty) >= 0 ? parseFloat(record.qty) : (parseFloat(record.qty) * -1);
+                //let productQty = parseFloat(record.qty) >= 0 ? parseFloat(record.qty) : (parseFloat(record.qty) * -1);    //prev ver
+                let productQty = parseFloat(record.qty);
                 return (
                     <div>
                         {record.qty ? (productQty * parseFloat(record.product_sale_price)).toFixed(2)
