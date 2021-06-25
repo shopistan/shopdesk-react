@@ -2,16 +2,23 @@ import React, { useState, useEffect } from "react";
 import { message, Modal, Typography } from "antd";
 import ViewtableStock from "../../../organism/table/stock/stockTable";
 import * as StockApiUtil from '../../../../utils/api/stock-api-utils';
+import * as SalesApiUtil from '../../../../utils/api/sales-api-utils';
 import Constants from '../../../../utils/constants/constants';
 import {
   getDataFromLocalStorage,
 } from "../../../../utils/local-storage/local-store-utils";
-import { extendWith } from "lodash";
+import moment from 'moment';
+
+const dateFormat = "YYYY-MM-DD";
+
+
 
 const { Text } = Typography;
 
 
 const TransferInventory = (props) => {
+  const { selectedDates = "", exportTransferCheck } = props;
+  console.log(selectedDates);
   const [paginationLimit, setPaginationLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -26,13 +33,25 @@ const TransferInventory = (props) => {
 
   const fetchInventoryTransfersData = async (pageLimit = 10, pageNumber = 1) => {
 
+    let startDate  =  selectedDates[0] ? selectedDates[0]  : moment(new Date()).format(dateFormat);
+    let finishDate =  selectedDates[1] ? selectedDates[1]  : moment(new Date()).format(dateFormat);
+
     document.getElementById('app-loader-container').style.display = "block";
-    const inventoryTransfersViewResponse = await StockApiUtil.viewInventoryTransfers(pageLimit, pageNumber);
+    const inventoryTransfersViewResponse = await StockApiUtil.viewInventoryTransfers(
+      pageLimit,
+      pageNumber,
+      startDate,
+      finishDate,
+    );
     console.log('inventoryTransfersViewResponse:', inventoryTransfersViewResponse);
 
     if (inventoryTransfersViewResponse.hasError) {
       console.log('Cant fetch inventory Transfers Data -> ', inventoryTransfersViewResponse.errorMessage);
       setLoading(false);
+      /*------------------new verion---------------------*/
+      setData([]);
+      setPaginationData({});
+      /*------------------new verion---------------------*/
       document.getElementById('app-loader-container').style.display = "none";
     }
     else {
@@ -60,7 +79,12 @@ const TransferInventory = (props) => {
 
 
   useEffect(() => {
-    fetchInventoryTransfersData();
+    if (exportTransferCheck === true) {
+      ExportToCsv();
+    }
+    if (exportTransferCheck === false) {
+      fetchInventoryTransfersData();
+    }
     var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
     readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
     if (readFromLocalStorage) {
@@ -71,7 +95,7 @@ const TransferInventory = (props) => {
       mounted = false;
     }
 
-  }, []);
+  }, [selectedDates, exportTransferCheck]);       //imp to rerender
 
 
 
@@ -114,6 +138,80 @@ const TransferInventory = (props) => {
   const handleCancelForceCloseModal = () => {
     setIsForceCloseModalVisible(false);
   };
+
+
+
+  const ExportToCsv = async (e) => {
+
+    if (data.length > 0) {
+      document.getElementById('app-loader-container').style.display = "block";
+      const getStoreResponse = await SalesApiUtil.getStoreId();
+      if (getStoreResponse.hasError) {
+        const errorMessage = getStoreResponse.errorMessage;
+        console.log('Cant get Store Id -> ', errorMessage);
+        document.getElementById('app-loader-container').style.display = "none";
+        message.error(errorMessage, 3);
+      } else {
+        console.log("Success:", getStoreResponse.message);
+        downloadInventoryTransfersData(getStoreResponse || null);
+      }
+    }
+    else { message.warning("Sales History Data Not Found", 3) } 
+
+  }
+
+
+  
+  const downloadInventoryTransfersData = async (fetchedStore) => {
+    //console.log("fetchedStore", fetchedStore);
+    let inventoryTransfersImportParams = {
+      "store_id": fetchedStore.store_id,
+      "startDate": selectedDates[0] || moment(new Date()).format("YYYY-MM-DD"),
+      "finishDate": selectedDates[1] ||moment(new Date()).format("YYYY-MM-DD"),
+    };
+
+
+    const inventoryTransfersExportResponse = await StockApiUtil.exportInventoryTransfers(
+      inventoryTransfersImportParams
+    );
+    
+    console.log("Inventory Transfers Export response:", inventoryTransfersExportResponse);
+
+    if (inventoryTransfersExportResponse.hasError) {
+      console.log(
+        "Cant Export Inventory Transfers-> ",
+        inventoryTransfersExportResponse.errorMessage
+      );
+      
+      document.getElementById('app-loader-container').style.display = "none";
+      message.error(inventoryTransfersExportResponse.errorMessage, 3);
+
+    } else {
+      console.log("res -> ", inventoryTransfersExportResponse.data);
+      /*---------------csv download--------------------------------*/
+      if (mounted) {     //imp if unmounted
+        // CSV FILE
+        let csvFile = new Blob([inventoryTransfersExportResponse.data], { type: "text/csv" });
+        let url = window.URL.createObjectURL(csvFile);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = "inventory_transfers_" + new Date().toUTCString() + ".csv";
+        document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+        a.click();
+        a.remove();  //afterwards we remove the element again
+        /*---------------csv download--------------------------------*/
+        document.getElementById('app-loader-container').style.display = "none";
+        //message.success(parkedSalesInvoicesExportResponse.message, 3);
+
+      }
+
+    }
+
+  }
+
+
+
+ 
 
 
 

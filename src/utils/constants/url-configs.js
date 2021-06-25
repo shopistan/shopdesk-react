@@ -133,6 +133,7 @@ const urls = {
     CLOSE_PURCHASE_ORDER:  BASE_URL + '/api/stock_control/closePo',
     CLOSE_TRANSFER_STATUS: BASE_URL + '/api/transfers/status',
     RECEIVE_TRANSFER_IN:  BASE_URL + '/api/transfers/getTransfer',
+    EXPORT_INVENTORY_TRANSFERS: BASE_URL + '/api/transfers/tarnsfersCsv',
 
   },
   SALES: {  
