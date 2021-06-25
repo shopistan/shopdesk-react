@@ -19,14 +19,11 @@ import {
   Button,
   Select,
   DatePicker,
-  InputNumber,
-  Spin,
   AutoComplete,
   Upload,
   message,
   Row,
   Col,
-  Space,
   Switch,
   Divider,
 } from "antd";
@@ -219,7 +216,7 @@ const PurchaseOrder = () => {
 
 
   const handleUpload = () => {
-    console.log(fileList[0]);   //imp
+    //console.log(fileList[0]);   //imp
     var file = fileList[0];
 
 

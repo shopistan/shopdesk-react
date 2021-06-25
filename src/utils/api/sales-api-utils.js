@@ -4,7 +4,7 @@ import UrlConstants from '../constants/url-configs';
 import GenericConstants from '../constants/constants';
 import * as ApiCallUtil from './generic-api-utils';
 import axios from 'axios';
-import $ from 'jquery';
+//import $ from 'jquery';
 
 
 export const getSalesHistory = async (pageLimit, pageNumber, limitCheck, startDate, finishDate) => {

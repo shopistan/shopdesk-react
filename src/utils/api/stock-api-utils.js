@@ -2,6 +2,7 @@
 import UrlConstants from '../constants/url-configs';
 import GenericConstants from '../constants/constants';
 import * as ApiCallUtil from './generic-api-utils';
+import axios from 'axios';
 import $ from 'jquery';
 
 
@@ -258,10 +259,12 @@ export const addStockAdjustment = async (addStockAdjustmentData) => {
 };
 
 
-export const viewInventoryTransfers = async (limit, pageNumber) => {
+export const viewInventoryTransfers = async (limit, pageNumber, startDate, finishDate) => {
     const formDataPair = {
         limit: limit,
-        page: pageNumber,
+        page: pageNumber, 
+        startDate: startDate,
+        finishDate: finishDate,
     };
 
     const viewInventoryTransfersFormDataBody = ApiCallUtil.constructFormData(formDataPair);
@@ -291,6 +294,37 @@ export const transferInventory = async (transferInventoryData) => {
         callType, //calltype
         transferInventoryFormDataBody, //body
     );
+
+};
+
+
+
+export const exportInventoryTransfers = async (params) => {
+
+    let query = Object.keys(params)
+    .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+    .join('&');
+    
+
+    //const url = UrlConstants.SALES.EXPORT_INVENTORY_DUMP+`/${storeId}`;         //imp prev
+    const url = UrlConstants.STOCK.EXPORT_INVENTORY_TRANSFERS+'?'+ query;
+    const headers = {
+        'Authorization': ApiCallUtil.getUserAuthToken(),
+    };
+
+    return await axios.get(url, {
+        headers: headers
+    })
+        .then(async (res) => {
+            console.log('Inventory Transfers Export Data Response -> ', res);
+            return { hasError: false, message: "Inventory Transfers Succesfully Exported", data: res.data };
+
+        })
+        .catch((error) => {
+            console.log("AXIOS ERROR: ", error);
+            return { hasError: true, errorMessage: error };
+
+        })
 
 };
 

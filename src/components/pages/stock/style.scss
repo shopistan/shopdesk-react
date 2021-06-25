@@ -44,6 +44,19 @@
 }
 
 
+.stock-control .stock-transfer-row-date-picker{
+
+    justify-content: flex-start !important;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+
+    .date-picker {
+      margin-right: 2rem;
+    }
+
+}
+
+
 .stock-add .select-product-drop-down-menu {
 
     border: 2px solid $color-primary !important;

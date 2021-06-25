@@ -117,8 +117,9 @@ const SellHistoryProductsTable = (props) => {
                     <span>
                         {(record.invoice_status === "1" && record.is_dead === "0") ? "Parked"
                             : (record.invoice_status === "1" && record.is_dead === "1") ? "Dead"
-                            : record.invoice_status === "2" ? "Return, completed"
-                            : "Completed"
+                            : (record.invoice_status === "0" && record.is_returned === "0")  ? "Completed"
+                            : (record.invoice_status === "0" && record.is_returned === "1")  ? "Return, completed"
+                            : (record.invoice_status === "2" && record.is_returned === "0")  && "Return, completed"
                         }
                     </span>
                 );
@@ -129,7 +130,7 @@ const SellHistoryProductsTable = (props) => {
             render: (_, record) => {
                 return (
                     <div className='action-btns stock-table-delete-item'>
-                        { (record.invoice_status === "0" && props.registerProcessReturn) ? <HistoryOutlined
+                        {(record.invoice_status === "0" && record.is_returned === "0"  && props.registerProcessReturn) ? <HistoryOutlined
                             onClick={() => handleInvoiceView(record)}
                             className="sell-history-action-btn-return"
                         />

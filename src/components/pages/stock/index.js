@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-import { Button, Tabs, Menu, Dropdown } from "antd";
-import { ProfileOutlined, DownOutlined } from "@ant-design/icons";
+import { Button, Tabs, Menu, Dropdown, DatePicker, Divider } from "antd";
+import { ProfileOutlined, DownOutlined, BarsOutlined, DownloadOutlined } from "@ant-design/icons";
 import PurchaseOrders from "./Po";
 import InventoryTransfers from "./Transfer";
 import StockAdjustment from "./Adjustment";
@@ -11,8 +11,10 @@ import {
   getDataFromLocalStorage,
 } from "../../../utils/local-storage/local-store-utils";
 import { useHistory } from "react-router-dom";
+import moment from 'moment';
 
 
+const dateFormat = "YYYY-MM-DD";
 
 const { TabPane } = Tabs;
 
@@ -21,6 +23,13 @@ const { TabPane } = Tabs;
 function Stock(props) {
   const history = useHistory();
   const [userLocalStorageData, setUserLocalStorageData] = useState(null);
+  const [selectedDates, setselectedDates] = useState([]);
+  const [selectedDatesRange, setselectedDatesRange] = useState([]);
+  const [exportCsvCheck, setExportCsvCheck] = useState(false);
+
+
+
+  const { RangePicker } = DatePicker;
 
   const { activeKey = "" } = props;
   //const [currentTab, setCurrentTab] = useState("");
@@ -73,6 +82,27 @@ function Stock(props) {
 
 
 
+  const handleRangePicker = (values) => {
+    if (values) {
+      let startDate = moment(values[0]).format(dateFormat);
+      let endDate = moment(values[1]).format(dateFormat);
+      setselectedDates([startDate, endDate]);
+    }
+  };
+
+  const fetchSalesHistoryWithDateRange = (e) => {
+    let dates = [...selectedDates];
+    setExportCsvCheck(false);
+    setselectedDatesRange(dates);
+  };
+
+
+  const ExportToCsv = () => {
+    setExportCsvCheck(true);
+  };
+
+
+
   const OptionsDropdown = (
     <Menu>
 
@@ -114,12 +144,23 @@ function Stock(props) {
     </Menu>
   );
 
+
   return (
     <div className="page setup">
       <div className="page__header">
         <h1>Stock Control</h1>
 
         <div className="page__header__buttons">
+
+          {activeKey === "inventory-transfers"  &&
+            <Button type='primary'
+              className='custom-btn custom-btn--primary'
+              icon={<DownloadOutlined />}
+              onClick={ExportToCsv}
+            >
+              Export CSV
+            </Button>}
+
           <Dropdown overlay={OptionsDropdown}
            placement="bottomCenter" trigger={["click"]}>
             <Button
@@ -131,9 +172,29 @@ function Stock(props) {
             </Button>
           </Dropdown>
         </div>
+
       </div>
 
-      <div className="page__content">
+
+      <div className="page__content stock-control">
+
+        {activeKey === "inventory-transfers"  && <div className='action-row stock-transfer-row-date-picker'>
+          <RangePicker
+            className='date-picker'
+            onCalendarChange={handleRangePicker}
+          />
+          <Button
+            type='primary'
+            icon={<BarsOutlined />}
+            onClick={fetchSalesHistoryWithDateRange}
+            className='custom-btn custom-btn--primary'
+          >
+            Fetch
+            </Button>
+        </div>}
+        <Divider />
+
+
         <Tabs activeKey={activeKey && activeKey} onChange={handletabChange}>
 
           {userLocalStorageData && stockScopeFilter(userLocalStorageData.user_info || null) &&
@@ -142,7 +203,7 @@ function Stock(props) {
             </TabPane>}
 
           <TabPane tab="Inventory Transfers" key="inventory-transfers">
-            <InventoryTransfers />
+            <InventoryTransfers selectedDates={selectedDatesRange} exportTransferCheck={exportCsvCheck} />
           </TabPane>
 
           {userLocalStorageData && stockScopeFilter(userLocalStorageData.user_info || null) &&

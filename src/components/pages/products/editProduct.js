@@ -86,11 +86,25 @@ const EditProduct = (props) => {
             //delete productsData['product_purchase_price'];
 
             /*-----setting products data to fields value------*/
+            /*--------------------new version -------------------------*/
+            if (productsData.tax_inclusive === "Y") {
+                //console.log("inside");
+                setInclusiveTax(true);
+                form.setFieldsValue({
+                    sale_price: parseFloat(parseFloat(productsData.product_sale_price) + parseFloat(productsData.tax_amount)).toFixed(2)
+                });
+            }
+            else {
+                form.setFieldsValue({ sale_price: productsData.product_sale_price });
+                setInclusiveTax(false);
+            }
+            /*--------------------new version -------------------------*/
+
             form.setFieldsValue({
                 sku: productsData.product_sku,
                 product_name: productsData.product_name,
                 product_description: removeHTML(productsData.product_description),
-                sale_price: productsData.product_sale_price,
+                //sale_price: productsData.product_sale_price,
                 purchase_price: Helpers.var_check(productsData.product_purchase_price) ?
                     productsData.product_purchase_price  === "0" ? 'N/A': productsData.product_purchase_price : 'N/A',
                 product_variant1_key: productsData.product_variant1_name,
@@ -196,11 +210,13 @@ const EditProduct = (props) => {
         productDataDeepClone.product_name = formValues.product_name;
         productDataDeepClone.product_sale_price = formValues.sale_price;
         productDataDeepClone.product_variant1_value = formValues.product_variant1_value;
-        productDataDeepClone.product_variant2_value = formValues.product_variant2_value;
+        productDataDeepClone.product_variant2_value = formValues.product_variant2_value; 
         if (formValues.product_attributes) { productDataDeepClone.product_attributes = ''; }  //needs discussion here
         productDataDeepClone.inclusive = inclusiveTax;
         productDataDeepClone.attributes = formValues.product_attributes ? formValues.product_attributes : "0";
         delete productDataDeepClone['status'];  //imp to delete
+        delete productDataDeepClone['tax_inclusive'];  //imp to delete  new one
+        delete productDataDeepClone['tax_amount'];     //imp to delete  new one
 
         
         if (buttonDisabled === false) {
@@ -466,7 +482,8 @@ const EditProduct = (props) => {
                                     <div className='form__col'>
                                         <Form.Item
                                         >
-                                            <span><Checkbox className='inclusive-sale-price-check' onChange={onInclusiveTaxChecked} >
+                                            <span><Checkbox className='inclusive-sale-price-check'
+                                                checked={inclusiveTax} onChange={onInclusiveTaxChecked} >
                                                 <small>Sale price inclusive of tax</small></Checkbox>
                                             </span>
                                         </Form.Item>
