@@ -3,10 +3,11 @@ import React, { useEffect, useState } from "react";
 import "../style.scss";
 import { Tabs, Menu, Dropdown, Button, Input, Select, message, Pagination } from "antd";
 import { useHistory } from "react-router-dom";
-
 import OmniSalesOrders from "./omniSalesOrders";
+import PrintSalesOrders from "./omniSalesOrders/printSalesOrder";
 import { ProfileOutlined, DownOutlined } from "@ant-design/icons";
 import * as EcommerceApiUtil from '../../../../utils/api/ecommerce-api-utils';
+import * as SetupApiUtil from '../../../../utils/api/setup-api-utils';
 import Constants from '../../../../utils/constants/constants';
 import {
   getDataFromLocalStorage,
@@ -34,6 +35,8 @@ function EcommerceOrders() {
   const [selectedSaleOrdersRowKeys, setSelectedSaleOrdersRowKeys] = useState([]);
   const [paginationData, setPaginationData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [outletData, setOutletData] = useState(null);
+  const [selectedSalesInvoiceBulkDataArr, setSelectedSalesInvoiceBulkDataArr] = useState([]);
 
 
 
@@ -50,6 +53,7 @@ function EcommerceOrders() {
     var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
     readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
     setUserLocalStorageData(readFromLocalStorage);
+    getUserStoreData(readFromLocalStorage.auth.current_store);      //new one imp to get user outlet data
     /*--------------set user local data-------------------------------*/
 
     return () => {
@@ -98,14 +102,22 @@ function EcommerceOrders() {
 
   function handledSearchedDataResponse(dataResponse) {
     var newData = [...dataSearched];
+    let foundIndex = -1; 
     dataResponse.forEach(item => {
-      var foundObj = newData.find(obj => {
+      var foundObj = newData.find((obj, index) => {
+        foundIndex = index;
         return obj.invoice_id === item.invoice_id;
       });
 
       if (!foundObj) {
         newData.push(item);
       }
+      else {
+        if (foundIndex > -1) {
+          newData.splice(foundIndex, 1, item);
+        }
+      }
+
     });
     //console.log(newData);
     setDataSearched(newData);
@@ -241,16 +253,40 @@ function EcommerceOrders() {
       message.warning(confirmOeSalesOrdersResponse.errorMessage, 3);
     }
     else {
-      console.log('res -> ', confirmOeSalesOrdersResponse);
       if (mounted) {     //imp if unmounted
-        document.getElementById('app-loader-container').style.display = "none";
+        //document.getElementById('app-loader-container').style.display = "none";   //imp but prev ver
         //message.success(confirmOeSalesOrdersResponse.message, 3);
-        setLoading(true);
-        fetchSalesOrdersData(paginationLimit, currentPage);
-
+        //fetchSalesOrdersData(paginationLimit, currentPage);                       //imp but prev ver
+  
       }
     }
   }
+
+
+
+  const fetchOeSaleOrderDataInBulk = async (invoice_id) => {
+
+    const fetchOeSaleOrderViewResponse = await EcommerceApiUtil.getOeSaleOrderData(invoice_id);
+    console.log('fetchOeSaleOrderViewResponse:', fetchOeSaleOrderViewResponse);
+
+    if (fetchOeSaleOrderViewResponse.hasError) {
+        console.log('Cant fetch Oe Sales Orders Data -> ', fetchOeSaleOrderViewResponse.errorMessage);
+        document.getElementById('app-loader-container').style.display = "none";
+        message.error(fetchOeSaleOrderViewResponse.errorMessage, 3);
+
+    }
+    else {
+        if (mounted) {     //imp if unmounted
+          let invoiceResponseData = {};
+          invoiceResponseData.customer_info = fetchOeSaleOrderViewResponse.customer_info;
+          invoiceResponseData.invoice_data = fetchOeSaleOrderViewResponse.invoice_data; 
+          invoiceResponseData.invoice_products = fetchOeSaleOrderViewResponse.invoice_products;
+          return invoiceResponseData;
+
+        }
+    }
+
+}
 
 
 
@@ -282,14 +318,74 @@ function EcommerceOrders() {
 
 
 
-  const makeOeSaleOrderInvoice = () => {
+  const makeOeSaleOrderInvoice = async () => {
     if (selectedSaleOrdersRowKeys.length === 0) {
       message.warning("Please Select a Sale Order", 3);
     }
     else {
-      confirmOeSalesOrders(selectedSaleOrdersRowKeys);
+      await confirmOeSalesOrders(selectedSaleOrdersRowKeys);   //imp await is neccessary
+      window.location.reload();                                //new one should be at the last
     }
 
+  }
+
+
+
+  const makeOeSaleOrderInvoiceInBulk = async () => {
+    if (selectedSaleOrdersRowKeys.length === 0) {
+      message.warning("Please Select a Sale Order", 3);
+    }
+    else {
+      await confirmOeSalesOrders(selectedSaleOrdersRowKeys);    //imp to set it's status to complete //imp await is neccessary
+      //console.log(selectedSaleOrdersRowKeys);
+      let bulkSalesInvoiceDataArr = [];
+      document.getElementById('app-loader-container').style.display = "block";
+      for (let i=0; i<selectedSaleOrdersRowKeys.length; i++) {
+        bulkSalesInvoiceDataArr[i] = await fetchOeSaleOrderDataInBulk(selectedSaleOrdersRowKeys[i]);
+      }
+      document.getElementById('app-loader-container').style.display = "none";
+      //console.log("final-bulk", bulkSalesInvoiceDataArr);
+      setSelectedSalesInvoiceBulkDataArr(bulkSalesInvoiceDataArr);    //imp to set array here
+      downloadInvoicesInHtml();                                       //imp
+      window.location.reload();                                       //new one should be at the last
+
+    }
+
+  }
+
+
+
+  function downloadInvoicesInHtml() {
+    let doc = document.getElementById("printSalesInvoiceBulkView").innerHTML;
+    let element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(doc));
+    element.setAttribute('download', "sales_invoices_bulk" + new Date().toUTCString() + ".html");
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  }
+
+
+
+
+  const getUserStoreData = async (storeId) => {
+    document.getElementById('app-loader-container').style.display = "block";
+    const getOutletViewResponse = await SetupApiUtil.getOutlet(storeId);
+    console.log('getOutletViewResponse:', getOutletViewResponse);
+
+    if (getOutletViewResponse.hasError) {
+      console.log('Cant fetch Store Data -> ', getOutletViewResponse.errorMessage);
+      //message.warning(getOutletViewResponse.errorMessage, 3);
+      document.getElementById('app-loader-container').style.display = "none";
+    }
+    else {
+      console.log('res -> ', getOutletViewResponse);
+      let selectedStore = getOutletViewResponse.outlet;
+      //message.success(getOutletViewResponse.message, 3);
+      setOutletData(selectedStore);
+
+    }
   }
 
 
@@ -320,6 +416,17 @@ function EcommerceOrders() {
 
 
   return (
+    <>
+
+    {/* print sales overview */}
+    {(selectedSalesInvoiceBulkDataArr && selectedSalesInvoiceBulkDataArr.length >=2  ) && (
+      <PrintSalesOrders
+        SalesInvoiceDataArr={selectedSalesInvoiceBulkDataArr}
+        selectedOutlet={outletData && outletData}
+        
+      />
+    )}
+
     <div className="page ecom-orders">
       <div className="page__header">
         <h1>Ecommerce</h1>
@@ -340,10 +447,14 @@ function EcommerceOrders() {
 
       <div className="page__content omni-sales-orders">
         <div className="search">
-          <Button type="primary"
+          {selectedSaleOrdersRowKeys.length <=1 && <Button type="primary"
             onClick={makeOeSaleOrderInvoice}
           >Make Invoice
-          </Button>
+          </Button>}
+          {selectedSaleOrdersRowKeys.length >=2 && <Button type="primary"
+            onClick={makeOeSaleOrderInvoiceInBulk}
+          >Bulk Invoice
+          </Button>}
           <Search
             allowClear
             size="middle"
@@ -376,7 +487,8 @@ function EcommerceOrders() {
               tableLoading={loading}
               onSaleOrderSelection={handleSaleOrderSelection}
               tableDataType={omniSalesTabsEnum.ALL}
-              currencySymbol={userLocalStorageData && userLocalStorageData.currency.symbol}
+              //currencySymbol={userLocalStorageData && userLocalStorageData.currency.symbol}    //imp prev ver
+              currencySymbol={outletData && outletData.currency_symbol}
             />
           </TabPane>
           <TabPane tab="Sale Orders" key="Sale Orders">
@@ -387,7 +499,8 @@ function EcommerceOrders() {
               tableLoading={loading}
               onSaleOrderSelection={handleSaleOrderSelection}
               tableDataType={omniSalesTabsEnum.SALE}
-              currencySymbol={userLocalStorageData && userLocalStorageData.currency.symbol}
+              //currencySymbol={userLocalStorageData && userLocalStorageData.currency.symbol}
+              currencySymbol={outletData && outletData.currency_symbol}
             />
           </TabPane>
           <TabPane tab="Completed Orders" key="Completed Orders">
@@ -398,13 +511,19 @@ function EcommerceOrders() {
               tableLoading={loading}
               onSaleOrderSelection={handleSaleOrderSelection}
               tableDataType={omniSalesTabsEnum.COMPLETED}
-              currencySymbol={userLocalStorageData && userLocalStorageData.currency.symbol}
+              //currencySymbol={userLocalStorageData && userLocalStorageData.currency.symbol}
+              currencySymbol={outletData && outletData.currency_symbol}
             />
           </TabPane>
         </Tabs>
 
       </div>
     </div>
+
+     
+
+    </>
+
   );
 }
 
