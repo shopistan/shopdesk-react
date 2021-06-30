@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./style.scss";
+// import "./style.scss";
 import { useHistory, Link } from "react-router-dom";
 
 import {
@@ -29,8 +29,7 @@ const SideMenu = () => {
   const [openKeys, setOpenKeys] = useState([]);
 
   var userRouteScopes = [];
-  const appRouteScopes =
-  {
+  const appRouteScopes = {
     categories: "categories",
     couriers: "couriers",
     taxes: "taxes",
@@ -46,7 +45,6 @@ const SideMenu = () => {
   var adminUser = false;
   var storeEcommerce = false;
 
-
   var readFromLocalStorage = getDataFromLocalStorage("user");
   readFromLocalStorage = readFromLocalStorage.data
     ? readFromLocalStorage.data
@@ -59,7 +57,10 @@ const SideMenu = () => {
       checkUserAuthFromLocalStorage(Constants.USER_DETAILS_KEY).authentication
     ) {
       authenticateDashboard = true;
-      if (readFromLocalStorage.auth.store_ecommerce && readFromLocalStorage.auth.store_ecommerce === "true") {
+      if (
+        readFromLocalStorage.auth.store_ecommerce &&
+        readFromLocalStorage.auth.store_ecommerce === "true"
+      ) {
         storeEcommerce = true;
       }
     } else {
@@ -67,18 +68,22 @@ const SideMenu = () => {
     }
   }
 
-
   if (userRouteScopes.includes("*")) {
     adminUser = true;
   }
 
-
   const { SubMenu } = Menu;
   // submenu keys of first level
-  const rootSubmenuKeys = ['register', 'stock', 'setup', 'reports', 'ecommerce'];
+  const rootSubmenuKeys = [
+    "register",
+    "stock",
+    "setup",
+    "reports",
+    "ecommerce",
+  ];
 
-  const onOpenChange = keys => {
-    const latestOpenKey = keys.find(key => openKeys.indexOf(key) === -1);
+  const onOpenChange = (keys) => {
+    const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
     if (rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
       setOpenKeys(keys);
     } else {
@@ -86,18 +91,19 @@ const SideMenu = () => {
     }
   };
 
-
   const stockScopeFilter = (localUserInfo) => {
-    if(!localUserInfo){return;}
-    if(localUserInfo.user_role == 'cashier' || localUserInfo.user_role == 'shop_manager'){
-       return false;
+    if (!localUserInfo) {
+      return;
     }
-    else{
+    if (
+      localUserInfo.user_role == "cashier" ||
+      localUserInfo.user_role == "shop_manager"
+    ) {
+      return false;
+    } else {
       return true;
     }
-
   };
-
 
   /*const onNavMenuItemClick = (currentMenuItem) => {
 
@@ -183,11 +189,6 @@ const SideMenu = () => {
 
   };*/
 
-
-
-
-
-
   return (
     <Menu
       theme="dark"
@@ -196,126 +197,230 @@ const SideMenu = () => {
       defaultSelectedKeys={["dashboard"]}
       openKeys={openKeys}
       onOpenChange={onOpenChange}
-
     >
-
       {readFromLocalStorage && (
         <React.Fragment>
           <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
-            <Link to={(readFromLocalStorage && authenticateDashboard) ? "/dashboard" : "/outlets"}
-              className="nav-menu-item-link" >Dashboard</Link>
+            <Link
+              to={
+                readFromLocalStorage && authenticateDashboard
+                  ? "/dashboard"
+                  : "/outlets"
+              }
+              className="nav-menu-item-link"
+            >
+              Dashboard
+            </Link>
           </Menu.Item>
         </React.Fragment>
       )}
-      
 
       {readFromLocalStorage && authenticateDashboard && (
         <React.Fragment>
-          {(userRouteScopes.includes(appRouteScopes.categories) || adminUser) &&
+          {(userRouteScopes.includes(appRouteScopes.categories) ||
+            adminUser) && (
             <Menu.Item key="categories" icon={<TagsOutlined />}>
-              <Link to="/categories" className="nav-menu-item-link"  >Categories</Link>
-            </Menu.Item>}
-          {(userRouteScopes.includes(appRouteScopes.suppliers) || adminUser) &&
+              <Link to="/categories" className="nav-menu-item-link">
+                Categories
+              </Link>
+            </Menu.Item>
+          )}
+          {(userRouteScopes.includes(appRouteScopes.suppliers) ||
+            adminUser) && (
             <Menu.Item key="suppliers" icon={<SendOutlined />}>
-              <Link to="/suppliers" className="nav-menu-item-link"  >Suppliers</Link>
-            </Menu.Item>}
-          {(userRouteScopes.includes(appRouteScopes.taxes) || adminUser) &&
+              <Link to="/suppliers" className="nav-menu-item-link">
+                Suppliers
+              </Link>
+            </Menu.Item>
+          )}
+          {(userRouteScopes.includes(appRouteScopes.taxes) || adminUser) && (
             <Menu.Item key="taxes" icon={<BankOutlined />}>
-              <Link to="/taxes" className="nav-menu-item-link"  >Taxes</Link>
-            </Menu.Item>}
-          {(userRouteScopes.includes(appRouteScopes.products) || adminUser) &&
+              <Link to="/taxes" className="nav-menu-item-link">
+                Taxes
+              </Link>
+            </Menu.Item>
+          )}
+          {(userRouteScopes.includes(appRouteScopes.products) || adminUser) && (
             <Menu.Item key="products" icon={<ShopOutlined />}>
-              <Link to="/products" className="nav-menu-item-link"  >Products</Link>
-            </Menu.Item>}
-          {(userRouteScopes.includes(appRouteScopes.customers) || adminUser) &&
+              <Link to="/products" className="nav-menu-item-link">
+                Products
+              </Link>
+            </Menu.Item>
+          )}
+          {(userRouteScopes.includes(appRouteScopes.customers) ||
+            adminUser) && (
             <Menu.Item key="customers" icon={<UserOutlined />}>
-              <Link to="/customers" className="nav-menu-item-link"  >Customers</Link>
-            </Menu.Item>}
-          {(userRouteScopes.includes(appRouteScopes.couriers) || adminUser) &&
+              <Link to="/customers" className="nav-menu-item-link">
+                Customers
+              </Link>
+            </Menu.Item>
+          )}
+          {(userRouteScopes.includes(appRouteScopes.couriers) || adminUser) && (
             <Menu.Item key="couriers" icon={<BarcodeOutlined />}>
-              <Link to="/couriers" className="nav-menu-item-link"  >Couriers</Link>
-            </Menu.Item>}
-          {(userRouteScopes.includes(appRouteScopes.register) || adminUser) &&
+              <Link to="/couriers" className="nav-menu-item-link">
+                Couriers
+              </Link>
+            </Menu.Item>
+          )}
+          {(userRouteScopes.includes(appRouteScopes.register) || adminUser) && (
             <SubMenu key="register" icon={<LaptopOutlined />} title="Register">
               <Menu.Item key="sell">
-                <Link to="/register/sell" className="nav-menu-item-link"  >Sell</Link>
+                <Link to="/register/sell" className="nav-menu-item-link">
+                  Sell
+                </Link>
               </Menu.Item>
               <Menu.Item key="salesHistory">
-                <Link to="/register/salesHistory" className="nav-menu-item-link"  >Sales History</Link>
+                <Link
+                  to="/register/salesHistory"
+                  className="nav-menu-item-link"
+                >
+                  Sales History
+                </Link>
               </Menu.Item>
-            </SubMenu>}
-          {(userRouteScopes.includes(appRouteScopes.stock) || adminUser) &&
+            </SubMenu>
+          )}
+          {(userRouteScopes.includes(appRouteScopes.stock) || adminUser) && (
             <SubMenu key="stock" icon={<StockOutlined />} title="Stock Control">
-
-            {stockScopeFilter(readFromLocalStorage.user_info || null) &&
-              <Menu.Item key="purchaseOrders">
-                <Link to="/stock-control/purchase-orders" className="nav-menu-item-link"  >Purchase Orders</Link>
-              </Menu.Item>}
+              {stockScopeFilter(readFromLocalStorage.user_info || null) && (
+                <Menu.Item key="purchaseOrders">
+                  <Link
+                    to="/stock-control/purchase-orders"
+                    className="nav-menu-item-link"
+                  >
+                    Purchase Orders
+                  </Link>
+                </Menu.Item>
+              )}
 
               <Menu.Item key="inventoryTransfers">
-                <Link to="/stock-control/inventory-transfers" className="nav-menu-item-link"  >Inventory Transfers</Link>
+                <Link
+                  to="/stock-control/inventory-transfers"
+                  className="nav-menu-item-link"
+                >
+                  Inventory Transfers
+                </Link>
               </Menu.Item>
 
-            {stockScopeFilter(readFromLocalStorage.user_info || null) &&
-              <Menu.Item key="stockAdjustments">
-                <Link to="/stock-control/stock-adjustments" className="nav-menu-item-link"  >Stock Adjustment</Link>
-              </Menu.Item>}
+              {stockScopeFilter(readFromLocalStorage.user_info || null) && (
+                <Menu.Item key="stockAdjustments">
+                  <Link
+                    to="/stock-control/stock-adjustments"
+                    className="nav-menu-item-link"
+                  >
+                    Stock Adjustment
+                  </Link>
+                </Menu.Item>
+              )}
 
-            {stockScopeFilter(readFromLocalStorage.user_info || null) &&
-              <Menu.Item key="stockReturned">
-                <Link to="/stock-control/returned-stock" className="nav-menu-item-link"  >Returned Stock</Link>
-              </Menu.Item>}
-
-            </SubMenu>}
-          {((userRouteScopes.includes(appRouteScopes.ecommerce) || adminUser) && storeEcommerce) &&
-            <SubMenu key="ecommerce" icon={<ApartmentOutlined />} title="Ecommerce">
-              <Menu.Item key="saleOrders">
-                <Link to="/ecommerce/orders" className="nav-menu-item-link"  >Orders</Link>
-              </Menu.Item>
-              <Menu.Item key="InventorySync">
-                <Link to="/ecommerce/inventory-sync" className="nav-menu-item-link"  >Inventory Sync</Link>
-              </Menu.Item>
-            </SubMenu>}
-          {(userRouteScopes.includes(appRouteScopes.reports) || adminUser) &&
+              {stockScopeFilter(readFromLocalStorage.user_info || null) && (
+                <Menu.Item key="stockReturned">
+                  <Link
+                    to="/stock-control/returned-stock"
+                    className="nav-menu-item-link"
+                  >
+                    Returned Stock
+                  </Link>
+                </Menu.Item>
+              )}
+            </SubMenu>
+          )}
+          {(userRouteScopes.includes(appRouteScopes.ecommerce) || adminUser) &&
+            storeEcommerce && (
+              <SubMenu
+                key="ecommerce"
+                icon={<ApartmentOutlined />}
+                title="Ecommerce"
+              >
+                <Menu.Item key="saleOrders">
+                  <Link to="/ecommerce/orders" className="nav-menu-item-link">
+                    Orders
+                  </Link>
+                </Menu.Item>
+                <Menu.Item key="InventorySync">
+                  <Link
+                    to="/ecommerce/inventory-sync"
+                    className="nav-menu-item-link"
+                  >
+                    Inventory Sync
+                  </Link>
+                </Menu.Item>
+              </SubMenu>
+            )}
+          {(userRouteScopes.includes(appRouteScopes.reports) || adminUser) && (
             <SubMenu key="reports" icon={<BarChartOutlined />} title="Reports">
               <Menu.Item key="salesSummary">
-                <Link to="/reports/salesSummary" className="nav-menu-item-link"  >Sales Summary</Link>
+                <Link to="/reports/salesSummary" className="nav-menu-item-link">
+                  Sales Summary
+                </Link>
               </Menu.Item>
               <Menu.Item key="inventoryDump">
-                <Link to="/reports/inventoryDump" className="nav-menu-item-link" >Inventory Dump</Link>
+                <Link
+                  to="/reports/inventoryDump"
+                  className="nav-menu-item-link"
+                >
+                  Inventory Dump
+                </Link>
               </Menu.Item>
               <Menu.Item key="productHistory">
-                <Link to="/reports/productHistory" className="nav-menu-item-link" >Product History</Link>
+                <Link
+                  to="/reports/productHistory"
+                  className="nav-menu-item-link"
+                >
+                  Product History
+                </Link>
               </Menu.Item>
               <Menu.Item key="omniSalesSummary">
-                <Link to="/reports/omniSalesSummary" className="nav-menu-item-link"  >Omni Sales Summary</Link>
+                <Link
+                  to="/reports/omniSalesSummary"
+                  className="nav-menu-item-link"
+                >
+                  Omni Sales Summary
+                </Link>
               </Menu.Item>
               <Menu.Item key="categoryWise">
-                <Link to="/reports/categoryWise" className="nav-menu-item-link"  >Category Wise</Link>
+                <Link to="/reports/categoryWise" className="nav-menu-item-link">
+                  Category Wise
+                </Link>
               </Menu.Item>
-            </SubMenu>}
-          {(userRouteScopes.includes(appRouteScopes.setup) || adminUser) &&
+            </SubMenu>
+          )}
+          {(userRouteScopes.includes(appRouteScopes.setup) || adminUser) && (
             <SubMenu key="setup" icon={<SettingOutlined />} title="Setup">
               <Menu.Item key="outlets">
-                <Link to="/setup/outlets" className="nav-menu-item-link" >Outlets</Link>
+                <Link to="/setup/outlets" className="nav-menu-item-link">
+                  Outlets
+                </Link>
               </Menu.Item>
               <Menu.Item key="users">
-                <Link to="/setup/users" className="nav-menu-item-link"  >Users</Link>
+                <Link to="/setup/users" className="nav-menu-item-link">
+                  Users
+                </Link>
               </Menu.Item>
               <Menu.Item key="receipts">
-                <Link to="/setup/receipts-templates" className="nav-menu-item-link" > Receipt Templates</Link>
+                <Link
+                  to="/setup/receipts-templates"
+                  className="nav-menu-item-link"
+                >
+                  {" "}
+                  Receipt Templates
+                </Link>
               </Menu.Item>
-            </SubMenu>}
+            </SubMenu>
+          )}
         </React.Fragment>
       )}
 
       {readFromLocalStorage == null && (
         <React.Fragment>
           <Menu.Item key="signup" icon={<SendOutlined />}>
-            <Link to="/signup" className="nav-menu-item-link" >Sign Up</Link>
+            <Link to="/signup" className="nav-menu-item-link">
+              Sign Up
+            </Link>
           </Menu.Item>
           <Menu.Item key="signin" icon={<BankOutlined />}>
-            <Link  to="/sign-in" className="nav-menu-item-link"  >Sign In</Link>
+            <Link to="/sign-in" className="nav-menu-item-link">
+              Sign In
+            </Link>
           </Menu.Item>
         </React.Fragment>
       )}

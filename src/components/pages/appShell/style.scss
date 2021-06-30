@@ -4,7 +4,7 @@
 // Logo
 .logo {
   height: 64px;
-  background-color: $color-white;
+  background-color: $color-grey-cp;
 
   @extend %flex-center;
 
@@ -37,11 +37,9 @@
   transition: all 0.3s;
 }
 
-
-.logo-dropdown-item:hover{
+.logo-dropdown-item:hover {
   color: $color-logo-dropdown-item !important;
 }
-
 
 // Header
 .header {
@@ -78,7 +76,6 @@
     .switch-outlet-heading:hover {
       text-decoration: underline;
     }
-
   }
 
   &__right {
