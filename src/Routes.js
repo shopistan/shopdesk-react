@@ -71,6 +71,7 @@ import TransferOut from "./components/pages/stock/order/transferInventory";
 import EcommerceOrders from "./components/pages/ecommerce/orders";
 import InventorySync from "./components/pages/ecommerce/inventorySync";
 import OeSaleOrderInvoiceView from "./components/pages/ecommerce/orders/omniSalesOrders/viewOmniSaleOrder";
+import SaStock from "./components/pages/superAdmin/index";
 
 
 
@@ -435,6 +436,16 @@ const Routes = () => {
           exact
           path="/stock-control/inventory-transfers/:transfer_id/receive"
           component={(props) => <ReceiveStockTransfer {...props} />}
+        />
+        <PrivateRoute
+          exact
+          path="/super-admin/stock-control/purchase-orders"
+          component={() => <SaStock  activeKey={'purchase-orders'} />}
+        />
+        <PrivateRoute
+          exact
+          path="/super-admin/stock-control/inventory-transfers"
+          component={() => <SaStock  activeKey={'inventory-transfers'} />}
         />
         <PrivateRoute
           exact

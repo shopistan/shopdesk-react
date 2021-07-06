@@ -18,7 +18,6 @@ const { Text } = Typography;
 
 const TransferInventory = (props) => {
   const { selectedDates = "", exportTransferCheck } = props;
-  console.log(selectedDates);
   const [paginationLimit, setPaginationLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -68,7 +67,7 @@ const TransferInventory = (props) => {
           if (
             inventoryTransfersData[i].transfer_status === "1"
           ) {
-            //message.success("Some Of The Inventory Transfers Are pending", 3);
+            message.success("Some Of The Inventory Transfers Are pending", 3);
             break;
           }
         }
