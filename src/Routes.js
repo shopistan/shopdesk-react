@@ -437,7 +437,7 @@ const Routes = () => {
           path="/stock-control/inventory-transfers/:transfer_id/receive"
           component={(props) => <ReceiveStockTransfer {...props} />}
         />
-        <PrivateRoute
+        {/*<PrivateRoute
           exact
           path="/super-admin/stock-control/purchase-orders"
           component={() => <SaStock  activeKey={'purchase-orders'} />}
@@ -446,7 +446,7 @@ const Routes = () => {
           exact
           path="/super-admin/stock-control/inventory-transfers"
           component={() => <SaStock  activeKey={'inventory-transfers'} />}
-        />
+        /> */}
         <PrivateRoute
           exact
           path="/setup/users"
