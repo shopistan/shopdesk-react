@@ -98,6 +98,7 @@ function Sell() {
         rt = true;
       }
       tmpInvoice.OldInvoiceNo = history.location.selected_invoice_id;
+      //tmpInvoice.discountVal = selectedViewedInvoice.invoice_details.discountVal;     /*imp pending for now */
       tmpInvoice.products = selectedViewedInvoice.invoices;
       tmpInvoice.return = rt;
       if (selectedViewedInvoice.hasCustomer == true) {

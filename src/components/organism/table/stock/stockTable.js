@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table, Menu, Dropdown, Button } from "antd";
+import { Table, Menu, Dropdown, Button, Typography } from "antd";
 import { ProfileOutlined, DownOutlined, MinusCircleOutlined, SendOutlined, EyeOutlined } from "@ant-design/icons";
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
@@ -99,6 +99,14 @@ const StockTable = (props) => {
     const handlePoQuickView = (record) => {
         props.onPoQuickViewSelection(record);
 
+    };
+
+
+    const viewGrn = (record) => {
+        history.push({
+            pathname: `/categories/${record.category_id}/edit`,
+            data: record, // your data array of objects
+        });
     };
     
     
@@ -323,6 +331,24 @@ const StockTable = (props) => {
                                 <EyeOutlined
                                     onClick={() => handlePoQuickView(record)}
                                 />}
+                        </div>
+                    );
+                },
+            },
+            {
+                title: "View",
+                render: (_, record) => {
+                    return (
+                        <div className='action-btns'>
+                            {(record.purchase_order_status === '0' ||
+                                (record.purchase_order_status === '1' && record.po_grn === "1"))
+                                ?
+                                <Typography.Link
+                                    onClick={() => viewGrn(record)}>
+                                    View GRN
+                                </Typography.Link>
+                                : "-"
+                            }
                         </div>
                     );
                 },

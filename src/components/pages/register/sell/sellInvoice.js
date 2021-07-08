@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import "./printInvoice.scss";
 import moment from 'moment';
 import UrlConstants from '../../../../utils/constants/url-configs';
+import * as Helpers from "../../../../utils/helpers/scripts";
 
 
 const PrintSalesInvoice = (props) => {
@@ -101,7 +102,15 @@ const PrintSalesInvoice = (props) => {
 
                                 <tr key={pro.product_id} >
                                     <td style={{textAlign: "center"}}>{pro.qty}</td>
-                                    <td  style={{textAlign: "center"}}>{pro.searchName || pro.product_name} </td>
+                                    <td  style={{textAlign: "center"}}>
+                                        {pro.searchName ||
+                                            (pro.product_name &&
+                                                Helpers.var_check_updated(pro.product_variant1_value) ? Helpers.var_check_updated(pro.product_variant2_value) ? <small>{pro.product_name + '/ ' + pro.product_variant1_value + '/ ' + pro.product_variant2_value}</small>
+                                                : <small>{pro.product_name + ' / ' + pro.product_variant1_value}</small>
+                                                : Helpers.var_check_updated(pro.product_variant2_value) ? <small>{pro.product_name + ' / ' + pro.product_variant2_value}</small>
+                                                    : pro.product_name)
+                                        }
+                                    </td>
                                     <td style={{textAlign: "center"}}>{pro.product_sale_price}</td>
                                     <td style={{textAlign: "center"}}>{(pro.qty*pro.product_sale_price).toFixed(2)}</td>
                                 </tr>
