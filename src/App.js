@@ -1,6 +1,6 @@
 import React from "react";
 import Routes from "./Routes";
-import { GlobalStyle, theme } from "@teamfabric/copilot-ui";
+//import { GlobalStyle, theme } from "@teamfabric/copilot-ui";
 import { Layout } from "antd";
 import "./styles/index.scss";
 
