@@ -118,6 +118,7 @@ const urls = {
   },
   STOCK: {
     VIEW_PO: BASE_URL + '/api/stock_control/viewPo',
+    PO_VIEW_GRN: BASE_URL + '/api/stock_control/viewGrn',
     VIEW_TRANSFER: BASE_URL + '/api/transfers/viewTransfer',
     VIEW_ADJUSTMENTS: BASE_URL + '/api/stock_control/viewAdjustment',
     VIEW_RETURNED_STOCK: BASE_URL + '/api/stock_control/viewReturnStock',

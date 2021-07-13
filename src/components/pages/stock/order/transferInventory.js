@@ -433,7 +433,7 @@ const TransferInventory = () => {
           pathname: '/stock-control/inventory-transfers',
           activeKey: 'inventory-transfers'
         });
-      }, 1200);
+      });
     }
 
   }

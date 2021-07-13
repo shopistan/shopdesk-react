@@ -389,7 +389,7 @@ const AdjustmentStock = () => {
           pathname: '/stock-control/stock-adjustments',
           activeKey: 'stock-adjustments'
         });
-      }, 1200);
+      });
     }
 
   }

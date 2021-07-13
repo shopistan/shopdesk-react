@@ -225,7 +225,6 @@ export const viewStockReturned = async (limit, pageNumber) => {
 };
 
 
-
 export const viewStockReturnedDataByReturnId = async (returnId) => {
     const formDataPair = {
         return: returnId,
@@ -243,6 +242,21 @@ export const viewStockReturnedDataByReturnId = async (returnId) => {
 };
 
 
+export const viewStockPurchaseOrdersViewGrnByPoId = async (purchaseOrderId) => {
+    const formDataPair = {
+        po: purchaseOrderId,
+    };
+
+    const viewStockPurchaseOrderByPoIdFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+    const url = UrlConstants.STOCK.PO_VIEW_GRN;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        viewStockPurchaseOrderByPoIdFormDataBody, //body
+    );
+};
 
 
 export const addStockAdjustment = async (addStockAdjustmentData) => {

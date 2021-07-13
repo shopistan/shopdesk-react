@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "../style.scss";
-import ViewStockReturnedTable from "../../../organism/table/stock/viewStockReturnedTable";
+import PurchaseOrderviewGrnTable from "../../../organism/table/stock/PurchaseOrderviewGrnTable";
 import * as StockApiUtil from '../../../../utils/api/stock-api-utils';
 import { useHistory } from "react-router-dom";
-
 
 import {
     Button,
@@ -11,32 +10,30 @@ import {
 } from "antd";
 
 import {
-    ArrowLeftOutlined, 
+    ArrowLeftOutlined,
     DownloadOutlined,
-  } from "@ant-design/icons";
+} from "@ant-design/icons";
 
 
 
 
-const ViewStockReturn = (props) => {
+
+const PurchaseOrderViewGrn = (props) => {
     const history = useHistory();
-    const [loading, setLoading] = useState(true);
-    const [stockReturnData, setStockReturnData] = useState([]);
-    //const [buttonDisabled, setButtonDisabled] = useState(false);
+    const [stockPoViewGrnData, setStockPoViewGrnData] = useState([]);
     const { match = {} } = props;
-    const { stock_return_id = {} } =  match !== undefined && match.params;
+    const { po_id = {} } = match !== undefined && match.params;
 
 
     let mounted = true;
 
 
-
     useEffect(() => {
-        if (stock_return_id !== undefined) {
-            viewStockReturnDataByReturnId(stock_return_id);
+        if (po_id !== undefined) {
+            fetchPurchaseOrdersViewGrn(po_id);
         }
         else {
-            message.error("Stock Returned Id cannot be null", 2);
+            message.error("Stock PO Id cannot be null", 2);
             setTimeout(() => {
                 history.goBack();
             }, 2000);
@@ -47,28 +44,25 @@ const ViewStockReturn = (props) => {
             mounted = false;
         }
 
-        
+
     }, []);  //imp to render when history prop changes
 
 
-    const viewStockReturnDataByReturnId = async (stockReturnId) => {
+    const fetchPurchaseOrdersViewGrn = async (PurchaseOrderId) => {
         document.getElementById('app-loader-container').style.display = "block";
-        const viewStockReturnDataResponse = await StockApiUtil.viewStockReturnedDataByReturnId(stockReturnId);
-        console.log('viewStockReturnDataResponse:', viewStockReturnDataResponse);
+        const viewStockPoGrnDataResponse = await StockApiUtil.viewStockPurchaseOrdersViewGrnByPoId(PurchaseOrderId);
+        console.log('viewStockPoGrnDataResponse:', viewStockPoGrnDataResponse);
 
-        if (viewStockReturnDataResponse.hasError) {
-            console.log('Cant Get Stock Returned Data -> ', viewStockReturnDataResponse.errorMessage);
-            setLoading(false);
+        if (viewStockPoGrnDataResponse.hasError) {
+            console.log('Cant Get Stock Returned Data -> ', viewStockPoGrnDataResponse.errorMessage);
             document.getElementById('app-loader-container').style.display = "none";
-            message.warning(viewStockReturnDataResponse.errorMessage, 2);
+            message.warning(viewStockPoGrnDataResponse.errorMessage, 2);
         }
         else {
-            console.log('res -> ', viewStockReturnDataResponse);
             if (mounted) {     //imp if unmounted
-                //message.success(viewStockReturnDataResponse.message, 3);
-                setStockReturnData(viewStockReturnDataResponse.data);
-                setLoading(false);
+                setStockPoViewGrnData(viewStockPoGrnDataResponse.data);
                 document.getElementById('app-loader-container').style.display = "none";
+                //message.success(viewStockReturnDataResponse.message, 3);
             }
         }
     }
@@ -104,7 +98,7 @@ const ViewStockReturn = (props) => {
     function export_table_to_csv(html, filename) {
         var csv = [];
         //imp selection below
-        var rows = document.querySelectorAll("div#return_stock_view_data_table  tr");
+        var rows = document.querySelectorAll("div#purchase_order_view_grn_table  tr");
 
         for (var i = 0; i < rows.length; i++) {
             var row = [],
@@ -115,7 +109,7 @@ const ViewStockReturn = (props) => {
             csv.push(row.join(","));
         }
 
-        let footerRows = document.querySelectorAll("div#return_stock_view_data_table  .return-stock-view-footer");
+        let footerRows = document.querySelectorAll("div#purchase_order_view_grn_table  .po-view-grn-view-footer");
 
         for (var i = 0; i < footerRows.length; i++) {
             var row = [],
@@ -130,25 +124,22 @@ const ViewStockReturn = (props) => {
         download_csv(csv.join("\n"), filename);
     }
 
-    
-    const DownloadToCsv = (e) => {
-        if (stockReturnData.length > 0) {
-            var html = document.getElementById("return_stock_view_data_table").innerHTML;
 
-            export_table_to_csv(html, "GRN_" + new Date().toUTCString() + ".csv");
+    const DownloadToCsv = (e) => {
+        if (stockPoViewGrnData.length > 0) {
+            var html = document.getElementById("purchase_order_view_grn_table").innerHTML;
+
+            export_table_to_csv(html, "PO_GRN_" + new Date().toUTCString() + ".csv");
         } else {
-            message.warning("No Return Stock Found", 3);
+            message.warning("No PO View Grn Found", 3);
         }
     };
 
 
-    
-
-
     const handleCancel = () => {
         history.push({
-            pathname: '/stock-control/returned-stock',
-            //activeKey: 'returned-stock'
+            pathname: '/stock-control/purchase-orders',
+            activeKey: 'purchase-orders'
         });
 
     };
@@ -156,41 +147,39 @@ const ViewStockReturn = (props) => {
 
     return (
         <div className="page stock-add">
+
             <div className="page__header">
                 <h1><Button type="primary" shape="circle" className="back-btn"
                     icon={<ArrowLeftOutlined />}
-                    onClick={handleCancel} />Returned Stock</h1>
+                    onClick={handleCancel} />GRN View</h1>
 
-
-                <Button
-                    type='primary'
+                <Button type='primary'
                     className='custom-btn custom-btn--primary'
                     icon={<DownloadOutlined />}
                     onClick={DownloadToCsv}
                 >
-                    {" "}
-                    Download
+                    Export CSV
                 </Button>
             </div>
 
-            {!loading &&
-                <div className="page__content">
-                    <h4 className="stock-receive-details-heading">GRN</h4>
+        
 
-                    {/* Table */}
-                    <div className='table'>
-                        <ViewStockReturnedTable
-                            tableData={stockReturnData}
-                            tableDataLoading={loading} 
-                            tableId='return_stock_view_data_table'
-                        />
-                    </div>
-                    {/* Table */}
+            <div className="page__content">
+                <h4 className="stock-receive-details-heading">GRN</h4>
 
+                {/* Table */}
+                <div className='table'>
+                    <PurchaseOrderviewGrnTable
+                        tableData={stockPoViewGrnData}
+                        tableId='purchase_order_view_grn_table'
+                    />
                 </div>
-            }
+                {/* Table */}
+
+            </div>
+
         </div>
     );
 };
 
-export default ViewStockReturn;
+export default PurchaseOrderViewGrn;

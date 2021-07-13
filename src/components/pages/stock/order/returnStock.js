@@ -418,12 +418,11 @@ const ReturnStock = () => {
       console.log('res -> ', res);
       document.getElementById('app-loader-container').style.display = "none";
       //message.success(res.message, 1);
-      setTimeout(() => {
-        history.push({
-          pathname: '/stock-control/purchase-orders',
-          activeKey: 'purchase-orders'
-        });
-      }, 1200);
+      history.push({
+        pathname: '/stock-control/returned-stock',
+        activeKey: 'returned-stock'
+      });
+
     }
 
   }
@@ -477,8 +476,8 @@ const ReturnStock = () => {
 
   const handleCancel = () => {
     history.push({
-      pathname: '/stock-control/purchase-orders',
-      activeKey: 'purchase-orders'
+      pathname: '/stock-control/returned-stock',
+      activeKey: 'returned-stock'
     });
   };
 

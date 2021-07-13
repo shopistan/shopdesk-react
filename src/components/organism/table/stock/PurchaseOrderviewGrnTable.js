@@ -4,7 +4,7 @@ import { Table, Form, Row, Col } from "antd";
 import "./style.scss"
 
 
-const ViewStockReturnedTable = (props) => {
+const PurchaseOrderviewGrnTable = (props) => {
     const [form] = Form.useForm();
     const [data, setData] = useState([]);
     const [productsTotalAmount, setProductsTotalAmount] = useState(0);
@@ -15,7 +15,7 @@ const ViewStockReturnedTable = (props) => {
         var stockReturnedTotal = 0;
         const newData = [...data];
         newData.forEach(item => {
-            stockReturnedTotal = (stockReturnedTotal + parseFloat(item.return_junction_quantity));
+            stockReturnedTotal = (stockReturnedTotal + parseFloat(item.grn_junction_quantity));
         });
         setProductsTotalAmount(stockReturnedTotal);
     }
@@ -24,11 +24,10 @@ const ViewStockReturnedTable = (props) => {
 
     useEffect(async () => {
         setData(props.tableData);
-        //console.log("pro-table-data-return-stock", props.tableData);
         calculateTotalStockRetunedQuantity(props.tableData);
 
 
-    }, [props.tableData, props.tableDataLoading]);  /* imp passing props to re-render */
+    }, [props.tableData]);  /* imp passing props to re-render */
 
 
     var columns = null;
@@ -41,8 +40,12 @@ const ViewStockReturnedTable = (props) => {
                 dataIndex: "product_sku",
             },
             {
+                title: "Price",
+                dataIndex: "grn_junction_price",
+            },
+            {
                 title: "Qty",
-                dataIndex: "return_junction_quantity",
+                dataIndex: "grn_junction_quantity",
             },
         ];
 
@@ -50,7 +53,7 @@ const ViewStockReturnedTable = (props) => {
 
     const tableFooter = () => {
         return (
-            <Row className="return-stock-view-footer">
+            <Row className="po-view-grn-view-footer">
                 <Col xs={24} sm={24} md={12} >
                     <span> Total Quantity </span>
                 </Col>
@@ -82,7 +85,6 @@ const ViewStockReturnedTable = (props) => {
 
     return (
         <Form form={form} component={false}>
-
             <Table
                 bordered={true}
                 columns={mergedColumns}
@@ -94,12 +96,10 @@ const ViewStockReturnedTable = (props) => {
                 size="small"
                 pagination={false}
             />
-
-
         </Form>
 
     );
 };
 
-export default ViewStockReturnedTable;
+export default PurchaseOrderviewGrnTable;
 

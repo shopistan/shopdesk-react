@@ -147,7 +147,8 @@ const PurchaseOrder = (props) => {
         /*---getting total amount----------------*/
         let productsTotal = 0;
         receiveProducts.forEach(item => {
-          productsTotal = productsTotal + (parseFloat(item.purchase_order_junction_quantity || 0) * parseFloat(item.purchase_order_junction_price));
+          let qtyReceived = item.recieved_by_total.split('/')[0];
+          productsTotal = productsTotal + (parseFloat(qtyReceived || 0) * parseFloat(item.purchase_order_junction_price));
         });
         setProductsTotalAmount(productsTotal);
         /*---getting total amount----------------*/
@@ -187,7 +188,8 @@ const PurchaseOrder = (props) => {
         /*---getting total amount----------------*/
         let productsTotal = 0;
         receiveProducts.forEach(item => {
-          productsTotal = productsTotal + (parseFloat(item.purchase_order_junction_quantity || 0) * parseFloat(item.purchase_order_junction_price));
+          let qtyReceived = item.recieved_by_total.split('/')[0];
+          productsTotal = productsTotal + (parseFloat(qtyReceived || 0) * parseFloat(item.purchase_order_junction_price));
         });
         setProductsTotalAmount(productsTotal);
         /*---getting total amount----------------*/

@@ -296,8 +296,12 @@ const StockReceiveTable = (props) => {
                 dataIndex: "product_sku",
             },
             {
-                title: "Quantity ordered",
+                title: "Quantity left",
                 dataIndex: "purchase_order_junction_quantity",
+            },
+            {
+                title: "Quantity ordered",
+                dataIndex: "recieved_by_total",
             },
            
             {
@@ -315,11 +319,11 @@ const StockReceiveTable = (props) => {
                 title: "Total",
                 render: (_, record) => {
                     let currency = outletData && outletData.currency_symbol;
+                    let qtyReceived = record.recieved_by_total.split('/')[0];
                     return (
                         <span>
                             {
-                                (currency || "") + (parseFloat(record.purchase_order_junction_quantity) * parseFloat(record.purchase_order_junction_price)).toFixed(2)
-
+                                (currency || "") + (parseFloat(qtyReceived) * parseFloat(record.purchase_order_junction_price)).toFixed(2)
                             }
                         </span>
                     );

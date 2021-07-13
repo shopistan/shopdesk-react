@@ -104,14 +104,13 @@ const StockTable = (props) => {
 
     const viewGrn = (record) => {
         history.push({
-            pathname: `/categories/${record.category_id}/edit`,
-            data: record, // your data array of objects
+            pathname: `/stock-control/purchase-orders/${record.purchase_order_id}/grn/view`,
         });
     };
     
     
     
-    var columns;
+    let columns;
 
     
     if (props.tableType === 'inventory_transfers') {
