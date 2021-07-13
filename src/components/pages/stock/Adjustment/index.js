@@ -2,9 +2,13 @@ import React, { useState, useEffect } from "react";
 import { message } from "antd";
 import ViewtableStock from "../../../organism/table/stock/stockTable";
 import * as StockApiUtil from '../../../../utils/api/stock-api-utils';
+import moment from 'moment';
+
+const dateFormat = "YYYY-MM-DD";
 
 
 const  StockAdjustment = (props) => {
+  const { selectedDates = "", exportTransferCheck } = props;
   const [paginationLimit, setPaginationLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -16,13 +20,26 @@ const  StockAdjustment = (props) => {
 
 
   const fetchStockAdjustmentsData = async (pageLimit = 10, pageNumber = 1) => {
+
+    let startDate  =  selectedDates[0] ? selectedDates[0]  : moment(new Date()).format(dateFormat);
+    let finishDate =  selectedDates[1] ? selectedDates[1]  : moment(new Date()).format(dateFormat);
+
     document.getElementById('app-loader-container').style.display = "block";
-    const stockAdjustmentsViewResponse = await StockApiUtil.viewStockAdjustments(pageLimit, pageNumber);
+    const stockAdjustmentsViewResponse = await StockApiUtil.viewStockAdjustments(
+      pageLimit,
+      pageNumber,
+      startDate,
+      finishDate,
+    );
     console.log('stockAdjustmentsViewResponse:', stockAdjustmentsViewResponse);
 
     if (stockAdjustmentsViewResponse.hasError) {
       console.log('Cant fetch stock adjustments Data -> ', stockAdjustmentsViewResponse.errorMessage);
       setLoading(false);
+      /*------------------new verion---------------------*/
+      setData([]);
+      setPaginationData({});
+      /*------------------new verion---------------------*/
       document.getElementById('app-loader-container').style.display = "none";
     }
     else {
@@ -39,7 +56,12 @@ const  StockAdjustment = (props) => {
 
 
   useEffect( () => {
-    fetchStockAdjustmentsData();
+    if (exportTransferCheck === true) {
+      //ExportToCsv();
+    }
+    if (exportTransferCheck === false) {
+      fetchStockAdjustmentsData();
+    }
     
     return () => {
       mounted = false;

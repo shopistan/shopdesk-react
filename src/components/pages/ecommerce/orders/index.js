@@ -37,6 +37,7 @@ function EcommerceOrders() {
   const [loading, setLoading] = useState(true);
   const [outletData, setOutletData] = useState(null);
   const [selectedSalesInvoiceBulkDataArr, setSelectedSalesInvoiceBulkDataArr] = useState([]);
+  const [searchInputValue, setSearchInputValue] = useState("");
 
 
 
@@ -197,14 +198,16 @@ function EcommerceOrders() {
     }
 
     setCurrentTab(key);
-    handleAccumulateSearchedData(key, dataSearched);  //imp
+    handleAccumulateSearchedData(key, dataSearched);       //imp
+    setSearchInputValue("");                               //imp new ver
 
   };
 
 
 
   const onSearch = (e) => {
-    var currValue = e.target.value;
+    let currValue = e.target.value;
+    setSearchInputValue(currValue);
     currValue = currValue.toLowerCase();
 
     if (currValue === "") {
@@ -460,6 +463,7 @@ function EcommerceOrders() {
             size="middle"
             onChange={onSearch}
             style={{ width: 300 }}
+            value={searchInputValue}
           />
         </div>
 

@@ -162,11 +162,8 @@ const PurchaseOrderViewGrn = (props) => {
                 </Button>
             </div>
 
-        
-
             <div className="page__content">
                 <h4 className="stock-receive-details-heading">GRN</h4>
-
                 {/* Table */}
                 <div className='table'>
                     <PurchaseOrderviewGrnTable
@@ -175,7 +172,6 @@ const PurchaseOrderViewGrn = (props) => {
                     />
                 </div>
                 {/* Table */}
-
             </div>
 
         </div>

@@ -11,20 +11,19 @@ import {
 } from "antd";
 
 import {
-    ArrowLeftOutlined, 
+    ArrowLeftOutlined,
     DownloadOutlined,
-  } from "@ant-design/icons";
+} from "@ant-design/icons";
 
 
 
 
 const ViewStockReturn = (props) => {
     const history = useHistory();
-    const [loading, setLoading] = useState(true);
     const [stockReturnData, setStockReturnData] = useState([]);
     //const [buttonDisabled, setButtonDisabled] = useState(false);
     const { match = {} } = props;
-    const { stock_return_id = {} } =  match !== undefined && match.params;
+    const { stock_return_id = {} } = match !== undefined && match.params;
 
 
     let mounted = true;
@@ -47,7 +46,7 @@ const ViewStockReturn = (props) => {
             mounted = false;
         }
 
-        
+
     }, []);  //imp to render when history prop changes
 
 
@@ -58,7 +57,6 @@ const ViewStockReturn = (props) => {
 
         if (viewStockReturnDataResponse.hasError) {
             console.log('Cant Get Stock Returned Data -> ', viewStockReturnDataResponse.errorMessage);
-            setLoading(false);
             document.getElementById('app-loader-container').style.display = "none";
             message.warning(viewStockReturnDataResponse.errorMessage, 2);
         }
@@ -67,7 +65,6 @@ const ViewStockReturn = (props) => {
             if (mounted) {     //imp if unmounted
                 //message.success(viewStockReturnDataResponse.message, 3);
                 setStockReturnData(viewStockReturnDataResponse.data);
-                setLoading(false);
                 document.getElementById('app-loader-container').style.display = "none";
             }
         }
@@ -130,7 +127,7 @@ const ViewStockReturn = (props) => {
         download_csv(csv.join("\n"), filename);
     }
 
-    
+
     const DownloadToCsv = (e) => {
         if (stockReturnData.length > 0) {
             var html = document.getElementById("return_stock_view_data_table").innerHTML;
@@ -142,7 +139,7 @@ const ViewStockReturn = (props) => {
     };
 
 
-    
+
 
 
     const handleCancel = () => {
@@ -161,7 +158,6 @@ const ViewStockReturn = (props) => {
                     icon={<ArrowLeftOutlined />}
                     onClick={handleCancel} />Returned Stock</h1>
 
-
                 <Button
                     type='primary'
                     className='custom-btn custom-btn--primary'
@@ -173,22 +169,18 @@ const ViewStockReturn = (props) => {
                 </Button>
             </div>
 
-            {!loading &&
-                <div className="page__content">
-                    <h4 className="stock-receive-details-heading">GRN</h4>
-
-                    {/* Table */}
-                    <div className='table'>
-                        <ViewStockReturnedTable
-                            tableData={stockReturnData}
-                            tableDataLoading={loading} 
-                            tableId='return_stock_view_data_table'
-                        />
-                    </div>
-                    {/* Table */}
-
+            <div className="page__content">
+                <h4 className="stock-receive-details-heading">GRN</h4>
+                {/* Table */}
+                <div className='table'>
+                    <ViewStockReturnedTable
+                        tableData={stockReturnData}
+                        tableId='return_stock_view_data_table'
+                    />
                 </div>
-            }
+                {/* Table */}
+            </div>
+            
         </div>
     );
 };

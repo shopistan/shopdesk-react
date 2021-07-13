@@ -17,7 +17,7 @@ const { Text } = Typography;
 
 
 const TransferInventory = (props) => {
-  const { selectedDates = "", exportTransferCheck } = props;
+  let { selectedDates = "", exportTransferCheck = "" } = props;
   const [paginationLimit, setPaginationLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -84,7 +84,8 @@ const TransferInventory = (props) => {
     if (exportTransferCheck === false) {
       fetchInventoryTransfersData();
     }
-    var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+
+    let readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
     readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
     if (readFromLocalStorage) {
       setActiveStoreId(readFromLocalStorage.auth.current_store);  //string
@@ -155,7 +156,7 @@ const TransferInventory = (props) => {
         downloadInventoryTransfersData(getStoreResponse || null);
       }
     }
-    else { message.warning("Sales History Data Not Found", 3) } 
+    else { message.warning("Inventory Transfers Data Not Found", 3) } 
 
   }
 

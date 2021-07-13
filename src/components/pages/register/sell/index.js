@@ -1115,13 +1115,6 @@ function Sell() {
 
               />
             </Form.Item>
-            <Form.Item
-              label='Invoice Note'
-              name='invoiceNote'
-              onChange={handleInvoiceNoteChange}
-            >
-              <Input placeholder='input Invoice Note' />
-            </Form.Item>
             <Form.Item label='Tax Category' name='tax_value'>
               <Select
                 onChange={handleTaxCategoryChange}
@@ -1145,6 +1138,13 @@ function Sell() {
                   FBS
                 </Option>
               </Select>
+            </Form.Item>
+            <Form.Item
+              label='Invoice Note'
+              name='invoiceNote'
+              onChange={handleInvoiceNoteChange}
+            >
+              <Input placeholder='input Invoice Note' />
             </Form.Item>
           </Form>
         </div>

@@ -6,10 +6,12 @@ import axios from 'axios';
 import $ from 'jquery';
 
 
-export const viewPurchaseOrders = async (limit, pageNumber) => {
+export const viewPurchaseOrders = async (limit, pageNumber, startDate, finishDate) => {
     const formDataPair = {
         limit: limit,
         page: pageNumber,
+        startDate,
+        finishDate,
     };
 
     const viewPurchaseOrdersFormDataBody = ApiCallUtil.constructFormData(formDataPair);
@@ -189,10 +191,12 @@ export const returnStock = async (returnStockData) => {
 };
 
 
-export const viewStockAdjustments = async (limit, pageNumber) => {
+export const viewStockAdjustments = async (limit, pageNumber, startDate, finishDate) => {
     const formDataPair = {
         limit: limit,
         page: pageNumber,
+        startDate,
+        finishDate,
     };
 
     const viewStockAdjustmentsFormDataBody = ApiCallUtil.constructFormData(formDataPair);
@@ -207,10 +211,12 @@ export const viewStockAdjustments = async (limit, pageNumber) => {
 };
 
 
-export const viewStockReturned = async (limit, pageNumber) => {
+export const viewStockReturned = async (limit, pageNumber, startDate, finishDate) => {
     const formDataPair = {
         limit: limit,
         page: pageNumber,
+        startDate,
+        finishDate,
     };
 
     const viewStockReturnedFormDataBody = ApiCallUtil.constructFormData(formDataPair);

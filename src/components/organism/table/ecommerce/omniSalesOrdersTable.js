@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import "./ecommerceStyle.scss";
-import { Table, Form, Typography } from "antd";
+import { Table, Form, Typography, Badge } from "antd";
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 
@@ -83,6 +83,7 @@ const OmniSalesOrdersTable = (props) => {
             //dataIndex: "invoice_status",
             //width: "50%",
             render: (_, record) => {
+                let saleOrderBadgeStyles = {backgroundColor: '#777', fontSize: "14px", borderRadius: "0.25rem" };
                 return (
                     <span className={record.invoice_status === "3" && 'ecommerce-sale-order' ||
                         record.invoice_status === "4" && 'ecommerce-sale-order-completed' ||
@@ -91,7 +92,11 @@ const OmniSalesOrdersTable = (props) => {
                     }
 
                     >
-                        {record.invoice_status === "3" ? "Sale Order"
+                        {record.invoice_status === "3" ?
+                            <Badge
+                                count="Sale order"
+                                style={saleOrderBadgeStyles}
+                            />
                             : record.invoice_status === "4" ? "Completed"
                                 : record.invoice_status === "5" ? "Canceled"
                                     : record.invoice_status === "6" ? "Returned"

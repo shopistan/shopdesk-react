@@ -28,7 +28,7 @@ const ViewStockReturnedTable = (props) => {
         calculateTotalStockRetunedQuantity(props.tableData);
 
 
-    }, [props.tableData, props.tableDataLoading]);  /* imp passing props to re-render */
+    }, [props.tableData]);  /* imp passing props to re-render */
 
 
     var columns = null;
@@ -82,7 +82,6 @@ const ViewStockReturnedTable = (props) => {
 
     return (
         <Form form={form} component={false}>
-
             <Table
                 bordered={true}
                 columns={mergedColumns}
@@ -94,8 +93,6 @@ const ViewStockReturnedTable = (props) => {
                 size="small"
                 pagination={false}
             />
-
-
         </Form>
 
     );

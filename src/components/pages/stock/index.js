@@ -13,7 +13,6 @@ import {
 import { useHistory } from "react-router-dom";
 import moment from 'moment';
 
-
 const dateFormat = "YYYY-MM-DD";
 
 const { TabPane } = Tabs;
@@ -98,7 +97,9 @@ function Stock(props) {
 
 
   const ExportToCsv = () => {
+    let dates = [...selectedDates];
     setExportCsvCheck(true);
+    setselectedDatesRange(dates);   //imp to set here too for rerendering childs
   };
 
 
@@ -144,6 +145,8 @@ function Stock(props) {
     </Menu>
   );
 
+  
+
 
   return (
     <div className="page setup">
@@ -178,7 +181,7 @@ function Stock(props) {
 
       <div className="page__content stock-control">
 
-        {activeKey === "inventory-transfers"  && <div className='action-row stock-transfer-row-date-picker'>
+        <div className='action-row stock-transfer-row-date-picker'>
           <RangePicker
             className='date-picker'
             onCalendarChange={handleRangePicker}
@@ -191,7 +194,7 @@ function Stock(props) {
           >
             Fetch
             </Button>
-        </div>}
+        </div>
         <Divider />
 
 
@@ -199,7 +202,7 @@ function Stock(props) {
 
           {userLocalStorageData && stockScopeFilter(userLocalStorageData.user_info || null) &&
             <TabPane tab="Purchase Orders" key="purchase-orders">
-              <PurchaseOrders />
+              <PurchaseOrders selectedDates={selectedDatesRange} exportTransferCheck={exportCsvCheck}  />
             </TabPane>}
 
           <TabPane tab="Inventory Transfers" key="inventory-transfers">
@@ -208,12 +211,12 @@ function Stock(props) {
 
           {userLocalStorageData && stockScopeFilter(userLocalStorageData.user_info || null) &&
             <TabPane tab="Stock Adjustment" key="stock-adjustments">
-              <StockAdjustment />
+              <StockAdjustment selectedDates={selectedDatesRange} exportTransferCheck={exportCsvCheck}  />
             </TabPane>}
 
           {userLocalStorageData && stockScopeFilter(userLocalStorageData.user_info || null) &&
             <TabPane tab="Returned Stock" key="returned-stock">
-              <StockReturned />
+              <StockReturned selectedDates={selectedDatesRange} exportTransferCheck={exportCsvCheck}  />
             </TabPane>}
 
         </Tabs>
