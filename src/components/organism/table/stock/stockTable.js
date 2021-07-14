@@ -322,7 +322,7 @@ const StockTable = (props) => {
                 },
             },
             {
-                title: "View",
+                title: "Quick View",
                 render: (_, record) => {
                     return (
                         <div className='sell-history-action-btn-quick-view'>

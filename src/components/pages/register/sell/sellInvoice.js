@@ -81,7 +81,7 @@ const PrintSalesInvoice = (props) => {
 
                     <span>Receipt / Tax Invoice</span><br /><br />
                     <b style={{fontSize: "10px"}}>Recipt #: </b> <span>{currentInvoiceNo || invoice.invoice_show_id}</span><br /> 
-                    <b style={{fontSize: "10px"}}>Invoice Note: </b> <span>{invoice.reference || invoice.invoice_note}</span><br />
+                    {/*<b style={{fontSize: "10px"}}>Invoice Note: </b> <span>{invoice.reference || invoice.invoice_note}</span><br /> */}
                     <b style={{fontSize: "10px"}}>Date: </b> <span>{today}</span><br />
                     <b style={{fontSize: "10px"}}>Sales Person: </b><span>{userName}</span><br />
                 </center>
@@ -141,6 +141,13 @@ const PrintSalesInvoice = (props) => {
                         {parseFloat( (parseFloat(invoice.sale_total) + parseFloat(invoice.tax_total) )
                          - parseFloat(invoice.discounted_amount) ).toFixed(2)}</b></p>
                 </div>}
+
+
+                <div style={{ width: "100%", borderBottom: "2px dotted #000", paddingTop: "0.5rem", paddingBottom: "0.5rem" }}>
+                    <center>
+                        <b style={{ fontSize: "10px" }}>Invoice Note: </b> <span>{invoice.reference || invoice.invoice_note}</span><br />
+                    </center>
+                </div>
 
                 <center style={{ borderBottom: "2px dotted #000", marginBottom: "5px; padding: 10px" }}>
                     <img src={`${UrlConstants.BASE_URL}/api/open/barcode/${invoice.invoiceNo || invoice.invoice_unique}`} style={{ width: "30%" }} />
