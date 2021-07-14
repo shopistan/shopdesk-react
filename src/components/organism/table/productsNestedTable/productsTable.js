@@ -153,7 +153,8 @@ const ProductsTable = (props) => {
     {
       title: "Product Name",
       dataIndex: "product_name",
-      width: "20%",
+      //width: "20%",
+      className: "product-name-heading",
       render: (_, record) => {
         return (
           <div>
@@ -248,7 +249,7 @@ const ProductsTable = (props) => {
       dataSource={data}
       columns={mergedColumns}
       rowClassName="editable-row"
-      className="table-frame"
+      className="table-frame products-listing-table"
       pagination={{
         total: props.paginationData && props.paginationData.totalElements,
         showTotal: (total, range) => showTotalItemsBar(total, range),

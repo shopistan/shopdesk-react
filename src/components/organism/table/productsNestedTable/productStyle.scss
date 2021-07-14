@@ -7,6 +7,12 @@
     }
 }
 
+.products-listing-table .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr {
+  .product-name-heading{
+    width: 20%;
+  }
+}
+
 .products-lookup-count,
 .products-discount-tag{
   background-color: #337ab7;
