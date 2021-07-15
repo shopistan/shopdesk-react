@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import "../productStyle.scss";
-import { Table, message, Button, Input, Form, InputNumber } from "antd";
+import { Table, Input, Form, InputNumber } from "antd";
+import { EditOutlined } from "@ant-design/icons";
 import ProductsVariantsNestedTable from "./productsVariantsNestedTable";
 
 const EditableContext = React.createContext(null);
@@ -44,6 +45,12 @@ const EditableCell = ({
     form.setFieldsValue({ [dataIndex]: record[dataIndex] });
   };
 
+  
+  const toggleEditColumn = () => {
+    setEditing(!editing);
+    form.setFieldsValue({ [dataIndex]: record[dataIndex] });
+  };
+
   const save = async () => {
     try {
       const values = await form.validateFields();
@@ -81,11 +88,14 @@ const EditableCell = ({
       </Form.Item>
     ) : (
       <div
-        className="editable-cell-value-wrap"
+        className="products-editable-cell-value-wrap"
         style={{ paddingRight: 24 }}
-        onClick={toggleEdit}
+        //onClick={toggleEdit}    //imp prev version
       >
+
         {children}
+        <EditOutlined onClick={toggleEditColumn} className="product-editable-cell-icon" />
+
       </div>
     );
   }

@@ -184,7 +184,7 @@ const Products = () => {
   }
 
 
-  /*const ExportToCsv = async (e) => {
+  const ExportToCsv = async (e) => {
 
     if (data.length > 0) {
       document.getElementById('app-loader-container').style.display = "block";
@@ -201,7 +201,52 @@ const Products = () => {
     }
     else { message.warning("Products Data Not Found", 3) } 
 
-  }*/
+  }
+
+
+  const downloadProductsCSVData = async (fetchedStore) => {
+    //console.log("fetchedStore", fetchedStore);
+    let productsImportParams = {
+      "store_id": fetchedStore.store_id,
+    };
+
+    const productsExportResponse = await ProductsApiUtil.exportProductsData(
+      productsImportParams
+    );
+    
+    console.log("Products Export response:", productsExportResponse);
+
+    if (productsExportResponse.hasError) {
+      console.log(
+        "Cant Export Products Data-> ",
+        productsExportResponse.errorMessage
+      );
+      
+      document.getElementById('app-loader-container').style.display = "none";
+      message.error(productsExportResponse.errorMessage, 3);
+
+    } else {
+      //console.log("res -> ", stockAdjustmentsExportResponse.data);
+      /*---------------csv download--------------------------------*/
+      if (mounted) {     //imp if unmounted
+        // CSV FILE
+        let csvFile = new Blob([productsExportResponse.data], { type: "text/csv" });
+        let url = window.URL.createObjectURL(csvFile);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = "products_" + new Date().toUTCString() + ".csv";
+        document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+        a.click();
+        a.remove();  //afterwards we remove the element again
+        /*---------------csv download--------------------------------*/
+        document.getElementById('app-loader-container').style.display = "none";
+        //message.success(productsExportResponse.message, 3);
+
+      }
+
+    }
+
+  }
  
 
 
@@ -234,13 +279,14 @@ const Products = () => {
         <h1>Products</h1>
 
         <div className='page__header__buttons'>
-          {/*<Button type='primary'
+
+          <Button type='primary'
             className='custom-btn custom-btn--primary'
             icon={<DownloadOutlined />}
             onClick={ExportToCsv}
           >
             Export CSV
-          </Button> */}
+          </Button>
 
           <Dropdown overlay={PrductsMenu} placement="bottomCenter"
             trigger={["click"]}>
