@@ -343,7 +343,8 @@ const StockTable = (props) => {
                                 (record.purchase_order_status === '1' && record.po_grn === "1"))
                                 ?
                                 <Typography.Link
-                                    onClick={() => viewGrn(record)}>
+                                    onClick={() => viewGrn(record)}
+                                >
                                     View GRN
                                 </Typography.Link>
                                 : "-"

@@ -6,6 +6,7 @@ import StockReceiveProductsTable from "../../../organism/table/stock/stockReceiv
 import PrintPurchaseOrderTable from "./viewPo";
 import * as StockApiUtil from '../../../../utils/api/stock-api-utils';
 import * as SetupApiUtil from '../../../../utils/api/setup-api-utils';
+import * as SalesApiUtil from '../../../../utils/api/sales-api-utils';
 import {
   getDataFromLocalStorage,
   checkUserAuthFromLocalStorage,
@@ -21,7 +22,7 @@ const { Text } = Typography;
 
 
 const PurchaseOrder = (props) => {
-  const { selectedDates = "", exportTransferCheck } = props;
+  const { selectedDates = "", exportTransferCheck = "" } = props;
   const [paginationLimit, setPaginationLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -83,7 +84,7 @@ const PurchaseOrder = (props) => {
 
   useEffect(() => {
     if (exportTransferCheck === true) {
-      //ExportToCsv();
+      ExportToCsv();
     }
     if (exportTransferCheck === false) {
       fetchPurchaseOrdersData();
@@ -105,7 +106,7 @@ const PurchaseOrder = (props) => {
       mounted = false;
     }
 
-  }, []);
+  }, [selectedDates, exportTransferCheck]);
 
 
   function handlePageChange(currentPg) {
@@ -251,6 +252,74 @@ const PurchaseOrder = (props) => {
 
   const handleQuickPoCancelModal = () => {
     setIsQuickViewPoModalVisible(false);
+
+  }
+
+
+  const ExportToCsv = async (e) => {
+
+    if (data.length > 0) {
+      document.getElementById('app-loader-container').style.display = "block";
+      const getStoreResponse = await SalesApiUtil.getStoreId();
+      if (getStoreResponse.hasError) {
+        const errorMessage = getStoreResponse.errorMessage;
+        console.log('Cant get Store Id -> ', errorMessage);
+        document.getElementById('app-loader-container').style.display = "none";
+        message.error(errorMessage, 3);
+      } else {
+        console.log("Success:", getStoreResponse.message);
+        downloadPurchaseOrdersCSVData(getStoreResponse || null);
+      }
+    }
+    else { message.warning("Purchase Orders Data Not Found", 3) } 
+
+  }
+
+
+  
+  const downloadPurchaseOrdersCSVData = async (fetchedStore) => {
+    //console.log("fetchedStore", fetchedStore);
+    let purchaseOrdersImportParams = {
+      "store_id": fetchedStore.store_id,
+      "startDate": selectedDates[0] || moment(new Date()).format("YYYY-MM-DD"),
+      "finishDate": selectedDates[1] ||moment(new Date()).format("YYYY-MM-DD"),
+    };
+
+    const purchaseOrdersExportResponse = await StockApiUtil.exportPurchaseOrders(
+      purchaseOrdersImportParams
+    );
+    
+    console.log("Purchase Orders Export response:", purchaseOrdersExportResponse);
+
+    if (purchaseOrdersExportResponse.hasError) {
+      console.log(
+        "Cant Export Purchase Orders Data-> ",
+        purchaseOrdersExportResponse.errorMessage
+      );
+      
+      document.getElementById('app-loader-container').style.display = "none";
+      message.error(purchaseOrdersExportResponse.errorMessage, 3);
+
+    } else {
+      //console.log("res -> ", purchaseOrdersExportResponse.data);
+      /*---------------csv download--------------------------------*/
+      if (mounted) {     //imp if unmounted
+        // CSV FILE
+        let csvFile = new Blob([purchaseOrdersExportResponse.data], { type: "text/csv" });
+        let url = window.URL.createObjectURL(csvFile);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = "purchase_orders_" + new Date().toUTCString() + ".csv";
+        document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+        a.click();
+        a.remove();  //afterwards we remove the element again
+        /*---------------csv download--------------------------------*/
+        document.getElementById('app-loader-container').style.display = "none";
+        //message.success(purchaseOrdersExportResponse.message, 3);
+
+      }
+
+    }
 
   }
 

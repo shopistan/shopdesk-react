@@ -145,7 +145,7 @@ function Stock(props) {
     </Menu>
   );
 
-  
+
 
 
   return (
@@ -155,17 +155,16 @@ function Stock(props) {
 
         <div className="page__header__buttons">
 
-          {activeKey === "inventory-transfers"  &&
-            <Button type='primary'
-              className='custom-btn custom-btn--primary'
-              icon={<DownloadOutlined />}
-              onClick={ExportToCsv}
-            >
-              Export CSV
-            </Button>}
+          <Button type='primary'
+            className='custom-btn custom-btn--primary'
+            icon={<DownloadOutlined />}
+            onClick={ExportToCsv}
+          >
+            Export CSV
+          </Button>
 
           <Dropdown overlay={OptionsDropdown}
-           placement="bottomCenter" trigger={["click"]}>
+            placement="bottomCenter" trigger={["click"]}>
             <Button
               type="Default"
               icon={<DownOutlined />}

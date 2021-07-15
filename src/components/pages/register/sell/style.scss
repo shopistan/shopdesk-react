@@ -221,7 +221,11 @@
 
   .ant-modal-content{
     overflow-y: scroll;
-    height: 400px;
+    /*height: 400px;*/   //imp prev ver//
+  }
+
+  .ant-modal{
+    width: auto !important;
   }
 
   .ant-col{

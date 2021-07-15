@@ -187,7 +187,7 @@ const TransferInventory = (props) => {
       message.error(inventoryTransfersExportResponse.errorMessage, 3);
 
     } else {
-      console.log("res -> ", inventoryTransfersExportResponse.data);
+      //console.log("res -> ", inventoryTransfersExportResponse.data);
       /*---------------csv download--------------------------------*/
       if (mounted) {     //imp if unmounted
         // CSV FILE
@@ -201,7 +201,7 @@ const TransferInventory = (props) => {
         a.remove();  //afterwards we remove the element again
         /*---------------csv download--------------------------------*/
         document.getElementById('app-loader-container').style.display = "none";
-        //message.success(parkedSalesInvoicesExportResponse.message, 3);
+        //message.success(inventoryTransfersExportResponse.message, 3);
 
       }
 
