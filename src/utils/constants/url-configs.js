@@ -78,6 +78,7 @@ const urls = {
     BULK_UPLOAD: BASE_URL + '/api/integrations/add_products',
     GET_MOVEMENT_REPORT: BASE_URL + '/api/reports/productMovementReport',
     GET_FULL_REGISTERED_PRODUCTS: BASE_URL + '/api/products/getFullRegister',
+    EXPORT_PRODUCTS: BASE_URL + '/api/products/exportProducts',
 
   },
   REPORTS: {
@@ -118,6 +119,7 @@ const urls = {
   },
   STOCK: {
     VIEW_PO: BASE_URL + '/api/stock_control/viewPo',
+    PO_VIEW_GRN: BASE_URL + '/api/stock_control/viewGrn',
     VIEW_TRANSFER: BASE_URL + '/api/transfers/viewTransfer',
     VIEW_ADJUSTMENTS: BASE_URL + '/api/stock_control/viewAdjustment',
     VIEW_RETURNED_STOCK: BASE_URL + '/api/stock_control/viewReturnStock',
@@ -134,6 +136,9 @@ const urls = {
     CLOSE_TRANSFER_STATUS: BASE_URL + '/api/transfers/status',
     RECEIVE_TRANSFER_IN:  BASE_URL + '/api/transfers/getTransfer',
     EXPORT_INVENTORY_TRANSFERS: BASE_URL + '/api/transfers/tarnsfersCsv',
+    EXPORT_PURCHASE_ORDERS: BASE_URL + '/api/stock_control/purchaseOrdersCsv',
+    EXPORT_STOCK_ADJUSTMENTS: BASE_URL + '/api/stock_control/stockAdjustmentCsv',
+    EXPORT_STOCK_RETURNED: BASE_URL + '/api/stock_control/returnedStockCsv',
 
   },
   SALES: {  

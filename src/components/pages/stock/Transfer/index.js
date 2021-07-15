@@ -17,8 +17,7 @@ const { Text } = Typography;
 
 
 const TransferInventory = (props) => {
-  const { selectedDates = "", exportTransferCheck } = props;
-  console.log(selectedDates);
+  let { selectedDates = "", exportTransferCheck = "" } = props;
   const [paginationLimit, setPaginationLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -68,7 +67,7 @@ const TransferInventory = (props) => {
           if (
             inventoryTransfersData[i].transfer_status === "1"
           ) {
-            //message.success("Some Of The Inventory Transfers Are pending", 3);
+            message.success("Some Of The Inventory Transfers Are pending", 3);
             break;
           }
         }
@@ -85,7 +84,8 @@ const TransferInventory = (props) => {
     if (exportTransferCheck === false) {
       fetchInventoryTransfersData();
     }
-    var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
+
+    let readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
     readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
     if (readFromLocalStorage) {
       setActiveStoreId(readFromLocalStorage.auth.current_store);  //string
@@ -156,7 +156,7 @@ const TransferInventory = (props) => {
         downloadInventoryTransfersData(getStoreResponse || null);
       }
     }
-    else { message.warning("Sales History Data Not Found", 3) } 
+    else { message.warning("Inventory Transfers Data Not Found", 3) } 
 
   }
 
@@ -187,7 +187,7 @@ const TransferInventory = (props) => {
       message.error(inventoryTransfersExportResponse.errorMessage, 3);
 
     } else {
-      console.log("res -> ", inventoryTransfersExportResponse.data);
+      //console.log("res -> ", inventoryTransfersExportResponse.data);
       /*---------------csv download--------------------------------*/
       if (mounted) {     //imp if unmounted
         // CSV FILE
@@ -201,7 +201,7 @@ const TransferInventory = (props) => {
         a.remove();  //afterwards we remove the element again
         /*---------------csv download--------------------------------*/
         document.getElementById('app-loader-container').style.display = "none";
-        //message.success(parkedSalesInvoicesExportResponse.message, 3);
+        //message.success(inventoryTransfersExportResponse.message, 3);
 
       }
 

@@ -62,6 +62,7 @@ import Sell from "./components/pages/register/sell";
 import ViewInvoice from "./components/pages/register/invoice/viewInvoice";
 import Stock from "./components/pages/stock";
 import PurchaseOrder from "./components/pages/stock/order";
+import PurchaseOrderViewGrn from "./components/pages/stock/Po/viewGrn";
 import ReceiveStock from "./components/pages/stock/stockReceive";
 import ViewStockReturn from "./components/pages/stock/ReturnedStock/viewStockReturn";
 import ReceiveStockTransfer from "./components/pages/stock/stockReceive/transfer";
@@ -71,6 +72,7 @@ import TransferOut from "./components/pages/stock/order/transferInventory";
 import EcommerceOrders from "./components/pages/ecommerce/orders";
 import InventorySync from "./components/pages/ecommerce/inventorySync";
 import OeSaleOrderInvoiceView from "./components/pages/ecommerce/orders/omniSalesOrders/viewOmniSaleOrder";
+//import SaStock from "./components/pages/superAdmin/index";
 
 
 
@@ -436,6 +438,21 @@ const Routes = () => {
           path="/stock-control/inventory-transfers/:transfer_id/receive"
           component={(props) => <ReceiveStockTransfer {...props} />}
         />
+        <PrivateRoute
+          exact
+          path="/stock-control/purchase-orders/:po_id/grn/view"
+          component={(props) => <PurchaseOrderViewGrn {...props} />}
+        />
+        {/*<PrivateRoute
+          exact
+          path="/super-admin/stock-control/purchase-orders"
+          component={() => <SaStock  activeKey={'purchase-orders'} />}
+        />
+        <PrivateRoute
+          exact
+          path="/super-admin/stock-control/inventory-transfers"
+          component={() => <SaStock  activeKey={'inventory-transfers'} />}
+        /> */}
         <PrivateRoute
           exact
           path="/setup/users"

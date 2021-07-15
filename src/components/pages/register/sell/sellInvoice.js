@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import "./printInvoice.scss";
 import moment from 'moment';
 import UrlConstants from '../../../../utils/constants/url-configs';
+import * as Helpers from "../../../../utils/helpers/scripts";
 
 
 const PrintSalesInvoice = (props) => {
@@ -80,7 +81,7 @@ const PrintSalesInvoice = (props) => {
 
                     <span>Receipt / Tax Invoice</span><br /><br />
                     <b style={{fontSize: "10px"}}>Recipt #: </b> <span>{currentInvoiceNo || invoice.invoice_show_id}</span><br /> 
-                    <b style={{fontSize: "10px"}}>Invoice Note: </b> <span>{invoice.reference || invoice.invoice_note}</span><br />
+                    {/*<b style={{fontSize: "10px"}}>Invoice Note: </b> <span>{invoice.reference || invoice.invoice_note}</span><br /> */}
                     <b style={{fontSize: "10px"}}>Date: </b> <span>{today}</span><br />
                     <b style={{fontSize: "10px"}}>Sales Person: </b><span>{userName}</span><br />
                 </center>
@@ -101,7 +102,15 @@ const PrintSalesInvoice = (props) => {
 
                                 <tr key={pro.product_id} >
                                     <td style={{textAlign: "center"}}>{pro.qty}</td>
-                                    <td  style={{textAlign: "center"}}>{pro.searchName || pro.product_name} </td>
+                                    <td  style={{textAlign: "center"}}>
+                                        {pro.searchName ||
+                                            (pro.product_name &&
+                                                Helpers.var_check_updated(pro.product_variant1_value) ? Helpers.var_check_updated(pro.product_variant2_value) ? <small>{pro.product_name + '/ ' + pro.product_variant1_value + '/ ' + pro.product_variant2_value}</small>
+                                                : <small>{pro.product_name + ' / ' + pro.product_variant1_value}</small>
+                                                : Helpers.var_check_updated(pro.product_variant2_value) ? <small>{pro.product_name + ' / ' + pro.product_variant2_value}</small>
+                                                    : pro.product_name)
+                                        }
+                                    </td>
                                     <td style={{textAlign: "center"}}>{pro.product_sale_price}</td>
                                     <td style={{textAlign: "center"}}>{(pro.qty*pro.product_sale_price).toFixed(2)}</td>
                                 </tr>
@@ -132,6 +141,13 @@ const PrintSalesInvoice = (props) => {
                         {parseFloat( (parseFloat(invoice.sale_total) + parseFloat(invoice.tax_total) )
                          - parseFloat(invoice.discounted_amount) ).toFixed(2)}</b></p>
                 </div>}
+
+
+                <div style={{ width: "100%", borderBottom: "2px dotted #000", paddingTop: "0.5rem", paddingBottom: "0.5rem" }}>
+                    <center>
+                        <b style={{ fontSize: "10px" }}>Invoice Note: </b> <span>{invoice.reference || invoice.invoice_note}</span><br />
+                    </center>
+                </div>
 
                 <center style={{ borderBottom: "2px dotted #000", marginBottom: "5px; padding: 10px" }}>
                     <img src={`${UrlConstants.BASE_URL}/api/open/barcode/${invoice.invoiceNo || invoice.invoice_unique}`} style={{ width: "30%" }} />

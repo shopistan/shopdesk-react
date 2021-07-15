@@ -17,7 +17,7 @@ import {
   Input,
   Button,
   Select,
-  Spin,
+  Upload,
   AutoComplete,
   message,
   Row,
@@ -28,8 +28,11 @@ import {
 } from "antd";
 
 import {
+  UploadOutlined,
+  DownloadOutlined,
   ArrowLeftOutlined,
 } from "@ant-design/icons";
+
 
 const { Option } = Select;
 
@@ -41,6 +44,8 @@ const ReturnStock = () => {
   const [form] = Form.useForm();
   const history = useHistory();
   const [loading, setLoading] = useState(true);
+  const [showBulkUpload, setShowBulkUpload] = useState(false);
+  const [fileList, setFileList] = useState([]);
   const [productsSearchResult, setProductsSearchResult] = useState([]);
   const [productsTableData, setProductsTableData] = useState([]);
   const [registereProductsData, setRegistereProductsData] = useState([]);
@@ -197,6 +202,74 @@ const ReturnStock = () => {
   };
 
 
+  const handleUpload = () => {
+    //console.log(fileList[0]);   //imp
+    var file = fileList[0];
+
+
+    if (file && fileExtention(file.name) === 'csv') {
+      var reader = new FileReader();
+      reader.readAsText(file);
+      reader.onload = function (evt) {
+        // code to convert file data and render in json format
+        var json = JSON.parse(Helpers.CSV2JSON(evt.target.result));
+        console.log(json);
+        //jsonOutput = JSON.parse((jsonOutput));
+        /*-------------------------------*/
+        var bulkProducts = [];
+        json.forEach((v, k) => {
+          registereProductsData.forEach((v2, k2) => {
+            if (v.SKU == v2.product_sku) {
+              let selectedItemCopy = JSON.parse(JSON.stringify(v2));
+              selectedItemCopy.qty = parseFloat(v.Quantity);
+              bulkProducts.push(selectedItemCopy);
+              return 0;
+            }
+          });
+        });  // end of for loop
+
+        //setProductsTableData(bulkProducts);   //imp 
+        handleCombineProductsTableData(bulkProducts, [...productsTableData]);
+        //message.success("Products Imported", 3);
+        /*-------------------------------*/
+
+      }
+      reader.onerror = function (evt) {
+        message.error('error reading file');
+      }
+    }
+    else {
+      message.error('Not a csv file');
+    }
+
+  };
+
+
+
+  const imageUploadProps = {
+    beforeUpload: file => {
+      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+      if (isJpgOrPng) {
+        message.error('You cant  upload JPG/PNG file!');
+      }
+      else { setFileList([file]); }
+
+      return false;
+    },
+    fileList,
+  };
+
+  function fileExtention(filename) {
+    var parts = filename.split('.');
+    return parts[parts.length - 1];
+  }
+
+
+  const onRemoveImage = (file) => {
+    setFileList([]);
+  };
+
+
   const handleChangeProductsData = (productsData, productsTotalQuantity = 0) => {
     setProductsTableData(productsData);
     setProductsTotalQuantity(productsTotalQuantity);
@@ -263,6 +336,41 @@ const ReturnStock = () => {
   }
 
 
+  const handleCombineProductsTableData = (bulkProducts, tableProducts) => {
+    if (bulkProducts.length > tableProducts.length) {
+      bulkProducts.forEach((v, k) => {
+        tableProducts.forEach((v2, k2) => {
+          //console.log(v);
+          if (v.product_sku == v2.product_sku) {
+            v.qty = v.qty + parseFloat(v2.qty);
+            return 0;
+          }
+        });
+      });  // end of for loop
+
+      calculateProductsTotalQuantity(bulkProducts);
+      setProductsTableData(bulkProducts);
+    }   // first if
+
+    if (tableProducts.length >= bulkProducts.length) {
+      tableProducts.forEach((v, k) => {
+        bulkProducts.forEach((v2, k2) => {
+          // console.log(v);
+          if (v.product_sku == v2.product_sku) {
+            v.qty = v.qty + parseFloat(v2.qty);
+            //bulkProducts.push(selectedItemCopy);
+            return 0;
+          }
+        });
+      });  // end of for loop
+
+      calculateProductsTotalQuantity(tableProducts);
+      setProductsTableData(tableProducts);
+    }   // end of second if
+
+  };
+
+
 
   const handleSaveChanges = async () => {
     var formValues = form.getFieldsValue();
@@ -310,26 +418,66 @@ const ReturnStock = () => {
       console.log('res -> ', res);
       document.getElementById('app-loader-container').style.display = "none";
       //message.success(res.message, 1);
-      setTimeout(() => {
-        history.push({
-          pathname: '/stock-control/purchase-orders',
-          activeKey: 'purchase-orders'
-        });
-      }, 1200);
+      history.push({
+        pathname: '/stock-control/returned-stock',
+        activeKey: 'returned-stock'
+      });
+
     }
 
   }
+
+
+  
+  const handleDownloadPoForm = async () => {
+    document.getElementById('app-loader-container').style.display = "block";
+    const downloadPoResponse = await StockApiUtil.downloadPoForm();
+    console.log("downloadPoResponse:", downloadPoResponse);
+
+    if (downloadPoResponse.hasError) {
+      console.log(
+        "Cant Download PO Form -> ",
+        downloadPoResponse.errorMessage
+      );
+      document.getElementById('app-loader-container').style.display = "none";
+
+
+    } else {
+      console.log("res -> ", downloadPoResponse);
+      document.getElementById('app-loader-container').style.display = "none";
+      var csv = "SKU,Quantity\n";
+      var arr = downloadPoResponse.product;
+      arr.forEach(function (row) {
+        csv += row.product_sku + ",0\n";
+      });
+
+      //var parent = document.getElementById("download_csv");
+      var hiddenElement = document.createElement("a");
+      //parent.appendChild(hiddenElement);
+      hiddenElement.href = "data:text/csv;charset=utf-8," + encodeURI(csv);
+      hiddenElement.target = "_blank";
+      hiddenElement.download = new Date().toUTCString() + "-Product-SKU.csv";
+      hiddenElement.click();
+      //parent.removeChild(hiddenElement); 
+    }
+
+
+  };
 
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 
+  const handleBulkSwitch = (checked) => {
+    setShowBulkUpload(checked);
+  };
+
 
   const handleCancel = () => {
     history.push({
-      pathname: '/stock-control/purchase-orders',
-      activeKey: 'purchase-orders'
+      pathname: '/stock-control/returned-stock',
+      activeKey: 'returned-stock'
     });
   };
 
@@ -467,14 +615,48 @@ const ReturnStock = () => {
 
               {/* Form Section */}
               <div className="form__section">
-                {/*<div className="form__section__header">
+                <div className="form__section__header">
                   <div className="switch__row">
                     <Switch className="bulk-order-switch"
                       onChange={handleBulkSwitch} />
                     <h2>Bulk Order</h2>
                   </div>
-                </div> */}
+                </div>
 
+
+                {showBulkUpload &&
+                  <div className="form__row">
+                    <div className="form__col">
+                      <Form.Item>
+                        <Upload {...imageUploadProps} onRemove={onRemoveImage}>
+                          <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                        </Upload>
+                      </Form.Item>
+                    </div>
+
+                    <div className="form__col">
+                      <Form.Item>
+                        <Button type="primary" icon={<DownloadOutlined />}
+                          style={{ width: "100%" }}
+                          id="download_csv"
+                          onClick={handleDownloadPoForm}>
+                          Download sample File
+                    </Button>
+                      </Form.Item>
+                    </div>
+                  </div>}
+
+                {showBulkUpload &&
+                  <div className="form__row">
+                    <div className="form__col">
+                      <Form.Item>
+                        <Button type="default" onClick={handleUpload}
+                          style={{ width: "100%" }}>
+                          Done
+                    </Button>
+                      </Form.Item>
+                    </div>
+                  </div>}
 
               </div>
               {/* Form Section */}

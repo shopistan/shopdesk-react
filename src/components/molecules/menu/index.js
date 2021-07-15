@@ -306,6 +306,16 @@ const SideMenu = () => {
                 <Link to="/setup/receipts-templates" className="nav-menu-item-link" > Receipt Templates</Link>
               </Menu.Item>
             </SubMenu>}
+
+          {/* (adminUser) &&
+            <SubMenu key="superAdmin" icon={<SettingOutlined />} title="Super Admin">
+              <Menu.Item key="SuperAdminPurchaseOrders">
+                <Link to="/super-admin/stock-control/purchase-orders" className="nav-menu-item-link" >Purchase Orders</Link>
+              </Menu.Item>
+              <Menu.Item key="superAdminInventoryTransfers">
+                <Link to="/super-admin/stock-control/inventory-transfers" className="nav-menu-item-link"  >Inventory Transfers</Link>
+              </Menu.Item>
+            </SubMenu> */}
         </React.Fragment>
       )}
 

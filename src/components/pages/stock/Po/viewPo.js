@@ -117,6 +117,7 @@ const PrintSalesInvoice = (props) => {
                         <tr>
                             <th>Product Name</th>
                             <th>SKU</th>
+                            <th>Quantity left</th>
                             <th>Quantity ordered</th>
                             <th>Price</th>
                             <th>Total</th>
@@ -125,6 +126,7 @@ const PrintSalesInvoice = (props) => {
                     <tbody>
 
                         {poData.products.map(pro => {
+                            let qtyReceived = pro.recieved_by_total.split('/')[0];         //imp new ver
                             return (
 
                                 <tr key={pro.product_id} >
@@ -138,13 +140,13 @@ const PrintSalesInvoice = (props) => {
 
                                     <td  style={{textAlign: "center"}}>{pro.product_sku} </td>
                                     <td style={{textAlign: "center"}}>{pro.purchase_order_junction_quantity}</td>
+                                    <td style={{textAlign: "center"}}>{pro.recieved_by_total}</td>
                                     <td style={{textAlign: "center"}}>{(currency || "") + parseFloat(pro.purchase_order_junction_price).toFixed(2)}</td>
                                     <td style={{ textAlign: "center" }}>
                                         {
                                             <span>
                                                 {
-                                                    (currency || "") + (parseFloat(pro.purchase_order_junction_quantity) * parseFloat(pro.purchase_order_junction_price)).toFixed(2)
-
+                                                    (currency || "") + (parseFloat(qtyReceived) * parseFloat(pro.purchase_order_junction_price)).toFixed(2)
                                                 }
                                             </span>
 

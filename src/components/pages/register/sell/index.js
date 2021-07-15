@@ -98,6 +98,7 @@ function Sell() {
         rt = true;
       }
       tmpInvoice.OldInvoiceNo = history.location.selected_invoice_id;
+      tmpInvoice.discountVal = selectedViewedInvoice.invoice_details.discount_percentage;    /*imp pending for now */
       tmpInvoice.products = selectedViewedInvoice.invoices;
       tmpInvoice.return = rt;
       if (selectedViewedInvoice.hasCustomer == true) {
@@ -322,6 +323,30 @@ function Sell() {
     //setSaleInvoiceData(saleInvoiceData);
     updateCart(saleInvoiceData);
   };
+
+
+  const selectCustomerOnEnter = (event) => {
+    //console.log(event);
+    if (event.key === "Enter") {
+      //console.log(" enter");
+      customersData.forEach((cus) => {
+        if ((cus.customer_name).toLowerCase()  === selectedCustomerValue.toLowerCase()) {
+          setSelectedCutomer(cus);     //passes customer
+          //console.log(cus);
+          saleInvoiceData.customer = cus;
+          saleInvoiceData.hasCustomer = true;
+          return 0;
+        }
+      });
+
+      updateCart(saleInvoiceData);     //imp
+   
+    } else {
+      //console.log("not enter");
+    }
+
+  };
+
 
   const handleDeleteSale = (e) => {
     saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, null);
@@ -550,8 +575,8 @@ function Sell() {
           saleInvoiceData.total - saleInvoiceData.discountAmount
         ).toFixed(2);
         if (parseFloat(saleInvoiceData.customer.balance) < invoiceTotal) {
-          message.warning("Insufficient Balance", 3);     //imp 
-          return;                                          //imp
+          //message.warning("Insufficient Balance", 3);      //imp 
+          //return;                                          //imp
         }
       } //end of inner if (customer selected)
 
@@ -1114,13 +1139,6 @@ function Sell() {
 
               />
             </Form.Item>
-            <Form.Item
-              label='Invoice Note'
-              name='invoiceNote'
-              onChange={handleInvoiceNoteChange}
-            >
-              <Input placeholder='input Invoice Note' />
-            </Form.Item>
             <Form.Item label='Tax Category' name='tax_value'>
               <Select
                 onChange={handleTaxCategoryChange}
@@ -1144,6 +1162,13 @@ function Sell() {
                   FBS
                 </Option>
               </Select>
+            </Form.Item>
+            <Form.Item
+              label='Invoice Note'
+              name='invoiceNote'
+              onChange={handleInvoiceNoteChange}
+            >
+              <Input placeholder='input Invoice Note' />
             </Form.Item>
           </Form>
         </div>
@@ -1191,6 +1216,7 @@ function Sell() {
                 onSearch={handleCustomerSearch}
                 onSelect={handleCustomerSelect}
                 placeholder='select customer'
+                onKeyDown={selectCustomerOnEnter}
               >
                 {customersData &&
                   customersData.map((item) => (

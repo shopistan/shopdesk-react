@@ -422,12 +422,15 @@ const Dashboard = () => {
 
                 <Pie
                   data={salesHistoryPieChartDataSets}
+                  width={100}
+	                height={100}
                   options={{
                     responsive: true,
                     title: {
                       display: true,
                       text: "Sales Channel",
                     },
+                    maintainAspectRatio: true,     //imp 
                   }}
                 />
               </div>

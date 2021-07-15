@@ -7,6 +7,23 @@
     }
 }
 
+.products-listing-table .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr {
+  .product-name-heading{
+    width: 20%;
+  }
+}
+
+
+.products-editable-cell-value-wrap .product-editable-cell-icon {
+
+  float: right;
+  border: 1px solid #1eb488;
+  color: #1eb488;
+  padding: 0.2rem;
+
+}
+
+
 .products-lookup-count,
 .products-discount-tag{
   background-color: #337ab7;

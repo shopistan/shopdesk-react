@@ -436,7 +436,7 @@ const PurchaseOrder = () => {
           pathname: '/stock-control/purchase-orders',
           activeKey: 'purchase-orders'
         });
-      }, 1200);
+      });
     }
 
   }

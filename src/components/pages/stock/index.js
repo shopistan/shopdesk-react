@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
 
+import React, { useEffect, useState } from "react";
 import { Button, Tabs, Menu, Dropdown, DatePicker, Divider } from "antd";
 import { ProfileOutlined, DownOutlined, BarsOutlined, DownloadOutlined } from "@ant-design/icons";
 import PurchaseOrders from "./Po";
@@ -12,7 +12,6 @@ import {
 } from "../../../utils/local-storage/local-store-utils";
 import { useHistory } from "react-router-dom";
 import moment from 'moment';
-
 
 const dateFormat = "YYYY-MM-DD";
 
@@ -98,7 +97,9 @@ function Stock(props) {
 
 
   const ExportToCsv = () => {
+    let dates = [...selectedDates];
     setExportCsvCheck(true);
+    setselectedDatesRange(dates);   //imp to set here too for rerendering childs
   };
 
 
@@ -145,6 +146,8 @@ function Stock(props) {
   );
 
 
+
+
   return (
     <div className="page setup">
       <div className="page__header">
@@ -152,17 +155,16 @@ function Stock(props) {
 
         <div className="page__header__buttons">
 
-          {activeKey === "inventory-transfers"  &&
-            <Button type='primary'
-              className='custom-btn custom-btn--primary'
-              icon={<DownloadOutlined />}
-              onClick={ExportToCsv}
-            >
-              Export CSV
-            </Button>}
+          <Button type='primary'
+            className='custom-btn custom-btn--primary'
+            icon={<DownloadOutlined />}
+            onClick={ExportToCsv}
+          >
+            Export CSV
+          </Button>
 
           <Dropdown overlay={OptionsDropdown}
-           placement="bottomCenter" trigger={["click"]}>
+            placement="bottomCenter" trigger={["click"]}>
             <Button
               type="Default"
               icon={<DownOutlined />}
@@ -178,7 +180,7 @@ function Stock(props) {
 
       <div className="page__content stock-control">
 
-        {activeKey === "inventory-transfers"  && <div className='action-row stock-transfer-row-date-picker'>
+        <div className='action-row stock-transfer-row-date-picker'>
           <RangePicker
             className='date-picker'
             onCalendarChange={handleRangePicker}
@@ -191,7 +193,7 @@ function Stock(props) {
           >
             Fetch
             </Button>
-        </div>}
+        </div>
         <Divider />
 
 
@@ -199,7 +201,7 @@ function Stock(props) {
 
           {userLocalStorageData && stockScopeFilter(userLocalStorageData.user_info || null) &&
             <TabPane tab="Purchase Orders" key="purchase-orders">
-              <PurchaseOrders />
+              <PurchaseOrders selectedDates={selectedDatesRange} exportTransferCheck={exportCsvCheck}  />
             </TabPane>}
 
           <TabPane tab="Inventory Transfers" key="inventory-transfers">
@@ -208,12 +210,12 @@ function Stock(props) {
 
           {userLocalStorageData && stockScopeFilter(userLocalStorageData.user_info || null) &&
             <TabPane tab="Stock Adjustment" key="stock-adjustments">
-              <StockAdjustment />
+              <StockAdjustment selectedDates={selectedDatesRange} exportTransferCheck={exportCsvCheck}  />
             </TabPane>}
 
           {userLocalStorageData && stockScopeFilter(userLocalStorageData.user_info || null) &&
             <TabPane tab="Returned Stock" key="returned-stock">
-              <StockReturned />
+              <StockReturned selectedDates={selectedDatesRange} exportTransferCheck={exportCsvCheck}  />
             </TabPane>}
 
         </Tabs>

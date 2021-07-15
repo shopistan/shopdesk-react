@@ -6,10 +6,12 @@ import axios from 'axios';
 import $ from 'jquery';
 
 
-export const viewPurchaseOrders = async (limit, pageNumber) => {
+export const viewPurchaseOrders = async (limit, pageNumber, startDate, finishDate) => {
     const formDataPair = {
         limit: limit,
         page: pageNumber,
+        startDate,
+        finishDate,
     };
 
     const viewPurchaseOrdersFormDataBody = ApiCallUtil.constructFormData(formDataPair);
@@ -189,10 +191,12 @@ export const returnStock = async (returnStockData) => {
 };
 
 
-export const viewStockAdjustments = async (limit, pageNumber) => {
+export const viewStockAdjustments = async (limit, pageNumber, startDate, finishDate) => {
     const formDataPair = {
         limit: limit,
         page: pageNumber,
+        startDate,
+        finishDate,
     };
 
     const viewStockAdjustmentsFormDataBody = ApiCallUtil.constructFormData(formDataPair);
@@ -207,10 +211,12 @@ export const viewStockAdjustments = async (limit, pageNumber) => {
 };
 
 
-export const viewStockReturned = async (limit, pageNumber) => {
+export const viewStockReturned = async (limit, pageNumber, startDate, finishDate) => {
     const formDataPair = {
         limit: limit,
         page: pageNumber,
+        startDate,
+        finishDate,
     };
 
     const viewStockReturnedFormDataBody = ApiCallUtil.constructFormData(formDataPair);
@@ -223,7 +229,6 @@ export const viewStockReturned = async (limit, pageNumber) => {
         viewStockReturnedFormDataBody, //body
     );
 };
-
 
 
 export const viewStockReturnedDataByReturnId = async (returnId) => {
@@ -243,6 +248,21 @@ export const viewStockReturnedDataByReturnId = async (returnId) => {
 };
 
 
+export const viewStockPurchaseOrdersViewGrnByPoId = async (purchaseOrderId) => {
+    const formDataPair = {
+        po: purchaseOrderId,
+    };
+
+    const viewStockPurchaseOrderByPoIdFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+    const url = UrlConstants.STOCK.PO_VIEW_GRN;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        viewStockPurchaseOrderByPoIdFormDataBody, //body
+    );
+};
 
 
 export const addStockAdjustment = async (addStockAdjustmentData) => {
@@ -327,6 +347,97 @@ export const exportInventoryTransfers = async (params) => {
         })
 
 };
+
+
+export const exportPurchaseOrders = async (params) => {
+
+    let query = Object.keys(params)
+    .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+    .join('&');
+    
+
+    //const url = UrlConstants.SALES.EXPORT_INVENTORY_DUMP+`/${storeId}`;         //imp prev
+    const url = UrlConstants.STOCK.EXPORT_PURCHASE_ORDERS+'?'+ query;
+    const headers = {
+        'Authorization': ApiCallUtil.getUserAuthToken(),
+    };
+
+    return await axios.get(url, {
+        headers: headers
+    })
+        .then(async (res) => {
+            console.log('Purchase Orders Export Data Response -> ', res);
+            return { hasError: false, message: "Purchase Orders Succesfully Exported", data: res.data };
+
+        })
+        .catch((error) => {
+            console.log("AXIOS ERROR: ", error);
+            return { hasError: true, errorMessage: error };
+
+        })
+
+};
+
+
+export const exportStockAdjustments = async (params) => {
+
+    let query = Object.keys(params)
+    .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+    .join('&');
+    
+
+    //const url = UrlConstants.SALES.EXPORT_INVENTORY_DUMP+`/${storeId}`;         //imp prev
+    const url = UrlConstants.STOCK.EXPORT_STOCK_ADJUSTMENTS+'?'+ query;
+    const headers = {
+        'Authorization': ApiCallUtil.getUserAuthToken(),
+    };
+
+    return await axios.get(url, {
+        headers: headers
+    })
+        .then(async (res) => {
+            console.log('Stock Adjustments Export Data Response -> ', res);
+            return { hasError: false, message: "Stock Adjustments Succesfully Exported", data: res.data };
+
+        })
+        .catch((error) => {
+            console.log("AXIOS ERROR: ", error);
+            return { hasError: true, errorMessage: error };
+
+        })
+
+};
+
+
+export const exportReturnedStock = async (params) => {
+
+    let query = Object.keys(params)
+    .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+    .join('&');
+    
+
+    //const url = UrlConstants.SALES.EXPORT_INVENTORY_DUMP+`/${storeId}`;         //imp prev
+    const url = UrlConstants.STOCK.EXPORT_STOCK_RETURNED+'?'+ query;
+    const headers = {
+        'Authorization': ApiCallUtil.getUserAuthToken(),
+    };
+
+    return await axios.get(url, {
+        headers: headers
+    })
+        .then(async (res) => {
+            console.log('Stock Returned Export Data Response -> ', res);
+            return { hasError: false, message: "Stock Returned Succesfully Exported", data: res.data };
+
+        })
+        .catch((error) => {
+            console.log("AXIOS ERROR: ", error);
+            return { hasError: true, errorMessage: error };
+
+        })
+
+};
+
 
 
 

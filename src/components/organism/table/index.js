@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
-import { Table, Input, InputNumber, Pagination, Form, Typography } from "antd";
+import React, { useState, useEffect, } from "react";
+import { Table, Form, Typography } from "antd";
 import { useHistory } from "react-router-dom";
 
 const EditableTable = (props) => {

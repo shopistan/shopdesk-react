@@ -1,7 +1,9 @@
 import UrlConstants from '../constants/url-configs';
 import GenericConstants from '../constants/constants';
 import * as ApiCallUtil from './generic-api-utils';
+import axios from 'axios';
 import $ from 'jquery';
+
 
 export const addProduct = async (productAddData) => {
     //const addProductFormDataBody = createComplexAddFormData(productAddData);  //impp
@@ -244,6 +246,51 @@ export const getProductMovementReport = async (productId) => {
         producttMovementReportFormDataBody //body
     );
 };
+
+
+export const getStoreId = async () => {
+
+    const url = UrlConstants.PRODUCTS.GET_STORE;
+    const callType = GenericConstants.API_CALL_TYPE.GET;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+    );
+};
+
+
+
+export const exportProductsData = async (params) => {
+
+    let query = Object.keys(params)
+    .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+    .join('&');
+    
+
+    //const url = UrlConstants.SALES.EXPORT_INVENTORY_DUMP+`/${storeId}`;         //imp prev
+    const url = UrlConstants.PRODUCTS.EXPORT_PRODUCTS+'?'+ query;
+    const headers = {
+        'Authorization': ApiCallUtil.getUserAuthToken(),
+    };
+
+    return await axios.get(url, {
+        headers: headers
+    })
+        .then(async (res) => {
+            console.log('Products Export Data Response -> ', res);
+            return { hasError: false, message: "Products Data Succesfully Exported", data: res.data };
+
+        })
+        .catch((error) => {
+            console.log("AXIOS ERROR: ", error);
+            return { hasError: true, errorMessage: error };
+
+        })
+
+};
+
+
 
 export const createComplexAddFormData = (addProductData) => {
     const addProductFormDataBody = new FormData();

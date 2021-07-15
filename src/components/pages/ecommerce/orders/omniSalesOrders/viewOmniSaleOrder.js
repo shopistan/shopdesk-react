@@ -2,43 +2,41 @@
 import React, { useEffect, useState } from "react";
 import "../../style.scss";
 import {
-    Tabs,
     Menu,
     Dropdown,
     Button,
-    Input,
-    Select,
     message,
     Row,
     Col,
     Divider,
-    Spin
 } from "antd";
 import { useHistory } from "react-router-dom";
 import moment from 'moment';
 import OmniSalesOrderProductsTable from "../../../../organism/table/ecommerce/omniSalesOrdersProductsTable";
 import { ProfileOutlined, DownOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import * as EcommerceApiUtil from '../../../../../utils/api/ecommerce-api-utils';
+import * as SetupApiUtil from '../../../../../utils/api/setup-api-utils';
 import Constants from '../../../../../utils/constants/constants';
 import {
     getDataFromLocalStorage,
 } from "../../../../../utils/local-storage/local-store-utils";
+import PrintSalesOrders from "./printSalesOrder";
 
 
 
 
 
 const ViewOmniSaleOrder = (props) => {
-    const { Search } = Input;
-    const { Option } = Select;
     const history = useHistory();
     const [paginationLimit, setPaginationLimit] = useState(20);
     const [saleOrderCustomerInfo, setSaleOrdercustomerInfo] = useState(null);
     const [saleOrderInvoiceData, setSaleOrderInvoiceData] = useState(null);
     const [saleOrderProductsData, setSaleOrderProducts] = useState([]);
+    const [selectedSalesInvoiceBulkDataArr, setSelectedSalesInvoiceBulkDataArr] = useState([]);
     const [saleOrdersInvoiceTotal, setSaleOrdersInvoiceTotal] = useState(0);
     const [userLocalStorageData, setUserLocalStorageData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [outletData, setOutletData] = useState(null);
     const { match = {} } = props;
     const { invoice_id = {} } = match !== undefined && match.params;
 
@@ -54,6 +52,7 @@ const ViewOmniSaleOrder = (props) => {
             var readFromLocalStorage = getDataFromLocalStorage(Constants.USER_DETAILS_KEY);
             readFromLocalStorage = readFromLocalStorage.data ? readFromLocalStorage.data : null;
             setUserLocalStorageData(readFromLocalStorage);
+            getUserStoreData(readFromLocalStorage.auth.current_store);      //new one imp to get user outlet data
             /*--------------set user local data-------------------------------*/
         }
         else {
@@ -91,6 +90,13 @@ const ViewOmniSaleOrder = (props) => {
                 setSaleOrdercustomerInfo(fetchOeSaleOrderViewResponse.customer_info);
                 setSaleOrderInvoiceData(fetchOeSaleOrderViewResponse.invoice_data);
                 setSaleOrderProducts(fetchOeSaleOrderViewResponse.invoice_products);
+                /*-------------new version for print invoice-----------------*/
+                let invoiceResponseData = {};
+                invoiceResponseData.customer_info = fetchOeSaleOrderViewResponse.customer_info;
+                invoiceResponseData.invoice_data = fetchOeSaleOrderViewResponse.invoice_data; 
+                invoiceResponseData.invoice_products = fetchOeSaleOrderViewResponse.invoice_products;
+                setSelectedSalesInvoiceBulkDataArr([invoiceResponseData]);
+                 /*-------------new version for print invoice-----------------*/
                 let products = fetchOeSaleOrderViewResponse.invoice_products;
                 let invoiceData = fetchOeSaleOrderViewResponse.invoice_data;
                 let total = 0;
@@ -167,21 +173,49 @@ const ViewOmniSaleOrder = (props) => {
 
 
     const handlePrintOverview = (e) => {
-        var previewSalesHtml = document.getElementById("omni-sales-orders-view").innerHTML;
+        /*var previewSalesHtml = document.getElementById("omni-sales-orders-view").innerHTML;
         var previewSalesHtmlHeading = document.getElementById("omni-sale-order-heading").innerHTML;
         var doc =
             '<html><head><title></title><link rel="stylesheet" type="text/css" /></head><body onload="window.print(); window.close();">' +
             previewSalesHtmlHeading + previewSalesHtml +
+            "</body></html>"; */    //imp prev ver
+
+        let previewSalesInvoicesHtml = document.getElementById("printSalesInvoiceBulkView").innerHTML;
+        let doc =
+            '<html><head><title></title><link rel="stylesheet" type="text/css" /></head><body onload="window.print(); window.close();">' +
+            previewSalesInvoicesHtml+
             "</body></html>";
+        
         /* NEW TAB OPEN PRINT */
         /* NEW TAB OPEN PRINT */
         var popupWin = window.open("", "_blank");
         popupWin.document.open();
         // window.print(); window.close(); 'width: 80%, height=80%'
         popupWin.document.write(doc);
-        //popupWin.document.close();  //vvimp for autoprint
+        popupWin.document.close();  //vvimp for autoprint
         
     };
+
+
+
+    const getUserStoreData = async (storeId) => {
+        document.getElementById('app-loader-container').style.display = "block";
+        const getOutletViewResponse = await SetupApiUtil.getOutlet(storeId);
+        console.log('getOutletViewResponse:', getOutletViewResponse);
+    
+        if (getOutletViewResponse.hasError) {
+          console.log('Cant fetch Store Data -> ', getOutletViewResponse.errorMessage);
+          //message.warning(getOutletViewResponse.errorMessage, 3);
+          document.getElementById('app-loader-container').style.display = "none";
+        }
+        else {
+          console.log('res -> ', getOutletViewResponse);
+          let selectedStore = getOutletViewResponse.outlet;
+          //message.success(getOutletViewResponse.message, 3);
+          setOutletData(selectedStore);
+    
+        }
+      }
 
 
 
@@ -219,6 +253,19 @@ const ViewOmniSaleOrder = (props) => {
 
 
     return (
+        <>
+
+
+        {/* print sales overview */}
+        {(selectedSalesInvoiceBulkDataArr && selectedSalesInvoiceBulkDataArr.length >0  ) && (
+        <PrintSalesOrders
+            SalesInvoiceDataArr={selectedSalesInvoiceBulkDataArr}
+            selectedOutlet={outletData && outletData}
+            
+        />
+        )}
+
+
         <div id="omni-sale-order-page"  className="page ecom-orders">
 
             <div className="page__header">
@@ -298,7 +345,7 @@ const ViewOmniSaleOrder = (props) => {
                                         <span className="sale-order-item-content-font">
                                             Coupon Discount &nbsp;&nbsp;&nbsp;
                                         </span>
-                                        <span>{parseFloat(saleOrderInvoiceData.invoice_discount).toFixed(2)}</span>
+                                        <span>{(outletData && outletData.currency_symbol)+parseFloat(saleOrderInvoiceData.invoice_discount).toFixed(2)}</span>
                                     </Col>
                                     <Col xs={24} sm={24} md={24} className="sale-order-item-content">
                                         <span className="sale-order-item-content-font">
@@ -310,14 +357,14 @@ const ViewOmniSaleOrder = (props) => {
                                         <span className="sale-order-item-content-font">
                                             Shipping cost &nbsp;&nbsp;&nbsp;
                                         </span>
-                                        <span>{parseFloat(saleOrderInvoiceData.invoice_shipping_price).toFixed(2)}</span>
+                                        <span>{(outletData && outletData.currency_symbol)+parseFloat(saleOrderInvoiceData.invoice_shipping_price).toFixed(2)}</span>
                                     </Col>
                                     <Col xs={24} sm={24} md={24} className="sale-order-item-content">
                                         <span className="sale-order-item-content-font">
                                             Total &nbsp;&nbsp;&nbsp;
                                         </span>
                                         <span>
-                                            {userLocalStorageData.currency.symbol+parseFloat(saleOrdersInvoiceTotal).toFixed(2)}
+                                            {(outletData && outletData.currency_symbol)+parseFloat(saleOrdersInvoiceTotal).toFixed(2)}
                                         </span>
                                     </Col>
 
@@ -382,7 +429,8 @@ const ViewOmniSaleOrder = (props) => {
                                     pageLimit={paginationLimit}
                                     tableData={saleOrderProductsData}
                                     tableDataLoading={loading}
-                                    currency={userLocalStorageData.currency.symbol}
+                                    //currency={userLocalStorageData.currency.symbol}        //imp prev ver
+                                    currency={outletData && outletData.currency_symbol}
                                 />
                             </div>
                             {/* Table */}
@@ -392,6 +440,8 @@ const ViewOmniSaleOrder = (props) => {
 
                 </div>}
         </div>
+
+        </>
     );
 }
 
