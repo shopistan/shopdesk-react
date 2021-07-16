@@ -307,7 +307,7 @@ const SideMenu = () => {
               </Menu.Item>
             </SubMenu>}
 
-          {/* (adminUser) &&
+          { (adminUser) &&
             <SubMenu key="superAdmin" icon={<SettingOutlined />} title="Super Admin">
               <Menu.Item key="SuperAdminPurchaseOrders">
                 <Link to="/super-admin/stock-control/purchase-orders" className="nav-menu-item-link" >Purchase Orders</Link>
@@ -315,7 +315,7 @@ const SideMenu = () => {
               <Menu.Item key="superAdminInventoryTransfers">
                 <Link to="/super-admin/stock-control/inventory-transfers" className="nav-menu-item-link"  >Inventory Transfers</Link>
               </Menu.Item>
-            </SubMenu> */}
+            </SubMenu> }
         </React.Fragment>
       )}
 

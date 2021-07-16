@@ -23,10 +23,11 @@ const Products = () => {
   const [searchedData, setSearchedData] = useState(null);
   const [currentPageSearched, setCurrentPageSearched] = useState(1);
   const [userOutletData, setUserOutletData] = useState(null);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
 
 
-  var mounted = true;
+  let mounted = true;
 
   const { Option } = Select;
   const { Search } = Input;
@@ -187,12 +188,15 @@ const Products = () => {
   const ExportToCsv = async (e) => {
 
     if (data.length > 0) {
-      document.getElementById('app-loader-container').style.display = "block";
+      if (buttonDisabled === false) {
+        setButtonDisabled(true);}
+      //document.getElementById('app-loader-container').style.display = "block";
       const getStoreResponse = await SalesApiUtil.getStoreId();
       if (getStoreResponse.hasError) {
         const errorMessage = getStoreResponse.errorMessage;
         console.log('Cant get Store Id -> ', errorMessage);
-        document.getElementById('app-loader-container').style.display = "none";
+        setButtonDisabled(false);
+        //document.getElementById('app-loader-container').style.display = "none";
         message.error(errorMessage, 3);
       } else {
         console.log("Success:", getStoreResponse.message);
@@ -221,28 +225,28 @@ const Products = () => {
         "Cant Export Products Data-> ",
         productsExportResponse.errorMessage
       );
-      
-      document.getElementById('app-loader-container').style.display = "none";
+      setButtonDisabled(false);
+      //document.getElementById('app-loader-container').style.display = "none";
       message.error(productsExportResponse.errorMessage, 3);
 
     } else {
       //console.log("res -> ", stockAdjustmentsExportResponse.data);
       /*---------------csv download--------------------------------*/
-      if (mounted) {     //imp if unmounted
-        // CSV FILE
-        let csvFile = new Blob([productsExportResponse.data], { type: "text/csv" });
-        let url = window.URL.createObjectURL(csvFile);
-        let a = document.createElement('a');
-        a.href = url;
-        a.download = "products_" + new Date().toUTCString() + ".csv";
-        document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
-        a.click();
-        a.remove();  //afterwards we remove the element again
-        /*---------------csv download--------------------------------*/
-        document.getElementById('app-loader-container').style.display = "none";
-        //message.success(productsExportResponse.message, 3);
-
+      // CSV FILE
+      let csvFile = new Blob([productsExportResponse.data], { type: "text/csv" });
+      let url = window.URL.createObjectURL(csvFile);
+      let a = document.createElement('a');
+      a.href = url;
+      a.download = "products_" + new Date().toUTCString() + ".csv";
+      document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+      a.click();
+      a.remove();  //afterwards we remove the element again
+      /*---------------csv download--------------------------------*/
+      if (mounted) {               //imp if not mounted then change state
+        setButtonDisabled(false);
       }
+      //document.getElementById('app-loader-container').style.display = "none";
+      //message.success(productsExportResponse.message, 3);
 
     }
 
@@ -284,6 +288,7 @@ const Products = () => {
             className='custom-btn custom-btn--primary'
             icon={<DownloadOutlined />}
             onClick={ExportToCsv}
+            disabled={buttonDisabled}
           >
             Export CSV
           </Button>

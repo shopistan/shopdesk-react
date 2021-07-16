@@ -178,7 +178,7 @@ function validateEmail(email) {
   return re.test(email);
 }
 
-function current_datetime() {
+export function current_datetime() {
   var currentdate = new Date();
   var datetime =
     currentdate.getFullYear() +

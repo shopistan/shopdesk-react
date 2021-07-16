@@ -82,6 +82,24 @@ export const registerInvoice = async (invoiceQueue) => {
 };
 
 
+export const deadSaleHistory = async (oldInvoiceNo) => {
+    const formDataPair = {
+        invoice_id: oldInvoiceNo,
+    };
+    
+    const deadInvoiceHistoryFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+    const url = UrlConstants.SALES.REGISTER_INVOICE_MARK_DEAD;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+ 
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        deadInvoiceHistoryFormDataBody, //body
+    );
+
+};
+
+
 export const getStoreId = async () => {
 
     const url = UrlConstants.SALES.GET_STORE;
