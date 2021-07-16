@@ -7,11 +7,11 @@ import Constants from '../../../../utils/constants/constants';
 import {
   getDataFromLocalStorage,
 } from "../../../../utils/local-storage/local-store-utils";
+import * as Helpers from "../../../../utils/helpers/scripts";
 import moment from 'moment';
 
+
 const dateFormat = "YYYY-MM-DD";
-
-
 
 const { Text } = Typography;
 
@@ -108,9 +108,13 @@ const TransferInventory = (props) => {
 
   const confirmForceClose = async () => {
 
-    var transferId = forceCloseOrderData.transfer_id;
+    let transferId = forceCloseOrderData.transfer_id;
+    let todayDate = Helpers.current_datetime();
+    let transferStatus  = 2;                   //imp for force closed
     const closeTransferResponse = await StockApiUtil.closeTransferInventoryOrder(
-      transferId
+      transferId,
+      transferStatus,
+      todayDate,
     );
     console.log('closeTransferResponse:',  closeTransferResponse);
 

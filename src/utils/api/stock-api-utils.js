@@ -158,9 +158,11 @@ export const addReceiveTransfersStatus = async (addReceiveTransferStatusData) =>
     );
 };
 
-export const closeTransferInventoryOrder = async (closeTransferInventoryId) => {
+export const closeTransferInventoryOrder = async (closeTransferInventoryId, transferStatus, todayDate) => {
     const formDataPair = {
         transfer_id: closeTransferInventoryId,
+        status:  transferStatus,
+        date : todayDate,
     };
 
     const closeTransferInventoryFormDataBody = ApiCallUtil.constructFormData(formDataPair);
