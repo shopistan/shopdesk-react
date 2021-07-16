@@ -77,7 +77,7 @@ const SalesHistory = () => {
   var mounted = true;
 
 
-  const salesTypeEnum = { PARKED: "1", COMPLETED: "0", DEAD: "1", RETURNED: "1" }
+  const salesTypeEnum = { PARKED: "1", COMPLETED: "0", RETURNED_COMPLETED: "2", DEAD: "1", RETURNED: "1" }
   const salesHistoryEnum = {
     CONTINUE: "continue-sales",
     RETURNED: "returned-sales",
@@ -243,7 +243,7 @@ const SalesHistory = () => {
 
     if (currentTabKey === salesHistoryEnum.RETURNED) {
       filteredData = searchedDataRecordsAccumulate.filter((sale) => {
-        return (sale.invoice_status === salesTypeEnum.COMPLETED && sale.is_returned === salesTypeEnum.RETURNED);
+        return (sale.invoice_status === salesTypeEnum.RETURNED_COMPLETED && sale.is_returned === salesTypeEnum.RETURNED);
       });
       setDataSearchedAccumulate(filteredData);
     }
@@ -281,7 +281,7 @@ const SalesHistory = () => {
 
     if (currentTab === salesHistoryEnum.RETURNED) {
       filteredData = salesHistoryDataRecords.filter((sale) => {
-        return (sale.invoice_status === salesTypeEnum.COMPLETED && sale.is_returned === salesTypeEnum.RETURNED);
+        return (sale.invoice_status === salesTypeEnum.RETURNED_COMPLETED && sale.is_returned === salesTypeEnum.RETURNED);
       });
       setSelectedTabData(filteredData);
     }
@@ -320,7 +320,7 @@ const SalesHistory = () => {
 
     if (key === salesHistoryEnum.RETURNED) {
       filteredData = salesHistoryData.filter((sale) => {
-        return (sale.invoice_status === salesTypeEnum.COMPLETED && sale.is_returned === salesTypeEnum.RETURNED);
+        return (sale.invoice_status === salesTypeEnum.RETURNED_COMPLETED && sale.is_returned === salesTypeEnum.RETURNED);
       });
       setSelectedTabData(filteredData);
     }

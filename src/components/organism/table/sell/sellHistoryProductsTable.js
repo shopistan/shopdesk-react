@@ -89,7 +89,7 @@ const SellHistoryProductsTable = (props) => {
             render: (_, record) => {
                 return (
                     <div>
-                        { parseFloat(record.discounted_amount).toFixed(2)}
+                        { parseFloat(record.inv_discount).toFixed(2)}
                     </div>
                 );
             }
