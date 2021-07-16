@@ -63,6 +63,7 @@ import ViewInvoice from "./components/pages/register/invoice/viewInvoice";
 import Stock from "./components/pages/stock";
 import PurchaseOrder from "./components/pages/stock/order";
 import PurchaseOrderViewGrn from "./components/pages/stock/Po/viewGrn";
+import TransferViewGrn from "./components/pages/stock/Transfer/viewGrn";
 import ReceiveStock from "./components/pages/stock/stockReceive";
 import ViewStockReturn from "./components/pages/stock/ReturnedStock/viewStockReturn";
 import ReceiveStockTransfer from "./components/pages/stock/stockReceive/transfer";
@@ -162,7 +163,7 @@ const Routes = () => {
   };
 
   const PrivateRoute = ({ component: Component, ...rest }) => {
-    //console.log(rest.path.split('/'));
+    console.log(rest.path.split('/'));
     var readFromLocalStorage = getDataFromLocalStorage("user");
     var authExpirationTokenDate;
     let routePathName = rest.path.split("/")[1]; //imp to split path
@@ -443,6 +444,11 @@ const Routes = () => {
           path="/stock-control/purchase-orders/:po_id/grn/view"
           component={(props) => <PurchaseOrderViewGrn {...props} />}
         />
+        <PrivateRoute
+          exact
+          path="/stock-control/inventory-transfers/:transfer_id/grn/view"
+          component={(props) => <TransferViewGrn {...props} />}
+        />
         {/*<PrivateRoute
           exact
           path="/super-admin/stock-control/purchase-orders"
@@ -452,7 +458,7 @@ const Routes = () => {
           exact
           path="/super-admin/stock-control/inventory-transfers"
           component={() => <SaStock  activeKey={'inventory-transfers'} />}
-        /> */}
+        />*/}
         <PrivateRoute
           exact
           path="/setup/users"

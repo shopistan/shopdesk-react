@@ -265,6 +265,24 @@ export const viewStockPurchaseOrdersViewGrnByPoId = async (purchaseOrderId) => {
 };
 
 
+export const viewStockTransfersViewGrnByTransferId = async (transferId) => {
+    const formDataPair = {
+        transfer_id: transferId,
+    };
+
+    const viewStockTransferGrnByTransferIdFormDataBody = ApiCallUtil.constructFormData(formDataPair);
+    const url = UrlConstants.STOCK.TRANSFER_VIEW_GRN;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        viewStockTransferGrnByTransferIdFormDataBody, //body
+    );
+};
+
+
+
 export const addStockAdjustment = async (addStockAdjustmentData) => {
 
     const addStockAdjustmentFormDataBody =  $.param(addStockAdjustmentData);

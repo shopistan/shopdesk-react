@@ -93,9 +93,14 @@ function Sell() {
       var selectedViewedInvoice = history.location.selected_invoice_data;
       //console.log("invoice-imp", selectedViewedInvoice );
       var tmpInvoice = createNewInvoice();
-      var rt = false;
+      let rt = false;
+      let saleStatus = ""
       if (selectedViewedInvoice.status_invoice == 0) {
         rt = true;
+        tmpInvoice.saleStatus = "returned";
+      }
+      if(selectedViewedInvoice.status_invoice == 1){
+        tmpInvoice.saleStatus = "parked";
       }
       tmpInvoice.OldInvoiceNo = history.location.selected_invoice_id;
       tmpInvoice.discountVal = selectedViewedInvoice.invoice_details.discount_percentage;    /*imp pending for now */
@@ -357,6 +362,45 @@ function Sell() {
     updateCart(newInvoice);
   };
 
+
+  
+  const handleDeadSale = async (e) => {
+
+    let oldInvoiceId = saleInvoiceData.OldInvoiceNo || "";
+    document.getElementById('app-loader-container').style.display = "block";
+    const salesHistoryDeadResponse = await SalesApiUtil.deadSaleHistory(
+      oldInvoiceId,
+    );
+    console.log('salesHistoryViewResponse:', salesHistoryDeadResponse);
+    if (salesHistoryDeadResponse.hasError) {
+      console.log('Cant fetch registered products Data -> ', salesHistoryDeadResponse.errorMessage);
+      document.getElementById('app-loader-container').style.display = "none";
+      //message.warning(salesHistoryViewResponse.errorMessage, 3);
+    }
+    else {
+
+      if (mounted) {     //imp if unmounted
+        ////////////////////////update local////////////////////////////
+        saveDataIntoLocalStorage(Constants.SELL_CURRENT_INVOICE_KEY, null);
+        form.setFieldsValue({
+          tax_value: "",
+        }); //imp
+        let newInvoice = createNewInvoice();
+        updateCart(newInvoice);
+        ////////////////////////update local////////////////////////////
+        document.getElementById('app-loader-container').style.display = "none";
+        //message.success(salesHistoryDeadResponse.message, 2);
+        history.push({
+          pathname: "/register/salesHistory",
+        });
+
+      }
+    }
+
+
+  };
+
+
   const handleDiscountChange = (e) => {
     saleInvoiceData.isDiscount = true;
     updateCart(saleInvoiceData);
@@ -563,6 +607,7 @@ function Sell() {
     //console.log(clonedInvoiceData);
 
     saleInvoiceData.status = status; //imp
+    delete saleInvoiceData["saleStatus"];    //imp new one before inserting to queue
     //console.log(saleInvoiceData);
     //updateCart(clonedInvoiceData); // impppp  prev but no need here
 
@@ -823,6 +868,7 @@ function Sell() {
     data.hasCustomer = false;
     data.discountAmount = 0;
     data.courier_code = "";
+    data.saleStatus = "new_sale";
 
 
     setSaleInvoiceData(data);
@@ -1197,6 +1243,7 @@ function Sell() {
               </h3>
 
               <div className='header__btns'>
+
                 <Button
                   type='primary'
                   onClick={() => handlePayBill("hold")}
@@ -1204,7 +1251,14 @@ function Sell() {
                 >
                   Park Sale
                 </Button>
+
                 <Button onClick={handleDeleteSale}>Delete Sale</Button>
+
+                {(saleInvoiceData && saleInvoiceData.saleStatus === "parked") &&
+                <Button type='primary' danger onClick={handleDeadSale}>
+                  Dead Sale
+                </Button>}
+
               </div>
             </div>
 

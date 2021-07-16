@@ -18,22 +18,22 @@ import {
 
 
 
-const PurchaseOrderViewGrn = (props) => {
+const TransferViewGrn = (props) => {
     const history = useHistory();
-    const [stockPoViewGrnData, setStockPoViewGrnData] = useState([]);
+    const [stockTransfersViewGrnData, setStockTransfersViewGrnData] = useState([]);
     const { match = {} } = props;
-    const { po_id = {} } = match !== undefined && match.params;
+    const { transfer_id = {} } = match !== undefined && match.params;
 
 
     let mounted = true;
 
 
     useEffect(() => {
-        if (po_id !== undefined) {
-            fetchPurchaseOrdersViewGrn(po_id);
+        if (transfer_id !== undefined) {
+            fetchStockTransfersViewGrn(transfer_id);
         }
         else {
-            message.error("Stock PO Id cannot be null", 2);
+            message.error("Stock Transfer Id cannot be null", 2);
             setTimeout(() => {
                 history.goBack();
             }, 2000);
@@ -48,19 +48,19 @@ const PurchaseOrderViewGrn = (props) => {
     }, []);  //imp to render when history prop changes
 
 
-    const fetchPurchaseOrdersViewGrn = async (purchaseOrderId) => {
+    const fetchStockTransfersViewGrn = async (transferId) => {
         document.getElementById('app-loader-container').style.display = "block";
-        const viewStockPoGrnDataResponse = await StockApiUtil.viewStockPurchaseOrdersViewGrnByPoId(purchaseOrderId);
-        console.log('viewStockPoGrnDataResponse:', viewStockPoGrnDataResponse);
+        const viewTransfersGrnDataResponse = await StockApiUtil.viewStockTransfersViewGrnByTransferId(transferId);
+        console.log('viewStockPoGrnDataResponse:', viewTransfersGrnDataResponse);
 
-        if (viewStockPoGrnDataResponse.hasError) {
-            console.log('Cant Get Stock Returned Data -> ', viewStockPoGrnDataResponse.errorMessage);
+        if (viewTransfersGrnDataResponse.hasError) {
+            console.log('Cant Get Stock Returned Data -> ', viewTransfersGrnDataResponse.errorMessage);
             document.getElementById('app-loader-container').style.display = "none";
-            message.warning(viewStockPoGrnDataResponse.errorMessage, 2);
+            message.warning(viewTransfersGrnDataResponse.errorMessage, 2);
         }
         else {
             if (mounted) {     //imp if unmounted
-                setStockPoViewGrnData(viewStockPoGrnDataResponse.data);
+                setStockTransfersViewGrnData(viewTransfersGrnDataResponse.data);
                 document.getElementById('app-loader-container').style.display = "none";
                 //message.success(viewStockReturnDataResponse.message, 3);
             }
@@ -98,7 +98,7 @@ const PurchaseOrderViewGrn = (props) => {
     function export_table_to_csv(html, filename) {
         var csv = [];
         //imp selection below
-        var rows = document.querySelectorAll("div#purchase_order_view_grn_table  tr");
+        var rows = document.querySelectorAll("div#transfers_view_grn_table tr");
 
         for (var i = 0; i < rows.length; i++) {
             var row = [],
@@ -109,7 +109,7 @@ const PurchaseOrderViewGrn = (props) => {
             csv.push(row.join(","));
         }
 
-        let footerRows = document.querySelectorAll("div#purchase_order_view_grn_table  .po-view-grn-view-footer");
+        let footerRows = document.querySelectorAll("div#transfers_view_grn_table  .transfers-view-grn-view-footer");
 
         for (var i = 0; i < footerRows.length; i++) {
             var row = [],
@@ -126,20 +126,20 @@ const PurchaseOrderViewGrn = (props) => {
 
 
     const DownloadToCsv = (e) => {
-        if (stockPoViewGrnData.length > 0) {
-            var html = document.getElementById("purchase_order_view_grn_table").innerHTML;
+        if (stockTransfersViewGrnData.length > 0) {
+            var html = document.getElementById("transfers_view_grn_table").innerHTML;
 
-            export_table_to_csv(html, "PO_GRN_" + new Date().toUTCString() + ".csv");
+            export_table_to_csv(html, "TRANSFERS_GRN_" + new Date().toUTCString() + ".csv");
         } else {
-            message.warning("No PO View Grn Found", 3);
+            message.warning("No Transfers View Grn Found", 3);
         }
     };
 
 
     const handleCancel = () => {
         history.push({
-            pathname: '/stock-control/purchase-orders',
-            activeKey: 'purchase-orders'
+            pathname: '/stock-control/inventory-transfers',
+            activeKey: 'inventory-transfers'
         });
 
     };
@@ -151,7 +151,7 @@ const PurchaseOrderViewGrn = (props) => {
             <div className="page__header">
                 <h1><Button type="primary" shape="circle" className="back-btn"
                     icon={<ArrowLeftOutlined />}
-                    onClick={handleCancel} />GRN View</h1>
+                    onClick={handleCancel} />Transfers View</h1>
 
                 <Button type='primary'
                     className='custom-btn custom-btn--primary'
@@ -167,8 +167,9 @@ const PurchaseOrderViewGrn = (props) => {
                 {/* Table */}
                 <div className='table'>
                     <PurchaseOrderviewGrnTable
-                        tableData={stockPoViewGrnData}
-                        tableId='purchase_order_view_grn_table'
+                        tableData={stockTransfersViewGrnData}
+                        tableId='transfers_view_grn_table'
+                        tableType='transfers'
                     />
                 </div>
                 {/* Table */}
@@ -178,4 +179,4 @@ const PurchaseOrderViewGrn = (props) => {
     );
 };
 
-export default PurchaseOrderViewGrn;
+export default TransferViewGrn;

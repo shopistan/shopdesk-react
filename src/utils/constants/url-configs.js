@@ -120,6 +120,7 @@ const urls = {
   STOCK: {
     VIEW_PO: BASE_URL + '/api/stock_control/viewPo',
     PO_VIEW_GRN: BASE_URL + '/api/stock_control/viewGrn',
+    TRANSFER_VIEW_GRN: BASE_URL + '/api/stock_control/inventoryTransferQuickView',
     VIEW_TRANSFER: BASE_URL + '/api/transfers/viewTransfer',
     VIEW_ADJUSTMENTS: BASE_URL + '/api/stock_control/viewAdjustment',
     VIEW_RETURNED_STOCK: BASE_URL + '/api/stock_control/viewReturnStock',
@@ -148,6 +149,7 @@ const urls = {
     GET_STORE: BASE_URL + '/api/register/get_store_id',
     EXPORT_INVENTORY_DUMP: BASE_URL + '/api/register/parkedSaleReportCsv',
     GET_INVOICE_NUMBER: BASE_URL + '/api/register/getInvoiceNumber',
+    REGISTER_INVOICE_MARK_DEAD: BASE_URL + '/api/register/markDead',
 
   },
   DASHBOARD:{

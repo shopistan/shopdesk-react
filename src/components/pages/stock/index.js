@@ -27,7 +27,7 @@ function Stock(props) {
   const [exportCsvCheck, setExportCsvCheck] = useState(false);
 
 
-
+  const todayDate = moment();
   const { RangePicker } = DatePicker;
 
   const { activeKey = "" } = props;
@@ -184,6 +184,7 @@ function Stock(props) {
           <RangePicker
             className='date-picker'
             onCalendarChange={handleRangePicker}
+            defaultValue={[todayDate, todayDate]}
           />
           <Button
             type='primary'

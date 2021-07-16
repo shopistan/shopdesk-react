@@ -70,15 +70,21 @@ const SalesHistory = () => {
 
 
 
-
+  const todayDate = moment();
   const { RangePicker } = DatePicker;
 
 
   var mounted = true;
 
 
-  const salesTypeEnum = { PARKED: "1", COMPLETED: "0" }
-  const salesHistoryEnum = { CONTINUE: "continue-sales", PROCESS: "process-returns", ALL: "all-sales" }
+  const salesTypeEnum = { PARKED: "1", COMPLETED: "0", DEAD: "1", RETURNED: "1" }
+  const salesHistoryEnum = {
+    CONTINUE: "continue-sales",
+    RETURNED: "returned-sales",
+    COMPLETED: "completed-sales",
+    DEAD: "dead-sales",
+    ALL: "all-sales",
+  }
 
 
   useEffect(() => {
@@ -223,14 +229,28 @@ const SalesHistory = () => {
     let filteredData;
     if (currentTabKey === salesHistoryEnum.CONTINUE) {
       filteredData = searchedDataRecordsAccumulate.filter((sale) => {
-        return sale.invoice_status === salesTypeEnum.PARKED;
+        return (sale.invoice_status === salesTypeEnum.PARKED && sale.is_dead  ===  "0");
       });
       setDataSearchedAccumulate(filteredData);
     }
 
-    if (currentTabKey === salesHistoryEnum.PROCESS) {
+    if (currentTabKey === salesHistoryEnum.COMPLETED) {
       filteredData = searchedDataRecordsAccumulate.filter((sale) => {
-        return sale.invoice_status === salesTypeEnum.COMPLETED;
+        return (sale.invoice_status === salesTypeEnum.COMPLETED && sale.is_returned === "0");
+      });
+      setDataSearchedAccumulate(filteredData);
+    }
+
+    if (currentTabKey === salesHistoryEnum.RETURNED) {
+      filteredData = searchedDataRecordsAccumulate.filter((sale) => {
+        return (sale.invoice_status === salesTypeEnum.COMPLETED && sale.is_returned === salesTypeEnum.RETURNED);
+      });
+      setDataSearchedAccumulate(filteredData);
+    }
+
+    if (currentTabKey === salesHistoryEnum.DEAD) {
+      filteredData = searchedDataRecordsAccumulate.filter((sale) => {
+        return (sale.invoice_status === salesTypeEnum.PARKED && sale.is_dead === salesTypeEnum.DEAD);
       });
       setDataSearchedAccumulate(filteredData);
     }
@@ -247,14 +267,28 @@ const SalesHistory = () => {
     var filteredData;
     if (currentTab === salesHistoryEnum.CONTINUE) {
       filteredData = salesHistoryDataRecords.filter((sale) => {
-        return sale.invoice_status === salesTypeEnum.PARKED;
+        return (sale.invoice_status === salesTypeEnum.PARKED && sale.is_dead  ===  "0");
       });
       setSelectedTabData(filteredData);
     }
 
-    if (currentTab === salesHistoryEnum.PROCESS) {
+    if (currentTab === salesHistoryEnum.COMPLETED) {
       filteredData = salesHistoryDataRecords.filter((sale) => {
-        return sale.invoice_status === salesTypeEnum.COMPLETED;
+        return (sale.invoice_status === salesTypeEnum.COMPLETED && sale.is_returned === "0");
+      });
+      setSelectedTabData(filteredData);
+    }
+
+    if (currentTab === salesHistoryEnum.RETURNED) {
+      filteredData = salesHistoryDataRecords.filter((sale) => {
+        return (sale.invoice_status === salesTypeEnum.COMPLETED && sale.is_returned === salesTypeEnum.RETURNED);
+      });
+      setSelectedTabData(filteredData);
+    }
+
+    if (currentTab === salesHistoryEnum.DEAD) {
+      filteredData = salesHistoryDataRecords.filter((sale) => {
+        return (sale.invoice_status === salesTypeEnum.PARKED && sale.is_dead  ===  salesTypeEnum.DEAD);
       });
       setSelectedTabData(filteredData);
     }
@@ -272,14 +306,28 @@ const SalesHistory = () => {
     var filteredData;
     if (key === salesHistoryEnum.CONTINUE) {
       filteredData = salesHistoryData.filter((sale) => {
-        return sale.invoice_status === salesTypeEnum.PARKED;
+        return (sale.invoice_status === salesTypeEnum.PARKED && sale.is_dead  ===  "0");
       });
       setSelectedTabData(filteredData);
     }
 
-    if (key === salesHistoryEnum.PROCESS) {
+    if (key === salesHistoryEnum.COMPLETED) {
       filteredData = salesHistoryData.filter((sale) => {
-        return sale.invoice_status === salesTypeEnum.COMPLETED;
+        return (sale.invoice_status === salesTypeEnum.COMPLETED && sale.is_returned === "0");
+      });
+      setSelectedTabData(filteredData);
+    }
+
+    if (key === salesHistoryEnum.RETURNED) {
+      filteredData = salesHistoryData.filter((sale) => {
+        return (sale.invoice_status === salesTypeEnum.COMPLETED && sale.is_returned === salesTypeEnum.RETURNED);
+      });
+      setSelectedTabData(filteredData);
+    }
+
+    if (key === salesHistoryEnum.DEAD) {
+      filteredData = salesHistoryData.filter((sale) => {
+        return (sale.invoice_status === salesTypeEnum.PARKED && sale.is_dead  ===  salesTypeEnum.DEAD);
       });
       setSelectedTabData(filteredData);
     }
@@ -722,6 +770,7 @@ const SalesHistory = () => {
             <RangePicker
               className='date-picker'
               onCalendarChange={handleRangePicker}
+              defaultValue={[todayDate, todayDate]}
             />
             <Button
               type='primary'
@@ -753,7 +802,23 @@ const SalesHistory = () => {
             {/* Table */}
           </TabPane>
 
-          <TabPane tab='Process Returns' key='process-returns'>
+          <TabPane tab='Returns' key='returned-sales'>
+            {/* Table */}
+            <div className='table'>
+              <SellHistoryNestedProductsTable
+                tableData={selectedTabData}
+                tableDataLoading={loading}
+                pageLimit={paginationLimit}
+                paginationData={paginationData}
+                onInvoiceQuickViewSelection={handleInvoiceQuickViewSelection}
+                tableType={salesHistoryEnum.RETURNED}
+               
+               />
+            </div>
+            {/* Table */}
+          </TabPane>
+
+          <TabPane tab='Completed' key='completed-sales'>
             {/* Table */}
             <div className='table'>
               <SellHistoryNestedProductsTable
@@ -763,12 +828,28 @@ const SalesHistory = () => {
                 paginationData={paginationData}
                 onInvoiceSelection={handleInvoiceSelection}
                 onInvoiceQuickViewSelection={handleInvoiceQuickViewSelection}
-                tableType={salesHistoryEnum.PROCESS}
+                tableType={salesHistoryEnum.COMPLETED}
                 registerProcessReturn={registerScopeFilter("process_returns")}
                />
             </div>
             {/* Table */}
           </TabPane>
+
+          <TabPane tab='Dead Sales' key='dead-sales'>
+            {/* Table */}
+            <div className='table'>
+              <SellHistoryNestedProductsTable
+                tableData={selectedTabData}
+                tableDataLoading={loading}
+                pageLimit={paginationLimit}
+                paginationData={paginationData}
+                onInvoiceQuickViewSelection={handleInvoiceQuickViewSelection}
+                tableType={salesHistoryEnum.DEAD}
+               />
+            </div>
+            {/* Table */}
+          </TabPane>
+
 
           <TabPane tab='All Sales' key='all-sales'>
             {/* Table */}

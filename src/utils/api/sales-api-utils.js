@@ -82,6 +82,23 @@ export const registerInvoice = async (invoiceQueue) => {
 };
 
 
+export const deadSaleHistory = async (oldInvoiceNo) => {
+    const saleDeadInvoiceDataBody = {
+        invoice_id: parseInt(oldInvoiceNo),
+    };
+    
+    const url = UrlConstants.SALES.REGISTER_INVOICE_MARK_DEAD;
+    const callType = GenericConstants.API_CALL_TYPE.POST;
+ 
+    return await ApiCallUtil.http(
+        url, //api url
+        callType, //calltype
+        saleDeadInvoiceDataBody, //body
+    );
+
+};
+
+
 export const getStoreId = async () => {
 
     const url = UrlConstants.SALES.GET_STORE;

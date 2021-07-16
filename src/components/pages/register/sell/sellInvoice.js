@@ -86,11 +86,13 @@ const PrintSalesInvoice = (props) => {
                     <b style={{fontSize: "10px"}}>Sales Person: </b><span>{userName}</span><br />
                 </center>
                 <table className="print-sales-invoice sales-invoice-table"
-                    style={{width: "100%", borderBottom: "2px solid #000", borderTop: "2px solid #000"}}> 
+                    style={{width: "100%", borderBottom: "2px solid #000", borderTop: "2px solid #000"}}>
                     <thead>
                         <tr>
                             <th>QTY</th>
                             <th>Name</th>
+                            <th>Color</th>
+                            <th>Size</th>
                             <th>Price</th>
                             <th>Total</th>
                         </tr>
@@ -109,6 +111,21 @@ const PrintSalesInvoice = (props) => {
                                                 : <small>{pro.product_name + ' / ' + pro.product_variant1_value}</small>
                                                 : Helpers.var_check_updated(pro.product_variant2_value) ? <small>{pro.product_name + ' / ' + pro.product_variant2_value}</small>
                                                     : pro.product_name)
+                                        }
+                                    </td>
+
+                                    <td  style={{textAlign: "center"}}>
+                                        {(pro.product_name &&
+                                            Helpers.var_check_updated(pro.product_variant1_value) ?
+                                            <small>{pro.product_variant1_value}</small>
+                                            : "")
+                                        }
+                                    </td>
+                                    <td style={{ textAlign: "center" }}>
+                                        {(pro.product_name &&
+                                            Helpers.var_check_updated(pro.product_variant2_value) ?
+                                            <small>{pro.product_variant2_value}</small>
+                                            : "")
                                         }
                                     </td>
                                     <td style={{textAlign: "center"}}>{pro.product_sale_price}</td>

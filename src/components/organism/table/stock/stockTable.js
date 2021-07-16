@@ -107,6 +107,13 @@ const StockTable = (props) => {
             pathname: `/stock-control/purchase-orders/${record.purchase_order_id}/grn/view`,
         });
     };
+
+    const viewGrnTransfers = (record) => {
+        console.log("i", record);
+        history.push({
+            pathname: `/stock-control/inventory-transfers/${record.transfer_id}/grn/view`,
+        });
+    };
     
     
     
@@ -176,6 +183,24 @@ const StockTable = (props) => {
                                     : showActionDropDown(record)
                                 }
                             </span>
+                        </div>
+                    );
+                },
+            },
+            {
+                title: "View",
+                render: (_, record) => {
+                    return (
+                        <div className='action-btns'>
+                            {(record.transfer_status === '0')
+                                ?
+                                <Typography.Link
+                                    onClick={() => viewGrnTransfers(record)}
+                                >
+                                    View
+                                </Typography.Link>
+                                : "-"
+                            }
                         </div>
                     );
                 },

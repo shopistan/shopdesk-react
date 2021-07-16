@@ -5,6 +5,7 @@ import "./style.scss"
 
 
 const PurchaseOrderviewGrnTable = (props) => {
+    const { tableType =  "" } = props;
     const [form] = Form.useForm();
     const [data, setData] = useState([]);
     const [productsTotalAmount, setProductsTotalAmount] = useState(0);
@@ -15,7 +16,10 @@ const PurchaseOrderviewGrnTable = (props) => {
         var stockReturnedTotal = 0;
         const newData = [...data];
         newData.forEach(item => {
-            stockReturnedTotal = (stockReturnedTotal + parseFloat(item.grn_junction_quantity));
+            let itemQty = tableType === "transfers" ?
+                parseFloat(item.quantity) : parseFloat(item.grn_junction_quantity);
+
+            stockReturnedTotal = (stockReturnedTotal + itemQty);
         });
         setProductsTotalAmount(stockReturnedTotal);
     }
@@ -30,10 +34,26 @@ const PurchaseOrderviewGrnTable = (props) => {
     }, [props.tableData]);  /* imp passing props to re-render */
 
 
-    var columns = null;
+    let columns = null;
 
 
-    
+    if (tableType === "transfers") {
+        columns = [
+            {
+                title: "SKU",
+                dataIndex: "sku",
+            },
+            {
+                title: "Price",
+                dataIndex: "purchase_price",
+            },
+            {
+                title: "Qty",
+                dataIndex: "quantity",
+            },
+        ];
+    }
+    else {
         columns = [
             {
                 title: "SKU",
@@ -49,11 +69,13 @@ const PurchaseOrderviewGrnTable = (props) => {
             },
         ];
 
+    }
+
 
 
     const tableFooter = () => {
         return (
-            <Row className="po-view-grn-view-footer">
+            <Row className="transfers-view-grn-view-footer">
                 <Col xs={24} sm={24} md={12} >
                     <span> Total Quantity </span>
                 </Col>

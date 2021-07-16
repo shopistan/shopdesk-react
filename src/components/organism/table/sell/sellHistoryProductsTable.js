@@ -119,14 +119,14 @@ const SellHistoryProductsTable = (props) => {
                             : (record.invoice_status === "1" && record.is_dead === "1") ? "Dead"
                             : (record.invoice_status === "0" && record.is_returned === "0")  ? "Completed"
                             : (record.invoice_status === "0" && record.is_returned === "1")  ? "Return, completed"
-                            : (record.invoice_status === "2" && record.is_returned === "0")  && "Return, completed"
+                            : (record.invoice_status === "2" && record.is_returned === "1")  && "Return, completed"
                         }
                     </span>
                 );
             },
         },
         {
-            title: "Return", 
+            title: props.tableType === "continue-sales" ? "Continue" : "Return",
             render: (_, record) => {
                 return (
                     <div className='action-btns stock-table-delete-item'>
@@ -147,13 +147,17 @@ const SellHistoryProductsTable = (props) => {
     ];
 
 
-    if (props.tableType === "process-returns" || props.tableType === "all-sales") {
+    if (props.tableType === "completed-sales" ||
+        props.tableType === "all-sales" ||
+        props.tableType === "dead-sales" ||
+        props.tableType === "returned-sales"
+    ) {
         let item = {
             title: "Quick View",
             render: (_, record) => {
                 return (
                     <div className='action-btns stock-table-delete-item'>
-                        {(record.invoice_status === "0" || record.invoice_status === "2") && <EyeOutlined
+                        {(record.invoice_status === "0" || record.invoice_status === "2" || record.is_dead === "1") && <EyeOutlined
                             onClick={() => handleInvoiceQuickView(record)}
                             className="sell-history-action-btn-quick-view"
                         />}
