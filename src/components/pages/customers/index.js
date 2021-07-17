@@ -55,7 +55,7 @@ const Customers = () => {
     console.log('couriersSearchResponse:', customersSearchResponse);
     if (customersSearchResponse.hasError) {
       console.log('Cant Search Customers -> ', customersSearchResponse.errorMessage);
-      message.error(customersSearchResponse.errorMessage, 2);
+      //message.error(customersSearchResponse.errorMessage, 2);
       setLoading(false);
     }
     else {
